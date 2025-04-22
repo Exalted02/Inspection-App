@@ -3,13 +3,13 @@
 
 	<!-- Logo -->
 	<div class="header-left">
-		<a href="{{ route('dashboard')}}" class="logo">
+		<a href="" class="logo">
 			<img src="{{ asset('front-assets/img/-logo1.jpg') }}" alt="{{ __('project_title') }}">
 		</a>
-		<a href="{{ route('dashboard')}}" class="logo collapse-logo">
+		<a href="" class="logo collapse-logo">
 			<img src="{{ asset('front-assets/img/-logo1.jpg') }}" alt="{{ __('project_title') }}">
 		</a>
-		<a href="{{ route('dashboard')}}" class="logo2">
+		<a href="" class="logo2">
 			<img src="{{ asset('front-assets/img/-logo1.jpg') }}"  alt="{{ __('project_title') }}">
 		</a>
 	</div>
