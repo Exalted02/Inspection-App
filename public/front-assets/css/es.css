@@ -1,0 +1,53 @@
+.profile-card {
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+  background: white;
+}
+
+.profile-banner {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.profile-info {
+  position: relative;
+  padding: 50px 50px 20px 50px;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid white;
+  position: absolute;
+  top: -40px;
+  /* left: 7%; */
+  /* transform: translateX(-50%); */
+  background: white;
+}
+
+.profile-name {
+  margin: 10px 0 5px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.profile-description {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.category-grid-box-1 .price-tag {
+    top: 15px;
+    position: absolute;
+    left: 9px;
+}
+.category-grid-box-1 .price-tag .price span {
+	background-color: #FFF !important;
+    color: #000 !important;
+    border-radius: 5px;
+}
