@@ -78,7 +78,7 @@
 							 @endif
 						  </div>
 					   </div>
-					   <button class="btn btn-theme btn-lg btn-block g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-callback='onSubmit' data-action='submit'>Login with us</button>
+					   <button class="btn btn-primary btn-lg btn-block g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-callback='onSubmit' data-action='submit'>Login with us</button>
 					</form>
 				 </div>
 				 <!-- Form -->

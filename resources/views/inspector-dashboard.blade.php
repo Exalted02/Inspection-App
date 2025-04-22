@@ -49,9 +49,6 @@
 									<div class="image">
 										<img alt="Test" src="{{url('front-assets/images/posting/10.jpg')}}" class="img-responsive">
 										<div class="ribbon popular"></div>
-										<div class="price-tag">
-											<div class="price"><span>4 pending tasks</span></div>
-										</div>
 									</div>
 									<div class="short-description-1 clearfix">
 										<h3><a title="" href="single-page-listing.html">Choa Chu Kang</a></h3>
