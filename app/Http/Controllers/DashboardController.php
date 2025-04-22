@@ -8,10 +8,10 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function inspector_dashboard()
     {
 		$data = [];
 		
-        return view('dashboard', $data);
+        return view('inspector-dashboard', $data);
     }
 }

@@ -58,7 +58,7 @@ Route::get('lang/change', [LangController::class, 'change'])->name('changeLang')
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+	Route::get('/inspector-dashboard', [DashboardController::class, 'inspector_dashboard'])->name('inspector-dashboard');
 	
 	//User-Accounts
 	Route::get('/users', [UserController::class, 'index'])->name('users');

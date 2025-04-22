@@ -1,47 +1,100 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+@extends('layouts.app')
+@section('content')
+	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
+  <div class="page-header-area-2 gray">
+	 <div class="container">
+		<div class="row">
+		   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			  <div class="small-breadcrumb">
+				 <div class=" breadcrumb-link">
+					<ul>
+					   <li><a href="javascript:void(0)">Login</a></li>
+					</ul>
+				 </div>
+				 <div class="header-page">
+					<h1>Sign In to your account</h1>
+				 </div>
+			  </div>
+		   </div>
+		</div>
+	 </div>
+  </div>
+  <!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= -->
+  <!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
+  <div class="main-content-area clearfix">
+	 <!-- =-=-=-=-=-=-= Latest Ads =-=-=-=-=-=-= -->
+	 <section class="section-padding no-top gray">
+		<!-- Main Container -->
+		<div class="container">
+		   <!-- Row -->
+		   <div class="row">
+			  <!-- Middle Content Area -->
+			  <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+				 <!--  Form -->
+				 <div class="form-grid">
+					<form method="POST" action="{{ route('login') }}" id="loginForm">
+					@csrf
+					{{--<a class="btn btn-lg btn-block btn-social btn-facebook">
+							<span class="fa fa-facebook"></span> Sign in with Facebook
+					  </a>
+					  
+					  <a class="btn btn-lg btn-block btn-social btn-google">
+							<span class="fa fa-google"></span> Sign in with Facebook
+					  </a>
+					  
+					  <h2 class="no-span"><b>(OR)</b></h2>--}}
+					
+						<div class="form-group">
+							<label>Email</label>
+							<input type="email" id="email" name="email"  placeholder="Email" class="form-control" :value="old('email')" autofocus>
+							<x-input-error :messages="$errors->get('email')" class="mt-2 text-danger" />
+						</div>
+					   <div class="form-group">
+						  <label>Password</label>
+						  <input type="password" id="password" name="password" placeholder="Password" class="form-control">
+						  <x-input-error :messages="$errors->get('password')" class="mt-2 text-danger" />
+					   </div>
+					   <div class="form-group">						  
+						  <x-input-error :messages="$errors->get('g-recaptcha-response')" class="mt-2 text-danger" />
+					   </div>
+					   <div class="form-group">
+						  <div class="row">
+							 <div class="col-xs-12 col-sm-4">
+								<div class="skin-minimal">
+								   <ul class="list">
+									  <li>
+										 <input  type="checkbox" id="remember_me" name="remember">
+										 <label for="remember_me">Remember me</label>
+									  </li>
+								   </ul>
+								</div>
+							 </div>
+							 @if (Route::has('password.request'))
+							 <div class="col-xs-12 col-sm-8 text-right">
+								{{--<p class="help-block"><a data-target="#forgotPasswordModal" data-toggle="modal">Forgot password?</a>--}}
+								<p class="help-block"><a href="{{ route('password.request') }}">Forgot password?</a>
+								</p>
+							 </div>
+							 @endif
+						  </div>
+					   </div>
+					   <button class="btn btn-primary btn-lg btn-block g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-callback='onSubmit' data-action='submit'>Login with us</button>
+					</form>
+				 </div>
+				 <!-- Form -->
+			  </div>
+			  <!-- Middle Content Area  End -->
+		   </div>
+		   <!-- Row End -->
+		</div>
+		<!-- Main Container End -->
+	 </section>
+	</div>
+@endsection
+@section('component-scripts')
+<script>
+	function onSubmit(token) {
+		document.getElementById("loginForm").submit();
+	}
+ </script>
+@endsection
