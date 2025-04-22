@@ -22,6 +22,7 @@ function change_multi_status(status, model, url, additional_table = null) {
 	$(".table input[name=chk_id]:checked").each(function() {  
 		employee.push($(this).data('emp-id'));
 	});
+
 	if(employee.length <=0)  {
 		$('#confirmChkSelect').modal("show");	
 	}else {
@@ -30,6 +31,7 @@ function change_multi_status(status, model, url, additional_table = null) {
 		$("#confirmMultiStatus").find("h3").text(WRN_PROFILE_STATUS);
 		$('#confirmMultiStatus').on('click', '#change', function(e) {	
 			var selected_values = employee.join(",");
+			//alert(selected_values);
 			/*$.ajaxSetup({
 				headers: {
 					'X-CSRF-TOKEN': csrfToken 

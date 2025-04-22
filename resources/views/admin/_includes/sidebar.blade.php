@@ -26,6 +26,23 @@
 				<li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
 					<a href="{{ route('admin.dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
+				
+				<li class="submenu">
+					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-location')  ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span> {{ __('masters') }} </span><span class="menu-arrow"></span></a>
+					<ul style="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-location') ? 'display:block' : '' }}">
+						<li><a href="{{ route('admin.manage-company')}}" class="{{ request()->routeIs('admin.manage-company') ? 'menu-active' : '' }}"><span>{{ __('manage_company') }}</span></a></li>
+						<li><a href="{{ route('admin.manage-location')}}" class="{{ request()->routeIs('admin.manage-location') ? 'menu-active' : '' }}"><span>{{ __('manage_location') }}</span></a></li>
+					</ul>
+				</li>
+				
+				<li class="submenu">
+					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category')  ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span> {{ __('location') }} </span><span class="menu-arrow"></span></a>
+					<ul style="{{ request()->routeIs('admin.category')  ? 'display:block' : '' }}">
+						<li><a href="{{ route('admin.category')}}" class="{{ request()->routeIs('admin.category') ? 'menu-active' : '' }}"><span>{{ __('category') }}</span></a></li>
+						<li><a href="" class=""><span>{{ __('subcategory') }}</span></a></li>
+					</ul>
+				</li>
+				
 				<li class="{{ request()->routeIs('admin.email-management','admin.email-management-edit') ? 'active' : '' }}">
 					<a href="{{ route('admin.email-management') }}"><i class="fa-regular fa-envelope"></i> <span> {{ __('email_management') }} </span></a>
 				</li>

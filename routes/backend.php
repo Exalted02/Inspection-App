@@ -6,6 +6,10 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\EmailManagementController;
 use App\Http\Controllers\Admin\EmailSettingsController;
 use App\Http\Controllers\Admin\ChangePasswordController;
+use App\Http\Controllers\Admin\MasterController;
+use App\Http\Controllers\Admin\CommonController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SubCategoryController;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -22,7 +26,48 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::get('email-management', [EmailManagementController::class,'index'])->name('email-management');
 	Route::get('/email-management-edit/{id}', [EmailManagementController::class, 'email_management_edit'])->name('email-management-edit');
 	Route::post('/email-management-edit-save',[EmailManagementController::class,'manage_email_management_process'])->name('email-management-edit-save');
-		
+	
+	// master company name 
+	Route::get('/manage-company', [MasterController::class, 'manage_company'])->name('manage-company');
+	Route::post('/manage-company', [MasterController::class, 'manage_company'])->name('manage-company');
+	Route::post('/save-company-name', [MasterController::class, 'save_manage_company'])->name('save-company-name');
+	Route::post('/deleteManageCompanytList',[MasterController::class,'delete_manage_company_list'])->name('deleteManageCompanytList');
+	Route::post('/company_name_update_status',[MasterController::class,'update_status'])->name('company_name_update_status');
+	Route::post('/edit-company-name', [MasterController::class, 'edit_company'])->name('edit-company-name');
+	Route::post('/getDeleteCompanyName', [MasterController::class, 'delete_company'])->name('getDeleteCompanyName');
+	
+	// master location 
+	Route::get('/manage-location', [MasterController::class, 'manage_location'])->name('manage-location');
+	Route::post('/manage-location', [MasterController::class, 'manage_location'])->name('manage-location');
+	Route::post('/save-location', [MasterController::class, 'save_location'])->name('save-location');
+	Route::post('/location_name_update_status',[MasterController::class,'location_update_status'])->name('location_name_update_status');
+	Route::post('/edit-location-name', [MasterController::class, 'edit_location'])->name('edit-location-name');
+	Route::post('/getDeleteLocationName', [MasterController::class, 'delete_location'])->name('getDeleteLocationName');
+	Route::post('/deleteLocationList',[MasterController::class,'delete_location_list'])->name('deleteLocationList');
+	
+	// category
+	Route::get('/category', [CategoryController::class, 'index'])->name('category');
+	Route::post('/category', [CategoryController::class, 'index'])->name('category');
+	Route::post('/save-category', [CategoryController::class, 'save_category'])->name('save-category');
+	Route::post('/category_update_status',[CategoryController::class,'update_status'])->name('category_update_status');
+	Route::post('/getDeleteCategory', [CategoryController::class, 'delete_category'])->name('getDeleteCategory');
+	Route::post('/deleteCategoryList',[CategoryController::class,'delete_list'])->name('deleteCategoryList');
+	Route::post('/edit-category', [CategoryController::class, 'edit_category'])->name('edit-category');
+	
+	// category
+	Route::get('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
+	//Route::post('/category', [CategoryController::class, 'index'])->name('category');
+	//Route::post('/save-category', [CategoryController::class, 'save_category'])->name('save-category');
+	//Route::post('/category_update_status',[CategoryController::class,'update_status'])->name('category_update_status');
+	//Route::post('/getDeleteCategory', [CategoryController::class, 'delete_category'])->name('getDeleteCategory');
+	//Route::post('/deleteCategoryList',[CategoryController::class,'delete_list'])->name('deleteCategoryList');
+	//Route::post('/edit-category', [CategoryController::class, 'edit_category'])->name('edit-category');
+	
+	
+	Route::post('/change-multi-status',[CommonController::class,'change_multi_status'])->name('change-multi-status');
+	Route::post('/delete-multi-data',[CommonController::class,'delete_multi_data'])->name('delete-multi-data');
+	Route::post('/getstatebycountry',[CommonController::class,'get_state_by_country'])->name('getstatebycountry');
+	Route::post('/getcitybystate',[CommonController::class,'get_city_by_state'])->name('getcitybystate');
 });
 
 Route::prefix('admin')->group(function () {

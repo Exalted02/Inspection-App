@@ -6,40 +6,32 @@ Version      : 4.0
 
 $(document).ready(function() {
 	
-	$(document).on('click','.save-category', function(){
-		let name = $('#name').val().trim();
-		
+	$(document).on('click','.save-company-name', function(){
+		let companyName = $('#company_name').val().trim();
+		//let createdDate = $('#created_date').val().trim();
 		let isValid = true;
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
-		if (name === '')
+		if (companyName === '')
 		{
-			$('#name').addClass('is-invalid');
-			$('#name').next('.invalid-feedback').show();
+			$('#company_name').addClass('is-invalid');
+			$('#company_name').next('.invalid-feedback').show();
 			isValid = false;
 		}
-		
-		
-		
 		if (isValid) {
-			//var form = $("#frmlocation");
-			var URL = $('#frmcategory').attr('action');
+			var form = $("#frmcompany");
+			var URL = $('#frmcompany').attr('action');
 			var id = $('#id').val();
-			
-			let formData = new FormData($('#frmcategory')[0]);
-			formData.append('_token', csrfToken);
 			//alert(URL);
 			$.ajax({
 				url: URL,
 				type: "POST",
-				data: formData,
-				processData: false,
-				contentType: false,
+				data: form.serialize() + '&_token=' + csrfToken,
 				//dataType: 'json',
 				success: function(response) {
 					if (!response.success) {
-						$('#name').addClass('is-invalid');
-						$('#name').next('.invalid-feedback').text(response.message).show();
+						$('#company_name').addClass('is-invalid');
+						$('#company_name').next('.invalid-feedback').text(response.message).show();
 					} else {
 						if(id=='')
 						{
@@ -59,7 +51,7 @@ $(document).ready(function() {
 	
 
 
-$(document).on('click','.edit-category', function(){
+$(document).on('click','.edit-company-name', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(URL);
@@ -71,15 +63,8 @@ $(document).on('click','.edit-category', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
-			$('#name').val(response.name);
-			
-			
-			
-			var app_url = response.app_url; 
-			$('#preview').attr('src', app_url + '/' + response.category_image).show();
-			
-			$('#head-label').html(response.edit);
-			$('#add_category').modal('show');
+			$('#company_name').val(response.company_name);
+			$('#add_company').modal('show');
 			//alert(JSON.stringify(response));
 			
 		},
@@ -125,7 +110,7 @@ $(document).on('click','.update-product-code-form', function(){
 
 
 
-$(document).on('click','.delete-category-name', function(){
+$(document).on('click','.delete-company-name', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(id);alert(URL);
@@ -137,14 +122,14 @@ $(document).on('click','.delete-category-name', function(){
 		success: function(response) {
 			//alert(response);
 			//var url = "{{ route('deleteContactList') }}";
-			$('.data-id-list').attr('data-id', id);
-			$('#list_name').html(response);
-			$('#delete_location_modal').modal('show');
+			$('.data-id-pcode-list').attr('data-id', id);
+			$('#list_code_name').html(response);
+			$('#delete_product_code').modal('show');
 		},
 	});
 	
 });
-$(document).on('click','.data-id-list', function(){
+$(document).on('click','.data-id-pcode-list', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(URL);
@@ -155,7 +140,7 @@ $(document).on('click','.data-id-list', function(){
 		dataType: 'json',
 		success: function(response) {
 			if(response.result == 'success'){
-				$('#delete-msg').html('<font color="green">Record Deleted Successfully</font>');
+				$('#delete-prospect-msg').html('<font color="green">Record Deleted Successfully</font>');
 			}else{
 				$('#data_already_use').modal('show');
 			}
@@ -185,7 +170,7 @@ $(document).on('click','.update-status', function(){
 });
 
 $(document).on('click','.search-data', function(){
-	$('#search-category-frm').submit();
+	$('#search-company-name').submit();
 	
 });
 $('.search-sort-by').on('change' ,function (event) {
@@ -220,26 +205,11 @@ $(document).on('click','.downloaddemo', function(){
 	}, 1000);
 });
 
-/*$(document).on('click','.add_location', function(){
-	//alert('ok');
-	$('#frmlocation')[0].reset();
+$(document).on('click','.add_company', function(){
+	$('#frmcompany')[0].reset();
 	$('#id').val('');
-	alert(translations.addlocation);
-	$('#head-label').html(translations.addlocation);
 	$('.invalid-feedback').hide();
 	$('.form-control').removeClass('is-invalid');
-});*/
-
-
-$('#category_image').on('change', function (event) {
-    const [file] = event.target.files;
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            $('#preview').attr('src', e.target.result).show();
-        }
-        reader.readAsDataURL(file);
-    }
 });
 
 });
