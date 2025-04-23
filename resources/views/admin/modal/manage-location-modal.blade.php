@@ -93,6 +93,32 @@
 											</div>
 										</div>
 									</div>
+									
+									<div class="row">
+										<div class="tab-content" id="pills-tabContent">
+											<div class="tab-pane fade" id="pills-public" role="tabpanel" aria-labelledby="pills-public-tab">
+
+											</div>
+											<div class="tab-pane fade" id="pills-private" role="tabpanel" aria-labelledby="pills-private-tab">
+											</div>
+											<div class="tab-pane fade show active" id="pills-select-people" role="tabpanel" aria-labelledby="pills-select-people-tab">
+												<div class="people-select-tab" style="max-height: 200px; overflow-y: auto;">
+													<h3>Select Category</h3>
+													@foreach($categories as $category)
+														<div class="select-people-checkbox-s">
+															<label class="custom_check">
+																<input type="checkbox" name="category[]" value="{{ $category->id }}">													
+																<span class="checkmark"></span>
+																<span class="people-profile">
+																	<a href="#">{{ $category->name ?? '' }}</a>
+																</span>
+															</label>
+														</div>
+													@endforeach
+												</div>
+											</div>
+										</div>
+									</div>
 
 									<div class="row">
 										<div class="col-sm-6">

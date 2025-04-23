@@ -9,6 +9,8 @@ use App\Models\Manage_location;
 use App\Models\Countries;
 use App\Models\States;
 use App\Models\Cities;
+use App\Models\Category;
+use App\Models\Manage_location_category;
 use Lang;
 
 class MasterController extends Controller
@@ -226,6 +228,8 @@ class MasterController extends Controller
 		$data['src_cities'] = Cities::where(['state_id'=>$request->src_state_id])->get();
 		$data['src_city_id'] = $request->src_city_id;
 		
+		$data['categories'] = Category::where('status','!=',2)->get();
+		
 		return view('admin.master.manage-location',$data);
 	
 	}
@@ -246,13 +250,16 @@ class MasterController extends Controller
 			]);
 		}
 		
+
+		$categoryData = $request->input('category');
+		
+		//echo "<pre>";print_r($request->post('category')[]);die;
 		$image = '';
 		if($request->post('id')>0)
 		{
 			$model= Manage_location::find($request->post('id'));
 			
 			$model->location_name 	=	$request->post('location_name');
-			$model->image 			=	$image ?? null;
 			$model->address 		=	$request->post('address');
 			$model->zipcode 		=	$request->post('zipcode');
 			$model->country_id 		=	$request->post('country_id');
@@ -262,11 +269,22 @@ class MasterController extends Controller
 			$model->updated_at		=	date('Y-m-d');
 			$model->save();
 			$id = $request->post('id');
+			
+			if(!empty($categoryData))
+			{
+				Manage_location_category::where('location_id', $request->post('id'))->delete();
+				foreach($categoryData as $category)
+				{
+					$mngCatmodel = new Manage_location_category();
+					$mngCatmodel->location_id = $id;
+					$mngCatmodel->category_id = $category;
+					$mngCatmodel->save();
+				}
+			}
 		}
 		else{
 			$model=new Manage_location();
 			$model->location_name 	=	$request->post('location_name');
-			$model->image 			=	$image ?? null;
 			$model->address 		=	$request->post('address');
 			$model->zipcode 		=	$request->post('zipcode');
 			$model->country_id 		=	$request->post('country_id');
@@ -277,6 +295,17 @@ class MasterController extends Controller
 			$model->created_at		=	date('Y-m-d');
 			$model->save();
 			$id = $model->id;
+			
+			if(!empty($categoryData))
+			{
+				foreach($categoryData as $category)
+				{
+					$mngCatmodel = new Manage_location_category();
+					$mngCatmodel->location_id = $id;
+					$mngCatmodel->category_id = $category;
+					$mngCatmodel->save();
+				}
+			}
 		}
 		
 		$fileName = '';
@@ -322,6 +351,15 @@ class MasterController extends Controller
 		$data['location_image']  = $location->image;
 		$data['app_url']  = url('uploads/location');
 		$data['edit']  =  Lang::get('edit_location');
+		
+		$catArry = array();
+		$location_category = Manage_location_category::where('location_id', $request->id)->get();
+		foreach($location_category as $val)
+		{
+			$catArry[] = $val->category_id;
+		}
+		$data['categary_data']  = $catArry;
+		
 		return $data;
 	}
 	public function delete_location(Request $request)

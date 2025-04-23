@@ -45,25 +45,13 @@
 			<div class="row filter-row">
 				<div class="col-xl-3">  
 					 <div class="input-block">
-						 <select name="src_category" class="select select_category" data-url="{{ route('admin.get-subcategory')}}">
-							<option value="">{{ __('category') }}</option>
+						 <select name="src_checklist" class="select">
+							<option value="">{{ __('subchecklist') }}</option>
 							@foreach($checklists as $checklist)
-								<option value="{{ $checklist->id }}" {{ old('src_category', request('src_category')) == (string) $checklist->id ? 'selected' : '' }}>{{ $checklist->name }}</option>
+								<option value="{{ $checklist->id }}" {{ old('src_checklist', request('src_checklist')) == (string) $checklist->id ? 'selected' : '' }}>{{ $checklist->name }}</option>
 							@endforeach
 						 </select>
 					 </div>
-				</div>
-				<div class="col-xl-3">  
-					<div class="input-block">
-						<select name="src_subcategory" class="select subcategory">
-						<option value="">{{ __('sub_category') }}</option>
-						@if(isset($src_subcategories) && count($src_subcategories) > 0)
-							@foreach($src_subcategories as $subcategory)
-								<option value="{{ $subcategory->id }}" {{ $src_subcategory==$subcategory->id ? 'selected' : '' }}>{{ $subcategory->name }}</option>
-							@endforeach
-						@endif
-						</select>
-					</div>
 				</div>
 				<div class="col-xl-3">  
 					 <div class="input-block">
@@ -234,7 +222,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/subchecklist";
+		window.location.href = "/admin/sub-checklist";
 	});
 	
 	const translations = {

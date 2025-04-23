@@ -55,6 +55,16 @@ $(document).ready(function() {
 			isValid = false;
 		}
 		
+		
+		/*let selectedCategories = [];
+		console.log('Checkbox found?', $('input[name="category[]"]:checked').length);
+		$('input[name="category[]"]:checked').each(function() {
+			selectedCategories.push($(this).val());
+		});
+		alert(selectedCategories);*/
+		
+
+		
 		if (isValid) {
 			//var form = $("#frmlocation");
 			var URL = $('#frmlocation').attr('action');
@@ -103,7 +113,7 @@ $(document).on('click','.edit-location', function(){
 		data: {id:id, _token: csrfToken},
 		dataType: 'json',
 		success: function(response) {
-			//alert(response.state);
+			//alert(response.categary_data);
 			$('#id').val(response.id);
 			$('#location_name').val(response.location_name);
 			$('#address').val(response.address);
@@ -129,10 +139,18 @@ $(document).on('click','.edit-location', function(){
 			var app_url = response.app_url; 
 			$('#preview').attr('src', app_url + '/' + response.location_image).show();
 			
+			let selectedCategories = Array.isArray(response.categary_data)? response.categary_data : String(response.categary_data).split(',');
+			selectedCategories = selectedCategories.map(String);
+			
+			$('input[name="category[]"]').each(function () {
+				let val = $(this).val().toString();
+				if (selectedCategories.includes(val)) {
+					$(this).prop('checked', true);
+				}
+			});
+			
 			$('#head-label').html(response.edit);
 			$('#add_location').modal('show');
-			//alert(JSON.stringify(response));
-			
 		},
 	});
 }); 

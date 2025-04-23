@@ -26,14 +26,9 @@ class SubChecklistController extends Controller
 		
 		$dataArr = Subchecklist::with('get_checklist');
 		
-		if($request->src_category)
+		if($request->src_checklist)
 		{
-			$dataArr->where('category_id', 'like', '%' . $request->src_category . '%');
-		}
-		
-		if($request->subcategory)
-		{
-			$dataArr->where('subcategory_id', 'like', '%' . $request->subcategory . '%');
+			$dataArr->where('checklist_id', 'like', '%' . $request->src_checklist . '%');
 		}
 		
 		if($request->search_name)
@@ -128,14 +123,13 @@ class SubChecklistController extends Controller
 			'success' => true
 		]);
 	}
-	public function edit_Subchecklist(Request $request)
+	public function edit_subchecklist(Request $request)
 	{
-		$Subchecklist = Subchecklist::where('id', $request->id)->first();
+		$subchecklist = Subchecklist::where('id', $request->id)->first();
 		$data = array();
-		$data['id']  = $Subchecklist->id ;
-		$data['category']  = $Subchecklist->category_id ;
-		$data['subcategory']  = $Subchecklist->subcategory_id ;
-		$data['name']  = $Subchecklist->name ;
+		$data['id']  = $subchecklist->id ;
+		$data['checklist']  = $subchecklist->checklist_id ;
+		$data['name']  = $subchecklist->name ;
 		$data['edit']  =  Lang::get('edit_sub_category');
 		return $data;
 	}

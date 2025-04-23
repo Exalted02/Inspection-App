@@ -77,20 +77,7 @@ $(document).on('click','.edit-subchecklist', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
-			
-			function waitForDropdownToLoad(selector, value, callback) {
-				const interval = setInterval(() => {
-						if ($(selector).find(`option[value="${value}"]`).length > 0) {
-							$(selector).val(value).trigger('change');
-							clearInterval(interval);
-							if (callback) callback();
-						}
-					}, 100); 
-			}
-			waitForDropdownToLoad('#category', response.category, function() {
-				waitForDropdownToLoad('#subcategory', response.subcategory);
-			});
-			//$('#category').val(response.category).trigger('change');
+			$('#checklist').val(response.checklist).trigger('change');
 			$('#name').val(response.name);
 			$('#head-label').html(response.edit);
 			$('#add_subchecklist').modal('show');
