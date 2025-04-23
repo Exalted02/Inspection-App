@@ -7,10 +7,10 @@
 						<i class="la la-trash-restore"></i>
 					</div>
 					<h3>{{ __('are_you_sure') }}, {{ __('you_want_delete') }}</h3>
-					<p>{{ __('sub_category_name') }} "<span id="list_name"></span>" {{ __('from_your_account') }}</p>
+					<p>{{ __('checklist_name') }} "<span id="list_name"></span>" {{ __('from_your_account') }}</p>
 					<div class="col-lg-12 text-center form-wizard-button">
 						<a href="#" class="button btn-lights" data-bs-dismiss="modal">{{ __('not_now') }}</a>
-						<a href="javascript:void(0);" class="btn btn-primary data-id-list" data-url="{{ route('admin.deleteSubCategoryList') }}">{{ __('okay') }}</a>
+						<a href="javascript:void(0);" class="btn btn-primary data-id-list" data-url="{{ route('admin.deletechecklist') }}">{{ __('okay') }}</a>
 					</div>
 				</div>
 			</div>
@@ -20,7 +20,7 @@
 
 
 <!-- Add product code -->
-<div id="add_subcategory" class="modal custom-modal fade" role="dialog">
+<div id="add_checklist" class="modal custom-modal fade" role="dialog">
 					<div class="modal-dialog modal-dialog-centered" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -30,19 +30,19 @@
 								</button>
 							</div>
 							<div class="modal-body">
-								<form id="frmsubcategory" action="{{ route('admin.save-subcategory') }}" enctype="multipart/form-data">
+								<form id="frmchecklist" action="{{ route('admin.save-checklist') }}" enctype="multipart/form-data">
 								<input type="hidden" id="id" name="id">
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('category_name') }}<span class="text-danger">*</span></label>
-												<select class="select" name="category" id="category">
+												<select class="select select_category" name="category" id="category" data-url="{{ route('admin.get-subcategory')}}">
 													<option value="">{{ __('category') }}</option>
 													@foreach($categories as $category)
 													<option value="{{  $category->id ?? ''}}">{{  $category->name ?? ''}}</option>
 													@endforeach
 												</select>
-												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('category')}}.</div>
+												<div class="invalid-feedback">{{ __('please_select') }} {{ __('category')}}.</div>
 											</div>
 										</div>
 									</div>
@@ -50,13 +50,24 @@
 										<div class="col-sm-12">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('sub_category_name') }}<span class="text-danger">*</span></label>
-												<input type="text" name="subcategory" id="subcategory" class="form-control">
-												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('subcategory')}}.</div>
+												<select class="select subcategory" name="subcategory" id="subcategory">
+													<option value="">{{ __('sub_category') }}</option>
+												</select>
+												<div class="invalid-feedback">{{ __('please_select') }} {{ __('subcategory')}}.</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="input-block mb-3">
+												<label class="col-form-label">{{ __('checklist_name') }}<span class="text-danger">*</span></label>
+												<input type="text" name="name" id="name" class="form-control">
+												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('checklist_name')}}.</div>
 											</div>
 										</div>
 									</div>
 									<div class="submit-section">
-										<button class="btn btn-primary submit-btn save-subcategory" type="button">Submit</button>
+										<button class="btn btn-primary submit-btn save-checklist" type="button">Submit</button>
 									</div>
 								</form>
 							</div>

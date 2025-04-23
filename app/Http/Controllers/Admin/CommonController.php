@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\Countries;
 use App\Models\States;
 use App\Models\Cities;
+use App\Models\Category;
+use App\Models\Subcategory;
 use Lang;
 
 class CommonController extends Controller
@@ -83,6 +85,18 @@ class CommonController extends Controller
 			$html .='<option value>'.Lang::get('please_select').'</option>';
 		}
 		foreach($city_list as $val)
+		{
+		$html .='<option value='.$val->id.'>'.$val->name.'</option>';
+		}
+		echo json_encode($html);
+	}
+	public function get_category_by_subcategory(Request $request)
+	{
+		$category = $request->category_id;
+		$subcategory_list = Subcategory::query()->where('category_id', $category)->orderBy('name')->get();
+		$html = '';
+		$html .='<option value>'.Lang::get('sub_category').'</option>';
+		foreach($subcategory_list as $val)
 		{
 		$html .='<option value='.$val->id.'>'.$val->name.'</option>';
 		}

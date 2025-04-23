@@ -125,6 +125,11 @@
 	"add_subcategory": "Add sub category",
 	"edit_sub_category": "Edit sub category",
 	
+	"checklist": "Checklist",
+	"checklist_name": "Checklist name",
+	"add_checklist": "Add checklist",
+	"edit_checklist": "Edit checklist",
+	
 	"add": "Add"
 	
 }
