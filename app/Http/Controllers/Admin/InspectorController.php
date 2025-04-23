@@ -84,16 +84,31 @@ class InspectorController extends Controller
 		//echo "<pre>";print_r($request->all());die;
 		
 		
-		$existingStage = Inspector::where('name', $request->post('name'))->where('status', '!=', 2)
+		$existingInsp = Inspector::where('name', $request->post('name'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
         ->first();
 		
-		if ($existingStage) {
+		if ($existingInsp) {
 			return response()->json([
 				'success' => false,
+				'label' => 'name',
 				'message' => 'Inspector name already exists.'
+			]);
+		}
+		
+		$duplemail = Inspector::where('email', $request->post('email'))->where('status', '!=', 2)
+        ->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+        ->first();
+		
+		if ($duplemail) {
+			return response()->json([
+				'success' => false,
+				'label' => 'email',
+				'message' => 'Email already exists.'
 			]);
 		}
 		

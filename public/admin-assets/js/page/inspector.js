@@ -9,6 +9,7 @@ $(document).ready(function() {
 	$(document).on('click','.save-inspector', function(){
 		let name = $('#name').val().trim();
 		let email = $('#email').val().trim();
+		let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		let passwords = $('#password').val().trim();
 		let company_name = $('#company_name').val().trim();
 		
@@ -27,6 +28,13 @@ $(document).ready(function() {
 			$('#email').next('.invalid-feedback').show();
 			isValid = false;
 		}
+		else if (!emailPattern.test(email)) {
+			$('#email').addClass('is-invalid');
+			$('#email').next('.invalid-feedback').text('Please enter valid email.').show();
+			isValid = false;
+		} 
+		
+		
 		if (passwords === '')
 		{
 			$('#password').addClass('is-invalid');
@@ -65,8 +73,18 @@ $(document).ready(function() {
 				//dataType: 'json',
 				success: function(response) {
 					if (!response.success) {
-						$('#name').addClass('is-invalid');
-						$('#name').next('.invalid-feedback').text(response.message).show();
+						if(response.label == 'name')
+						{
+							$('#name').addClass('is-invalid');
+							$('#name').next('.invalid-feedback').text(response.message).show();
+						}
+						
+						if(response.label == 'email')
+						{
+							$('#email').addClass('is-invalid');
+							$('#email').next('.invalid-feedback').text(response.message).show();
+						}
+						
 					} else {
 						if(id=='')
 						{
