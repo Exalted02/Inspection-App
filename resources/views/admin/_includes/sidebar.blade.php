@@ -46,8 +46,8 @@
 				</li>--}}
 				
 				<li class="submenu">
-					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist') ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span>{{ __('location') }}</span> <span class="menu-arrow"></span></a>
-					<ul style="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist') ? 'display:block' : '' }}">
+					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist','admin.inspector') ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span>{{ __('location') }}</span> <span class="menu-arrow"></span></a>
+					<ul style="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist','admin.inspector') ? 'display:block' : '' }}">
 						
 						<li class="submenu">
 							<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist') ? 'subdrop' : '' }}"> <span>{{ __('manage_checklists') }}</span> <span class="menu-arrow"></span></a>

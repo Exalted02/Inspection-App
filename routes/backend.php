@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\ChecklistController;
 use App\Http\Controllers\Admin\SubChecklistController;
+use App\Http\Controllers\Admin\InspectorController;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -84,7 +85,13 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/edit-subchecklist', [SubChecklistController::class, 'edit_subchecklist'])->name('edit-subchecklist');
 	
 	// inspector
-	Route::get('/inspector', [SubChecklistController::class, 'index'])->name('inspector');
+	Route::get('/inspector', [InspectorController::class, 'index'])->name('inspector');
+	Route::post('/inspector', [InspectorController::class, 'index'])->name('inspector');
+	Route::post('/save-inspector', [InspectorController::class, 'save_inspector'])->name('save-inspector');
+	Route::post('/inspector_update_status',[InspectorController::class,'update_status'])->name('inspector_update_status');
+	Route::post('/getDeleteinspector', [InspectorController::class, 'delete_inspector'])->name('getDeleteinspector');
+	Route::post('/deleteinspectorList',[InspectorController::class,'delete_list'])->name('deleteinspectorList');
+	Route::post('/edit-inspector', [InspectorController::class, 'edit_inspector'])->name('edit-inspector');
 	
 	Route::post('/change-multi-status',[CommonController::class,'change_multi_status'])->name('change-multi-status');
 	Route::post('/delete-multi-data',[CommonController::class,'delete_multi_data'])->name('delete-multi-data');

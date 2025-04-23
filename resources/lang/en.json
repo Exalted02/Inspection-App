@@ -133,6 +133,13 @@
 	"manage_users": "Manage users",
 	
 	"inspector": "Inspector",
+	"inspector_name": "Inspector name",
+	"add_inspector": "Add inspector",
+	"edit_inspector": "Edit inspector",
+	"avatar": "Avatar",
+	"backgroung_image": "Backgroung image",
+	
+	
 	"location_owner": "Location Owner",
 	"location_owner_supervisor": "Location Owner Supervisor",
 	"management": "Management",
