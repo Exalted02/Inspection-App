@@ -21,16 +21,10 @@
 	"okay": "Okay",
 	"close": "Close",
 	"view_details": "View Details",
-	"category": "Category",
-	"add_category": "Add Category",
-	"add_new_category": "Add New Category",
-	"edit_new_category": "Edit New Category",
+	
 	"category_created_successfully": "Category Created Successfully",
 	
-	"sub_category": "Sub Category",
-	"add_sub_category": "Add Sub Category",
-	"add_new_sub_category": "Add New Sub Category",
-	"edit_sub_category": "Edit Sub Category",
+	
 	"sub_category_created_successfully": "Sub Category Created Successfully",
 	
 	"//":"for Email Settings.",
@@ -129,6 +123,11 @@
 	"checklist_name": "Checklist name",
 	"add_checklist": "Add checklist",
 	"edit_checklist": "Edit checklist",
+	
+	"subchecklist": "Sub checklist",
+	"subchecklist_name": "Sub checklist name",
+	"add_subchecklist": "Add sub checklist",
+	"edit_subchecklist": "Edit sub checklist",
 	
 	"add": "Add"
 	

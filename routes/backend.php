@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CommonController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\ChecklistController;
+use App\Http\Controllers\Admin\SubChecklistController;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -64,7 +65,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/deleteSubCategoryList',[SubCategoryController::class,'delete_list'])->name('deleteSubCategoryList');
 	Route::post('/edit-subcategory', [SubCategoryController::class, 'edit_subcategory'])->name('edit-subcategory');
 	
-	// Checklist get-subcategory
+	// Checklist 
 	Route::get('/checklist', [ChecklistController::class, 'index'])->name('checklist');
 	Route::post('/checklist', [ChecklistController::class, 'index'])->name('checklist');
 	Route::post('/save-checklist', [ChecklistController::class, 'save_checklist'])->name('save-checklist');
@@ -73,6 +74,14 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/deletechecklist',[ChecklistController::class,'delete_list'])->name('deletechecklist');
 	Route::post('/edit-checklist', [ChecklistController::class, 'edit_checklist'])->name('edit-checklist');
 	
+	// Sub Checklist 
+	Route::get('/sub-checklist', [SubChecklistController::class, 'index'])->name('sub-checklist');
+	Route::post('/sub-checklist', [SubChecklistController::class, 'index'])->name('sub-checklist');
+	Route::post('/save-subchecklist', [SubChecklistController::class, 'save_subchecklist'])->name('save-subchecklist');
+	Route::post('/subchecklist_update_status',[SubChecklistController::class,'update_status'])->name('subchecklist_update_status');
+	Route::post('/getDeletesubchecklist', [SubChecklistController::class, 'delete_subchecklist'])->name('getDeletesubchecklist');
+	Route::post('/deletesubchecklist',[SubChecklistController::class,'delete_list'])->name('deletesubchecklist');
+	Route::post('/edit-subchecklist', [SubChecklistController::class, 'edit_subchecklist'])->name('edit-subchecklist');
 	
 	Route::post('/change-multi-status',[CommonController::class,'change_multi_status'])->name('change-multi-status');
 	Route::post('/delete-multi-data',[CommonController::class,'delete_multi_data'])->name('delete-multi-data');
