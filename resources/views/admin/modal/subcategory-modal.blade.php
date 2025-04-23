@@ -10,7 +10,7 @@
 					<p>{{ __('category_name') }} "<span id="list_name"></span>" {{ __('from_your_account') }}</p>
 					<div class="col-lg-12 text-center form-wizard-button">
 						<a href="#" class="button btn-lights" data-bs-dismiss="modal">{{ __('not_now') }}</a>
-						<a href="javascript:void(0);" class="btn btn-primary data-id-list" data-url="{{ route('admin.deleteCategoryList') }}">{{ __('okay') }}</a>
+						<a href="javascript:void(0);" class="btn btn-primary data-id-list" data-url="{{ route('admin.deleteSubCategoryList') }}">{{ __('okay') }}</a>
 					</div>
 				</div>
 			</div>

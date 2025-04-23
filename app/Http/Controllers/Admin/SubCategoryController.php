@@ -127,7 +127,7 @@ class SubCategoryController extends Controller
 		$data['edit']  =  Lang::get('edit_sub_category');
 		return $data;
 	}
-	public function delete_category(Request $request)
+	public function delete_subcategory(Request $request)
 	{
 		$name = Subcategory::where('id', $request->id)->first()->name;
 		echo json_encode($name);

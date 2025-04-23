@@ -125,7 +125,7 @@ $(document).on('click','.update-product-code-form', function(){
 
 
 
-$(document).on('click','.delete-category-name', function(){
+$(document).on('click','.delete-subcategory', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(id);alert(URL);

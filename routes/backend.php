@@ -59,8 +59,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
 	Route::post('/save-subcategory', [SubCategoryController::class, 'save_subcategory'])->name('save-subcategory');
 	Route::post('/subcategory_update_status',[SubCategoryController::class,'update_status'])->name('subcategory_update_status');
-	//Route::post('/getDeleteCategory', [SubCategoryController::class, 'delete_category'])->name('getDeleteCategory');
-	//Route::post('/deleteCategoryList',[SubCategoryController::class,'delete_list'])->name('deleteCategoryList');
+	Route::post('/getDeleteSubCategory', [SubCategoryController::class, 'delete_subcategory'])->name('getDeleteSubCategory');
+	Route::post('/deleteSubCategoryList',[SubCategoryController::class,'delete_list'])->name('deleteSubCategoryList');
 	Route::post('/edit-subcategory', [SubCategoryController::class, 'edit_subcategory'])->name('edit-subcategory');
 	
 	
