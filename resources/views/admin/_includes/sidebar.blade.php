@@ -63,9 +63,9 @@
 							<a href="javascript:void(0);" class="{{ request()->routeIs('admin.inspector') ? 'subdrop' : '' }}"> <span>{{ __('manage_users') }}</span> <span class="menu-arrow"></span></a>
 							<ul style="{{ request()->routeIs('admin.inspector') ? 'display:block' : '' }}">
 								<li><a href="{{ route('admin.inspector')}}" class="{{ request()->routeIs('admin.inspector') ? 'menu-active' : '' }}"><span>{{ __('inspector') }}</span></a></li>
-								<li><a href="#" class=""><span>{{ __('location_owner') }}</span></a></li>
-								<li><a href="#" class=""><span>{{ __('location_owner_supervisor') }}</span></a></li>
-								<li><a href="#" class=""><span>{{ __('management') }}</span></a></li>
+								<li><a href="javascript:void(0);" class=""><span>{{ __('location_owner') }}</span></a></li>
+								<li><a href="javascript:void(0);" class=""><span>{{ __('location_owner_supervisor') }}</span></a></li>
+								<li><a href="javascript:void(0);" class=""><span>{{ __('management') }}</span></a></li>
 							</ul>
 						</li>
 					</ul>
