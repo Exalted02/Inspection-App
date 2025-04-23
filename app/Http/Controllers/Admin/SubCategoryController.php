@@ -22,7 +22,13 @@ class SubCategoryController extends Controller
 		}
 		$data['has_search'] = $has_search;
 		
-		$dataArr = Subcategory::query();
+		$dataArr = Subcategory::with('get_category');
+		
+		if($request->category)
+		{
+			$dataArr->where('category_id', 'like', '%' . $request->category . '%');
+		}
+		
 		if($request->search_name)
 		{
 			$dataArr->where('name', 'like', '%' . $request->search_name . '%');
@@ -67,18 +73,14 @@ class SubCategoryController extends Controller
 		
 		$dataArr->orderBy('name', 'ASC'); 
 		$data['subcategory'] = $dataArr->get();
+		$data['categories'] = Category::where('status','!=',2)->get();
 		return view('admin.location.subcategory',$data);
 	}
-	
-	
-	
 	public function save_subcategory(Request $request)
 	{
 		
 		//echo "<pre>";print_r($request->all());die;
-		
-		
-		$existingStage = Subcategory::where('name', $request->post('name'))->where('status', '!=', 2)
+		$existingStage = Subcategory::where('name', $request->post('subcategory'))->where('category_id',$request->post('category'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
@@ -91,23 +93,23 @@ class SubCategoryController extends Controller
 			]);
 		}
 		
-		
 		if($request->post('id')>0)
 		{
 			$model= Subcategory::find($request->post('id'));
-			
-			$model->name =	$request->post('name');
-			$model->created_at	=	date('Y-m-d');
+			$model->category_id		=	$request->post('category');
+			$model->name		=	$request->post('subcategory');
+			$model->updated_at	=	date('Y-m-d');
 			$model->save();
 			$id = $request->post('id');
 		}
-		else{
+		else
+		{
 			$model=new Subcategory();
-			$model->name		=	$request->post('name');
+			$model->category_id	=	$request->post('category');
+			$model->name		=	$request->post('subcategory');
 			$model->status		=	1;
 			$model->created_at	=	date('Y-m-d');
 			$model->save();
-			
 			$id = $model->id;
 		}
 		
@@ -115,15 +117,14 @@ class SubCategoryController extends Controller
 			'success' => true
 		]);
 	}
-	public function edit_category(Request $request)
+	public function edit_subcategory(Request $request)
 	{
-		$category = Subcategory::where('id', $request->id)->first();
+		$subcategory = Subcategory::where('id', $request->id)->first();
 		$data = array();
-		$data['id']  = $category->id ;
-		$data['name']  = $category->name ;
-		$data['category_image']  = $category->image ;
-		$data['app_url']  = url('uploads/category') ;
-		$data['edit']  =  Lang::get('edit_category');
+		$data['id']  = $subcategory->id ;
+		$data['category']  = $subcategory->category_id ;
+		$data['name']  = $subcategory->name ;
+		$data['edit']  =  Lang::get('edit_sub_category');
 		return $data;
 	}
 	public function delete_category(Request $request)

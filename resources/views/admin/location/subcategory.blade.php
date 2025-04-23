@@ -14,7 +14,7 @@
 				<div class="col-md-4">
 					<h3 class="page-title">{{ __('sub_category') }}</h3>
 					<ul class="breadcrumb">
-						<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('dashboard') }}</a></li>
+						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
 						<li class="breadcrumb-item active">{{ __('sub_category') }}</li>
 					</ul>
 				</div>
@@ -31,7 +31,7 @@
 						<div class="form-sort">
 							<a href="javascript:void(0);" class="list-view btn btn-link" data-bs-toggle="modal" data-bs-target="#import"><i class="fa-solid fa-file-import"></i>{{ __('import') }}</a>
 						</div>--}}
-						<a href="#" class="btn add-btn add_category" data-bs-toggle="modal" data-bs-target="#add_category"><i class="la la-plus-circle"></i> {{ __('add') }}</a>
+						<a href="#" class="btn add-btn add_subcategory" data-bs-toggle="modal" data-bs-target="#add_subcategory"><i class="la la-plus-circle"></i> {{ __('add') }}</a>
 					</div>
 				</div>
 			</div>
@@ -40,17 +40,27 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.category')}}" id="search-category-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.sub-category')}}" id="search-category-frm">
 		@csrf
 			<div class="row filter-row">
 				<div class="col-xl-3">  
 					 <div class="input-block">
-						 <input type="text" class="form-control" name="search_name" placeholder="{{ __('category_name')}}" value="{{ old('search_name', request('search_name'))}}">
+						 <select name="category" class="select">
+							<option value="">{{ __('category') }}</option>
+							@foreach($categories as $category)
+								<option value="{{ $category->id }}">{{ $category->name }}</option>
+							@endforeach
+						 </select>
 					 </div>
 				</div>
 				<div class="col-xl-3">  
 					 <div class="input-block">
-						<input type="text" class="form-control date-range" name="date_range_phone" placeholder="{{ __('from_to_date')}}" id="src_category_name_date_range" value="{{ old('date_range_phone', request('date_range_phone')) }}">
+						 <input type="text" class="form-control" name="search_name" placeholder="{{ __('sub_category_name')}}" value="{{ old('search_name', request('search_name'))}}">
+					 </div>
+				</div>
+				<div class="col-xl-3">  
+					 <div class="input-block">
+						<input type="text" class="form-control date-range" name="date_range_phone" placeholder="{{ __('from_to_date')}}" id="src_subcategory_name_date_range" value="{{ old('date_range_phone', request('date_range_phone')) }}">
 					 </div>
 				 </div>
 				 <div class="col-xl-2">  
@@ -76,14 +86,14 @@
 		 <hr>
 		 <!-- /Search Filter -->
 		 <div class="row">
-		 @if($category->count() > 0)
+		 @if($subcategory->count() > 0)
 			<div class="col-lg-6 mb-2">
 				<div class="btn-group">
 					<button type="button" class="btn action-btn add-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
 					<ul class="dropdown-menu">
-						<li><a class="dropdown-item" onclick="change_multi_status('1','Category','{{url('admin/change-multi-status')}}')">Active</a></li>
-						<li><a class="dropdown-item" onclick="change_multi_status('0','Category','{{url('admin/change-multi-status')}}')">Inactive</a></li>
-						<li><a class="dropdown-item" onclick="delete_multi_data('Category','{{url('admin/delete-multi-data')}}')">Delete</a></li>
+						<li><a class="dropdown-item" onclick="change_multi_status('1','Subcategory','{{url('admin/change-multi-status')}}')">Active</a></li>
+						<li><a class="dropdown-item" onclick="change_multi_status('0','Subcategory','{{url('admin/change-multi-status')}}')">Inactive</a></li>
+						<li><a class="dropdown-item" onclick="delete_multi_data('Subcategory','{{url('admin/delete-multi-data')}}')">Delete</a></li>
 					</ul>
 				</div>
 			</div>
@@ -97,7 +107,7 @@
 								<a href="javascript:void(0);" class="grid-view btn btn-link"><i class="las la-th"></i></a>
 							</div>
 						</li>--}}
-						@if($category->count() > 0)
+						@if($subcategory->count() > 0)
 						<li>
 							<div class="form-sort">
 								<i class="las la-sort-alpha-up-alt"></i>
@@ -125,7 +135,7 @@
 						<thead>
 							<tr>
 							{{--<th class="no-sort"></th>--}}
-							@if($category->count() > 0)
+							@if($subcategory->count() > 0)
 								<th>
 									<label class="form-check form-check-inline">
 										<input class="form-check-input" type="checkbox" id="checkAll">
@@ -134,24 +144,24 @@
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
 								<th>{{ __('category_name') }}</th>
-								<th>{{ __('image') }}</th>
+								<th>{{ __('sub_category_name') }}</th>
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
 								<th class="text-end">Action</th>
 							</tr>
 						</thead>
 						<tbody>
-						@foreach($category as $val)
+						@foreach($subcategory as $val)
 							<tr>
-								@if($category->count() > 0)
+								@if($subcategory->count() > 0)
 								<td>
 									<label class="form-check form-check-inline">
 										<input class="form-check-input" type="checkbox" name="chk_id" data-emp-id="{{$val->id}}">
 									</label>
 								</td>
 								@endif
-								<td class="contact-details">{{ $val->name ?? ''}}</td>
-								<td><img src="{{ url('uploads/category/' . $val->image) }}" width="50" height="50"></td>
+								<td class="contact-details">{{ $val->get_category->name ?? ''}}</td>
+								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
@@ -160,8 +170,8 @@
 											<i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}
 										</a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.category_update_status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}</a>
-											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.category_update_status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}</a>
+											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.subcategory_update_status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}</a>
+											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.subcategory_update_status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}</a>
 										</div>
 									</div>
 								 @else
@@ -170,8 +180,8 @@
 											<i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}
 										</a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.category_update_status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}</a>
-											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.category_update_status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}</a>
+											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.subcategory_update_status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}</a>
+											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.subcategory_update_status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}</a>
 										</div>
 									</div> 
 								 
@@ -183,7 +193,7 @@
 									<div class="dropdown dropdown-action">
 										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item edit-category" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-category') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
+											<a class="dropdown-item edit-subcategory" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-subcategory') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
 											<a class="dropdown-item delete-category-name" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteCategory') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 										</div>
 									</div>
@@ -200,11 +210,11 @@
 	<!-- /Page Content -->
 
 @include('modal.common')
-@include('admin.modal.category-modal')
+@include('admin.modal.subcategory-modal')
 @endsection 
 @section('scripts')
 @include('_includes.footer')
-<script src="{{ url('admin-assets/js/page/category.js') }}"></script>
+<script src="{{ url('admin-assets/js/page/subcategory.js') }}"></script>
 <script src="{{ url('admin-assets/js/page/common.js') }}"></script>
 <script src="{{ url('admin-assets/js/search-calender.js') }}"></script>
 <script src="{{ url('admin-assets/js/page/country_state_city.js') }}"></script>
@@ -212,18 +222,18 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/category";
+		window.location.href = "/admin/sub-category";
 	});
 	
 	const translations = {
-        addlocation: @json(__('add_category')),
+        addsubcat: @json(__('add_subcategory')),
     };
 	
-	$(document).on('click','.add_category', function(){
-		$('#frmcategory')[0].reset();
+	$(document).on('click','.add_subcategory', function(){
+		$('#frmsubcategory')[0].reset();
 		$('#id').val('');
-		$('#preview').attr('src', '').show();
-		$('#head-label').html(translations.addlocation);
+		$('#category').val('').trigger('change');
+		$('#head-label').html(translations.addsubcat);
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
 	});

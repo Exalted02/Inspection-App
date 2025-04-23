@@ -14,4 +14,9 @@ class Subcategory extends Model
         'name', 
         'status', 
     ];
+	
+	public function get_category()
+	{
+		return $this->belongsTo(Category::class, 'category_id');
+	}
 }

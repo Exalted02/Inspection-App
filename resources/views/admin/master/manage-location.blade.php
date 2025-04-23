@@ -40,7 +40,7 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.manage-location')}}" id="search-location-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.sub-category')}}" id="search-location-frm">
 		@csrf
 			<div class="row filter-row">
 				<div class="col-xl-3">  

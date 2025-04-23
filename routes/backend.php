@@ -55,13 +55,13 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/edit-category', [CategoryController::class, 'edit_category'])->name('edit-category');
 	
 	// category
-	//Route::get('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
-	//Route::post('/category', [CategoryController::class, 'index'])->name('category');
-	//Route::post('/save-category', [CategoryController::class, 'save_category'])->name('save-category');
-	//Route::post('/category_update_status',[CategoryController::class,'update_status'])->name('category_update_status');
-	//Route::post('/getDeleteCategory', [CategoryController::class, 'delete_category'])->name('getDeleteCategory');
-	//Route::post('/deleteCategoryList',[CategoryController::class,'delete_list'])->name('deleteCategoryList');
-	//Route::post('/edit-category', [CategoryController::class, 'edit_category'])->name('edit-category');
+	Route::get('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
+	Route::post('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
+	Route::post('/save-subcategory', [SubCategoryController::class, 'save_subcategory'])->name('save-subcategory');
+	Route::post('/subcategory_update_status',[SubCategoryController::class,'update_status'])->name('subcategory_update_status');
+	//Route::post('/getDeleteCategory', [SubCategoryController::class, 'delete_category'])->name('getDeleteCategory');
+	//Route::post('/deleteCategoryList',[SubCategoryController::class,'delete_list'])->name('deleteCategoryList');
+	Route::post('/edit-subcategory', [SubCategoryController::class, 'edit_subcategory'])->name('edit-subcategory');
 	
 	
 	Route::post('/change-multi-status',[CommonController::class,'change_multi_status'])->name('change-multi-status');

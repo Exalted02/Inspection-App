@@ -36,10 +36,10 @@
 				</li>
 				
 				<li class="submenu">
-					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category')  ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span> {{ __('location') }} </span><span class="menu-arrow"></span></a>
-					<ul style="{{ request()->routeIs('admin.category')  ? 'display:block' : '' }}">
+					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category') || request()->routeIs('admin.sub-category')  ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span> {{ __('location') }} </span><span class="menu-arrow"></span></a>
+					<ul style="{{ request()->routeIs('admin.category') || request()->routeIs('admin.sub-category')  ? 'display:block' : '' }}">
 						<li><a href="{{ route('admin.category')}}" class="{{ request()->routeIs('admin.category') ? 'menu-active' : '' }}"><span>{{ __('category') }}</span></a></li>
-						<li><a href="" class=""><span>{{ __('subcategory') }}</span></a></li>
+						<li><a href="{{ route('admin.sub-category')}}" class="{{ request()->routeIs('admin.sub-category') ? 'menu-active' : '' }}"><span>{{ __('subcategory') }}</span></a></li>
 					</ul>
 				</li>
 				
