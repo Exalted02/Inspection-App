@@ -55,7 +55,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/edit-category', [CategoryController::class, 'edit_category'])->name('edit-category');
 	
 	// category
-	Route::get('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
+	//Route::get('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
 	//Route::post('/category', [CategoryController::class, 'index'])->name('category');
 	//Route::post('/save-category', [CategoryController::class, 'save_category'])->name('save-category');
 	//Route::post('/category_update_status',[CategoryController::class,'update_status'])->name('category_update_status');

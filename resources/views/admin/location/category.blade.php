@@ -14,7 +14,7 @@
 				<div class="col-md-4">
 					<h3 class="page-title">{{ __('category') }}</h3>
 					<ul class="breadcrumb">
-						<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('dashboard') }}</a></li>
+						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
 						<li class="breadcrumb-item active">{{ __('category') }}</li>
 					</ul>
 				</div>
