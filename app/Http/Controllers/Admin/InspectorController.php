@@ -32,6 +32,16 @@ class InspectorController extends Controller
 			$dataArr->where('name', 'like', '%' . $request->search_name . '%');
 		}
 		
+		if($request->search_email)
+		{
+			$dataArr->where('email', 'like', '%' . $request->search_email . '%');
+		}
+		
+		if($request->search_company_name)
+		{
+			$dataArr->where('company_name', 'like', '%' . $request->search_company_name . '%');
+		}
+		
 		if($request->date_range_phone && $request->date_range_phone != 'MM/DD/YYYY - MM/DD/YYYY') {
 			// Explode the date range into start and end dates
 			$dates = explode(' - ', $request->date_range_phone);

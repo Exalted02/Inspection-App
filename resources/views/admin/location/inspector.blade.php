@@ -50,6 +50,21 @@
 				</div>
 				<div class="col-xl-3">  
 					 <div class="input-block">
+						 <input type="text" class="form-control" name="search_email" placeholder="{{ __('email')}}" value="{{ old('search_email', request('search_email'))}}">
+					 </div>
+				</div>
+				<div class="col-xl-3">  
+					 <div class="input-block">
+						 <select class="select" name="search_company_name">
+							<option value="">{{ __('company_name') }}</option>
+							@foreach($companies as $company)
+								<option value="{{ $company->id ?? '' }}" {{ old('search_company_name', request('search_company_name')) == (string) $company->id ? 'selected' : '' }}>{{ $company->company_name ?? '' }}</option>
+							@endforeach
+						 </select>
+					 </div>
+				</div>
+				<div class="col-xl-3">  
+					 <div class="input-block">
 						<input type="text" class="form-control date-range" name="date_range_phone" placeholder="{{ __('from_to_date')}}" id="src_inspector_name_date_range" value="{{ old('date_range_phone', request('date_range_phone')) }}">
 					 </div>
 				 </div>
