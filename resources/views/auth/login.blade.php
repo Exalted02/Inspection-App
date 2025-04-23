@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
-  <div class="page-header-area-2 gray">
+	{{--<div class="page-header-area-2 gray">
 	 <div class="container">
 		<div class="row">
 		   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -18,12 +18,12 @@
 		   </div>
 		</div>
 	 </div>
-  </div>
+  </div>--}}
   <!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= -->
   <!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
   <div class="main-content-area clearfix">
 	 <!-- =-=-=-=-=-=-= Latest Ads =-=-=-=-=-=-= -->
-	 <section class="section-padding no-top gray">
+	 <section class="section-padding no-top1 gray">
 		<!-- Main Container -->
 		<div class="container">
 		   <!-- Row -->
@@ -31,7 +31,9 @@
 			  <!-- Middle Content Area -->
 			  <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 				 <!--  Form -->
+				 <div class=" card login-card">
 				 <div class="form-grid">
+					<h2 class="text-center">Sign In to your account</h2>
 					<form method="POST" action="{{ route('login') }}" id="loginForm">
 					@csrf
 					{{--<a class="btn btn-lg btn-block btn-social btn-facebook">
@@ -80,6 +82,7 @@
 					   </div>
 					   <button class="btn btn-primary btn-lg btn-block g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-callback='onSubmit' data-action='submit'>Login with us</button>
 					</form>
+				 </div>
 				 </div>
 				 <!-- Form -->
 			  </div>
