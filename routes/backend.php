@@ -83,6 +83,9 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/deletesubchecklist',[SubChecklistController::class,'delete_list'])->name('deletesubchecklist');
 	Route::post('/edit-subchecklist', [SubChecklistController::class, 'edit_subchecklist'])->name('edit-subchecklist');
 	
+	// inspector
+	Route::get('/inspector', [SubChecklistController::class, 'index'])->name('inspector');
+	
 	Route::post('/change-multi-status',[CommonController::class,'change_multi_status'])->name('change-multi-status');
 	Route::post('/delete-multi-data',[CommonController::class,'delete_multi_data'])->name('delete-multi-data');
 	Route::post('/getstatebycountry',[CommonController::class,'get_state_by_country'])->name('getstatebycountry');

@@ -129,6 +129,13 @@
 	"add_subchecklist": "Add sub checklist",
 	"edit_subchecklist": "Edit sub checklist",
 	
+	"manage_checklists": "Manage checklist",
+	"manage_users": "Manage users",
+	
+	"inspector": "Inspector",
+	"location_owner": "Location Owner",
+	"location_owner_supervisor": "Location Owner Supervisor",
+	"management": "Management",
 	"add": "Add"
 	
 }
