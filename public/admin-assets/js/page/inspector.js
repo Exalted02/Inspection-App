@@ -50,11 +50,15 @@ $(document).ready(function() {
 		
 		
 		let selectedLocations = [];
-		console.log('Checkbox found?', $('input[name="location[]"]:checked').length);
 		$('input[name="location[]"]:checked').each(function() {
 			selectedLocations.push($(this).val());
 		});
 		//alert(selectedLocations);
+		if (selectedLocations.length === 0) {
+			$('input[name="location[]"]').first().addClass('is-invalid');
+			$('input[name="location[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();
+			isValid = false;
+		}
 		
 		if (isValid) {
 			//var form = $("#frmlocation");

@@ -103,6 +103,7 @@
 											</div>
 											<div class="tab-pane fade show active" id="pills-select-people" role="tabpanel" aria-labelledby="pills-select-people-tab">
 												<div class="people-select-tab" style="max-height: 200px; overflow-y: auto;">
+													<div class="invalid-feedback">{{ __('please_select') }} {{ __('category')}}.</div>
 													<h3>Select Category</h3>
 													@foreach($categories as $category)
 														<div class="select-people-checkbox-s">

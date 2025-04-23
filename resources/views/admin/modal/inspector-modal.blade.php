@@ -79,6 +79,7 @@
 											</div>
 											<div class="tab-pane fade show active" id="pills-select-people" role="tabpanel" aria-labelledby="pills-select-people-tab">
 												<div class="people-select-tab" style="max-height: 200px; overflow-y: auto;">
+													<div class="invalid-feedback">{{ __('please_select') }} {{ __('location')}}.</div>
 													<h3>Select Location</h3>
 													@foreach($locations as $location)
 														<div class="select-people-checkbox-s">

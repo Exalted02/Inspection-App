@@ -56,13 +56,17 @@ $(document).ready(function() {
 		}
 		
 		
-		/*let selectedCategories = [];
+		let selectedCategories = [];
 		console.log('Checkbox found?', $('input[name="category[]"]:checked').length);
 		$('input[name="category[]"]:checked').each(function() {
 			selectedCategories.push($(this).val());
 		});
-		alert(selectedCategories);*/
-		
+		//alert(selectedCategories);
+		if (selectedCategories.length === 0) {
+			$('input[name="category[]"]').first().addClass('is-invalid');
+			$('input[name="category[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();
+			isValid = false;
+		}
 
 		
 		if (isValid) {
