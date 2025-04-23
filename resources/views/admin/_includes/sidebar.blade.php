@@ -26,6 +26,52 @@
 				<li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
 					<a href="{{ route('admin.dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
+				
+				<li class="submenu">
+					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-location')  ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span> {{ __('masters') }} </span><span class="menu-arrow"></span></a>
+					<ul style="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-location') ? 'display:block' : '' }}">
+						<li><a href="{{ route('admin.manage-company')}}" class="{{ request()->routeIs('admin.manage-company') ? 'menu-active' : '' }}"><span>{{ __('manage_company') }}</span></a></li>
+						<li><a href="{{ route('admin.manage-location')}}" class="{{ request()->routeIs('admin.manage-location') ? 'menu-active' : '' }}"><span>{{ __('manage_location') }}</span></a></li>
+					</ul>
+				</li>
+				
+				{{--<li class="submenu">
+					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category') || request()->routeIs('admin.sub-category') || request()->routeIs('admin.checklist') || request()->routeIs('admin.sub-checklist')  ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span> {{ __('location') }} </span><span class="menu-arrow"></span></a>
+					<ul style="{{ request()->routeIs('admin.category') || request()->routeIs('admin.sub-category') || request()->routeIs('admin.checklist') || request()->routeIs('admin.sub-checklist')  ? 'display:block' : '' }}">
+						<li><a href="{{ route('admin.category')}}" class="{{ request()->routeIs('admin.category') ? 'menu-active' : '' }}"><span>{{ __('category') }}</span></a></li>
+						<li><a href="{{ route('admin.sub-category')}}" class="{{ request()->routeIs('admin.sub-category') ? 'menu-active' : '' }}"><span>{{ __('sub_category') }}</span></a></li>
+						<li><a href="{{ route('admin.checklist')}}" class="{{ request()->routeIs('admin.checklist') ? 'menu-active' : '' }}"><span>{{ __('checklist') }}</span></a></li>
+						<li><a href="{{ route('admin.sub-checklist')}}" class="{{ request()->routeIs('admin.sub-checklist') ? 'menu-active' : '' }}"><span>{{ __('subchecklist') }}</span></a></li>
+					</ul>
+				</li>--}}
+				
+				<li class="submenu">
+					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist','admin.inspector') ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span>{{ __('location') }}</span> <span class="menu-arrow"></span></a>
+					<ul style="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist','admin.inspector') ? 'display:block' : '' }}">
+						
+						<li class="submenu">
+							<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist') ? 'subdrop' : '' }}"> <span>{{ __('manage_checklists') }}</span> <span class="menu-arrow"></span></a>
+							<ul style="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist') ? 'display:block' : '' }}">
+								<li><a href="{{ route('admin.category')}}" class="{{ request()->routeIs('admin.category') ? 'menu-active' : '' }}"><span>{{ __('category') }}</span></a></li>
+								<li><a href="{{ route('admin.sub-category')}}" class="{{ request()->routeIs('admin.sub-category') ? 'menu-active' : '' }}"><span>{{ __('sub_category') }}</span></a></li>
+								<li><a href="{{ route('admin.checklist')}}" class="{{ request()->routeIs('admin.checklist') ? 'menu-active' : '' }}"><span>{{ __('checklist') }}</span></a></li>
+								<li><a href="{{ route('admin.sub-checklist')}}" class="{{ request()->routeIs('admin.sub-checklist') ? 'menu-active' : '' }}"><span>{{ __('subchecklist') }}</span></a></li>
+							</ul>
+						</li>
+						
+						<li class="submenu">
+							<a href="javascript:void(0);" class="{{ request()->routeIs('admin.inspector') ? 'subdrop' : '' }}"> <span>{{ __('manage_users') }}</span> <span class="menu-arrow"></span></a>
+							<ul style="{{ request()->routeIs('admin.inspector') ? 'display:block' : '' }}">
+								<li><a href="{{ route('admin.inspector')}}" class="{{ request()->routeIs('admin.inspector') ? 'menu-active' : '' }}"><span>{{ __('inspector') }}</span></a></li>
+								<li><a href="javascript:void(0);" class=""><span>{{ __('location_owner') }}</span></a></li>
+								<li><a href="javascript:void(0);" class=""><span>{{ __('location_owner_supervisor') }}</span></a></li>
+								<li><a href="javascript:void(0);" class=""><span>{{ __('management') }}</span></a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				
+				
 				<li class="{{ request()->routeIs('admin.email-management','admin.email-management-edit') ? 'active' : '' }}">
 					<a href="{{ route('admin.email-management') }}"><i class="fa-regular fa-envelope"></i> <span> {{ __('email_management') }} </span></a>
 				</li>

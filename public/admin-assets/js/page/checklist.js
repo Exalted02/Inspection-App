@@ -6,13 +6,27 @@ Version      : 4.0
 
 $(document).ready(function() {
 	
-	$(document).on('click','.save-category', function(){
-		let name = $('#name').val().trim();
+	$(document).on('click','.save-checklist', function(){
+		let category = $('#category').val().trim();
+		let subcategory = $('#subcategory').val().trim();
+		let checklist = $('#name').val().trim();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
-		if (name === '')
+		if (category === '')
+		{
+			$('#category').addClass('is-invalid');
+			$('#category').siblings('.invalid-feedback').show();
+			isValid = false;
+		}
+		if (subcategory === '')
+		{
+			$('#subcategory').addClass('is-invalid');
+			$('#subcategory').siblings('.invalid-feedback').show();
+			isValid = false;
+		}
+		if (checklist === '')
 		{
 			$('#name').addClass('is-invalid');
 			$('#name').next('.invalid-feedback').show();
@@ -20,13 +34,12 @@ $(document).ready(function() {
 		}
 		
 		
-		
 		if (isValid) {
 			//var form = $("#frmlocation");
-			var URL = $('#frmcategory').attr('action');
+			var URL = $('#frmchecklist').attr('action');
 			var id = $('#id').val();
 			
-			let formData = new FormData($('#frmcategory')[0]);
+			let formData = new FormData($('#frmchecklist')[0]);
 			formData.append('_token', csrfToken);
 			//alert(URL);
 			$.ajax({
@@ -59,7 +72,7 @@ $(document).ready(function() {
 	
 
 
-$(document).on('click','.edit-category', function(){
+$(document).on('click','.edit-checklist', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(URL);
@@ -71,16 +84,23 @@ $(document).on('click','.edit-category', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
+			
+			function waitForDropdownToLoad(selector, value, callback) {
+				const interval = setInterval(() => {
+						if ($(selector).find(`option[value="${value}"]`).length > 0) {
+							$(selector).val(value).trigger('change');
+							clearInterval(interval);
+							if (callback) callback();
+						}
+					}, 100); 
+			}
+			waitForDropdownToLoad('#category', response.category, function() {
+				waitForDropdownToLoad('#subcategory', response.subcategory);
+			});
+			//$('#category').val(response.category).trigger('change');
 			$('#name').val(response.name);
-			
-			
-			
-			var app_url = response.app_url; 
-			$('#preview').attr('src', app_url + '/' + response.category_image).show();
-			
 			$('#head-label').html(response.edit);
-			$('#add_category').modal('show');
-			//alert(JSON.stringify(response));
+			$('#add_checklist').modal('show');
 			
 		},
 	});
@@ -125,7 +145,7 @@ $(document).on('click','.update-product-code-form', function(){
 
 
 
-$(document).on('click','.delete-category-name', function(){
+$(document).on('click','.delete-checklist', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(id);alert(URL);
@@ -185,7 +205,7 @@ $(document).on('click','.update-status', function(){
 });
 
 $(document).on('click','.search-data', function(){
-	$('#search-category-frm').submit();
+	$('#search-checklist-frm').submit();
 	
 });
 $('.search-sort-by').on('change' ,function (event) {
@@ -241,5 +261,4 @@ $('#category_image').on('change', function (event) {
         reader.readAsDataURL(file);
     }
 });
-
 });

@@ -6,12 +6,19 @@ Version      : 4.0
 
 $(document).ready(function() {
 	
-	$(document).on('click','.save-category', function(){
+	$(document).on('click','.save-subchecklist', function(){
+		let checklist = $('#checklist').val().trim();
 		let name = $('#name').val().trim();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
+		if (checklist === '')
+		{
+			$('#checklist').addClass('is-invalid');
+			$('#checklist').siblings('.invalid-feedback').show();
+			isValid = false;
+		}
 		if (name === '')
 		{
 			$('#name').addClass('is-invalid');
@@ -20,13 +27,12 @@ $(document).ready(function() {
 		}
 		
 		
-		
 		if (isValid) {
 			//var form = $("#frmlocation");
-			var URL = $('#frmcategory').attr('action');
+			var URL = $('#frmsubchecklist').attr('action');
 			var id = $('#id').val();
 			
-			let formData = new FormData($('#frmcategory')[0]);
+			let formData = new FormData($('#frmsubchecklist')[0]);
 			formData.append('_token', csrfToken);
 			//alert(URL);
 			$.ajax({
@@ -59,7 +65,7 @@ $(document).ready(function() {
 	
 
 
-$(document).on('click','.edit-category', function(){
+$(document).on('click','.edit-subchecklist', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(URL);
@@ -71,16 +77,10 @@ $(document).on('click','.edit-category', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
+			$('#checklist').val(response.checklist).trigger('change');
 			$('#name').val(response.name);
-			
-			
-			
-			var app_url = response.app_url; 
-			$('#preview').attr('src', app_url + '/' + response.category_image).show();
-			
 			$('#head-label').html(response.edit);
-			$('#add_category').modal('show');
-			//alert(JSON.stringify(response));
+			$('#add_subchecklist').modal('show');
 			
 		},
 	});
@@ -125,7 +125,7 @@ $(document).on('click','.update-product-code-form', function(){
 
 
 
-$(document).on('click','.delete-category-name', function(){
+$(document).on('click','.delete-subchecklist', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(id);alert(URL);
@@ -185,7 +185,7 @@ $(document).on('click','.update-status', function(){
 });
 
 $(document).on('click','.search-data', function(){
-	$('#search-category-frm').submit();
+	$('#search-subchecklist-frm').submit();
 	
 });
 $('.search-sort-by').on('change' ,function (event) {
@@ -241,5 +241,4 @@ $('#category_image').on('change', function (event) {
         reader.readAsDataURL(file);
     }
 });
-
 });

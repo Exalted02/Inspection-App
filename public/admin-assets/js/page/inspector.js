@@ -6,8 +6,12 @@ Version      : 4.0
 
 $(document).ready(function() {
 	
-	$(document).on('click','.save-category', function(){
+	$(document).on('click','.save-inspector', function(){
 		let name = $('#name').val().trim();
+		let email = $('#email').val().trim();
+		let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		let passwords = $('#password').val().trim();
+		let company_name = $('#company_name').val().trim();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
@@ -18,15 +22,50 @@ $(document).ready(function() {
 			$('#name').next('.invalid-feedback').show();
 			isValid = false;
 		}
+		if (email === '')
+		{
+			$('#email').addClass('is-invalid');
+			$('#email').next('.invalid-feedback').show();
+			isValid = false;
+		}
+		else if (!emailPattern.test(email)) {
+			$('#email').addClass('is-invalid');
+			$('#email').next('.invalid-feedback').text('Please enter valid email.').show();
+			isValid = false;
+		} 
 		
 		
+		if (passwords === '')
+		{
+			$('#password').addClass('is-invalid');
+			$('#password').next('.invalid-feedback').show();
+			isValid = false;
+		}
+		if (company_name === '')
+		{
+			$('#company_name').addClass('is-invalid');
+			$('#company_name').siblings('.invalid-feedback').show();
+			isValid = false;
+		}
+		
+		
+		let selectedLocations = [];
+		$('input[name="location[]"]:checked').each(function() {
+			selectedLocations.push($(this).val());
+		});
+		//alert(selectedLocations);
+		if (selectedLocations.length === 0) {
+			$('input[name="location[]"]').first().addClass('is-invalid');
+			$('input[name="location[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();
+			isValid = false;
+		}
 		
 		if (isValid) {
 			//var form = $("#frmlocation");
-			var URL = $('#frmcategory').attr('action');
+			var URL = $('#frminspector').attr('action');
 			var id = $('#id').val();
 			
-			let formData = new FormData($('#frmcategory')[0]);
+			let formData = new FormData($('#frminspector')[0]);
 			formData.append('_token', csrfToken);
 			//alert(URL);
 			$.ajax({
@@ -38,8 +77,18 @@ $(document).ready(function() {
 				//dataType: 'json',
 				success: function(response) {
 					if (!response.success) {
-						$('#name').addClass('is-invalid');
-						$('#name').next('.invalid-feedback').text(response.message).show();
+						if(response.label == 'name')
+						{
+							$('#name').addClass('is-invalid');
+							$('#name').next('.invalid-feedback').text(response.message).show();
+						}
+						
+						if(response.label == 'email')
+						{
+							$('#email').addClass('is-invalid');
+							$('#email').next('.invalid-feedback').text(response.message).show();
+						}
+						
 					} else {
 						if(id=='')
 						{
@@ -59,7 +108,7 @@ $(document).ready(function() {
 	
 
 
-$(document).on('click','.edit-category', function(){
+$(document).on('click','.edit-inspector', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(URL);
@@ -72,15 +121,26 @@ $(document).on('click','.edit-category', function(){
 			//alert(response.state);
 			$('#id').val(response.id);
 			$('#name').val(response.name);
-			
-			
+			$('#email').val(response.email);
+			$('#password').val(response.password);
+			$('#company_name').val(response.company_name).trigger('change');
 			
 			var app_url = response.app_url; 
-			$('#preview').attr('src', app_url + '/' + response.category_image).show();
+			$('#preview').attr('src', app_url + '/' + response.avatar).show();
+			$('#preview_backgrnd').attr('src', app_url + '/' + response.background_image).show();
+			
+			let selectedLocations = Array.isArray(response.location_data)? response.location_data : String(response.location_data).split(',');
+			selectedLocations = selectedLocations.map(String);
+			
+			$('input[name="location[]"]').each(function () {
+				let val = $(this).val().toString();
+				if (selectedLocations.includes(val)) {
+					$(this).prop('checked', true);
+				}
+			});
 			
 			$('#head-label').html(response.edit);
-			$('#add_category').modal('show');
-			//alert(JSON.stringify(response));
+			$('#add_inspector').modal('show');
 			
 		},
 	});
@@ -125,7 +185,7 @@ $(document).on('click','.update-product-code-form', function(){
 
 
 
-$(document).on('click','.delete-category-name', function(){
+$(document).on('click','.delete-inspector-name', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(id);alert(URL);
@@ -185,7 +245,7 @@ $(document).on('click','.update-status', function(){
 });
 
 $(document).on('click','.search-data', function(){
-	$('#search-category-frm').submit();
+	$('#search-inspector-frm').submit();
 	
 });
 $('.search-sort-by').on('change' ,function (event) {
@@ -231,12 +291,23 @@ $(document).on('click','.downloaddemo', function(){
 });*/
 
 
-$('#category_image').on('change', function (event) {
+$('#avatar').on('change', function (event) {
     const [file] = event.target.files;
     if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
             $('#preview').attr('src', e.target.result).show();
+        }
+        reader.readAsDataURL(file);
+    }
+});
+
+$('#backgroung_image').on('change', function (event) {
+    const [file] = event.target.files;
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            $('#preview_backgrnd').attr('src', e.target.result).show();
         }
         reader.readAsDataURL(file);
     }
