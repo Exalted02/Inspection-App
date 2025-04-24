@@ -83,7 +83,8 @@ html, body {
 }
 
 body {
-	font-family: 'Source Sans Pro', sans-serif;
+	/* font-family: 'Source Sans Pro', sans-serif; */
+	font-family: sans-serif;
 	color: #777;
 	font-size: 16px;
 	line-height: 1.7em;

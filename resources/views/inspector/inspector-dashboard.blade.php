@@ -5,7 +5,7 @@
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
-		<div class="profile-banner" style="background-image: url('{{url('front-assets/images/cover.jpeg')}}');"></div>
+		<div class="profile-banner" style="background-image: url('{{url('front-assets/static-image/cover.jpeg')}}');"></div>
 		<div class="profile-info">
 			<img class="profile-avatar" src="https://i.pravatar.cc/100?img=12" alt="Profile Picture">
 			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
@@ -44,7 +44,7 @@
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">
-										<h3><a title="" href="single-page-listing.html">Choa Chu Kang</a></h3>
+										<h3><a title="" href="{{route('location-details', ['id' => 1])}}">Choa Chu Kang</a></h3>
 										<div class="category-title"> <span><a href="#">Mandai Road 23, 532012</a></span> </div>
 									</div>
 								</div>
@@ -57,7 +57,7 @@
 										<div class="ribbon popular"></div>
 									</div>
 									<div class="short-description-1 clearfix">
-										<h3><a title="" href="single-page-listing.html">Choa Chu Kang</a></h3>
+										<h3><a title="" href="{{route('location-details', ['id' => 2])}}">Choa Chu Kang</a></h3>
 										<div class="category-title"> <span><a href="#">Mandai Road 23, 532012</a></span> </div>
 									</div>
 								</div>
@@ -72,7 +72,7 @@
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">
-										<h3><a title="" href="single-page-listing.html">Choa Chu Kang</a></h3>
+										<h3><a title="" href="{{route('location-details', ['id' => 3])}}">Choa Chu Kang</a></h3>
 										<div class="category-title"> <span><a href="#">Mandai Road 23, 532012</a></span> </div>
 									</div>
 								</div>
