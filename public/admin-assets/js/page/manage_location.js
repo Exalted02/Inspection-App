@@ -122,6 +122,7 @@ $(document).on('click','.edit-location', function(){
 			$('#location_name').val(response.location_name);
 			$('#address').val(response.address);
 			$('#zipcode').val(response.zipcode);
+			$('#hid_image').val(response.location_image);
 			//$('#country_id').val(response.country_id);
 			//$('#state_id').val(response.state_id);
 			//$('#city_id').val(response.city_id);

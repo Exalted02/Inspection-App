@@ -321,6 +321,15 @@ class MasterController extends Controller
 			$updtmodel= Manage_location::find($id);
 			$updtmodel->image = $fileName;
 			$updtmodel->save();
+			
+			// unlink image
+			if(!empty($request->post('hid_image')))
+			{
+				$path = public_path('uploads/location/' . $request->post('hid_image'));
+				if (file_exists($path)) {
+					unlink($path);
+				}
+			}
 		}
 		
 		return response()->json([

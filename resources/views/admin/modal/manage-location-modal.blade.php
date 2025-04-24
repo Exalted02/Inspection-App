@@ -136,6 +136,7 @@
 											</div>
 										</div>
 									</div>
+									<input type="hidden" name="hid_image" id="hid_image">
 									<div class="submit-section">
 										<button class="btn btn-primary submit-btn save-location" type="button">Submit</button>
 									</div>
