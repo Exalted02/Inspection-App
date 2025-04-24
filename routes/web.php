@@ -14,6 +14,7 @@ use App\Http\Controllers\ChangePasswordController;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChallengesController;
+use App\Http\Controllers\DashboardInspectorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +59,7 @@ Route::get('lang/change', [LangController::class, 'change'])->name('changeLang')
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-	Route::get('/inspector-dashboard', [DashboardController::class, 'inspector_dashboard'])->name('inspector-dashboard');
+	Route::get('/inspector-dashboard', [DashboardInspectorController::class, 'inspector_dashboard'])->name('inspector-dashboard');
 	
 	//User-Accounts
 	Route::get('/users', [UserController::class, 'index'])->name('users');
