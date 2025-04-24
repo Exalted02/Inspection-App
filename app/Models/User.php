@@ -73,4 +73,9 @@ class User extends Authenticatable
 	{
 		return $this->belongsTo(Manage_company::class, 'company_name');
 	}
+	
+	public function get_user_location()
+	{
+		return $this->hasMany(Users_location::class, 'user_id', 'id');
+	}
 }

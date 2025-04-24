@@ -33,4 +33,9 @@ class Manage_location extends Model
 	{
 		return $this->belongsTo(Cities::class, 'city_id');
 	}
+	
+	public function category_by_location()
+	{
+		return $this->hasMany(Manage_location_category::class, 'location_id', 'id');
+	}
 }
