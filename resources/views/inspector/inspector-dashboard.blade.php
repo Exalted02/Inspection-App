@@ -50,7 +50,7 @@
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">
-										<h3><a title="" href="{{route('location-details', ['id' => 1])}}">{{ $lacationData->location_name ?? '' }}</a></h3>
+										<h3><a title="" href="{{route('location-details', ['id' => $locations->location_id ])}}">{{ $lacationData->location_name ?? '' }}</a></h3>
 										<div class="category-title"> <span><a href="#">{{ $city ?? '' }} , {{ $state ?? '' }} , {{ $country ?? '' }} , {{ $lacationData->zipcode ?? '' }}</a></span> </div>
 									</div>
 								</div>

@@ -16,4 +16,10 @@ class DashboardInspectorController extends Controller
 		$data['userdata'] = User::with('get_user_location')->where('id', $id)->first();
         return view('inspector.inspector-dashboard', $data);
 	}
+	public function location_details($id='')
+    {
+		$data = [];
+		
+        return view('inspector.location-details', $data);
+    }
 }

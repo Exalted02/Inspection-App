@@ -59,7 +59,7 @@ Route::get('lang/change', [LangController::class, 'change'])->name('changeLang')
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-	Route::get('/location-details/{id}', [DashboardController::class, 'location_details'])->name('location-details');
+	Route::get('/location-details/{id}', [DashboardInspectorController::class, 'location_details'])->name('location-details');
 	Route::get('/inspector-dashboard', [DashboardInspectorController::class, 'inspector_dashboard'])->name('inspector-dashboard');
 	
 	//User-Accounts
