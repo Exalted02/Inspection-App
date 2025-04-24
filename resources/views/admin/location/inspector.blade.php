@@ -245,6 +245,7 @@ $(document).ready(function() {
 		$('#id').val('');
 		$('#company_name').val('').trigger('change');
 		$('#preview').attr('src', '').show();
+		$('#preview_backgrnd').attr('src', '').show();
 		$('#head-label').html(translations.addlocation);
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');

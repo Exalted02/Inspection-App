@@ -241,10 +241,11 @@ $(document).ready(function() {
     };
 	
 	$(document).on('click','.add_location_owner', function(){
-		$('#frmlocation_owner')[0].reset();
+		$('#frmlocationowner')[0].reset();
 		$('#id').val('');
 		$('#company_name').val('').trigger('change');
 		$('#preview').attr('src', '').show();
+		$('#preview_backgrnd').attr('src', '').show();
 		$('#head-label').html(translations.addlocation);
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
