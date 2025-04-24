@@ -89,13 +89,13 @@ class LocationOwnerController extends Controller
 	
 	
 	
-	public function save_inspector(Request $request)
+	public function save_location_owner(Request $request)
 	{
 		
 		//echo "<pre>";print_r($request->all());die;
 		
 		
-		$existingInsp = User::where('name', $request->post('name'))->where('status', '!=', 2)
+		$existingInsp = User::where('name', $request->post('name'))->where('user_type',2)->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
@@ -190,6 +190,15 @@ class LocationOwnerController extends Controller
 			$updtmodel= User::find($id);
 			$updtmodel->profile_image = $fileName;
 			$updtmodel->save();
+			
+			// unlink avatar
+			if(!empty($request->post('hid_avatar')))
+			{
+				$path = public_path('uploads/profile/' . $id  . '/locationowner/' . $request->post('hid_avatar'));
+				if (file_exists($path)) {
+					unlink($path);
+				}
+			}
 		}
 		
 		$backgroundImgfileName = '';
@@ -205,13 +214,22 @@ class LocationOwnerController extends Controller
 			$updtmodel= User::find($id);
 			$updtmodel->background_image = $backgroundImgfileName;
 			$updtmodel->save();
+			
+			// unlink background img
+			if(!empty($request->post('hid_back_grd_image')))
+			{
+				$path = public_path('uploads/profile/' . $id  . '/locationowner/' . $request->post('hid_back_grd_image'));
+				if (file_exists($path)) {
+					unlink($path);
+				}
+			}
 		}
 		
 		return response()->json([
 			'success' => true
 		]);
 	}
-	public function edit_inspector(Request $request)
+	public function edit_location_owner(Request $request)
 	{
 		$inspector = User::where('id', $request->id)->first();
 		$data = array();
@@ -224,7 +242,7 @@ class LocationOwnerController extends Controller
 		$data['avatar']  = $inspector->profile_image;
 		$data['background_image']  = $inspector->background_image;
 		$data['app_url']  = url('uploads/profile/' . $request->id .'/locationowner/');
-		$data['edit']  =  Lang::get('edit_inspector');
+		$data['edit']  =  Lang::get('edit_location_owner');
 		
 		$inspLocArry = array();
 		$inspector_location  = Users_location::where('user_id', $request->id)->get();
@@ -236,7 +254,7 @@ class LocationOwnerController extends Controller
 		
 		return $data;
 	}
-	public function delete_inspector(Request $request)
+	public function delete_location_owner(Request $request)
 	{
 		$name = User::where('id', $request->id)->first()->name;
 		echo json_encode($name);

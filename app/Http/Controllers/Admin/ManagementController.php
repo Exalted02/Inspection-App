@@ -13,7 +13,7 @@ use Lang;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class InspectorController extends Controller
+class ManagementController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -75,27 +75,27 @@ class InspectorController extends Controller
 		
 		if($request->has('search_status') && $request->search_status !== '' && isset($request->search_status))
 		{
-			$dataArr->where('user_type', 1)->where('status', $request->search_status);
+			$dataArr->where('user_type', 4)->where('status', $request->search_status);
 		} else {
-			$dataArr->where('user_type', 1)->where('status', '!=', 2);
+			$dataArr->where('user_type', 4)->where('status', '!=', 2);
 		}
 		
 		$dataArr->orderBy('name', 'ASC'); 
-		$data['inspector'] = $dataArr->get();
+		$data['management'] = $dataArr->get();
 		$data['companies'] = Manage_company::where('status','!=',2)->get();
 		$data['locations'] = Manage_location::where('status','!=',2)->get();
-		return view('admin.location.inspector',$data);
+		return view('admin.location.management',$data);
 	}
 	
 	
 	
-	public function save_inspector(Request $request)
+	public function save_management(Request $request)
 	{
 		
 		//echo "<pre>";print_r($request->all());die;
 		
 		
-		$existingInsp = User::where('name', $request->post('name'))->where('user_type',1)->where('status', '!=', 2)
+		$existingInsp = User::where('name', $request->post('name'))->where('user_type',4)->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
@@ -105,7 +105,7 @@ class InspectorController extends Controller
 			return response()->json([
 				'success' => false,
 				'label' => 'name',
-				'message' => 'Inspector name already exists.'
+				'message' => 'management name already exists.'
 			]);
 		}
 		
@@ -154,7 +154,7 @@ class InspectorController extends Controller
 		}
 		else{
 			$model=new User();
-			$model->user_type	=	1;
+			$model->user_type	=	4;
 			$model->name		=	$request->post('name');
 			$model->email		=	$request->post('email');
 			$model->password	=	Hash::make($request->input('password'));
@@ -179,7 +179,7 @@ class InspectorController extends Controller
 		
 		$fileName = '';
 		if($request->hasFile('avatar')) {
-			$destinationPath = public_path('uploads/profile/' . $id .'/inspector/');
+			$destinationPath = public_path('uploads/profile/' . $id .'/management/');
 			if (!file_exists($destinationPath)) {
 				mkdir($destinationPath, 0777, true);
 			}
@@ -194,7 +194,7 @@ class InspectorController extends Controller
 			// unlink avatar
 			if(!empty($request->post('hid_avatar')))
 			{
-				$path = public_path('uploads/profile/' . $id  . '/inspector/' . $request->post('hid_avatar'));
+				$path = public_path('uploads/profile/' . $id  . '/management/' . $request->post('hid_avatar'));
 				if (file_exists($path)) {
 					unlink($path);
 				}
@@ -203,7 +203,7 @@ class InspectorController extends Controller
 		
 		$backgroundImgfileName = '';
 		if($request->hasFile('backgroung_image')) {
-			$destinationPath = public_path('uploads/profile/' . $id .'/inspector/');
+			$destinationPath = public_path('uploads/profile/' . $id .'/management/');
 			if (!file_exists($destinationPath)) {
 				mkdir($destinationPath, 0777, true);
 			}
@@ -214,10 +214,11 @@ class InspectorController extends Controller
 			$updtmodel= User::find($id);
 			$updtmodel->background_image = $backgroundImgfileName;
 			$updtmodel->save();
+			
 			// unlink background img
 			if(!empty($request->post('hid_back_grd_image')))
 			{
-				$path = public_path('uploads/profile/' . $id  . '/inspector/' . $request->post('hid_back_grd_image'));
+				$path = public_path('uploads/profile/' . $id  . '/management/' . $request->post('hid_back_grd_image'));
 				if (file_exists($path)) {
 					unlink($path);
 				}
@@ -228,24 +229,24 @@ class InspectorController extends Controller
 			'success' => true
 		]);
 	}
-	public function edit_inspector(Request $request)
+	public function edit_management(Request $request)
 	{
-		$inspector = User::where('id', $request->id)->first();
+		$management = User::where('id', $request->id)->first();
 		$data = array();
-		$data['id']  = $inspector->id ;
-		$data['name']  = $inspector->name ;
-		$data['email']  = $inspector->email ;
-		$data['password']  = $inspector->password ;
-		$data['company_name']  = $inspector->company_name;
+		$data['id']  = $management->id ;
+		$data['name']  = $management->name ;
+		$data['email']  = $management->email ;
+		$data['password']  = $management->password ;
+		$data['company_name']  = $management->company_name;
 		
-		$data['avatar']  = $inspector->profile_image;
-		$data['background_image']  = $inspector->background_image;
-		$data['app_url']  = url('uploads/profile/' . $request->id .'/inspector/');
-		$data['edit']  =  Lang::get('edit_inspector');
+		$data['avatar']  = $management->profile_image;
+		$data['background_image']  = $management->background_image;
+		$data['app_url']  = url('uploads/profile/' . $request->id .'/management/');
+		$data['edit']  =  Lang::get('edit_management');
 		
 		$inspLocArry = array();
-		$inspector_location  = Users_location::where('user_id', $request->id)->get();
-		foreach($inspector_location as $val)
+		$management_location  = Users_location::where('user_id', $request->id)->get();
+		foreach($management_location as $val)
 		{
 			$inspLocArry[] = $val->location_id;
 		}
@@ -253,7 +254,7 @@ class InspectorController extends Controller
 		
 		return $data;
 	}
-	public function delete_inspector(Request $request)
+	public function delete_management(Request $request)
 	{
 		$name = User::where('id', $request->id)->first()->name;
 		echo json_encode($name);

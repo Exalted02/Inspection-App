@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 @section('content')
 @php 
-//echo "<pre>";print_r($inspector);die;
+//echo "<pre>";print_r($management);die;
 @endphp
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -12,16 +12,16 @@
 		<div class="page-header">
 			<div class="row align-items-center">
 				<div class="col-md-4">
-					<h3 class="page-title">{{ __('inspector') }}</h3>
+					<h3 class="page-title">{{ __('management') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ __('inspector') }}</li>
+						<li class="breadcrumb-item active">{{ __('management') }}</li>
 					</ul>
 				</div>
 				<div class="col-md-8 float-end ms-auto">
 					<div class="d-flex title-head">
 						<div class="view-icons">
-							<a href="{{ route('admin.inspector') }}" class="grid-view btn btn-link"><i class="las la-redo-alt"></i></a>
+							<a href="{{ route('admin.management') }}" class="grid-view btn btn-link"><i class="las la-redo-alt"></i></a>
 							<a href="#" class="list-view btn btn-link" id="collapse-header"><i class="las la-expand-arrows-alt"></i></a>
 							<a href="javascript:void(0);" class="list-view btn btn-link" id="filter_search"><i class="las la-filter"></i></a>
 						</div>
@@ -31,7 +31,7 @@
 						<div class="form-sort">
 							<a href="javascript:void(0);" class="list-view btn btn-link" data-bs-toggle="modal" data-bs-target="#import"><i class="fa-solid fa-file-import"></i>{{ __('import') }}</a>
 						</div>--}}
-						<a href="#" class="btn add-btn add_inspector" data-bs-toggle="modal" data-bs-target="#add_inspector"><i class="la la-plus-circle"></i> {{ __('add') }}</a>
+						<a href="#" class="btn add-btn add_management" data-bs-toggle="modal" data-bs-target="#add_management"><i class="la la-plus-circle"></i> {{ __('add') }}</a>
 					</div>
 				</div>
 			</div>
@@ -40,12 +40,12 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.inspector')}}" id="search-inspector-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.management')}}" id="search-management-frm">
 		@csrf
 			<div class="row filter-row">
 				<div class="col-xl-3">  
 					 <div class="input-block">
-						 <input type="text" class="form-control" name="search_name" placeholder="{{ __('inspector_name')}}" value="{{ old('search_name', request('search_name'))}}">
+						 <input type="text" class="form-control" name="search_name" placeholder="{{ __('management_name')}}" value="{{ old('search_name', request('search_name'))}}">
 					 </div>
 				</div>
 				<div class="col-xl-3">  
@@ -65,7 +65,7 @@
 				</div>
 				<div class="col-xl-3">  
 					 <div class="input-block">
-						<input type="text" class="form-control date-range" name="date_range_phone" placeholder="{{ __('from_to_date')}}" id="src_inspector_name_date_range" value="{{ old('date_range_phone', request('date_range_phone')) }}">
+						<input type="text" class="form-control date-range" name="date_range_phone" placeholder="{{ __('from_to_date')}}" id="src_management_name_date_range" value="{{ old('date_range_phone', request('date_range_phone')) }}">
 					 </div>
 				 </div>
 				 <div class="col-xl-2">  
@@ -91,7 +91,7 @@
 		 <hr>
 		 <!-- /Search Filter -->
 		 <div class="row">
-		 @if($inspector->count() > 0)
+		 @if($management->count() > 0)
 			<div class="col-lg-6 mb-2">
 				<div class="btn-group">
 					<button type="button" class="btn action-btn add-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
@@ -112,7 +112,7 @@
 								<a href="javascript:void(0);" class="grid-view btn btn-link"><i class="las la-th"></i></a>
 							</div>
 						</li>--}}
-						@if($inspector->count() > 0)
+						@if($management->count() > 0)
 						<li>
 							<div class="form-sort">
 								<i class="las la-sort-alpha-up-alt"></i>
@@ -140,7 +140,7 @@
 						<thead>
 							<tr>
 							{{--<th class="no-sort"></th>--}}
-							@if($inspector->count() > 0)
+							@if($management->count() > 0)
 								<th>
 									<label class="form-check form-check-inline">
 										<input class="form-check-input" type="checkbox" id="checkAll">
@@ -148,7 +148,7 @@
 								</th>
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
-								<th>{{ __('inspector_name') }}</th>
+								<th>{{ __('management_name') }}</th>
 								<th>{{ __('email') }}</th>
 								<th>{{ __('company_name') }}</th>
 								<th>{{ __('avatar') }}</th>
@@ -159,9 +159,9 @@
 							</tr>
 						</thead>
 						<tbody>
-						@foreach($inspector as $val)
+						@foreach($management as $val)
 							<tr>
-								@if($inspector->count() > 0)
+								@if($management->count() > 0)
 								<td>
 									<label class="form-check form-check-inline">
 										<input class="form-check-input" type="checkbox" name="chk_id" data-emp-id="{{$val->id}}">
@@ -171,8 +171,8 @@
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ $val->email ?? ''}}</td>
 								<td>{{ $val->get_company->company_name ?? ''}}</td>
-								<td><img src="{{ url('uploads/profile/' . $val->id. '/inspector/'.$val->profile_image) }}" width="50" height="50"></td>
-								<td><img src="{{ url('uploads/profile/' . $val->id. '/inspector/'. $val->background_image) }}" width="50" height="50"></td>
+								<td><img src="{{ url('uploads/profile/' . $val->id. '/management/'.$val->profile_image) }}" width="50" height="50"></td>
+								<td><img src="{{ url('uploads/profile/' . $val->id. '/management/'. $val->background_image) }}" width="50" height="50"></td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
@@ -181,8 +181,8 @@
 											<i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}
 										</a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.inspector_update_status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}</a>
-											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.inspector_update_status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}</a>
+											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.management_update_status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}</a>
+											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.management_update_status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}</a>
 										</div>
 									</div>
 								 @else
@@ -191,8 +191,8 @@
 											<i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}
 										</a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.inspector_update_status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}</a>
-											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.inspector_update_status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}</a>
+											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.management_update_status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('active') }}</a>
+											<a class="dropdown-item update-status" href="javascript:void(0);" data-id="{{ $val->id }}" data-url="{{ route('admin.management_update_status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('inactive') }}</a>
 										</div>
 									</div> 
 								 
@@ -204,8 +204,8 @@
 									<div class="dropdown dropdown-action">
 										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item edit-inspector" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-inspector') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
-											<a class="dropdown-item delete-inspector-name" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteinspector') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
+											<a class="dropdown-item edit-management" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-management') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
+											<a class="dropdown-item delete-management-name" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeletemanagement') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 										</div>
 									</div>
 								</td>
@@ -221,11 +221,11 @@
 	<!-- /Page Content -->
 
 @include('modal.common')
-@include('admin.modal.inspector-modal')
+@include('admin.modal.management-modal')
 @endsection 
 @section('scripts')
 @include('_includes.footer')
-<script src="{{ url('admin-assets/js/page/inspector.js') }}"></script>
+<script src="{{ url('admin-assets/js/page/management.js') }}"></script>
 <script src="{{ url('admin-assets/js/page/common.js') }}"></script>
 <script src="{{ url('admin-assets/js/search-calender.js') }}"></script>
 <script src="{{ url('admin-assets/js/page/country_state_city.js') }}"></script>
@@ -233,15 +233,15 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/inspector";
+		window.location.href = "/admin/management";
 	});
 	
 	const translations = {
-        addlocation: @json(__('add_inspector')),
+        addlocation: @json(__('add_management')),
     };
 	
-	$(document).on('click','.add_inspector', function(){
-		$('#frminspector')[0].reset();
+	$(document).on('click','.add_management', function(){
+		$('#frmmanagement')[0].reset();
 		$('#id').val('');
 		$('#company_name').val('').trigger('change');
 		$('#preview').attr('src', '').show();

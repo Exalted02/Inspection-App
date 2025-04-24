@@ -118,6 +118,10 @@ $(document).on('click','.edit-inspector', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(URL);
+	$('input[name="location[]"]').each(function () {
+		$(this).prop('checked', false);
+	});
+	
 	$.ajax({
 		url: URL,
 		type: "POST",
@@ -130,6 +134,9 @@ $(document).on('click','.edit-inspector', function(){
 			$('#email').val(response.email);
 			$('#password').val('');
 			$('#company_name').val(response.company_name).trigger('change');
+			
+			$('#hid_avatar').val(response.avatar);
+			$('#hid_back_grd_image').val(response.background_image);
 			
 			var app_url = response.app_url; 
 			$('#preview').attr('src', app_url + '/' + response.avatar).show();

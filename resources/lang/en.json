@@ -147,7 +147,14 @@
 	
 	
 	"location_owner_supervisor": "Location Owner Supervisor",
+	"location_owner_supervisor_name": "Location owner supervisor name",
+	"add_location_owner_supervisor": "Add location owner supervisor",
+	"edit_location_owner_supervisor": "Edit location owner supervisor",
+	
 	"management": "Management",
+	"management_name": "Management name",
+	"add_management": "Add management",
+	"edit_management": "Edit management",
 	"add": "Add"
 	
 }
