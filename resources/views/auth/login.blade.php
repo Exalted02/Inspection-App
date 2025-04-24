@@ -50,6 +50,11 @@
 							<label>Email</label>
 							<input type="email" id="email" name="email"  placeholder="Email" class="form-control" :value="old('email')" autofocus>
 							<x-input-error :messages="$errors->get('email')" class="mt-2 text-danger" />
+							@if (session('error'))
+								<ul class="text-sm text-red-600 space-y-1 mt-2 text-danger">
+									<li>{{ session('error') }}</li>
+								</ul>
+							@endif
 						</div>
 					   <div class="form-group">
 						  <label>Password</label>

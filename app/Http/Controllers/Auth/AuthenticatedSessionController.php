@@ -30,8 +30,17 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+		if(Auth::user()->user_type == 1){
+			return redirect()->intended(RouteServiceProvider::INSPECTOR_HOME);
+		}else{
+			Auth::guard('web')->logout();
 
-        return redirect()->intended(RouteServiceProvider::INSPECTOR_HOME);
+			$request->session()->invalidate();
+
+			$request->session()->regenerateToken();
+			
+			return redirect('/login')->with('error', 'Account not exists.');
+		}
     }
 
     /**

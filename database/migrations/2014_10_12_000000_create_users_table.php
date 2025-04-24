@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('user_type')->default(1)->comment('0=Admin');
+            $table->tinyInteger('user_type')->default(1)->comment('0=Admin, 1=Inspector, 2=Location Owner, 3=Location Owner Supervisor, 4=Management');
             $table->string('name');
 			$table->string('first_name')->nullable();
 			$table->string('last_name')->nullable();
