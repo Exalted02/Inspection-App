@@ -140,7 +140,12 @@
 	"backgroung_image": "Backgroung image",
 	
 	
-	"location_owner": "Location Owner",
+	"location_owner": "Location owner",
+	"location_owner_name": "Location owner name",
+	"add_location_owner": "Add location owner",
+	"edit_location_owner": "Edit location owner",
+	
+	
 	"location_owner_supervisor": "Location Owner Supervisor",
 	"management": "Management",
 	"add": "Add"

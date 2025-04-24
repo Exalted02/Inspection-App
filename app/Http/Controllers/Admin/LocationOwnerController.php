@@ -13,7 +13,7 @@ use Lang;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class InspectorController extends Controller
+class LocationOwnerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -75,16 +75,16 @@ class InspectorController extends Controller
 		
 		if($request->has('search_status') && $request->search_status !== '' && isset($request->search_status))
 		{
-			$dataArr->where('user_type', 1)->where('status', $request->search_status);
+			$dataArr->where('user_type', 2)->where('status', $request->search_status);
 		} else {
-			$dataArr->where('user_type', 1)->where('status', '!=', 2);
+			$dataArr->where('user_type', 2)->where('status', '!=', 2);
 		}
 		
 		$dataArr->orderBy('name', 'ASC'); 
-		$data['inspector'] = $dataArr->get();
+		$data['locationowner'] = $dataArr->get();
 		$data['companies'] = Manage_company::where('status','!=',2)->get();
 		$data['locations'] = Manage_location::where('status','!=',2)->get();
-		return view('admin.location.inspector',$data);
+		return view('admin.location.location-owner',$data);
 	}
 	
 	
@@ -154,7 +154,7 @@ class InspectorController extends Controller
 		}
 		else{
 			$model=new User();
-			$model->user_type	=	1;
+			$model->user_type	=	2;
 			$model->name		=	$request->post('name');
 			$model->email		=	$request->post('email');
 			$model->password	=	Hash::make($request->input('password'));
@@ -179,7 +179,7 @@ class InspectorController extends Controller
 		
 		$fileName = '';
 		if($request->hasFile('avatar')) {
-			$destinationPath = public_path('uploads/profile/' . $id .'/inspector/');
+			$destinationPath = public_path('uploads/profile/' . $id .'/locationowner/');
 			if (!file_exists($destinationPath)) {
 				mkdir($destinationPath, 0777, true);
 			}
@@ -194,7 +194,7 @@ class InspectorController extends Controller
 		
 		$backgroundImgfileName = '';
 		if($request->hasFile('backgroung_image')) {
-			$destinationPath = public_path('uploads/profile/' . $id .'/inspector/');
+			$destinationPath = public_path('uploads/profile/' . $id .'/locationowner/');
 			if (!file_exists($destinationPath)) {
 				mkdir($destinationPath, 0777, true);
 			}
@@ -223,7 +223,7 @@ class InspectorController extends Controller
 		
 		$data['avatar']  = $inspector->profile_image;
 		$data['background_image']  = $inspector->background_image;
-		$data['app_url']  = url('uploads/profile/' . $request->id .'/inspector/');
+		$data['app_url']  = url('uploads/profile/' . $request->id .'/locationowner/');
 		$data['edit']  =  Lang::get('edit_inspector');
 		
 		$inspLocArry = array();

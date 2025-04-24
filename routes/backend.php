@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\ChecklistController;
 use App\Http\Controllers\Admin\SubChecklistController;
 use App\Http\Controllers\Admin\InspectorController;
+use App\Http\Controllers\Admin\LocationOwnerController;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -92,6 +93,15 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/getDeleteinspector', [InspectorController::class, 'delete_inspector'])->name('getDeleteinspector');
 	Route::post('/deleteinspectorList',[InspectorController::class,'delete_list'])->name('deleteinspectorList');
 	Route::post('/edit-inspector', [InspectorController::class, 'edit_inspector'])->name('edit-inspector');
+	
+	// location owner
+	Route::get('/location-owner', [LocationOwnerController::class, 'index'])->name('location-owner');
+	Route::post('/location-owner', [LocationOwnerController::class, 'index'])->name('location-owner');
+	Route::post('/save-location-owner', [LocationOwnerController::class, 'save_inspector'])->name('save-location-owner');
+	Route::post('/location-owner_update_status',[LocationOwnerController::class,'update_status'])->name('location_owner_update_status');
+	Route::post('/getDeletelocationowner', [LocationOwnerController::class, 'delete_inspector'])->name('getDeletelocationowner');
+	Route::post('/deletelocationownerList',[LocationOwnerController::class,'delete_list'])->name('deletelocationownerList');
+	Route::post('/edit-location-owner', [LocationOwnerController::class, 'edit_inspector'])->name('edit-location-owner');
 	
 	Route::post('/change-multi-status',[CommonController::class,'change_multi_status'])->name('change-multi-status');
 	Route::post('/delete-multi-data',[CommonController::class,'delete_multi_data'])->name('delete-multi-data');
