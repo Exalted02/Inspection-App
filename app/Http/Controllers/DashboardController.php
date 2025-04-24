@@ -12,6 +12,12 @@ class DashboardController extends Controller
     {
 		$data = [];
 		
-        return view('inspector-dashboard', $data);
+        return view('inspector.inspector-dashboard', $data);
+    }
+    public function location_details($id='')
+    {
+		$data = [];
+		
+        return view('inspector.location-details', $data);
     }
 }
