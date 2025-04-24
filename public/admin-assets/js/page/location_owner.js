@@ -117,6 +117,10 @@ $(document).on('click','.edit-location-owner', function(){
 	$('.form-control').removeClass('is-invalid');
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
+	
+	$('input[name="location[]"]').each(function () {
+		$(this).prop('checked', false);
+	});
 	//alert(URL);
 	$.ajax({
 		url: URL,

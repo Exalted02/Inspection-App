@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ChecklistController;
 use App\Http\Controllers\Admin\SubChecklistController;
 use App\Http\Controllers\Admin\InspectorController;
 use App\Http\Controllers\Admin\LocationOwnerController;
+use App\Http\Controllers\Admin\LocationOwnerSupervisorController;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -102,6 +103,15 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/getDeletelocationowner', [LocationOwnerController::class, 'delete_location_owner'])->name('getDeletelocationowner');
 	Route::post('/deletelocationownerList',[LocationOwnerController::class,'delete_list'])->name('deletelocationownerList');
 	Route::post('/edit-location-owner', [LocationOwnerController::class, 'edit_location_owner'])->name('edit-location-owner');
+	
+	// location owner supervisor
+	Route::get('/location-owner-supervisor', [LocationOwnerSupervisorController::class, 'index'])->name('location-owner-supervisor');
+	Route::post('/location-owner-supervisor', [LocationOwnerSupervisorController::class, 'index'])->name('location-owner-supervisor');
+	Route::post('/save-location-owner-supervisor', [LocationOwnerSupervisorController::class, 'save_location_owner_supervisor'])->name('save-location-owner-supervisor');
+	Route::post('/location-owner-supervisor_update_status',[LocationOwnerSupervisorController::class,'update_status'])->name('location_owner_supervisor_update_status');
+	Route::post('/getDeletelocationownersupervisor', [LocationOwnerSupervisorController::class, 'delete_location_owner_supervisor'])->name('getDeletelocationownersupervisor');
+	Route::post('/deletelocationownersupervisorList',[LocationOwnerSupervisorController::class,'delete_list'])->name('deletelocationownersupervisorList');
+	Route::post('/edit-location-owner-supervisor', [LocationOwnerSupervisorController::class, 'edit_location_owner_supervisor'])->name('edit-location-owner-supervisor');
 	
 	Route::post('/change-multi-status',[CommonController::class,'change_multi_status'])->name('change-multi-status');
 	Route::post('/delete-multi-data',[CommonController::class,'delete_multi_data'])->name('delete-multi-data');
