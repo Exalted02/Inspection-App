@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Manage_location;
+use App\Models\Manage_location_category;
 
 class DashboardInspectorController extends Controller
 {
@@ -19,7 +21,7 @@ class DashboardInspectorController extends Controller
 	public function location_details($id='')
     {
 		$data = [];
-		
+		$data['location_categories'] = Manage_location::with('category_by_location')->where('id', $id)->get();
         return view('inspector.location-details', $data);
     }
 }
