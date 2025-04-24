@@ -35,6 +35,7 @@ class User extends Authenticatable
         'upload_tax_lisence',
         'otp',
         'profile_image',
+        'background_image',
         'latitude',
         'longitude',
         'status',
@@ -68,4 +69,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(State::class, 'id', 'state');
     }
+	public function get_company()
+	{
+		return $this->belongsTo(Manage_company::class, 'company_name');
+	}
 }

@@ -171,8 +171,8 @@
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ $val->email ?? ''}}</td>
 								<td>{{ $val->get_company->company_name ?? ''}}</td>
-								<td><img src="{{ url('uploads/inspector/' . $val->avatar) }}" width="50" height="50"></td>
-								<td><img src="{{ url('uploads/inspector/' . $val->background_image) }}" width="50" height="50"></td>
+								<td><img src="{{ url('uploads/profile/' . $val->id. '/inspector/'.$val->profile_image) }}" width="50" height="50"></td>
+								<td><img src="{{ url('uploads/profile/' . $val->id. '/inspector/'. $val->background_image) }}" width="50" height="50"></td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)

@@ -12,6 +12,7 @@ $(document).ready(function() {
 		let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		let passwords = $('#password').val().trim();
 		let company_name = $('#company_name').val().trim();
+		var edit_id = $('#id').val(); 
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
@@ -34,13 +35,16 @@ $(document).ready(function() {
 			isValid = false;
 		} 
 		
-		
-		if (passwords === '')
+		if(edit_id =='')
 		{
-			$('#password').addClass('is-invalid');
-			$('#password').next('.invalid-feedback').show();
-			isValid = false;
+			if (passwords === '')
+			{
+				$('#password').addClass('is-invalid');
+				$('#password').next('.invalid-feedback').show();
+				isValid = false;
+			}
 		}
+		
 		if (company_name === '')
 		{
 			$('#company_name').addClass('is-invalid');
@@ -122,7 +126,7 @@ $(document).on('click','.edit-inspector', function(){
 			$('#id').val(response.id);
 			$('#name').val(response.name);
 			$('#email').val(response.email);
-			$('#password').val(response.password);
+			$('#password').val('');
 			$('#company_name').val(response.company_name).trigger('change');
 			
 			var app_url = response.app_url; 

@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inspector_locations', function (Blueprint $table) {
-            $table->id();
-			$table->integer('inspector_id')->nullable();
-			$table->integer('location_id')->nullable();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+           $table->integer('company_name')->nullable()->after('password');
+		   $table->string('background_image')->nullable()->after('profile_image');
         });
     }
 
@@ -24,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inspector_locations');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

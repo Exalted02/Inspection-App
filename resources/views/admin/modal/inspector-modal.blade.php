@@ -70,33 +70,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="row">
-										<div class="tab-content" id="pills-tabContent">
-											<div class="tab-pane fade" id="pills-public" role="tabpanel" aria-labelledby="pills-public-tab">
-
-											</div>
-											<div class="tab-pane fade" id="pills-private" role="tabpanel" aria-labelledby="pills-private-tab">
-											</div>
-											<div class="tab-pane fade show active" id="pills-select-people" role="tabpanel" aria-labelledby="pills-select-people-tab">
-												<div class="people-select-tab" style="max-height: 200px; overflow-y: auto;">
-													<div class="invalid-feedback">{{ __('please_select') }} {{ __('location')}}.</div>
-													<h3>Select Location</h3>
-													@foreach($locations as $location)
-														<div class="select-people-checkbox-s">
-															<label class="custom_check">
-																<input type="checkbox" name="location[]" value="{{ $location->id }}">													
-																<span class="checkmark"></span>
-																<span class="people-profile">
-																	<a href="#">{{ $location->location_name ?? '' }}</a>
-																</span>
-															</label>
-														</div>
-													@endforeach
-												</div>
-											</div>
-										</div>
-										
-									</div>
+									
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
@@ -124,6 +98,32 @@
 											<div class="input-block mb-3">
 											<label class="col-form-label"></label>
 											<img id="preview_backgrnd" src="#" alt="" style="max-width: 70px; margin-top: 25px; display: none;" />
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="tab-content" id="pills-tabContent">
+											<div class="tab-pane fade" id="pills-public" role="tabpanel" aria-labelledby="pills-public-tab">
+
+											</div>
+											<div class="tab-pane fade" id="pills-private" role="tabpanel" aria-labelledby="pills-private-tab">
+											</div>
+											<div class="tab-pane fade show active" id="pills-select-people" role="tabpanel" aria-labelledby="pills-select-people-tab">
+												<div class="people-select-tab" style="max-height: 200px; overflow-y: auto;">
+													<div class="invalid-feedback">{{ __('please_select') }} {{ __('location')}}.</div>
+													<h3>Select Location</h3>
+													@foreach($locations as $location)
+														<div class="select-people-checkbox-s">
+															<label class="custom_check">
+																<input type="checkbox" name="location[]" value="{{ $location->id }}">													
+																<span class="checkmark"></span>
+																<span class="people-profile">
+																	<a href="#">{{ $location->location_name ?? '' }}</a>
+																</span>
+															</label>
+														</div>
+													@endforeach
+												</div>
 											</div>
 										</div>
 									</div>
