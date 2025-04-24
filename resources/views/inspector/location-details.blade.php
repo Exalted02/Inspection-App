@@ -14,7 +14,7 @@
 		<div class="main-content-area clearfix">
 			<section class="custom-padding1">
 				<div class="container">
-					<div class="row">
+					<div class="row custom-tab">
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#inprogress_tab" aria-controls="inprogress_tab" role="tab" data-toggle="tab">4 In progress</a></li>
@@ -22,8 +22,8 @@
 						</ul>
 						<!-- Tab panes -->
 						<div class="tab-content">
-							<div role="tabpanel" class="tab-pane pt-3 pb-3 active" id="inprogress_tab">
-								<div class="d-flex mb-4 task">
+							<div role="tabpanel" class="tab-pane active" id="inprogress_tab">
+								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
 											<div class="day">FEB</div>
@@ -32,12 +32,14 @@
 										</div>
 									</div>
 									<div class="flex-grow-1">
-										<img src="{{url('front-assets/static-image/1.jpg')}}" alt="Task" />
-										<h6>Respirator user has a training sticker on employee badge</h6>
-										<p class="text-muted mb-0">Set corrective actions</p>
+										<a href="{{route('checklist')}}">
+											<img src="{{url('front-assets/static-image/1.jpg')}}" alt="Task" />
+											<h6>Respirator user has a training sticker on employee badge</h6>
+											<p class="text-muted mb-0">Set corrective actions</p>
+										</a>
 									</div>
 								</div>
-								<div class="d-flex mb-4 task">
+								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
 											<div class="day">JULY</div>
@@ -46,12 +48,14 @@
 										</div>
 									</div>
 									<div class="flex-grow-1">
-										<img src="{{url('front-assets/static-image/2.jpg')}}" alt="Task" />
-										<h6>Respirator user has a training sticker on employee badge</h6>
-										<p class="text-muted mb-0">Check on final corrective outcome</p>
+										<a href="{{route('checklist')}}">
+											<img src="{{url('front-assets/static-image/2.jpg')}}" alt="Task" />
+											<h6>Respirator user has a training sticker on employee badge</h6>
+											<p class="text-muted mb-0">Set corrective actions</p>
+										</a>
 									</div>
 								</div>
-								<div class="d-flex mb-4 task">
+								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
 											<div class="day">JAN</div>
@@ -60,14 +64,16 @@
 										</div>
 									</div>
 									<div class="flex-grow-1">
-										<img src="{{url('front-assets/static-image/3.jpg')}}" alt="Task" />
-										<h6>Respirator user has a training sticker on employee badge</h6>
-										<p class="text-muted mb-0">Check on final corrective outcome</p>
+										<a href="{{route('checklist')}}">
+											<img src="{{url('front-assets/static-image/3.jpg')}}" alt="Task" />
+											<h6>Respirator user has a training sticker on employee badge</h6>
+											<p class="text-muted mb-0">Set corrective actions</p>
+										</a>
 									</div>
 								</div>
 							</div>
-							<div role="tabpanel" class="tab-pane pt-3 pb-3" id="completed_tab">
-								<div class="d-flex mb-4 task">
+							<div role="tabpanel" class="tab-pane" id="completed_tab">
+								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
 											<div class="day">JAN</div>
@@ -76,12 +82,14 @@
 										</div>
 									</div>
 									<div class="flex-grow-1">
-										<img src="{{url('front-assets/static-image/3.jpg')}}" alt="Task" />
-										<h6>Respirator user has a training sticker on employee badge</h6>
-										<p class="text-muted mb-0">Check on final corrective outcome</p>
+										<a href="{{route('checklist')}}">
+											<img src="{{url('front-assets/static-image/3.jpg')}}" alt="Task" />
+											<h6>Respirator user has a training sticker on employee badge</h6>
+											<p class="text-muted mb-0">Set corrective actions</p>
+										</a>
 									</div>
 								</div>
-								<div class="d-flex mb-4 task">
+								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
 											<div class="day">JULY</div>
@@ -90,12 +98,14 @@
 										</div>
 									</div>
 									<div class="flex-grow-1">
-										<img src="{{url('front-assets/static-image/2.jpg')}}" alt="Task" />
-										<h6>Respirator user has a training sticker on employee badge</h6>
-										<p class="text-muted mb-0">Check on final corrective outcome</p>
+										<a href="{{route('checklist')}}">
+											<img src="{{url('front-assets/static-image/2.jpg')}}" alt="Task" />
+											<h6>Respirator user has a training sticker on employee badge</h6>
+											<p class="text-muted mb-0">Set corrective actions</p>
+										</a>
 									</div>
 								</div>
-								<div class="d-flex mb-4 task">
+								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
 											<div class="day">FEB</div>
@@ -104,9 +114,11 @@
 										</div>
 									</div>
 									<div class="flex-grow-1">
-										<img src="{{url('front-assets/static-image/1.jpg')}}" alt="Task" />
-										<h6>Respirator user has a training sticker on employee badge</h6>
-										<p class="text-muted mb-0">Set corrective actions</p>
+										<a href="{{route('checklist')}}">
+											<img src="{{url('front-assets/static-image/1.jpg')}}" alt="Task" />
+											<h6>Respirator user has a training sticker on employee badge</h6>
+											<p class="text-muted mb-0">Set corrective actions</p>
+										</a>
 									</div>
 								</div>
 							</div>
