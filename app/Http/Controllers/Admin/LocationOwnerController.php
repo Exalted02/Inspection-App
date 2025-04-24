@@ -89,7 +89,7 @@ class LocationOwnerController extends Controller
 	
 	
 	
-	public function save_inspector(Request $request)
+	public function save_location_owner(Request $request)
 	{
 		
 		//echo "<pre>";print_r($request->all());die;
@@ -211,7 +211,7 @@ class LocationOwnerController extends Controller
 			'success' => true
 		]);
 	}
-	public function edit_inspector(Request $request)
+	public function edit_location_owner(Request $request)
 	{
 		$inspector = User::where('id', $request->id)->first();
 		$data = array();
@@ -224,7 +224,7 @@ class LocationOwnerController extends Controller
 		$data['avatar']  = $inspector->profile_image;
 		$data['background_image']  = $inspector->background_image;
 		$data['app_url']  = url('uploads/profile/' . $request->id .'/locationowner/');
-		$data['edit']  =  Lang::get('edit_inspector');
+		$data['edit']  =  Lang::get('edit_location_owner');
 		
 		$inspLocArry = array();
 		$inspector_location  = Users_location::where('user_id', $request->id)->get();
@@ -236,7 +236,7 @@ class LocationOwnerController extends Controller
 		
 		return $data;
 	}
-	public function delete_inspector(Request $request)
+	public function delete_location_owner(Request $request)
 	{
 		$name = User::where('id', $request->id)->first()->name;
 		echo json_encode($name);

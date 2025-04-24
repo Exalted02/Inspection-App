@@ -7,10 +7,10 @@
 						<i class="la la-trash-restore"></i>
 					</div>
 					<h3>{{ __('are_you_sure') }}, {{ __('you_want_delete') }}</h3>
-					<p>{{ __('inspector_name') }} "<span id="list_name"></span>" {{ __('from_your_account') }}</p>
+					<p>{{ __('location_owner_name') }} "<span id="list_name"></span>" {{ __('from_your_account') }}</p>
 					<div class="col-lg-12 text-center form-wizard-button">
 						<a href="#" class="button btn-lights" data-bs-dismiss="modal">{{ __('not_now') }}</a>
-						<a href="javascript:void(0);" class="btn btn-primary data-id-list" data-url="{{ route('admin.deleteinspectorList') }}">{{ __('okay') }}</a>
+						<a href="javascript:void(0);" class="btn btn-primary data-id-list" data-url="{{ route('admin.deletelocationownerList') }}">{{ __('okay') }}</a>
 					</div>
 				</div>
 			</div>
@@ -20,7 +20,7 @@
 
 
 <!-- Add product code -->
-<div id="add_inspector" class="modal custom-modal fade" role="dialog">
+<div id="add_location_owner" class="modal custom-modal fade" role="dialog">
 					<div class="modal-dialog modal-dialog-centered" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -30,12 +30,12 @@
 								</button>
 							</div>
 							<div class="modal-body">
-								<form id="frminspector" action="{{ route('admin.save-inspector') }}" enctype="multipart/form-data">
+								<form id="frmlocationowner" action="{{ route('admin.save-location-owner') }}" enctype="multipart/form-data">
 								<input type="hidden" id="id" name="id">
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
-												<label class="col-form-label">{{ __('inspector_name') }}<span class="text-danger">*</span></label>
+												<label class="col-form-label">{{ __('location_owner_name') }}<span class="text-danger">*</span></label>
 												<input class="form-control" type="text" name="name" id="name">
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('name')}}.</div>
 											</div>
@@ -128,7 +128,7 @@
 										</div>
 									</div>
 									<div class="submit-section">
-										<button class="btn btn-primary submit-btn save-inspector" type="button">Submit</button>
+										<button class="btn btn-primary submit-btn save-location-owner" type="button">Submit</button>
 									</div>
 								</form>
 							</div>

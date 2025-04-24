@@ -40,7 +40,7 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.location-owner')}}" id="search-location_owner-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.location-owner')}}" id="search-location-owner-frm">
 		@csrf
 			<div class="row filter-row">
 				<div class="col-xl-3">  
@@ -171,8 +171,8 @@
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ $val->email ?? ''}}</td>
 								<td>{{ $val->get_company->company_name ?? ''}}</td>
-								<td><img src="{{ url('uploads/profile/' . $val->id. '/location_owner/'.$val->profile_image) }}" width="50" height="50"></td>
-								<td><img src="{{ url('uploads/profile/' . $val->id. '/location_owner/'. $val->background_image) }}" width="50" height="50"></td>
+								<td><img src="{{ url('uploads/profile/' . $val->id. '/locationowner/'.$val->profile_image) }}" width="50" height="50"></td>
+								<td><img src="{{ url('uploads/profile/' . $val->id. '/locationowner/'. $val->background_image) }}" width="50" height="50"></td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
@@ -225,7 +225,7 @@
 @endsection 
 @section('scripts')
 @include('_includes.footer')
-<script src="{{ url('admin-assets/js/page/location-owner.js') }}"></script>
+<script src="{{ url('admin-assets/js/page/location_owner.js') }}"></script>
 <script src="{{ url('admin-assets/js/page/common.js') }}"></script>
 <script src="{{ url('admin-assets/js/search-calender.js') }}"></script>
 <script src="{{ url('admin-assets/js/page/country_state_city.js') }}"></script>
@@ -233,7 +233,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/location_owner";
+		window.location.href = "/admin/location-owner";
 	});
 	
 	const translations = {

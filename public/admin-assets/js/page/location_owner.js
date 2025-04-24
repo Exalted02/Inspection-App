@@ -6,7 +6,7 @@ Version      : 4.0
 
 $(document).ready(function() {
 	
-	$(document).on('click','.save-inspector', function(){
+	$(document).on('click','.save-location-owner', function(){
 		let name = $('#name').val().trim();
 		let email = $('#email').val().trim();
 		let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,10 +66,10 @@ $(document).ready(function() {
 		
 		if (isValid) {
 			//var form = $("#frmlocation");
-			var URL = $('#frminspector').attr('action');
+			var URL = $('#frmlocationowner').attr('action');
 			var id = $('#id').val();
 			
-			let formData = new FormData($('#frminspector')[0]);
+			let formData = new FormData($('#frmlocationowner')[0]);
 			formData.append('_token', csrfToken);
 			//alert(URL);
 			$.ajax({
@@ -112,7 +112,7 @@ $(document).ready(function() {
 	
 
 
-$(document).on('click','.edit-inspector', function(){
+$(document).on('click','.edit-location-owner', function(){
 	$('.invalid-feedback').hide();
 	$('.form-control').removeClass('is-invalid');
 	var id = $(this).data('id');
@@ -146,7 +146,7 @@ $(document).on('click','.edit-inspector', function(){
 			});
 			
 			$('#head-label').html(response.edit);
-			$('#add_inspector').modal('show');
+			$('#add_location_owner').modal('show');
 			
 		},
 	});
@@ -191,7 +191,7 @@ $(document).on('click','.update-product-code-form', function(){
 
 
 
-$(document).on('click','.delete-inspector-name', function(){
+$(document).on('click','.delete-location-owner-name', function(){
 	var id = $(this).data('id');
 	var URL = $(this).data('url');
 	//alert(id);alert(URL);
@@ -251,7 +251,7 @@ $(document).on('click','.update-status', function(){
 });
 
 $(document).on('click','.search-data', function(){
-	$('#search-inspector-frm').submit();
+	$('#search-location-owner-frm').submit();
 	
 });
 $('.search-sort-by').on('change' ,function (event) {
