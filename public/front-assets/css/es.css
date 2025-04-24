@@ -97,15 +97,61 @@
 	color: #000000;
 	font-weight: 600;
 }
-.location-details .nav-tabs li a {
-    color: #777 !important;
-    font-size: 17px;
-    font-weight: 700;
+.custom-tab .nav-tabs {
+	border-bottom: 2px solid #DDD;
 }
-.location-details .nav-tabs> li.active> a, .location-details .nav-tabs> li> a:hover {
-	color: #000000 !important;
-    border: none !important;
-    background: transparent;
+.custom-tab .nav-tabs> li.active> a, .custom-tab .nav-tabs> li.active> a:focus, .custom-tab .nav-tabs> li.active> a:hover {
+	border-width: 0;
+	color: #E52D27;
+}
+.custom-tab .nav-tabs> li> a {
+	border: none;
+	color: #666;
+}
+.custom-tab .nav-tabs> li.active> a, .custom-tab .nav-tabs> li> a:hover {
+	border: none;
+	background: transparent;
+}
+.custom-tab .nav-tabs> li> a::after {
+	content: "";
+	height: 2px;
+	position: absolute;
+	width: 100%;
+	left: 0px;
+	bottom: -1px;
+	-webkit-transition: all 250ms ease 0s;
+	-moz-transition: all 250ms ease 0s;
+	-ms-transition: all 250ms ease 0s;
+	-o-transition: all 250ms ease 0s;
+	transition: all 250ms ease 0s;
+	-webkit-transform: scale(0);
+	-moz-transform: scale(0);
+	-o-transform: scale(0);
+	-ms-transform: scale(0);
+	transform: scale(0);
+}
+.custom-tab .nav-tabs> li.active> a::after, .custom-tab .nav-tabs> li:hover> a::after {
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-o-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1);
+}
+.custom-tab .tab-nav> li> a::after {
+	background: #21527d none repeat scroll 0% 0%;
+	color: #fff;
+}
+.custom-tab .tab-pane {
+	padding: 15px 0;
+}
+.custom-tab .tab-content {
+	/* padding: 20px */
+}
+.custom-tab .nav-tabs > li > a::after {
+	background: #E52D27 none repeat scroll 0 0;
+}
+.custom-tab .nav-tabs > li.active > a {
+	color: #E52D27;
 }
 .location-details .task img {
 	width: 100%;
@@ -144,8 +190,115 @@
 .location-details .tab-content h6 {
 	font-size: 15px;
 	font-weight: 700;
+	color: #000000;
 }
 .location-details .tab-content .flex-grow-1 p {
 	font-size: 13px;
 }
 /*******************************FOR LOCATION DETAILS PAGE********************************/
+/**********************************FOR CHECKLIST PAGE***********************************/
+.checklist-title {
+	font-size: 30px;
+	font-weight: 700;
+	margin-bottom: 20px;
+	color: #000000;
+}
+.location-section {
+	margin-bottom: 24px;
+}
+.location-label {
+	font-size: 20px;
+	font-weight: 700;
+	margin-bottom: 6px;
+	color: #000000;
+}
+.location-input, .location-edit {
+	background: #fff;
+	border-radius: 12px;
+	padding: 12px 16px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+	font-size: 14px;
+	transition: all 0.3s ease;
+}
+.location-input {
+	cursor: pointer;
+	color: #999;
+}
+.location-input span {
+	color: #000000;
+}
+.location-edit {
+	display: none;
+}
+.location-edit input {
+	border: none;
+	outline: none;
+	flex: 1;
+	font-size: 14px;
+	color: #333;
+}
+.location-edit button {
+	background-color: #eee;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 25px;
+	font-size: 14px;
+	cursor: pointer;
+	margin-left: 10px;
+	color: #000000;
+}
+.checklist-item {
+	background-color: #fff;
+	/* padding: 16px; */
+	margin-bottom: 12px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #ccc;
+}
+.checklist-item .text {
+	font-size: 14px;
+}
+.checklist-item .text .title {
+	font-weight: 600;
+	font-size: 16px;
+	margin-bottom: 4px;
+	color: #000000;
+}
+.checklist-item .text .subtitle {
+	font-size: 14px;
+	color: #777;
+	padding-bottom: 12px;
+}
+.arrow {
+	font-size: 20px;
+    color: #000000;
+    background: #EAEAEA;
+    border: 1px solid #EAEAEA;
+    border-radius: 50%;
+    padding: 5px 9px 3px 9px;
+    /* cursor: pointer; */
+}
+.sticky-footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: #002b5c;
+	padding: 16px;
+	text-align: center;
+	z-index: 1000;
+}
+
+.sticky-footer button {
+	background: none;
+	border: none;
+	color: white;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+}
+/**********************************FOR CHECKLIST PAGE***********************************/
