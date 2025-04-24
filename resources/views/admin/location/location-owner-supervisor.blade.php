@@ -65,7 +65,7 @@
 				</div>
 				<div class="col-xl-3">  
 					 <div class="input-block">
-						<input type="text" class="form-control date-range" name="date_range_phone" placeholder="{{ __('from_to_date')}}" id="src_location_owner_name_date_range" value="{{ old('date_range_phone', request('date_range_phone')) }}">
+						<input type="text" class="form-control date-range" name="date_range_phone" placeholder="{{ __('from_to_date')}}" id="src_location_owner_supervisor_date_range" value="{{ old('date_range_phone', request('date_range_phone')) }}">
 					 </div>
 				 </div>
 				 <div class="col-xl-2">  
