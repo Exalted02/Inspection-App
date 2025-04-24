@@ -6,7 +6,6 @@
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container location-details">
 		<div class="d-flex align-items-center location-header mb-3">
-		{{--<img src="{{url('front-assets/static-image/4.jpg')}}" alt="Location" />--}}
 			<img src="{{url('uploads/location/' . $location_categories[0]->image )}}" alt="Location" />
 			<div>
 				<div class="title">{{ $location_categories[0]->location_name ?? ''}}</div>
@@ -42,7 +41,7 @@
 									<div class="flex-grow-1">
 										<a href="{{ route('checklist') }}">
 											<img src="{{url('uploads/category/' .$categoryData->image )}}" alt="Task"/>
-											<h6>Respirator user has a training sticker on employee badge</h6>
+											<h6>{{ $categoryData->name ?? '' }}</h6>
 											<p class="text-muted mb-0">Set corrective actions</p>
 										</a>
 									</div>
