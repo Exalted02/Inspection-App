@@ -1,6 +1,19 @@
 .mt-0 {
 	margin-top: 0 !important;
 }
+.login-card {
+	padding: 30px 0;
+	border-radius: 20px;
+}
+.category-grid-box-1 {
+	border-radius: 20px;
+}
+.login-card h2 {
+	color: #232323;
+    font-size: 26px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
 .profile-card {
   width: 100%;
   overflow: hidden;
