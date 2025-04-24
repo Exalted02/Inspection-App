@@ -7,7 +7,7 @@
 	<div class="profile-card">
 		<div class="profile-banner" style="background-image: url('{{url('front-assets/static-image/cover.jpeg')}}');"></div>
 		<div class="profile-info">
-			<img class="profile-avatar" src="https://i.pravatar.cc/100?img=12" alt="Profile Picture">
+			<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->profile_image)}}" alt="Profile Picture">
 			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
 			<p class="profile-description">
 				Inspector at {{ $userdata->get_company->company_name ?? '' }},<br>Mandai Hill
@@ -33,19 +33,25 @@
                     <div class="row ">
                      	<div class="grid-style-2">
 						@foreach($userdata->get_user_location as $locations)
+						@php
+							$lacationData = App\Models\Manage_location::where('id',$locations->location_id)->first();
+							$city = App\Models\Cities::where('id', $lacationData->city_id)->first()->name;
+							$state = App\Models\States::where('id', $lacationData->state_id)->first()->name;
+							$country = App\Models\Countries::where('id', $lacationData->country_id)->first()->name;
+						@endphp
                             <div class="col-md-4 col-xs-12 col-sm-6">
 								<div class="category-grid-box-1">
 									<div class="image">
 									{{--<img alt="Test" src="{{url('front-assets/images/posting/10.jpg')}}" class="img-responsive">--}}
-										<img alt="Test" src="{{url('uploads/images/posting/10.jpg')}}" class="img-responsive">
+										<img alt="Test" src="{{url('uploads/location/' .$lacationData->image)}}" class="img-responsive">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
 											<div class="price"><span>4 pending tasks</span></div>
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">
-										<h3><a title="" href="{{route('location-details', ['id' => 1])}}">Choa Chu Kang</a></h3>
-										<div class="category-title"> <span><a href="#">Mandai Road 23, 532012</a></span> </div>
+										<h3><a title="" href="{{route('location-details', ['id' => 1])}}">{{ $lacationData->location_name ?? '' }}</a></h3>
+										<div class="category-title"> <span><a href="#">{{ $city ?? '' }} , {{ $state ?? '' }} , {{ $country ?? '' }} , {{ $lacationData->zipcode ?? '' }}</a></span> </div>
 									</div>
 								</div>
                             </div>
