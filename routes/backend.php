@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\SubChecklistController;
 use App\Http\Controllers\Admin\InspectorController;
 use App\Http\Controllers\Admin\LocationOwnerController;
 use App\Http\Controllers\Admin\LocationOwnerSupervisorController;
+use App\Http\Controllers\Admin\ManagementController;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -112,6 +113,16 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/getDeletelocationownersupervisor', [LocationOwnerSupervisorController::class, 'delete_location_owner_supervisor'])->name('getDeletelocationownersupervisor');
 	Route::post('/deletelocationownersupervisorList',[LocationOwnerSupervisorController::class,'delete_list'])->name('deletelocationownersupervisorList');
 	Route::post('/edit-location-owner-supervisor', [LocationOwnerSupervisorController::class, 'edit_location_owner_supervisor'])->name('edit-location-owner-supervisor');
+	
+	// management
+	Route::get('/management', [ManagementController::class, 'index'])->name('management');
+	Route::post('/management', [ManagementController::class, 'index'])->name('management');
+	Route::post('/save-management', [ManagementController::class, 'save_management'])->name('save-management');
+	Route::post('/management_update_status',[ManagementController::class,'update_status'])->name('management_update_status');
+	Route::post('/getDeletemanagement', [ManagementController::class, 'delete_management'])->name('getDeletemanagement');
+	Route::post('/deletemanagementList',[ManagementController::class,'delete_list'])->name('deletemanagementList');
+	Route::post('/edit-management', [ManagementController::class, 'edit_management'])->name('edit-management');
+	
 	
 	Route::post('/change-multi-status',[CommonController::class,'change_multi_status'])->name('change-multi-status');
 	Route::post('/delete-multi-data',[CommonController::class,'delete_multi_data'])->name('delete-multi-data');

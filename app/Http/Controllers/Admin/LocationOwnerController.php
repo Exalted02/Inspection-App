@@ -95,7 +95,7 @@ class LocationOwnerController extends Controller
 		//echo "<pre>";print_r($request->all());die;
 		
 		
-		$existingInsp = User::where('name', $request->post('name'))->where('status', '!=', 2)
+		$existingInsp = User::where('name', $request->post('name'))->where('user_type',2)->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
