@@ -127,6 +127,8 @@
 											</div>
 										</div>
 									</div>
+									<input type="hidden" id="hid_avatar" name="hid_avatar">
+									<input type="hidden" id="hid_back_grd_image" name="hid_back_grd_image">
 									<div class="submit-section">
 										<button class="btn btn-primary submit-btn save-location-owner-supervisor" type="button">Submit</button>
 									</div>

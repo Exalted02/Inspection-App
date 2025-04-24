@@ -135,6 +135,9 @@ $(document).on('click','.edit-location-owner', function(){
 			$('#password').val('');
 			$('#company_name').val(response.company_name).trigger('change');
 			
+			$('#hid_avatar').val(response.avatar);
+			$('#hid_back_grd_image').val(response.background_image);
+			
 			var app_url = response.app_url; 
 			$('#preview').attr('src', app_url + '/' + response.avatar).show();
 			$('#preview_backgrnd').attr('src', app_url + '/' + response.background_image).show();

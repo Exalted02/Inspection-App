@@ -190,6 +190,15 @@ class LocationOwnerSupervisorController extends Controller
 			$updtmodel= User::find($id);
 			$updtmodel->profile_image = $fileName;
 			$updtmodel->save();
+			
+			// unlink avatar
+			if(!empty($request->post('hid_avatar')))
+			{
+				$path = public_path('uploads/profile/' . $id  . '/locationownersupervisor/' . $request->post('hid_avatar'));
+				if (file_exists($path)) {
+					unlink($path);
+				}
+			}
 		}
 		
 		$backgroundImgfileName = '';
@@ -205,6 +214,15 @@ class LocationOwnerSupervisorController extends Controller
 			$updtmodel= User::find($id);
 			$updtmodel->background_image = $backgroundImgfileName;
 			$updtmodel->save();
+			
+			// unlink background img
+			if(!empty($request->post('hid_back_grd_image')))
+			{
+				$path = public_path('uploads/profile/' . $id  . '/locationownersupervisor/' . $request->post('hid_back_grd_image'));
+				if (file_exists($path)) {
+					unlink($path);
+				}
+			}
 		}
 		
 		return response()->json([
