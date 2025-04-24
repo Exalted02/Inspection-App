@@ -5,8 +5,7 @@
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
-	<div class="profile-banner" style="background-image: url('{{url('front-assets/static-image/cover.jpeg')}}');"></div>
-		{{--<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->background_image')}} ')"></div>--}}
+		<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->background_image )}} ')"></div>
 		<div class="profile-info">
 			<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->profile_image)}}" alt="Profile Picture">
 			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
@@ -57,33 +56,6 @@
 								</div>
                             </div>
 						@endforeach
-                            {{--<div class="col-md-4 col-xs-12 col-sm-6">
-								<div class="category-grid-box-1">
-									<div class="image">
-										<img alt="Test" src="{{url('front-assets/images/posting/10.jpg')}}" class="img-responsive">
-										<div class="ribbon popular"></div>
-									</div>
-									<div class="short-description-1 clearfix">
-										<h3><a title="" href="{{route('location-details', ['id' => 2])}}">Choa Chu Kang</a></h3>
-										<div class="category-title"> <span><a href="#">Mandai Road 23, 532012</a></span> </div>
-									</div>
-								</div>
-                            </div>
-                            <div class="col-md-4 col-xs-12 col-sm-6">
-								<div class="category-grid-box-1">
-									<div class="image">
-										<img alt="Test" src="{{url('front-assets/images/posting/10.jpg')}}" class="img-responsive">
-										<div class="ribbon popular"></div>
-										<div class="price-tag">
-											<div class="price"><span>4 pending tasks</span></div>
-										</div>
-									</div>
-									<div class="short-description-1 clearfix">
-										<h3><a title="" href="{{route('location-details', ['id' => 3])}}">Choa Chu Kang</a></h3>
-										<div class="category-title"> <span><a href="#">Mandai Road 23, 532012</a></span> </div>
-									</div>
-								</div>
-                            </div>--}}
                         </div>
                      </div>
                   </div>

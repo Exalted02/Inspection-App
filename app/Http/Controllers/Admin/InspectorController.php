@@ -12,6 +12,8 @@ use App\Models\Users_location;
 use Lang;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+//use Intervention\Image\Facades\Image;
+//use Intervention\Image\ImageManager;
 
 class InspectorController extends Controller
 {
