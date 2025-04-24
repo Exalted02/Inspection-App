@@ -8,12 +8,6 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
-    public function inspector_dashboard()
-    {
-		$data = [];
-		
-        return view('inspector.inspector-dashboard', $data);
-    }
     public function location_details($id='')
     {
 		$data = [];

@@ -12,6 +12,6 @@ class DashboardInspectorController extends Controller
     {
 		$data = [];
 		
-        return view('inspector-dashboard', $data);
+        return view('inspector.inspector-dashboard', $data);
     }
 }
