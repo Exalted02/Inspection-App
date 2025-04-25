@@ -10,7 +10,7 @@
 			<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->profile_image)}}" alt="Profile Picture">
 			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
 			<p class="profile-description">
-				Inspector at {{ $userdata->get_company->company_name ?? '' }},<br>Mandai Hill
+				Inspector at {{ $userdata->get_company->company_name ?? '' }},<br>
 			</p>
 		</div>
 	</div>
@@ -39,11 +39,11 @@
 							$state = App\Models\States::where('id', $lacationData->state_id)->first()->name;
 							$country = App\Models\Countries::where('id', $lacationData->country_id)->first()->name;
 						@endphp
-                            <div class="col-md-4 col-xs-6 col-sm-6">
+                            <div class="col-md-4 col-xs-12 col-sm-6">
 								<div class="category-grid-box-1">
-									<div class="image" style="background-image: url('{{url('uploads/location/' .$lacationData->image)}}')">
+									<div class="image">
 									{{--<img alt="Test" src="{{url('front-assets/images/posting/10.jpg')}}" class="img-responsive">--}}
-										<img alt="Test" src="{{url('uploads/location/' .$lacationData->image)}}" class="img-responsive d-none">
+										<img alt="Test" src="{{url('uploads/location/' .$lacationData->image)}}" class="img-responsive">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
 											<div class="price"><span>4 pending tasks</span></div>
@@ -51,7 +51,7 @@
 									</div>
 									<div class="short-description-1 clearfix">
 										<h3><a title="" href="{{route('location-details', ['id' => $locations->location_id ])}}">{{ $lacationData->location_name ?? '' }}</a></h3>
-										<div class="category-title"> <span><a href="#">{{ $city ?? '' }} , {{ $state ?? '' }} , {{ $country ?? '' }} , {{ $lacationData->zipcode ?? '' }}</a></span> </div>
+										<div class="category-title"> <span>{{ $city ?? '' }}, {{ $state ?? '' }}, {{ $country ?? '' }}, {{ $lacationData->zipcode ?? '' }}</span> </div>
 									</div>
 								</div>
                             </div>

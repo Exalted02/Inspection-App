@@ -92,7 +92,7 @@ class DashboardInspectorController extends Controller
 		->orderBy('id', 'asc')
 		->first();
 		//echo "<pre>";print_r($nextQuestion);die;
-		return response()->json(['id'=> $nextQuestion->id, 'name' => $nextQuestion->name, 'subchecklist' => $nextQuestion->get_subchecklist]);
+		return response()->json(['currentid'=> $nextQuestion->id, 'name' => $nextQuestion->name, 'subchecklist' => $nextQuestion->get_subchecklist]);
 
 	}
 }
