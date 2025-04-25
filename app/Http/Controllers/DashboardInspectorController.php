@@ -26,13 +26,13 @@ class DashboardInspectorController extends Controller
 		$data['location_categories'] = Manage_location::with('category_by_location')->where('id', $id)->get();
         return view('inspector.location-details', $data);
     }
-	public function checklist($lid='',$catid='')
+	public function category($lid='',$catid='')
     {
 		
 		$data = [];
 		$data['categoryData'] = Category::with('get_subcategory')->where('id', $catid)->get();
 		$data['location_id'] = $lid;
-		return view('inspector.checklist', $data);
+		return view('inspector.category-subcategory', $data);
     }
 	public function send_location_details(Request $request)
 	{
