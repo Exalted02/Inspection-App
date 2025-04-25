@@ -59,11 +59,12 @@ Route::get('lang/change', [LangController::class, 'change'])->name('changeLang')
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-	Route::get('/checklist', [DashboardInspectorController::class, 'checklist'])->name('checklist');
+	Route::get('/checklist/{location_id}/{cat_id}', [DashboardInspectorController::class, 'checklist'])->name('checklist');
 	
 	Route::get('/location-details/{id}', [DashboardInspectorController::class, 'location_details'])->name('location-details');
 	Route::get('/inspector-dashboard', [DashboardInspectorController::class, 'inspector_dashboard'])->name('inspector-dashboard');
 	
+	Route::post('send-location-details', [DashboardInspectorController::class, 'send_location_details'])->name('send-location-details');
 	//User-Accounts
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	

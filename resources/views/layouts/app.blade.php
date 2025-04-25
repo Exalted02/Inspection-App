@@ -64,6 +64,10 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
 		@yield('component-style')
+		
+		<script>
+        var csrfToken = "{{ csrf_token() }}"; // Declare the CSRF token
+		</script>
     </head>
 	<body>
 		@if(!request()->routeIs('login'))
