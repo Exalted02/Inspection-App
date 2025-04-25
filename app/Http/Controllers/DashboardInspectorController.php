@@ -9,6 +9,8 @@ use App\Models\Manage_location;
 use App\Models\Manage_location_category;
 use App\Models\Category;
 use App\Models\Task_lists;
+use App\Models\Checklist;
+use App\Models\Subchecklist;
 
 class DashboardInspectorController extends Controller
 {
@@ -63,5 +65,32 @@ class DashboardInspectorController extends Controller
 		
 		return response()->json(['status' => 'success', 'message' => 'Data saved successfully.']);
 
+	}
+	public function checklist_question($cat_id='',$subcat_id='')
+    {
+		$data = [];
+		//echo $cat_id.' '.$subcat_id; die;
+		$data['checklistdata'] = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id',$cat_id)->where('subcategory_id', $subcat_id)->where('status','!=', 2)->first();
+		//echo "<pre>";print_r($checklistdata);die;
+		/*$nextQuestion = Checklist::where('category_id', $cat_id)
+		->where('subcategory_id', $subcat_id)
+		->where('status', '!=', 2)
+		->where('id', '>', $current_question_id)
+		->orderBy('id', 'asc')
+		->first();*/
+        return view('inspector.checklist-question', $data);
+    }
+	public function checklist_next_question(Request $request)
+	{
+		$current_question_id = $request->post('current_question_id');
+		$category_id = $request->post('category_id');
+		$subcategory_id = $request->post('subcategory_id');
+		$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+		->where('subcategory_id', $subcategory_id)
+		->where('status', '!=', 2)
+		->where('id', '>', $current_question_id)
+		->orderBy('id', 'asc')
+		->first();
+		echo $nextQuestion->name;
 	}
 }

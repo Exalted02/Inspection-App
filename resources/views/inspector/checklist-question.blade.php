@@ -3,9 +3,12 @@
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist-question">
 		<div class="single-checklist d-none1">
-			<div class="question-header">Personal Protective Equipments</div>
+			<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>
 			<div class="question-text">
-				Use of Safety Goggles / Glasses at Sink / Clean Room
+				{{ $checklistdata->name ?? '' }}
+				<input type="hidden" id="current_id" value="{{ $checklistdata->id ?? '' }}">
+				<input type="hidden" id="category_id" value="{{ $checklistdata->category_id ?? '' }}">
+				<input type="hidden" id="subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
 			</div>
 			<div class="reject-form mb-3" id="rejectForm-1">
 				<textarea placeholder="State why you rejected this..."></textarea>
@@ -77,7 +80,7 @@
 		<div class="clearfix"></div>
 		<div class="footer-content">
 			<button>Back</button>
-			<button>Next</button>
+			<button class="next_question">Next</button>
 		</div>
 	</div>
 @endsection 
@@ -111,6 +114,27 @@ function previewFiles(id) {
 		reader.readAsDataURL(file);
 	});
 }
+</script>
+<script>
+$(document ).ready(function() {
+    $(document).on('click','.next_question', function(){
+		var current_id = $('#current_id').val();
+		var category_id = $('#category_id').val();
+		var subcategory_id = $('#subcategory_id').val();
+		var URL = "{{ route('checklist-next-question') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {current_question_id:current_id,category_id:category_id,subcategory_id:subcategory_id, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				alert(response);
+				//$('#addressInput').val('');
+				//$('#successMessage').fadeIn().delay(2000).fadeOut();
+			},
+		});
+	})
+});
 </script>
 @endsection
 

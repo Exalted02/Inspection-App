@@ -25,4 +25,8 @@ class Checklist extends Model
 	{
 		return $this->belongsTo(Subcategory::class, 'subcategory_id');
 	}
+	public function get_subchecklist()
+	{
+		return $this->hasMany(Subchecklist::class, 'checklist_id' ,'id');
+	}
 }
