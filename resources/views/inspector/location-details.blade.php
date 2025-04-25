@@ -9,7 +9,7 @@
 			<img src="{{url('uploads/location/' . $location_categories[0]->image )}}" alt="Location" />
 			<div>
 				<div class="title">{{ $location_categories[0]->location_name ?? ''}}</div>
-				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>Mandai Road 23, 532012</small>
+				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>{{ $location_categories[0]->address ?? ''}}, {{ $location_categories[0]->zipcode ?? ''}}</small>
 			</div>
 		</div>
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
