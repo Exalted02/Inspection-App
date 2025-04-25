@@ -12,8 +12,11 @@ class Task_lists extends Model
 	protected $fillable = [
         'inspector_id', 
         'location_id', 
+        'category_id', 
         'lo_id', 
         'los_id', 
         'management_id', 
+        'location_details', 
+        'status', 
     ];
 }

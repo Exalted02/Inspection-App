@@ -9,7 +9,6 @@ use App\Models\Manage_location;
 use App\Models\Manage_location_category;
 use App\Models\Category;
 use App\Models\Task_lists;
-use App\Models\Task_list_categories;
 
 class DashboardInspectorController extends Controller
 {
@@ -40,44 +39,26 @@ class DashboardInspectorController extends Controller
 		$location_id = $request->post('location_id');
 		$category_id = $request->post('category_id');
 		$details = $request->post('details');
-		//echo $location_id.' '.$category_id.' '.$details; die;
-		$hasId = Task_lists::where('inspector_id', auth()->user()->id)->where('location_id', $location_id)->first()?->id;
-		if($hasId)
-		{
-			$ifExists = Task_list_categories::where('task_list_id', $hasId)->where('category_id', $category_id)->exists();
-		    if($ifExists)
-			{
-				Task_list_categories::where('task_list_id', $hasId)->update(['location_details' => $details]);
-			}
-			else
-			{
-				$model = new Task_lists();
-				$model->inspector_id = auth()->user()->id;
-				$model->location_id = $location_id;
-				$model->save();
-				$task_list_id  = $model->id;
-				
-				$modelCat = new Task_list_categories();
-				$modelCat->task_list_id = $task_list_id ?? null;
-				$modelCat->category_id = $category_id ?? null;
-				$modelCat->location_details = $details ?? null;
-				$modelCat->status = 1;
-				$modelCat->save();
-			}
-		}
-		else{
-			$model = new Task_lists();
-			$model->inspector_id = auth()->user()->id;
-			$model->location_id = $location_id;
-			$model->save();
-			$task_list_id  = $model->id;
-			
-			$modelCat = new Task_list_categories();
-			$modelCat->task_list_id = $task_list_id ?? null;
-			$modelCat->category_id = $category_id ?? null;
-			$modelCat->location_details = $details ?? null;
-			$modelCat->status = 1;
-			$modelCat->save();
+		$inspectorId = auth()->user()->id;
+		
+		$taskList = Task_lists::where('inspector_id', $inspectorId)
+                      ->where('location_id', $location_id)
+					  ->where('category_id', $category_id)
+                      ->first();
+
+		$existingCategory = $taskList 
+		? Task_lists::where('id', $taskList->id)->first() : null;
+							  
+		if ($existingCategory) {
+			$existingCategory->location_details = $details;
+			$existingCategory->save();
+		} else {
+				$taskList = new Task_lists();
+				$taskList->inspector_id = $inspectorId;
+				$taskList->location_id = $location_id;
+				$taskList->category_id = $category_id;
+				$taskList->location_details = $details;
+				$taskList->save();
 		}
 		
 		return response()->json(['status' => 'success', 'message' => 'Data saved successfully.']);
