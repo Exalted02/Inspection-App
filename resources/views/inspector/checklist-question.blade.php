@@ -125,7 +125,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 $(document ).ready(function() {
     $(document).on('click','.next_question', function(){
 		var current_id = $('#current_id').val();
-		alert(current_id);
+		//alert(current_id);
 		var category_id = $('#category_id').val();
 		var subcategory_id = $('#subcategory_id').val();
 		var URL = "{{ route('checklist-next-question') }}";
@@ -136,8 +136,8 @@ $(document ).ready(function() {
 			dataType: 'json',
 			success: function(response) {
 				 $('#current_id').val(response.currentid);
-				 alert(response.name);
-				 alert(response.get_subchecklist);
+				 //alert(response.name);
+				 //alert(response.get_subchecklist);
 				//$('#addressInput').val('');
 				//$('#successMessage').fadeIn().delay(2000).fadeOut();
 			},
