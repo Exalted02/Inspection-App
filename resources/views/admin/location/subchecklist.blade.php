@@ -232,7 +232,7 @@ $(document).ready(function() {
 	$(document).on('click','.add_subchecklist', function(){
 		$('#frmsubchecklist')[0].reset();
 		$('#id').val('');
-		$('#category').val('').trigger('change');
+		$('#category').val('').trigger('');
 		$('#head-label').html(translations.addsubcat);
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
