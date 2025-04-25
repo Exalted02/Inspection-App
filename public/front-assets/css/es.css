@@ -77,7 +77,20 @@
   color: #666;
 }
 .category-grid-box-1 {
+	background: transparent !important;
+    box-shadow: none !important;
+}
+.category-grid-box-1 .image {
 	border-radius: 20px;
+	/* max-height: auto;	 */
+    height: 190px;
+    background-position: center;
+    background-repeat: no-repeat;
+	background-size: cover;
+}
+.category-grid-box-1 .short-description-1 {
+	padding: 15px 0 !important;
+	background: transparent !important;
 }
 .category-grid-box-1 .price-tag {
     top: 15px;
@@ -88,6 +101,7 @@
 	background-color: #FFF !important;
     color: #000 !important;
     border-radius: 5px;
+	font-size: 12px !important;
 }
 /*****************************FOR INSPECTOR DASHBOARD PAGE******************************/
 /*******************************FOR LOCATION DETAILS PAGE********************************/
@@ -309,6 +323,9 @@
 }
 /**********************************FOR CHECKLIST PAGE***********************************/
 /******************************FOR CHECKLIST QUESTION PAGE*******************************/
+.checklist-question {
+	margin-bottom: 50px;
+}
 .question-header {
 	font-size: 14px;
 	color: #666;
@@ -345,8 +362,8 @@
 	gap: 20px;
 }
 .action-buttons button, .action-buttons-without-text button {
-	width: 56px;
-	height: 56px;
+	width: 40px;
+	height: 40px;
 	border-radius: 50%;
 	border: 2px solid;
 	background: #fff;
@@ -360,7 +377,7 @@
 	color: #a0a0a0;
 }
 .action-buttons span {
-	font-size: 20px;
+	font-size: 18px;
 	color: #000000;
 	font-weight: 700;
 }
@@ -391,6 +408,21 @@
 	font-size: 14px;
 	resize: none;
 }
+.reject-form .dropzone {
+	width: 100%;
+	border: 2px dashed rgba(0, 0, 0, .3);
+	min-height: 70px;
+}
+.reject-form .dropzone .dz-message {
+    margin: 0;
+}
+.reject-form .dropzone .dz-preview .dz-image {
+    width: 80px;
+    height: 80px;
+}
+.reject-form .dropzone .dz-preview .dz-details {
+	padding: 5px;
+}
 .upload-box {
 	display: flex;
 	align-items: center;
@@ -417,11 +449,6 @@
 	border-radius: 8px;
 	object-fit: cover;
 }
-
-
-
-
-
 .checklist-question-sticky-footer {
 	position: fixed;
     bottom: 0;

@@ -39,11 +39,11 @@
 							$state = App\Models\States::where('id', $lacationData->state_id)->first()->name;
 							$country = App\Models\Countries::where('id', $lacationData->country_id)->first()->name;
 						@endphp
-                            <div class="col-md-4 col-xs-12 col-sm-6">
+                            <div class="col-md-4 col-xs-6 col-sm-6">
 								<div class="category-grid-box-1">
-									<div class="image">
+									<div class="image" style="background-image: url('{{url('uploads/location/' .$lacationData->image)}}')">
 									{{--<img alt="Test" src="{{url('front-assets/images/posting/10.jpg')}}" class="img-responsive">--}}
-										<img alt="Test" src="{{url('uploads/location/' .$lacationData->image)}}" class="img-responsive">
+										<img alt="Test" src="{{url('uploads/location/' .$lacationData->image)}}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
 											<div class="price"><span>4 pending tasks</span></div>

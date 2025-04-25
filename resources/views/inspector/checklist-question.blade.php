@@ -1,4 +1,8 @@
 @extends('layouts.app')
+@section('component-style')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+@endsection
 @section('content')
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist-question">
@@ -13,12 +17,13 @@
 			<div class="reject-form mb-3" id="rejectForm-1">
 				<textarea placeholder="State why you rejected this..."></textarea>
 
-				<label class="upload-box">
+				{{--<label class="upload-box">
 					<input type="file" id="fileInput-1" multiple style="display: none;" onchange="previewFiles(1)">
 					<span>Upload files</span>
 				</label>
 
-				<div class="preview-container" id="previewContainer-1"></div>
+				<div class="preview-container" id="previewContainer-1"></div>--}}
+				<form action="/your-upload-route" class="dropzone" id="dropzone-1"></form>
 			</div>
 			<div class="action-buttons-without-text">
 				<button class="rejected" id="question-reject-1" onclick="handleReject(1)"><i class="fa-solid fa-xmark"></i></button>
@@ -41,12 +46,13 @@
 				<div class="reject-form mb-3" id="rejectForm-2">
 					<textarea placeholder="State why you rejected this..."></textarea>
 
-					<label class="upload-box">
+					{{--<label class="upload-box">
 						<input type="file" id="fileInput-2" multiple style="display: none;" onchange="previewFiles(2)">
 						<span>Upload files</span>
 					</label>
 
-					<div class="preview-container" id="previewContainer-2"></div>
+					<div class="preview-container" id="previewContainer-2"></div>--}}
+					<form action="/your-upload-route" class="dropzone" id="dropzone-2"></form>
 				</div>
 			</div>
 			<div class="sub-checklist-question">
@@ -60,12 +66,13 @@
 				<div class="reject-form mb-3" id="rejectForm-3">
 					<textarea placeholder="State why you rejected this..."></textarea>
 
-					<label class="upload-box">
+					{{--<label class="upload-box">
 						<input type="file" id="fileInput-3" multiple style="display: none;" onchange="previewFiles(3)">
 						<span>Upload files</span>
 					</label>
 
-					<div class="preview-container" id="previewContainer-3"></div>
+					<div class="preview-container" id="previewContainer-3"></div>--}}
+					<form action="/your-upload-route" class="dropzone" id="dropzone-3"></form>
 				</div>
 			</div>
 		</div>
@@ -99,7 +106,7 @@ function handleApprove(id) {
 	document.getElementById("question-approve-"+id).classList.add("active");
 }
 
-function previewFiles(id) {
+/*function previewFiles(id) {
 	const container = document.getElementById('previewContainer-'+id);
 	const input = document.getElementById('fileInput-'+id);
 	container.innerHTML = ""; // Clear previous previews
@@ -113,7 +120,27 @@ function previewFiles(id) {
 		}
 		reader.readAsDataURL(file);
 	});
-}
+}*/
+Dropzone.autoDiscover = false; // very important
+
+// This will automatically find and initialize all dropzones
+document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+    new Dropzone(dropzoneElement, {
+        url: "/your-upload-route", // your upload URL
+        maxFiles: 5,
+        maxFilesize: 2, // MB
+        acceptedFiles: 'image/*',
+        addRemoveLinks: true,
+        dictDefaultMessage: 'Drag & drop or click to upload',
+        success: function (file, response) {
+            console.log('File uploaded', response);
+        },
+        error: function (file, errorMessage) {
+            console.error('Upload error', errorMessage);
+        }
+    });
+});
+
 </script>
 <script>
 $(document ).ready(function() {

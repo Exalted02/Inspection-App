@@ -29,7 +29,7 @@
 		<link rel="stylesheet" href="{{ url('front-assets/css/carspot-menu.css') }}" type="text/css">
 		<!-- =-=-=-=-=-=-= Animation =-=-=-=-=-=-= -->
 		<link rel="stylesheet" href="{{ url('front-assets/css/animate.min.css') }}" type="text/css">
-		<link rel="stylesheet" href="{{ url('front-assets/css/dropzone.css') }}" type="text/css">
+		<link rel="stylesheet" href="{{ url('front-assets/css/dropzone1.css') }}" type="text/css">
 		<!-- =-=-=-=-=-=-= Select Options =-=-=-=-=-=-= -->
 		<link href="{{ url('front-assets/css/select2.min.css') }}" rel="stylesheet" />
 		<!-- =-=-=-=-=-=-= noUiSlider =-=-=-=-=-=-= -->
