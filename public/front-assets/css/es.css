@@ -309,6 +309,9 @@
 }
 /**********************************FOR CHECKLIST PAGE***********************************/
 /******************************FOR CHECKLIST QUESTION PAGE*******************************/
+.checklist-question {
+	margin-bottom: 50px;
+}
 .question-header {
 	font-size: 14px;
 	color: #666;
@@ -417,11 +420,6 @@
 	border-radius: 8px;
 	object-fit: cover;
 }
-
-
-
-
-
 .checklist-question-sticky-footer {
 	position: fixed;
     bottom: 0;
