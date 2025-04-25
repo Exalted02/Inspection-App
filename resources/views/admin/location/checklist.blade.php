@@ -236,7 +236,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/checklist";
+		window.location.href = "{{ route('admin.checklist')}}";
 	});
 	
 	const translations = {

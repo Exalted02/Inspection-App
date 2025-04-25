@@ -233,7 +233,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/location-owner";
+		window.location.href = "{{ route('admin.location-owner')}}";
 	});
 	
 	const translations = {

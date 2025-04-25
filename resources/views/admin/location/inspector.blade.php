@@ -233,7 +233,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/inspector";
+		window.location.href = "{{ route('admin.inspector')}}";
 	});
 	
 	const translations = {

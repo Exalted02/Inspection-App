@@ -222,7 +222,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/sub-category";
+		window.location.href = "{{ route('admin.sub-category')}}";
 	});
 	
 	const translations = {

@@ -63,8 +63,8 @@
 							<a href="javascript:void(0);" class="{{ request()->routeIs('admin.inspector')|| request()->routeIs('admin.location-owner') || request()->routeIs('admin.location-owner-supervisor') || request()->routeIs('admin.management') ? 'subdrop' : '' }}"> <span>{{ __('manage_users') }}</span> <span class="menu-arrow"></span></a>
 							<ul style="{{ request()->routeIs('admin.inspector') || request()->routeIs('admin.location-owner') || request()->routeIs('admin.location-owner-supervisor') || request()->routeIs('admin.management')  ? 'display:block' : '' }}">
 								<li><a href="{{ route('admin.inspector')}}" class="{{ request()->routeIs('admin.inspector') ? 'menu-active' : '' }}"><span>{{ __('inspector') }}</span></a></li>
-								<li><a href="{{ route('admin.location-owner')}}" class="{{ request()->routeIs('admin.location-owner') ? 'menu-active' : '' }}"><span>{{ __('location_owner') }}</span></a></li>
-								<li><a href="{{ route('admin.location-owner-supervisor')}}" class="{{ request()->routeIs('admin.location-owner-supervisor') ? 'menu-active' : '' }}"><span>{{ __('location_owner_supervisor') }}</span></a></li>
+								<li><a href="{{ route('admin.location-owner')}}" class="{{ request()->routeIs('admin.location-owner') ? 'menu-active' : '' }}"><span>{{ __('LO') }}</span></a></li>
+								<li><a href="{{ route('admin.location-owner-supervisor')}}" class="{{ request()->routeIs('admin.location-owner-supervisor') ? 'menu-active' : '' }}"><span>{{ __('LOS') }}</span></a></li>
 								<li><a href="{{ route('admin.management')}}" class="{{ request()->routeIs('admin.management') ? 'menu-active' : '' }}"><span>{{ __('management') }}</span></a></li>
 							</ul>
 						</li>
@@ -72,12 +72,12 @@
 				</li>
 				
 				
-				<li class="{{ request()->routeIs('admin.email-management','admin.email-management-edit') ? 'active' : '' }}">
+				{{--<li class="{{ request()->routeIs('admin.email-management','admin.email-management-edit') ? 'active' : '' }}">
 					<a href="{{ route('admin.email-management') }}"><i class="fa-regular fa-envelope"></i> <span> {{ __('email_management') }} </span></a>
 				</li>
 				<li class="{{ request()->routeIs('admin.email-settings') ? 'active' : '' }}">
 					<a href="{{ route('admin.email-settings') }}"><i class="fa-regular fa-envelope"></i> <span> {{ __('email_settings') }} </span></a>
-				</li>				
+				</li>--}}				
 				<li class="{{ request()->routeIs('admin_logout') ? 'active' : '' }}">
 					<a href="{{ route('admin_logout') }}"><i class="fa-solid fa-shop-lock"></i> <span> {{ __('logout') }} </span></a>
 				</li>

@@ -211,7 +211,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/manage-company";
+		window.location.href = "{{ route('admin.manage-company') }}";
 	});
 	
 	const has_search = @json($has_search);

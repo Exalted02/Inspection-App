@@ -46,7 +46,7 @@
 				<div class="col-xl-3">  
 					 <div class="input-block">
 						 <select name="src_checklist" class="select">
-							<option value="">{{ __('subchecklist') }}</option>
+							<option value="">{{ __('checklist') }}</option>
 							@foreach($checklists as $checklist)
 								<option value="{{ $checklist->id }}" {{ old('src_checklist', request('src_checklist')) == (string) $checklist->id ? 'selected' : '' }}>{{ $checklist->name }}</option>
 							@endforeach
@@ -222,7 +222,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/sub-checklist";
+		window.location.href = "{{ route('admin.sub-checklist')}}";
 	});
 	
 	const translations = {

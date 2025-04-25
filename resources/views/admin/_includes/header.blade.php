@@ -4,13 +4,13 @@
 	<!-- Logo -->
 	<div class="header-left">
 		<a href="" class="logo">
-			<img src="{{ asset('front-assets/img/-logo1.jpg') }}" alt="{{ __('project_title') }}">
+			<img src="{{url('front-assets/images/logo.png')}}" alt="{{ __('project_title') }}">
 		</a>
 		<a href="" class="logo collapse-logo">
-			<img src="{{ asset('front-assets/img/-logo1.jpg') }}" alt="{{ __('project_title') }}">
+			<img src="{{url('front-assets/images/logo.png')}}" alt="{{ __('project_title') }}">
 		</a>
 		<a href="" class="logo2">
-			<img src="{{ asset('front-assets/img/-logo1.jpg') }}"  alt="{{ __('project_title') }}">
+			<img src="{{url('front-assets/images/logo.png')}}"  alt="{{ __('project_title') }}">
 		</a>
 	</div>
 	<!-- /Logo -->
@@ -273,8 +273,8 @@
 
 		<li class="nav-item dropdown has-arrow main-drop">
 			<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-				<span class="user-img"><img src="{{ asset('/front-assets/img/avatar/avatar-19.jpg') }}" class="mt-1" alt="img">
-				<span class="status online"></span></span>
+			{{--<span class="user-img"><img src="{{ asset('/front-assets/img/avatar/avatar-19.jpg') }}" class="mt-1" alt="img">
+			<span class="status online"></span></span>--}}
 				<span>{{ Auth::guard('admin')->user()->name }}</span>
 			</a>
 			<div class="dropdown-menu">

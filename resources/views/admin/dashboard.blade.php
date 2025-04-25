@@ -19,11 +19,11 @@
             </div>
             <!-- /Page Header -->
         
-            <div class="row">
+		{{--<div class="row">
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
-						{{--<span class="dash-widget-icon"><i class="fa-solid fa-chart-line"></i></span>--}}
+						<span class="dash-widget-icon"><i class="fa-solid fa-chart-line"></i></span>
                             <span class="dash-widget-icon"><i class="fa-solid fa-handshake"></i></span>
                             <div class="dash-widget-info">
                                 <h3>45</h3>
@@ -35,7 +35,7 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
-						{{--<span class="dash-widget-icon"><i class="fa-regular fa-user"></i></span>--}}
+						<span class="dash-widget-icon"><i class="fa-regular fa-user"></i></span>
                             <span class="dash-widget-icon"><i class="fa-solid fa-store"></i></span>
                             <div class="dash-widget-info">
                                 <h3>25</h3>
@@ -47,7 +47,7 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
-						{{--<span class="dash-widget-icon"><i class="fa-solid fa-person-shelter"></i></span>--}}
+							<span class="dash-widget-icon"><i class="fa-solid fa-person-shelter"></i></span>
                             <span class="dash-widget-icon"><i class="fa fa-money-bill-wave"></i></span>
                             <div class="dash-widget-info">
                                 <h3>102</h3>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>--}}
         
         </div>
         <!-- /Page Content -->

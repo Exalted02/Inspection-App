@@ -40,7 +40,7 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.sub-category')}}" id="search-location-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.manage-location')}}" id="search-location-frm">
 		@csrf
 			<div class="row filter-row">
 				<div class="col-xl-3">  
@@ -254,7 +254,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "/admin/manage-location";
+		window.location.href = "{{ route('admin.manage-location') }}";
 	});
 	
 	const translations = {

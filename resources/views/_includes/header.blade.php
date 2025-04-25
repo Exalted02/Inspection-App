@@ -59,7 +59,7 @@
 					<!-- menu logo -->
 					<ul class="menu-logo">
 					   <li style="margin-top: 7px;">
-							<a href="index.html">
+							<a href="{{ route('inspector-dashboard')}}">
 							{{--<img src="{{url('front-assets/images/logo.png')}}" alt="logo"> --}}
 							<span>Inspection</span>
 							</a>
