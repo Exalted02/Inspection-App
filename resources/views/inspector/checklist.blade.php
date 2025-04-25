@@ -42,7 +42,7 @@
 										<div class="title">{{ $subcategories->name ?? ''}}</div>
 										<div class="subtitle">Completed 3 of 7</div>
 									</div>
-									<a href=""><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
+									<a href="{{route('checklist-question')}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
 								</div>
 								@endforeach
 								{{--<div class="checklist-item">

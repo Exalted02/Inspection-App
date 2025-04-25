@@ -14,10 +14,10 @@ class DashboardController extends Controller
 		
         return view('inspector.location-details', $data);
     }
-    public function checklist()
+    public function checklist_question()
     {
 		$data = [];
 		
-        return view('inspector.checklist', $data);
+        return view('inspector.checklist-question', $data);
     }
 }
