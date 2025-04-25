@@ -91,6 +91,8 @@ class DashboardInspectorController extends Controller
 		->where('id', '>', $current_question_id)
 		->orderBy('id', 'asc')
 		->first();
-		echo $nextQuestion->name;
+		//echo "<pre>";print_r($nextQuestion);die;
+		return response()->json(['id'=> $nextQuestion->id, 'name' => $nextQuestion->name, 'subchecklist' => $nextQuestion->get_subchecklist]);
+
 	}
 }

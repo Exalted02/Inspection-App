@@ -17,12 +17,6 @@
 			<div class="reject-form mb-3" id="rejectForm-1">
 				<textarea placeholder="State why you rejected this..."></textarea>
 
-				{{--<label class="upload-box">
-					<input type="file" id="fileInput-1" multiple style="display: none;" onchange="previewFiles(1)">
-					<span>Upload files</span>
-				</label>
-
-				<div class="preview-container" id="previewContainer-1"></div>--}}
 				<form action="/your-upload-route" class="dropzone" id="dropzone-1"></form>
 			</div>
 			<div class="action-buttons-without-text">
@@ -106,21 +100,6 @@ function handleApprove(id) {
 	document.getElementById("question-approve-"+id).classList.add("active");
 }
 
-/*function previewFiles(id) {
-	const container = document.getElementById('previewContainer-'+id);
-	const input = document.getElementById('fileInput-'+id);
-	container.innerHTML = ""; // Clear previous previews
-
-	Array.from(input.files).forEach(file => {
-		const reader = new FileReader();
-		reader.onload = function (e) {
-			const img = document.createElement('img');
-			img.src = e.target.result;
-			container.appendChild(img);
-		}
-		reader.readAsDataURL(file);
-	});
-}*/
 Dropzone.autoDiscover = false; // very important
 
 // This will automatically find and initialize all dropzones
@@ -146,6 +125,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 $(document ).ready(function() {
     $(document).on('click','.next_question', function(){
 		var current_id = $('#current_id').val();
+		//alert(current_id);
 		var category_id = $('#category_id').val();
 		var subcategory_id = $('#subcategory_id').val();
 		var URL = "{{ route('checklist-next-question') }}";
@@ -155,7 +135,9 @@ $(document ).ready(function() {
 			data: {current_question_id:current_id,category_id:category_id,subcategory_id:subcategory_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
-				alert(response);
+				 $('#current_id').val(response.id);
+				 alert(response.name);
+				 alert(response.get_subchecklist);
 				//$('#addressInput').val('');
 				//$('#successMessage').fadeIn().delay(2000).fadeOut();
 			},
