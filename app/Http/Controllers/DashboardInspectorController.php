@@ -41,18 +41,45 @@ class DashboardInspectorController extends Controller
 		$category_id = $request->post('category_id');
 		$details = $request->post('details');
 		//echo $location_id.' '.$category_id.' '.$details; die;
-		$model = new Task_lists();
-		$model->inspector_id = auth()->user()->id;
-		$model->location_id = $location_id;
-		$model->save();
-		$task_list_id  = $model->id;
+		$hasId = Task_lists::where('inspector_id', auth()->user()->id)->where('location_id', $location_id)->first()?->id;
+		if($hasId)
+		{
+			$ifExists = Task_list_categories::where('task_list_id', $hasId)->where('category_id', $category_id)->exists();
+		    if($ifExists)
+			{
+				Task_list_categories::where('task_list_id', $hasId)->update(['location_details' => $details]);
+			}
+			else
+			{
+				$model = new Task_lists();
+				$model->inspector_id = auth()->user()->id;
+				$model->location_id = $location_id;
+				$model->save();
+				$task_list_id  = $model->id;
+				
+				$modelCat = new Task_list_categories();
+				$modelCat->task_list_id = $task_list_id ?? null;
+				$modelCat->category_id = $category_id ?? null;
+				$modelCat->location_details = $details ?? null;
+				$modelCat->status = 1;
+				$modelCat->save();
+			}
+		}
+		else{
+			$model = new Task_lists();
+			$model->inspector_id = auth()->user()->id;
+			$model->location_id = $location_id;
+			$model->save();
+			$task_list_id  = $model->id;
+			
+			$modelCat = new Task_list_categories();
+			$modelCat->task_list_id = $task_list_id ?? null;
+			$modelCat->category_id = $category_id ?? null;
+			$modelCat->location_details = $details ?? null;
+			$modelCat->status = 1;
+			$modelCat->save();
+		}
 		
-		$modelCat = new Task_list_categories();
-		$modelCat->task_list_id = $task_list_id ?? null;
-		$modelCat->category_id = $category_id ?? null;
-		$modelCat->location_details = $details ?? null;
-		$modelCat->status = 1;
-		$modelCat->save();
 		return response()->json(['status' => 'success', 'message' => 'Data saved successfully.']);
 
 	}

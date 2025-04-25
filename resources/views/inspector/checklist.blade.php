@@ -13,7 +13,10 @@
 				<span><i class="fa-solid fa-pen"></i></span>
 			</div>
 			<span id="successMessage" style="display: none; color: green;">
-				Data saved successfully!
+				Details saved successfully!
+			</span>
+			<span id="errorMessage" style="display: none; color: red;">
+				Please enter details.
 			</span>
 			<div class="location-edit" id="editBox">
 				<input type="text" id="addressInput" placeholder="Add location" />
@@ -126,6 +129,11 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var category_id = $('#category_id').val();
 		var details  = $('#addressInput').val();
+		if(details=='')
+		{
+			$('#errorMessage').fadeIn().delay(2000).fadeOut();
+			return false;
+		}
 	    //alert(location_id);alert(category_id);alert(details);
 		var URL = "{{ route('send-location-details') }}";
 		
