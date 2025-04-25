@@ -59,7 +59,10 @@
 					<!-- menu logo -->
 					<ul class="menu-logo">
 					   <li style="margin-top: 7px;">
-						  <a href="index.html"><img src="{{url('front-assets/images/logo.png')}}" alt="logo"> </a>
+							<a href="index.html">
+							{{--<img src="{{url('front-assets/images/logo.png')}}" alt="logo"> --}}
+							<span>Inspection</span>
+							</a>
 					   </li>
 					</ul>
 					<!-- menu links -->

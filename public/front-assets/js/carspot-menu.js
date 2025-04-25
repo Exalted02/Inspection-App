@@ -115,11 +115,11 @@
                             // check if the menu links and menu social bar hide
                             if (drop_down.is(':hidden')) {
                                 // show the drop down
-                                $(this).addClass(activeClass);
+                                //$(this).addClass(activeClass);
                                 drop_down.show(0);
                             } else {
                                 // hide the drop down
-                                $(this).removeClass(activeClass);
+                                //$(this).removeClass(activeClass);
                                 drop_down.hide(0);
                             }
                             return false;

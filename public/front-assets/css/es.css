@@ -28,6 +28,39 @@
 .d-none {
 	display: none !important;
 }
+/**********************************FOR HEADER SECTION***********************************/
+.menu-logo span {
+	font-size: 38px;
+    text-transform: uppercase;
+    color: #000000;
+}
+.mega-menu .menu-mobile-collapse-trigger {
+	height: 45px !important;
+    width: 45px !important;
+}
+.mega-menu .menu-mobile-collapse-trigger:before {
+	top: 12px !important;
+	width: 30px !important;
+}
+.mega-menu .menu-mobile-collapse-trigger span {
+    top: 21px !important;
+	width: 30px !important;
+}
+.mega-menu .menu-mobile-collapse-trigger:after {
+    top: 30px !important;
+	width: 30px !important;
+}
+.mega-menu .menu-mobile-collapse-trigger.active:before {
+    -webkit-transform: rotate(35deg) !important;
+    -ms-transform: rotate(35deg) !important;
+    transform: rotate(35deg) !important;
+}
+.mega-menu .menu-mobile-collapse-trigger.active:after {
+    -webkit-transform: rotate(-35deg) !important;
+    -ms-transform: rotate(-35deg) !important;
+    transform: rotate(-35deg) !important;
+}
+/**********************************FOR HEADER SECTION***********************************/
 /************************************FOR LOGIN PAGE*************************************/
 .login-card {
 	padding: 30px 0;
