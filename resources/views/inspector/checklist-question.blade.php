@@ -9,7 +9,7 @@
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist-question">
-	@if($checklistdata->get_subchecklist->isEmpty())
+	@if(isset($checklistdata) && $checklistdata->get_subchecklist->isEmpty())
 		<div class="single-checklist d-none1">
 			<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>
 			<div class="question-text">
@@ -17,9 +17,14 @@
 
 			</div>
 			<div class="reject-form mb-3" id="rejectForm-1">
-				<textarea placeholder="State why you rejected this..."></textarea>
-
-				<form action="/your-upload-route" class="dropzone" id="dropzone-1"></form>
+				<textarea id="single_rejecttext" placeholder="State why you rejected this..."></textarea>
+				<input type="hidden" id="mode" value="single">
+				<form action="{{ route('reject-files')}}" class="dropzone" id="dropzone-1">
+					<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="{{ $checklistdata->id ?? '' }}">
+					<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
+					<input type="hidden" name="checklistid" id="single-checklistid" value="{{ $checklistdata->checklist_id ?? '' }}">
+					<input type="hidden" name="task_id" id="single-task_id" value="{{ $task_id ?? '' }}">
+				</form>
 			</div>
 			<div class="action-buttons-without-text">
 				<button class="rejected" id="question-reject-1" onclick="handleReject(1)"><i class="fa-solid fa-xmark"></i></button>
@@ -32,23 +37,30 @@
 			<div class="question-text">
 				<span id="multiple-question">{{ $checklistdata->name ?? '' }}:</span>
 			</div>
-			@foreach($checklistdata->get_subchecklist as $subchecklists)
-			<div class="sub-checklist-question">
-				<div class="action-buttons">
-					<span class="d-flex align-items-center">{{ $subchecklists->name ?? ''}}</span>
-					<div class="btn-div">
-						<button class="rejected" id="question-reject-{{ $subchecklists->id }}" onclick="handleReject({{ $subchecklists->id }})"><i class="fa-solid fa-xmark"></i></button>
-						<button class="approved" id="question-approve-{{ $subchecklists->id }}" onclick="handleApprove({{ $subchecklists->id }})"><i class="fa-solid fa-check"></i></button>
+			@if($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_subchecklist->isNotEmpty())
+				@foreach($checklistdata->get_subchecklist as $subchecklists)
+				<div class="sub-checklist-question">
+					<div class="action-buttons">
+						<span class="d-flex align-items-center">{{ $subchecklists->name ?? ''}}</span>
+						<div class="btn-div">
+							<button class="rejected" id="question-reject-{{ $subchecklists->id }}" onclick="handleReject({{ $subchecklists->id }})"><i class="fa-solid fa-xmark"></i></button>
+							<button class="approved" id="question-approve-{{ $subchecklists->id }}" onclick="handleApprove({{ $subchecklists->id }})"><i class="fa-solid fa-check"></i></button>
+						</div>
+					</div>
+					<div class="reject-form mb-3" id="rejectForm-{{ $subchecklists->id }}">
+						<textarea placeholder="State why you rejected this..."></textarea>
+						<input type="hidden" id="mode" value="multiple">
+						
+						<form action="{{ route('reject-files')}}" class="dropzone" id="dropzon-{{ $subchecklists->id }}">
+							<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="{{ $checklistdata->id ?? '' }}">
+							<input type="hidden" id="category_id" value="{{ $checklistdata->category_id ?? '' }}">
+							<input type="hidden" name="subcategory_id" id="subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
+							<input type="hidden" name="task_id" id="task_id" value="{{ $task_id ?? '' }}">
+						</form>
 					</div>
 				</div>
-				<div class="reject-form mb-3" id="rejectForm-{{ $subchecklists->id }}">
-					<textarea placeholder="State why you rejected this..."></textarea>
-
-					
-					<form action="/your-upload-route" class="dropzone" id="dropzon-{{ $subchecklists->id }}"></form>
-				</div>
-			</div>
-			@endforeach
+				@endforeach
+			@endif
 			{{--<div class="sub-checklist-question">
 				<div class="action-buttons">
 					<span class="d-flex align-items-center">Face shield</span>
@@ -71,7 +83,8 @@
 	<input type="hidden" id="current_checklist_id" value="{{ $checklistdata->id ?? '' }}">
 	<input type="hidden" id="category_id" value="{{ $checklistdata->category_id ?? '' }}">
 	<input type="hidden" id="subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
-<div class="checklist-question-sticky-footer">
+	<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
+	<div class="checklist-question-sticky-footer">
 		<div class="progress-bar">
 			<span style="width: 40%;"></span>
 		</div>
@@ -102,11 +115,14 @@ Dropzone.autoDiscover = false; // very important
 // This will automatically find and initialize all dropzones
 document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     new Dropzone(dropzoneElement, {
-        url: "/your-upload-route", // your upload URL
+        url: "{{ route('reject-files')}}", // your upload URL
         maxFiles: 5,
         maxFilesize: 2, // MB
         acceptedFiles: 'image/*',
         addRemoveLinks: true,
+		headers: {
+			'X-CSRF-TOKEN': csrfToken
+		},
         dictDefaultMessage: 'Drag & drop or click to upload',
         success: function (file, response) {
             console.log('File uploaded', response);
@@ -125,17 +141,50 @@ $(document ).ready(function() {
 		//alert(current_id);
 		var category_id = $('#category_id').val();
 		var subcategory_id = $('#subcategory_id').val();
+		var task_id = $('#task_id').val();
+		var mode = $('#mode').val();
+		//alert(mode);
+		var rejectTextsSingle = '';
+		let rejectTextsMultiple = {};
+		if(mode=='single')
+		{
+			 var rejectTextsSingle = $('#single_rejecttext').val();
+			  alert(rejectTextsSingle);
+		}
+		else{
+			
+			$('.reject-form').each(function () {
+				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
+				const text = $(this).find('textarea').val().trim();
+				// Save only if there's any text entered (optional)
+				if (text !== '') {
+					rejectTextsMultiple[subchecklistId] = text;
+				}
+			});
+			//alert(rejectTextsMultiple);
+		}
 		var URL = "{{ route('checklist-next-question') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {current_question_id:current_id,category_id:category_id,subcategory_id:subcategory_id, _token: csrfToken},
+			data: {
+				mode: mode,
+				task_id: task_id,
+				current_question_id: current_id,
+				category_id: category_id,
+				subcategory_id: subcategory_id,
+				rejectTextsSingle: rejectTextsSingle,
+				rejectTextsMultiple: JSON.stringify(rejectTextsMultiple), // <--- Fix here
+				_token: csrfToken
+			},
+			traditional: true,
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.currentid);
 				$('#current_checklist_id').val(response.currentid);
 				 //$('#single-question').html(response.name);
-				 if (response.subchecklist.length > 0) {
+				const rejectFilesRoute = "{{ route('reject-files') }}";
+				if (response.subchecklist.length > 0) {
 				// Has subchecklists
 				let html = '<div class="sub-checklist">';
 				html += '<div class="question-header">' + response.subcategoryname + '</div>';
@@ -144,7 +193,7 @@ $(document ).ready(function() {
 				html += '</div>';
 
 				response.subchecklist.forEach((item, index) => {
-					 //alert(item.id);
+					    //alert(item.id);
 						let rejectId = 'rejectForm-' + item.id;
 						html += '<div class="sub-checklist-question">';
 						html += '<div class="action-buttons">';
@@ -156,7 +205,8 @@ $(document ).ready(function() {
 						html += '</div>'; 
 						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
 						html += '<textarea placeholder="State why you rejected this..."></textarea>';
-						html += '<form action="/your-upload-route" class="dropzone" id="dropzone-' + item.id + '"></form>';
+						html += '<input type="hidden" id="mode" value="multiple">';
+						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '"></form>';
 						html += '</div>'; 
 						html += '</div>'; 
 					});
@@ -165,7 +215,7 @@ $(document ).ready(function() {
 
 						$('.checklist-question').html(html); 
 				} else {
-						
+						//alert('nooo');
 						let html = '<div class="single-checklist">';
 						html += '<div class="question-header">' + response.subcategoryname + '</div>';
 						html += '<div class="question-text">';
@@ -175,8 +225,13 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="subcategory_id" value="' + subcategory_id + '">';
 						html += '</div>'; 
 						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
-						html += '<textarea placeholder="State why you rejected this..."></textarea>';
-						html += '<form action="/your-upload-route" class="dropzone" id="dropzone-1"></form>';
+						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this..."></textarea>';
+						html += '<input type="hidden" id="mode" value="single">';
+						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
+						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
+						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + subcategory_id + '">';
+						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
+						html += '</form>';
 						html += '</div>'; 
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
@@ -193,11 +248,14 @@ $(document ).ready(function() {
 						// Avoid double-initializing if Dropzone was already applied
 						if (!dropzoneElement.classList.contains("dz-clickable")) {
 							new Dropzone(dropzoneElement, {
-								url: "/your-upload-route",
+								url: "{{ route('reject-files') }}",
 								maxFiles: 5,
 								maxFilesize: 2,
 								acceptedFiles: 'image/*',
 								addRemoveLinks: true,
+								headers: {
+									'X-CSRF-TOKEN': csrfToken
+								},
 								dictDefaultMessage: 'Drag & drop or click to upload',
 								success: function (file, response) {
 									console.log('File uploaded', response);

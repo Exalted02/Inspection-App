@@ -11,6 +11,9 @@ use App\Models\Category;
 use App\Models\Task_lists;
 use App\Models\Checklist;
 use App\Models\Subchecklist;
+use App\Models\Task_list_checklist_temp_rejected_files;
+use App\Models\Task_list_checklists;
+use App\Models\Task_list_checklist_rejected_files;
 
 class DashboardInspectorController extends Controller
 {
@@ -66,7 +69,24 @@ class DashboardInspectorController extends Controller
 		return response()->json(['status' => 'success', 'message' => 'Data saved successfully.']);
 
 	}
-	public function checklist_question($cat_id='',$subcat_id='')
+	
+	public function check_task_id(Request $request)
+	{
+		$category_id = $request->post('cat_id');
+		$location_id = $request->post('location_id');
+		$inspector_id = auth()->user()->id;
+		$exists = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->exists();
+		if($exists)
+		{
+			$taskid = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->first()->id;
+			return response()->json(['hasData'=> true, 'taskid'=>$taskid]);
+		}
+		else{
+			return response()->json(['hasData'=> false, 'id'=>NULL]);
+		}
+	}
+	
+	public function checklist_question($taskid='', $cat_id='',$subcat_id='')
     {
 		$data = [];
 		//echo $cat_id.' '.$subcat_id; die;
@@ -78,10 +98,17 @@ class DashboardInspectorController extends Controller
 		->where('id', '>', $current_question_id)
 		->orderBy('id', 'asc')
 		->first();*/
+		$data['task_id'] = $taskid;
         return view('inspector.checklist-question', $data);
     }
 	public function checklist_next_question(Request $request)
 	{
+		$mode = $request->post('mode');
+		$rejectTextsSingle = $request->post('rejectTextsSingle');
+		$rejectTextsMultiple = json_decode($request->input('rejectTextsMultiple'), true);
+		//echo "<pre>";print_r($rejectTextsMultiple);die;
+		
+		$task_id = $request->post('task_id');
 		$current_question_id = $request->post('current_question_id');
 		$category_id = $request->post('category_id');
 		$subcategory_id = $request->post('subcategory_id');
@@ -97,6 +124,60 @@ class DashboardInspectorController extends Controller
 		$subchecklist = '';
 		$subcategoryname = '';
 		//$subChklistArr = [];
+		
+		//---add record to table
+		if($mode == 'single')
+		{
+			$model = new Task_list_checklists();	
+			$model->task_list_id = $task_id ?? null;
+			$model->task_list_subcategory_id = $subcategory_id ?? null;
+			$model->checklist_id = $current_question_id ?? null;
+			$model->rejected_region = $rejectTextsSingle ?? null;
+			$model->save();
+			$task_list_checklist_id = $model->id;
+			
+			$checkTemps = Task_list_checklist_temp_rejected_files::where(
+			[
+				'inspector_id'=> auth()->user()->id,
+				'task_id'=> $task_id,
+				'task_list_checklist_id'=>$current_question_id,
+				'subcategory_id'=>$subcategory_id
+			])->get();
+			
+			if ($checkTemps->isNotEmpty()) {
+				foreach ($checkTemps as $tempFile) {
+					$filename = $tempFile->file;
+
+					$sourcePath = public_path('uploads/temp-reject-files/' . $filename);
+					$destinationPath = public_path('uploads/reject-files/' . $filename);
+
+					if (!file_exists(dirname($destinationPath))) {
+						mkdir(dirname($destinationPath), 0777, true);
+					}
+
+					if (file_exists($sourcePath)) {
+						rename($sourcePath, $destinationPath);
+					}
+
+					$fileModel = new Task_list_checklist_rejected_files();
+					$fileModel->task_list_checklist_id = $task_list_checklist_id;
+					$fileModel->file = $filename;
+					$fileModel->save();
+
+					$tempFile->delete();
+				}
+			}
+
+		}
+		else
+		{
+			if (!empty($rejectTextsMultiple) && is_array($rejectTextsMultiple)) {
+				foreach ($rejectTextsMultiple as $subChecklistId => $text) {
+					//echo "SubChecklist ID: " . $subChecklistId . " - Reason: " . $text . "<br>";
+				}
+			}
+		}
+		//-------
 		
 		if($nextQuestionExists)
 		{
@@ -125,7 +206,7 @@ class DashboardInspectorController extends Controller
 				$subcategoryname = $nextQuestion->get_subcategory->name;
 			}
 		}
-		return response()->json(['currentid'=> $nextId ?? null, 'name' => $name ?? null, 'subchecklist' => $subChklistArr, 'subcategoryname' => $subcategoryname]);
+		return response()->json(['task_id'=>$task_id, 'currentid'=> $nextId ?? null, 'name' => $name ?? null, 'subchecklist' => $subChklistArr, 'subcategoryname' => $subcategoryname]);
 	}
 	public function checklist_previous_question(Request $request)
 	{
@@ -173,4 +254,39 @@ class DashboardInspectorController extends Controller
 		}
 		return response()->json(['currentid'=> $nextId ?? null, 'name' => $name ?? null, 'subchecklist' => $subChklistArr, 'subcategoryname' => $subcategoryname]);
 	}
+	public function single_reject_files(Request $request)
+	{
+		$current_checklist_id = $request->post('current_checklist_id');
+		$subcategory_id = $request->post('subcategory_id');
+		$task_id = $request->post('task_id');
+		
+		if($request->hasFile('file')) {
+			$file = $request->file('file');
+			$destinationPath = public_path('uploads/temp-reject-files');
+
+			if (!file_exists($destinationPath)) {
+				mkdir($destinationPath, 0777, true);
+			}
+
+			$filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+			$file->move($destinationPath, $filename);
+			
+			
+			//---add record to table 
+			$tempmodel = new Task_list_checklist_temp_rejected_files();
+			$tempmodel->inspector_id = auth()->user()->id;
+			$tempmodel->task_id = $task_id ?? null;
+			$tempmodel->task_list_checklist_id = $current_checklist_id ?? null;
+			$tempmodel->subcategory_id = $subcategory_id ?? null;
+			$tempmodel->file = $filename;
+			$tempmodel->save();
+			//-------
+			
+			return response()->json(['success' => true, 'filename' => $filename, 'checklist_id' =>$current_checklist_id, 'subcategory_id' =>$subcategory_id, 'task_id' =>$task_id]);
+		}
+
+      return response()->json(['success' => false, 'message' => 'No file uploaded.'], 400);
+	}
+	
 }

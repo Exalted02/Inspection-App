@@ -59,7 +59,7 @@ Route::get('lang/change', [LangController::class, 'change'])->name('changeLang')
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-	Route::get('/checklist-question/{cat_id}/{subcat_id}', [DashboardInspectorController::class, 'checklist_question'])->name('checklist-question');
+	Route::get('/checklist-question/{taskid}/{cat_id}/{subcat_id}', [DashboardInspectorController::class, 'checklist_question'])->name('checklist-question');
 	Route::post('checklist-next-question', [DashboardInspectorController::class, 'checklist_next_question'])->name('checklist-next-question');
 	Route::post('checklist-previous-question', [DashboardInspectorController::class, 'checklist_previous_question'])->name('checklist-previous-question');
 	Route::get('/category/{location_id}/{cat_id}', [DashboardInspectorController::class, 'category'])->name('category');
@@ -68,6 +68,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('/inspector-dashboard', [DashboardInspectorController::class, 'inspector_dashboard'])->name('inspector-dashboard');
 	
 	Route::post('send-location-details', [DashboardInspectorController::class, 'send_location_details'])->name('send-location-details');
+	//check-task-id
+	Route::post('check-task-id', [DashboardInspectorController::class, 'check_task_id'])->name('check-task-id');
+	Route::post('reject-files', [DashboardInspectorController::class, 'single_reject_files'])->name('reject-files');
 	//User-Accounts
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	

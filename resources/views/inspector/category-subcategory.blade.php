@@ -24,6 +24,7 @@
 			</div>
 			<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 			<input type="hidden" id="category_id" value="{{ $categoryData[0]->id ?? '' }}">
+			<input type="hidden" id="taskid">
 		</div>
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
@@ -45,40 +46,11 @@
 										<div class="title">{{ $subcategories->name ?? ''}}</div>
 										<div class="subtitle">Completed 3 of 7</div>
 									</div>
-									<a href="{{route('checklist-question' ,['cat_id'=>$categoryData[0]->id, 'subcat_id'=>$subcategories->id])}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
+									{{--<a href="{{route('checklist-question' ,['cat_id'=>$categoryData[0]->id, 'subcat_id'=>$subcategories->id])}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
+									<a href="jacascript:void(0);" class="chk-task-id" data-cat="{{ $categoryData[0]->id ?? ''}}" data-subcat="{{ $subcategories->id ?? '' }}" data-location="{{ $location_id ?? ''}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
 								</div>
 								@endforeach
-								{{--<div class="checklist-item">
-									<div class="text">
-										<div class="title">Chemical handling & storage</div>
-										<div class="subtitle">Not started yet</div>
-									</div>
-									<a href=""><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
-								</div>
-
-								<div class="checklist-item">
-									<div class="text">
-										<div class="title">Process gases</div>
-										<div class="subtitle">3 out of 7 questions</div>
-									</div>
-									<a href=""><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
-								</div>
-
-								<div class="checklist-item">
-									<div class="text">
-										<div class="title">Exhaust ventilation</div>
-										<div class="subtitle">3 out of 7 questions</div>
-									</div>
-									<a href=""><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
-								</div>
-
-								<div class="checklist-item">
-									<div class="text">
-										<div class="title">Machine guarding</div>
-										<div class="subtitle">3 out of 7 questions</div>
-									</div>
-									<a href=""><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
-								</div>--}}
+								
 								<div class="sticky-footer">
 									<button>Submit checklist</button>
 								</div>
@@ -148,6 +120,34 @@ $(document ).ready(function() {
 				$('#successMessage').fadeIn().delay(2000).fadeOut();
 			},
 		});
+   });
+   
+   $(document).on('click','.chk-task-id', function(){
+	   var cat_id = $(this).data('cat');
+	   var subcat_id = $(this).data('subcat');
+	   var location_id = $(this).data('location');
+	   var URL = "{{ route('check-task-id') }}";
+	   $.ajax({
+			url: URL,
+			type: "POST",
+			data: {cat_id:cat_id,location_id:location_id, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.hasData);
+				$('#taskid').val(response.taskid);
+				if(!response.hasData)
+				{
+					$('#errorMessage').fadeIn().delay(2000).fadeOut();
+				}
+				else {
+					var taskid = $('#taskid').val();
+					var baseUrl = "{{ url('/checklist-question') }}";
+					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + subcat_id;
+					window.location.href = redirectUrl;
+				}
+			},
+		});
+	   
    });
 });
 </script>
