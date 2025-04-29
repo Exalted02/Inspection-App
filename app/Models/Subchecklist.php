@@ -15,8 +15,5 @@ class Subchecklist extends Model
         'status', 
     ];
 	
-	public function get_checklist()
-	{
-		return $this->belongsTo(Checklist::class, 'checklist_id');
-	}
+	
 }

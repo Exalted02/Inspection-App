@@ -85,14 +85,92 @@ class DashboardInspectorController extends Controller
 		$current_question_id = $request->post('current_question_id');
 		$category_id = $request->post('category_id');
 		$subcategory_id = $request->post('subcategory_id');
-		$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+		$nextQuestionExists = Checklist::where('category_id', $category_id)
 		->where('subcategory_id', $subcategory_id)
 		->where('status', '!=', 2)
 		->where('id', '>', $current_question_id)
 		->orderBy('id', 'asc')
-		->first();
-		//echo "<pre>";print_r($nextQuestion);die;
-		return response()->json(['currentid'=> $nextQuestion->id, 'name' => $nextQuestion->name, 'subchecklist' => $nextQuestion->get_subchecklist]);
-
+		->exists();
+		
+		$nextId = '';
+		$name  = '';
+		$subchecklist = '';
+		$subcategoryname = '';
+		//$subChklistArr = [];
+		
+		if($nextQuestionExists)
+		{
+			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+			->where('category_id', $category_id)
+			->where('subcategory_id', $subcategory_id)
+			->where('status', '!=', 2)
+			->where('id', '>', $current_question_id)
+			->orderBy('id', 'asc')
+			->first();
+			//echo "<pre>";print_r($nextQuestion);die;
+			$nextId = $nextQuestion->id;
+			$name = $nextQuestion->name;
+			$subChklistArr = [];
+			if(!empty($nextQuestion->get_subchecklist))
+			{
+				//$subchecklist = $nextQuestion->get_subchecklist;
+				foreach($nextQuestion->get_subchecklist as $subchecklists)
+				{
+					$subChklistArr[] = [
+						'id' => $subchecklists->id,
+						'name' => $subchecklists->name
+					];
+				}
+				
+				$subcategoryname = $nextQuestion->get_subcategory->name;
+			}
+		}
+		return response()->json(['currentid'=> $nextId ?? null, 'name' => $name ?? null, 'subchecklist' => $subChklistArr, 'subcategoryname' => $subcategoryname]);
+	}
+	public function checklist_previous_question(Request $request)
+	{
+		$current_question_id = $request->post('current_question_id');
+		$category_id = $request->post('category_id');
+		$subcategory_id = $request->post('subcategory_id');
+		$nextQuestionExists = Checklist::where('category_id', $category_id)
+		->where('subcategory_id', $subcategory_id)
+		->where('status', '!=', 2)
+		->where('id', '<', $current_question_id)
+		->orderBy('id', 'desc')
+		->exists();
+		
+		$nextId = '';
+		$name  = '';
+		$subchecklist = '';
+		$subcategoryname = '';
+		
+		if($nextQuestionExists)
+		{
+			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+			->where('category_id', $category_id)
+			->where('subcategory_id', $subcategory_id)
+			->where('status', '!=', 2)
+			->where('id', '<', $current_question_id)
+			->orderBy('id', 'desc')
+			->first();
+			//echo "<pre>";print_r($nextQuestion);die;
+			$nextId = $nextQuestion->id;
+			$name = $nextQuestion->name;
+			$subChklistArr = [];
+			if(!empty($nextQuestion->get_subchecklist))
+			{
+				//$subchecklist = $nextQuestion->get_subchecklist;
+				foreach($nextQuestion->get_subchecklist as $subchecklists)
+				{
+					$subChklistArr[] = [
+						'id' => $subchecklists->id,
+						'name' => $subchecklists->name
+					];
+				}
+				
+				$subcategoryname = $nextQuestion->get_subcategory->name;
+			}
+		}
+		return response()->json(['currentid'=> $nextId ?? null, 'name' => $name ?? null, 'subchecklist' => $subChklistArr, 'subcategoryname' => $subcategoryname]);
 	}
 }

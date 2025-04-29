@@ -9847,3 +9847,7 @@ footer.footer-bg {
     font-size: 26px;
     font-weight: 600;
 }
+.question-navigation {
+    width: 100%;
+    padding: 10px 0;
+}
