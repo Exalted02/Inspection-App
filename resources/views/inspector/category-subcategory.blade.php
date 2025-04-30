@@ -19,7 +19,7 @@
 				Please enter details.
 			</span>
 			<div class="location-edit" id="editBox">
-				<input type="text" id="addressInput" placeholder="Add location" />
+				<input type="text" id="addressInput" placeholder="Add location" value="{{ $location_details ?? ''}}"/>
 				<button id="doneBtn" class="donesubmit">Done</button>
 			</div>
 			<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
@@ -41,10 +41,14 @@
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane active" id="uncomplete_tab">
 								@foreach($categoryData[0]->get_subcategory as $subcategories)
+								@php 
+									$tot_checklist = App\Models\Checklist::where('category_id', $categoryData[0]->id)->where('subcategory_id', $subcategories->id)->count();
+									$tot_completed = App\Models\Task_list_checklists::where('task_list_id',$task_id)->where('task_list_subcategory_id', $subcategories->id)->count();
+								@endphp
 								<div class="checklist-item">
 									<div class="text">
 										<div class="title">{{ $subcategories->name ?? ''}}</div>
-										<div class="subtitle">Completed 3 of 7</div>
+										<div class="subtitle">Completed {{ $tot_completed ?? ''}} of {{ $tot_checklist ?? ''}}</div>
 									</div>
 									{{--<a href="{{route('checklist-question' ,['cat_id'=>$categoryData[0]->id, 'subcat_id'=>$subcategories->id])}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
 									<a href="jacascript:void(0);" class="chk-task-id" data-cat="{{ $categoryData[0]->id ?? ''}}" data-subcat="{{ $subcategories->id ?? '' }}" data-location="{{ $location_id ?? ''}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>

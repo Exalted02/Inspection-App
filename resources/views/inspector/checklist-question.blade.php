@@ -16,9 +16,13 @@
 				<span id="single-question">{{ $checklistdata->name ?? '' }}</span>
 
 			</div>
+			<span id="errormsg" style="display: none; color: red;">
+				Please enter text or file.
+			</span>
 			<div class="reject-form mb-3" id="rejectForm-1">
 				<textarea id="single_rejecttext" placeholder="State why you rejected this..."></textarea>
 				<input type="hidden" id="mode" value="single">
+				<input type="hidden" id="approveStatus">
 				<form action="{{ route('reject-files')}}" class="dropzone" id="dropzone-1">
 					<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="{{ $checklistdata->id ?? '' }}">
 					<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
@@ -102,12 +106,16 @@ function handleReject(id) {
 	
 	document.getElementById("question-approve-"+id).classList.remove("active");
 	document.getElementById("question-reject-"+id).classList.add("active");
+	$('#approveStatus').val(0);
+	//alert('reject');
 }
 function handleApprove(id) {
 	document.getElementById('rejectForm-'+id).style.display = 'none';
 	
 	document.getElementById("question-reject-"+id).classList.remove("active");
 	document.getElementById("question-approve-"+id).classList.add("active");
+	$('#approveStatus').val(1);
+	//alert('approve');
 }
 
 Dropzone.autoDiscover = false; // very important
@@ -137,6 +145,20 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 <script>
 $(document ).ready(function() {
     $(document).on('click','.next_question', function(){
+		
+		var approveStatus = $('#approveStatus').val();
+		//alert("approveStatus" + approveStatus);
+		if(approveStatus == '0')
+		{
+			//alert('ok1');
+			//alert($('#single_rejecttext').val());
+			if($('#single_rejecttext').val()=='')
+			{
+				$('#errormsg').fadeIn().delay(2000).fadeOut();
+				//alert('ok2');
+				return false;
+			}
+		}
 		var current_id = $('#current_checklist_id').val();
 		//alert(current_id);
 		var category_id = $('#category_id').val();
@@ -149,7 +171,7 @@ $(document ).ready(function() {
 		if(mode=='single')
 		{
 			 var rejectTextsSingle = $('#single_rejecttext').val();
-			  alert(rejectTextsSingle);
+			  //alert(rejectTextsSingle);
 		}
 		else{
 			
@@ -168,6 +190,7 @@ $(document ).ready(function() {
 			url: URL,
 			type: "POST",
 			data: {
+				approveStatus: approveStatus,
 				mode: mode,
 				task_id: task_id,
 				current_question_id: current_id,
@@ -206,6 +229,7 @@ $(document ).ready(function() {
 						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
 						html += '<textarea placeholder="State why you rejected this..."></textarea>';
 						html += '<input type="hidden" id="mode" value="multiple">';
+						html += '<input type="hidden" id="approveStatus">';
 						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '"></form>';
 						html += '</div>'; 
 						html += '</div>'; 
@@ -215,7 +239,21 @@ $(document ).ready(function() {
 
 						$('.checklist-question').html(html); 
 				} else {
-						//alert('nooo');
+						alert(response.next_approve);
+						if(response.next_approve==0)
+						{
+							const rejectButton = document.getElementById('question-reject-' + response.currentid);
+							rejectButton.click();
+							//$('#question-reject-' + response.currentid).click();
+							//'<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
+						}
+						
+						if(response.next_approve==1)
+						{
+							const approveButton = document.getElementById('question-approve-' + response.currentid);
+							approveButton.click();
+						}
+						
 						let html = '<div class="single-checklist">';
 						html += '<div class="question-header">' + response.subcategoryname + '</div>';
 						html += '<div class="question-text">';
@@ -224,9 +262,11 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="category_id" value="' + category_id + '">';
 						html += '<input type="hidden" id="subcategory_id" value="' + subcategory_id + '">';
 						html += '</div>'; 
+						html += '<span id="errormsg" style="display: none; color: red;">Please enter text or file.</span>';
 						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
-						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this..."></textarea>';
+						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this...">' + response.next_rejected_region + '</textarea>';
 						html += '<input type="hidden" id="mode" value="single">';
+						html += '<input type="hidden" id="approveStatus">';
 						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
 						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + subcategory_id + '">';
@@ -306,6 +346,7 @@ $(document ).ready(function() {
 						html += '</div>'; 
 						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
 						html += '<textarea placeholder="State why you rejected this..."></textarea>';
+						html += '<input type="hidden" id="approveStatus">';
 						html += '<form action="/your-upload-route" class="dropzone" id="dropzone-' + item.id + '"></form>';
 						html += '</div>'; 
 						html += '</div>'; 
@@ -324,8 +365,11 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="category_id" value="' + category_id + '">';
 						html += '<input type="hidden" id="subcategory_id" value="' + subcategory_id + '">';
 						html += '</div>'; 
+						html += '<span id="errormsg" style="display: none; color: red;">Please enter text or file.</span>';
 						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
-						html += '<textarea placeholder="State why you rejected this..."></textarea>';
+						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this..."></textarea>';
+						html += '<input type="hidden" id="mode" value="single">';
+						html += '<input type="hidden" id="approveStatus">';
 						html += '<form action="/your-upload-route" class="dropzone" id="dropzone-' + response.currentid + '"></form>';
 						html += '</div>'; 
 						html += '<div class="action-buttons-without-text">';
