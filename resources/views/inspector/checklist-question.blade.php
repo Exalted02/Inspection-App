@@ -239,21 +239,7 @@ $(document ).ready(function() {
 
 						$('.checklist-question').html(html); 
 				} else {
-						alert(response.next_approve);
-						if(response.next_approve==0)
-						{
-							const rejectButton = document.getElementById('question-reject-' + response.currentid);
-							rejectButton.click();
-							//$('#question-reject-' + response.currentid).click();
-							//'<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
-						}
-						
-						if(response.next_approve==1)
-						{
-							const approveButton = document.getElementById('question-approve-' + response.currentid);
-							approveButton.click();
-						}
-						
+						//alert(response.next_approve);
 						let html = '<div class="single-checklist">';
 						html += '<div class="question-header">' + response.subcategoryname + '</div>';
 						html += '<div class="question-text">';
@@ -280,6 +266,18 @@ $(document ).ready(function() {
 						html += '</div>'; 
 
 						$('.checklist-question').html(html); 
+						
+						if(response.next_approve== '0')
+						{
+							const rejectButton = document.getElementById('question-reject-' + response.currentid);
+							rejectButton.click();
+						}
+						
+						if(response.next_approve== '1')
+						{
+							const approveButton = document.getElementById('question-approve-' + response.currentid);
+							approveButton.click();
+						}
 					}
 					
 					
@@ -315,11 +313,18 @@ $(document ).ready(function() {
 		//alert(current_id);
 		var category_id = $('#category_id').val();
 		var subcategory_id = $('#subcategory_id').val();
+		var task_id = $('#task_id').val();
 		var URL = "{{ route('checklist-previous-question') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {current_question_id:current_id,category_id:category_id,subcategory_id:subcategory_id, _token: csrfToken},
+			data: {
+				task_id:task_id,
+				current_question_id:current_id,
+				category_id:category_id,
+				subcategory_id:subcategory_id,
+				_token: csrfToken
+			},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.currentid);
@@ -367,7 +372,7 @@ $(document ).ready(function() {
 						html += '</div>'; 
 						html += '<span id="errormsg" style="display: none; color: red;">Please enter text or file.</span>';
 						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
-						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this..."></textarea>';
+						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this...">' + response.next_rejected_region + '</textarea>';
 						html += '<input type="hidden" id="mode" value="single">';
 						html += '<input type="hidden" id="approveStatus">';
 						html += '<form action="/your-upload-route" class="dropzone" id="dropzone-' + response.currentid + '"></form>';
@@ -378,7 +383,18 @@ $(document ).ready(function() {
 						html += '</div>'; 
 						html += '</div>'; 
 
-						$('.checklist-question').html(html); 
+						$('.checklist-question').html(html);
+						if(response.next_approve== '0')
+						{
+							const rejectButton = document.getElementById('question-reject-' + response.currentid);
+							rejectButton.click();
+						}
+						
+						if(response.next_approve== '1')
+						{
+							const approveButton = document.getElementById('question-approve-' + response.currentid);
+							approveButton.click();
+						}
 					}
 				Dropzone.autoDiscover = false;
 					document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {

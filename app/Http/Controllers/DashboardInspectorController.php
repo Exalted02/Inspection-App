@@ -249,6 +249,7 @@ class DashboardInspectorController extends Controller
 	}
 	public function checklist_previous_question(Request $request)
 	{
+		$task_id = $request->post('task_id');
 		$current_question_id = $request->post('current_question_id');
 		$category_id = $request->post('category_id');
 		$subcategory_id = $request->post('subcategory_id');
@@ -290,8 +291,23 @@ class DashboardInspectorController extends Controller
 				
 				$subcategoryname = $nextQuestion->get_subcategory->name;
 			}
+			
+			// fetch data from task_list_checklist
+			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();
+			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
+			$next_approve = $iffetch ? $iffetch->approve : '';
 		}
-		return response()->json(['currentid'=> $nextId ?? null, 'name' => $name ?? null, 'subchecklist' => $subChklistArr, 'subcategoryname' => $subcategoryname]);
+		return response()->json(
+			[
+				'task_id'=>$task_id,
+				'currentid'=> $nextId ?? null,
+				'name' => $name ?? null,
+				'subchecklist' => $subChklistArr,
+				'subcategoryname' => $subcategoryname,
+				'next_rejected_region'=> $next_rejected_region ?? '',
+				'next_approve'=>$next_approve
+			]
+		);
 	}
 	public function single_reject_files(Request $request)
 	{
