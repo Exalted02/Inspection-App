@@ -43,6 +43,7 @@
 			<div class="reject-form mb-3" id="rejectForm-1">
 				<textarea id="single_rejecttext" placeholder="State why you rejected this...">{{ $rejected_region ??  '' }}</textarea>
 				<input type="hidden" id="mode" value="single">
+				<input type="text" id="hasEditFile" value="">
 				<input type="hidden" id="approveStatus" value="{{ $approve}}">
 				<form action="{{ route('reject-files')}}" class="dropzone" id="dropzone-1">
 					<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="{{ $checklistdata->id ?? '' }}">
@@ -110,8 +111,16 @@
 	<input type="hidden" id="subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
 	<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
 	<div class="checklist-question-sticky-footer">
-		<div class="progress-bar">
+	{{--<div class="progress-bar">
 			<span style="width: 40%;"></span>
+	</div>--}}
+		<div class="progress-block-bar mb-4">
+			<div class="step-block completed"></div>
+			<div class="step-block completed"></div>
+			<div class="step-block completed"></div>
+			<div class="step-block completed"></div>
+			<div class="step-block"></div>    
+			<div class="step-block"></div> 
 		</div>
 		<div class="clearfix"></div>
 		<div class="footer-content question-navigation d-flex justify-content-between">
@@ -125,6 +134,7 @@
 let existingFiles = @json($existingFiles);
 //---------- show image when page load ----------
 Dropzone.autoDiscover = false; // very important
+
 document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     let myDropzone = new Dropzone(dropzoneElement, {
         url: "{{ route('reject-files') }}", // still needed for new uploads
@@ -151,6 +161,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 
                 // Store filename for deletion
                 mockFile.uploadedFilename = file.name;
+				$('#hasEditFile').val(1);
             });
 
             this.on("removedfile", function (file) {
@@ -280,14 +291,39 @@ $(document ).ready(function() {
     $(document).on('click','.next_question', function(){
 		
 		var approveStatus = $('#approveStatus').val();
+		
 		//alert("approveStatus" + approveStatus);
 		if(approveStatus == '0')
 		{
-			if($('#single_rejecttext').val()=='')
-			{
+			var textIsEmpty = $('#single_rejecttext').val().trim() === '';
+			// Access Dropzone instance
+			//var dzInstance = Dropzone.forElement('#dropzone-1');
+			//var hasFiles = dzInstance.files.length > 0;
+			
+			//var dropzoneElement = document.querySelector('#dropzone-1');
+            //var dzInstance = dropzoneElement ? Dropzone.forElement('#dropzone-1') : null;
+			//var hasFiles = dzInstance && dzInstance.files.length > 0;
+			//alert(hasFiles);
+			var hasEditFile = $('#hasEditFile').val();
+			//alert(hasEditFile);
+			var hasFiles = false;
+			try {
+				var dzInstance = Dropzone.forElement('#dropzone-1');
+				hasFiles = dzInstance.files.length > 0;
+			} catch (e) {
+				console.warn("Dropzone not found or not initialized yet.");
+			}
+			
+			if (textIsEmpty &&  !hasFiles && !hasEditFile) {
 				$('#errormsg').fadeIn().delay(2000).fadeOut();
 				return false;
 			}
+			
+			/*if($('#single_rejecttext').val()=='')
+			{
+				$('#errormsg').fadeIn().delay(2000).fadeOut();
+				return false;
+			}*/
 		}
 		var current_id = $('#current_checklist_id').val();
 		//alert(current_id);
@@ -381,6 +417,7 @@ $(document ).ready(function() {
 						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
 						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this...">' + response.next_rejected_region + '</textarea>';
 						html += '<input type="hidden" id="mode" value="single">';
+						html += '<input type="hidden" id="hasEditFile" value="">';
 						html += '<input type="hidden" id="approveStatus">';
 						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
@@ -437,6 +474,7 @@ $(document ).ready(function() {
 
 										// Store filename for deletion
 										mockFile.uploadedFilename = file.name;
+										$('#hasEditFile').val(1);
 									});
 
 									this.on("removedfile", function (file) {
@@ -446,10 +484,23 @@ $(document ).ready(function() {
 												type: "POST",
 												data: {
 													_token: csrfToken,
-													filename: file.uploadedFilename
+													filename: file.uploadedFilename,
+													checklist_id: response.currentid,
+													task_id: task_id,
+													subcategory_id: subcategory_id
 												},
 												success: function (response) {
 													console.log('Deleted:', response);
+													alert(response.count);
+													if(response.count == '0')
+													{
+														//alert('1');
+														$('hasEditFile').val('');
+													}
+													else{
+														//alert('2');
+														$('hasEditFile').val(1);
+													}
 												},
 												error: function (xhr) {
 													console.error('Delete failed:', xhr.responseText);
@@ -559,7 +610,7 @@ $(document ).ready(function() {
 				//alert(response.currentid);
 				 $('#current_checklist_id').val(response.currentid);
 				 //$('#single-question').html(response.name);
-				 
+				 const rejectFilesRoute = "{{ route('reject-files') }}";
 				if (response.subchecklist.length > 0) {
 				// Has subchecklists
 				let html = '<div class="sub-checklist">';
@@ -603,8 +654,14 @@ $(document ).ready(function() {
 						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
 						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this...">' + response.next_rejected_region + '</textarea>';
 						html += '<input type="hidden" id="mode" value="single">';
+						html += '<input type="hidden" id="hasEditFile" value="">';
 						html += '<input type="hidden" id="approveStatus">';
-						html += '<form action="/your-upload-route" class="dropzone" id="dropzone-' + response.currentid + '"></form>';
+						//html += '<form action="/your-upload-route" class="dropzone" id="dropzone-' + response.currentid + '"></form>';
+						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
+						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
+						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + subcategory_id + '">';
+						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
+						html += '</form>';
 						html += '</div>'; 
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
@@ -655,6 +712,7 @@ $(document ).ready(function() {
 
 										// Store filename for deletion
 										mockFile.uploadedFilename = file.name;
+										$('#hasEditFile').val(1);
 									});
 
 									this.on("removedfile", function (file) {

@@ -408,8 +408,16 @@ class DashboardInspectorController extends Controller
 		if (file_exists($filePath)) {
 			unlink($filePath);
 		}
-
-		return response()->json(['success' => true, 'message' => 'File deleted.']);
+		
+		$checklist_id = $request->post('checklist_id');
+		$task_id = $request->post('task_id');
+		$subcategory_id = $request->post('subcategory_id');
+		$isFiles  = Task_list_checklists::where('task_list_id',$task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $checklist_id)->first();
+		$task_list_checklist_id = $isFiles ? $isFiles->id : null;
+		
+		$count = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->count();
+		
+		return response()->json(['success' => true, 'message' => 'File deleted.', 'count'=>$count]);
 	}
 
 	

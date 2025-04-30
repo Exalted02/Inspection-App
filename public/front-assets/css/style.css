@@ -9851,3 +9851,17 @@ footer.footer-bg {
     width: 100%;
     padding: 10px 0;
 }
+.progress-block-bar {
+	display: flex;   
+	gap: 4px;
+}
+.step-block {    
+	flex: 1;
+	height: 6px;
+	background-color: red !important;
+	border-radius: 1px;
+}
+   
+.step-block.completed {
+	background: black !important;  
+}
