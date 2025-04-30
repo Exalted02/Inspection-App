@@ -10,6 +10,27 @@
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist-question">
 	@if(isset($checklistdata) && $checklistdata->get_subchecklist->isEmpty())
+		@php 
+			$checkImageFile = App\Models\Task_list_checklists::where('task_list_id',$task_id)
+						->where('task_list_subcategory_id',$checklistdata->subcategory_id)
+						->where('checklist_id',$checklistdata->id)->first();
+			$task_list_checklist_id = $checkImageFile ? $checkImageFile->id : null;
+			$rejected_region = $checkImageFile ? $checkImageFile->rejected_region : '';
+			$approve = $checkImageFile ? $checkImageFile->approve : '';
+			$existingFiles = [];
+			if (isset($task_list_checklist_id)) {
+				$imageData = App\Models\Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
+				foreach ($imageData as $file) {
+					$filename = $file->file;
+					$existingFiles[] = [
+						'name' => $filename,
+						'size' => file_exists(public_path('uploads/reject-files/' . $filename)) ? filesize(public_path('uploads/reject-files/' . $filename)) : 123456, // default if unknown
+						'url' => asset('uploads/reject-files/' . $filename),
+					];
+				}
+			}
+				
+		@endphp
 		<div class="single-checklist d-none1">
 			<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>
 			<div class="question-text">
@@ -20,9 +41,9 @@
 				Please enter text or file.
 			</span>
 			<div class="reject-form mb-3" id="rejectForm-1">
-				<textarea id="single_rejecttext" placeholder="State why you rejected this..."></textarea>
+				<textarea id="single_rejecttext" placeholder="State why you rejected this...">{{ $rejected_region ??  '' }}</textarea>
 				<input type="hidden" id="mode" value="single">
-				<input type="hidden" id="approveStatus">
+				<input type="hidden" id="approveStatus" value="{{ $approve}}">
 				<form action="{{ route('reject-files')}}" class="dropzone" id="dropzone-1">
 					<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="{{ $checklistdata->id ?? '' }}">
 					<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
@@ -101,13 +122,65 @@
 @endsection 
 @section('scripts')
 <script>
+let existingFiles = @json($existingFiles);
+//---------- show image when page load ----------
+Dropzone.autoDiscover = false; // very important
+document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+    let myDropzone = new Dropzone(dropzoneElement, {
+        url: "{{ route('reject-files') }}", // still needed for new uploads
+        maxFiles: 5,
+        maxFilesize: 2, // MB
+        acceptedFiles: 'image/*',
+        addRemoveLinks: true,
+        dictRemoveFile: 'Delete file',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        },
+        init: function () {
+            let dz = this;
+
+            // Add existing files (preloaded from server)
+            existingFiles.forEach(function (file) {
+                let mockFile = { name: file.name, size: file.size, accepted: true };
+
+                dz.emit("addedfile", mockFile);
+                dz.emit("thumbnail", mockFile, file.url);
+                dz.emit("complete", mockFile);
+
+                mockFile.previewElement.classList.add('dz-success', 'dz-complete');
+
+                // Store filename for deletion
+                mockFile.uploadedFilename = file.name;
+            });
+
+            this.on("removedfile", function (file) {
+                if (file.uploadedFilename) {
+                    $.ajax({
+                        url: "{{ route('checklist-file-delete') }}", // handle deletion logic on server
+                        type: "POST",
+                        data: {
+                            _token: csrfToken,
+                            filename: file.uploadedFilename
+                        },
+                        success: function (response) {
+                            console.log('Deleted:', response);
+                        },
+                        error: function (xhr) {
+                            console.error('Delete failed:', xhr.responseText);
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+//alert(existingFiles);
 function handleReject(id) {
 	document.getElementById('rejectForm-'+id).style.display = 'flex';
 	
 	document.getElementById("question-approve-"+id).classList.remove("active");
 	document.getElementById("question-reject-"+id).classList.add("active");
 	$('#approveStatus').val(0);
-	//alert('reject');
 }
 function handleApprove(id) {
 	document.getElementById('rejectForm-'+id).style.display = 'none';
@@ -115,13 +188,11 @@ function handleApprove(id) {
 	document.getElementById("question-reject-"+id).classList.remove("active");
 	document.getElementById("question-approve-"+id).classList.add("active");
 	$('#approveStatus').val(1);
-	//alert('approve');
 }
 
-Dropzone.autoDiscover = false; // very important
+//Dropzone.autoDiscover = false; // very important
 
-// This will automatically find and initialize all dropzones
-document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     new Dropzone(dropzoneElement, {
         url: "{{ route('reject-files')}}", // your upload URL
         maxFiles: 5,
@@ -139,23 +210,82 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
             console.error('Upload error', errorMessage);
         }
     });
+});*/
+
+
+document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+    new Dropzone(dropzoneElement, {
+        url: "{{ route('reject-files') }}",
+        maxFiles: 5,
+        maxFilesize: 2, // MB
+        acceptedFiles: 'image/*',
+        addRemoveLinks: true,
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        },
+        dictDefaultMessage: 'Drag & drop or click to upload',
+        dictRemoveFile: 'Delete file',
+        init: function () {
+            this.on("success", function (file, response) {
+                console.log('Uploaded:', response);
+
+                // Attach filename to file object so we can use it on removal
+                file.uploadedFilename = response.filename;
+
+                // Replace default preview with file name
+                file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
+            });
+
+            this.on("removedfile", function (file) {
+                if (file.uploadedFilename) {
+                    // Send AJAX request to delete the file from storage and DB
+                    $.ajax({
+                        url: "{{ route('reject-file-delete') }}", // You need to define this route
+                        type: "POST",
+                        data: {
+                            _token: csrfToken,
+                            filename: file.uploadedFilename
+                        },
+                        success: function (response) {
+                            console.log('Deleted:', response);
+                        },
+                        error: function (xhr) {
+                            console.error('Delete failed:', xhr.responseText);
+                        }
+                    });
+                }
+            });
+        }
+    });
 });
+
 
 </script>
 <script>
 $(document ).ready(function() {
+	var approveStatus = $('#approveStatus').val();
+	if(approveStatus == '0')
+	{
+		const rejectButton = document.getElementById('question-reject-1');
+		rejectButton.click();
+	}
+	
+	if(approveStatus == '1')
+	{
+		const approveButton = document.getElementById('question-approve-1');
+		approveButton.click();
+	}
+	
+	
     $(document).on('click','.next_question', function(){
 		
 		var approveStatus = $('#approveStatus').val();
 		//alert("approveStatus" + approveStatus);
 		if(approveStatus == '0')
 		{
-			//alert('ok1');
-			//alert($('#single_rejecttext').val());
 			if($('#single_rejecttext').val()=='')
 			{
 				$('#errormsg').fadeIn().delay(2000).fadeOut();
-				//alert('ok2');
 				return false;
 			}
 		}
@@ -171,7 +301,6 @@ $(document ).ready(function() {
 		if(mode=='single')
 		{
 			 var rejectTextsSingle = $('#single_rejecttext').val();
-			  //alert(rejectTextsSingle);
 		}
 		else{
 			
@@ -278,10 +407,110 @@ $(document ).ready(function() {
 							const approveButton = document.getElementById('question-approve-' + response.currentid);
 							approveButton.click();
 						}
+						
+						// dropzone work
+						Dropzone.autoDiscover = false;
+						//---------- show image when page load ----------
+						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+							let myDropzone = new Dropzone(dropzoneElement, {
+								url: "{{ route('reject-files') }}",
+								maxFiles: 5,
+								maxFilesize: 2, // MB
+								acceptedFiles: 'image/*',
+								addRemoveLinks: true,
+								dictRemoveFile: 'Delete file',
+								headers: {
+									'X-CSRF-TOKEN': csrfToken
+								},
+								init: function () {
+									let dz = this;
+
+									// Add existing files (preloaded from server)
+									response.existingNextFiles.forEach(function (file) {
+										let mockFile = { name: file.name, size: file.size, accepted: true };
+
+										dz.emit("addedfile", mockFile);
+										dz.emit("thumbnail", mockFile, file.url);
+										dz.emit("complete", mockFile);
+
+										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
+
+										// Store filename for deletion
+										mockFile.uploadedFilename = file.name;
+									});
+
+									this.on("removedfile", function (file) {
+										if (file.uploadedFilename) {
+											$.ajax({
+												url: "{{ route('checklist-file-delete') }}", // handle deletion logic on server
+												type: "POST",
+												data: {
+													_token: csrfToken,
+													filename: file.uploadedFilename
+												},
+												success: function (response) {
+													console.log('Deleted:', response);
+												},
+												error: function (xhr) {
+													console.error('Delete failed:', xhr.responseText);
+												}
+											});
+										}
+									});
+								}
+							});
+						});
+						
+						//--- upload files ------- 
+						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+							new Dropzone(dropzoneElement, {
+								url: "{{ route('reject-files') }}",
+								maxFiles: 5,
+								maxFilesize: 2, // MB
+								acceptedFiles: 'image/*',
+								addRemoveLinks: true,
+								headers: {
+									'X-CSRF-TOKEN': csrfToken
+								},
+								dictDefaultMessage: 'Drag & drop or click to upload',
+								dictRemoveFile: 'Delete file',
+								init: function () {
+									this.on("success", function (file, response) {
+										console.log('Uploaded:', response);
+
+										// Attach filename to file object so we can use it on removal
+										file.uploadedFilename = response.filename;
+
+										// Replace default preview with file name
+										file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
+									});
+
+									this.on("removedfile", function (file) {
+										if (file.uploadedFilename) {
+											// Send AJAX request to delete the file from storage and DB
+											$.ajax({
+												url: "{{ route('reject-file-delete') }}", // You need to define this route
+												type: "POST",
+												data: {
+													_token: csrfToken,
+													filename: file.uploadedFilename
+												},
+												success: function (response) {
+													console.log('Deleted:', response);
+												},
+												error: function (xhr) {
+													console.error('Delete failed:', xhr.responseText);
+												}
+											});
+										}
+									});
+								}
+							});
+						});
 					}
 					
 					
-					Dropzone.autoDiscover = false;
+					/*Dropzone.autoDiscover = false;
 					document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 						// Avoid double-initializing if Dropzone was already applied
 						if (!dropzoneElement.classList.contains("dz-clickable")) {
@@ -303,7 +532,7 @@ $(document ).ready(function() {
 								}
 							});
 						}
-					});
+					});*/
 			},
 		});
 	});
@@ -395,8 +624,115 @@ $(document ).ready(function() {
 							const approveButton = document.getElementById('question-approve-' + response.currentid);
 							approveButton.click();
 						}
+						
+						// dropzone work
+						Dropzone.autoDiscover = false;
+						
+						//---------- show image when page load ----------
+						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+							let myDropzone = new Dropzone(dropzoneElement, {
+								url: "{{ route('reject-files') }}",
+								maxFiles: 5,
+								maxFilesize: 2, // MB
+								acceptedFiles: 'image/*',
+								addRemoveLinks: true,
+								dictRemoveFile: 'Delete file',
+								headers: {
+									'X-CSRF-TOKEN': csrfToken
+								},
+								init: function () {
+									let dz = this;
+
+									// Add existing files (preloaded from server)
+									response.existingPreviousFiles.forEach(function (file) {
+										let mockFile = { name: file.name, size: file.size, accepted: true };
+
+										dz.emit("addedfile", mockFile);
+										dz.emit("thumbnail", mockFile, file.url);
+										dz.emit("complete", mockFile);
+
+										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
+
+										// Store filename for deletion
+										mockFile.uploadedFilename = file.name;
+									});
+
+									this.on("removedfile", function (file) {
+										if (file.uploadedFilename) {
+											$.ajax({
+												url: "{{ route('checklist-file-delete') }}", // handle deletion logic on server
+												type: "POST",
+												data: {
+													_token: csrfToken,
+													filename: file.uploadedFilename
+												},
+												success: function (response) {
+													console.log('Deleted:', response);
+												},
+												error: function (xhr) {
+													console.error('Delete failed:', xhr.responseText);
+												}
+											});
+										}
+									});
+								}
+							});
+						});
+						
+						//--- upload files -------
+						
+						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+							new Dropzone(dropzoneElement, {
+								url: "{{ route('reject-files') }}",
+								maxFiles: 5,
+								maxFilesize: 2, // MB
+								acceptedFiles: 'image/*',
+								addRemoveLinks: true,
+								headers: {
+									'X-CSRF-TOKEN': csrfToken
+								},
+								dictDefaultMessage: 'Drag & drop or click to upload',
+								dictRemoveFile: 'Delete file',
+								init: function () {
+									this.on("success", function (file, response) {
+										console.log('Uploaded:', response);
+
+										// Attach filename to file object so we can use it on removal
+										file.uploadedFilename = response.filename;
+
+										// Replace default preview with file name
+										file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
+									});
+
+									this.on("removedfile", function (file) {
+										if (file.uploadedFilename) {
+											// Send AJAX request to delete the file from storage and DB
+											$.ajax({
+												url: "{{ route('reject-file-delete') }}", // You need to define this route
+												type: "POST",
+												data: {
+													_token: csrfToken,
+													filename: file.uploadedFilename
+												},
+												success: function (response) {
+													console.log('Deleted:', response);
+												},
+												error: function (xhr) {
+													console.error('Delete failed:', xhr.responseText);
+												}
+											});
+										}
+									});
+								}
+							});
+						});
+						
+						
+						
+						
 					}
-				Dropzone.autoDiscover = false;
+					
+					/*Dropzone.autoDiscover = false;
 					document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 						// Avoid double-initializing if Dropzone was already applied
 						if (!dropzoneElement.classList.contains("dz-clickable")) {
@@ -415,7 +751,7 @@ $(document ).ready(function() {
 								}
 							});
 						}
-					});
+					});*/
 			},
 		});
 	});

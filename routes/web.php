@@ -71,6 +71,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	//check-task-id
 	Route::post('check-task-id', [DashboardInspectorController::class, 'check_task_id'])->name('check-task-id');
 	Route::post('reject-files', [DashboardInspectorController::class, 'single_reject_files'])->name('reject-files');
+	Route::post('reject-file-delete', [DashboardInspectorController::class, 'delete_reject_file'])->name('reject-file-delete');
+	Route::post('checklist-file-delete', [DashboardInspectorController::class, 'checklist_file_delete'])->name('checklist-file-delete');
 	//User-Accounts
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	

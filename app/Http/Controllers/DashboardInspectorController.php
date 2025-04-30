@@ -186,7 +186,8 @@ class DashboardInspectorController extends Controller
 						$fileModel->file = $filename;
 						$fileModel->save();
 
-						$tempFile->delete();
+						//$tempFile->delete();
+						Task_list_checklist_temp_rejected_files::where('file', $filename)->delete();
 					}
 				}
 			}
@@ -233,6 +234,21 @@ class DashboardInspectorController extends Controller
 			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();
 			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
 			$next_approve = $iffetch ? $iffetch->approve : '';
+			
+			// fetch files 
+			$task_list_checklist_id = $iffetch ? $iffetch->id : null;
+			$existingFiles = [];
+			if (isset($task_list_checklist_id)) {
+				$imageData = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
+				foreach ($imageData as $file) {
+					$filename = $file->file;
+					$existingFiles[] = [
+						'name' => $filename,
+						'size' => file_exists(public_path('uploads/reject-files/' . $filename)) ? filesize(public_path('uploads/reject-files/' . $filename)) : 123456, // default if unknown
+						'url' => asset('uploads/reject-files/' . $filename),
+					];
+				}
+			}
 		}
 		return response()->json
 		(
@@ -243,7 +259,8 @@ class DashboardInspectorController extends Controller
 				'subchecklist' => $subChklistArr,
 				'subcategoryname' => $subcategoryname,
 				'next_rejected_region'=> $next_rejected_region ?? '',
-				'next_approve'=>$next_approve
+				'next_approve'=>$next_approve,
+				'existingNextFiles'=>$existingFiles
 			]
 		);
 	}
@@ -296,6 +313,21 @@ class DashboardInspectorController extends Controller
 			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();
 			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
 			$next_approve = $iffetch ? $iffetch->approve : '';
+			
+			// fetch files 
+			$task_list_checklist_id = $iffetch ? $iffetch->id : null;
+			$existingFiles = [];
+			if (isset($task_list_checklist_id)) {
+				$imageData = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
+				foreach ($imageData as $file) {
+					$filename = $file->file;
+					$existingFiles[] = [
+						'name' => $filename,
+						'size' => file_exists(public_path('uploads/reject-files/' . $filename)) ? filesize(public_path('uploads/reject-files/' . $filename)) : 123456, // default if unknown
+						'url' => asset('uploads/reject-files/' . $filename),
+					];
+				}
+			}
 		}
 		return response()->json(
 			[
@@ -305,7 +337,8 @@ class DashboardInspectorController extends Controller
 				'subchecklist' => $subChklistArr,
 				'subcategoryname' => $subcategoryname,
 				'next_rejected_region'=> $next_rejected_region ?? '',
-				'next_approve'=>$next_approve
+				'next_approve'=>$next_approve,
+				'existingPreviousFiles'=>$existingFiles
 			]
 		);
 	}
@@ -343,5 +376,41 @@ class DashboardInspectorController extends Controller
 
       return response()->json(['success' => false, 'message' => 'No file uploaded.'], 400);
 	}
+	
+	public function delete_reject_file(Request $request)
+	{
+		$filename = $request->post('filename');
+
+		if (!$filename) {
+			return response()->json(['success' => false, 'message' => 'Filename missing.'], 400);
+		}
+
+		$deleted = Task_list_checklist_temp_rejected_files::where('file', $filename)->delete();
+
+		$filePath = public_path('uploads/temp-reject-files/' . $filename);
+		if (file_exists($filePath)) {
+			unlink($filePath);
+		}
+
+		return response()->json(['success' => true, 'message' => 'File deleted.']);
+	}
+	public function checklist_file_delete(Request $request)
+	{
+		$filename = $request->post('filename');
+
+		if (!$filename) {
+			return response()->json(['success' => false, 'message' => 'Filename missing.'], 400);
+		}
+
+		Task_list_checklist_rejected_files::where('file', $filename)->delete();
+
+		$filePath = public_path('uploads/reject-files/' . $filename);
+		if (file_exists($filePath)) {
+			unlink($filePath);
+		}
+
+		return response()->json(['success' => true, 'message' => 'File deleted.']);
+	}
+
 	
 }
