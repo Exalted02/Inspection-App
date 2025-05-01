@@ -43,7 +43,7 @@
 			<div class="reject-form mb-3" id="rejectForm-1">
 				<textarea id="single_rejecttext" placeholder="State why you rejected this...">{{ $rejected_region ??  '' }}</textarea>
 				<input type="hidden" id="mode" value="single">
-				<input type="text" id="hasEditFile" value="">
+				<input type="hidden" id="hasEditFile" value="">
 				<input type="hidden" id="approveStatus" value="{{ $approve}}">
 				<form action="{{ route('reject-files')}}" class="dropzone" id="dropzone-1">
 					<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="{{ $checklistdata->id ?? '' }}">
@@ -484,22 +484,17 @@ $(document ).ready(function() {
 												type: "POST",
 												data: {
 													_token: csrfToken,
-													filename: file.uploadedFilename,
-													checklist_id: response.currentid,
-													task_id: task_id,
-													subcategory_id: subcategory_id
+													filename: file.uploadedFilename
 												},
 												success: function (response) {
 													console.log('Deleted:', response);
-													alert(response.count);
+													//alert(response.count);
 													if(response.count == '0')
 													{
-														//alert('1');
-														$('hasEditFile').val('');
+														$('#hasEditFile').val('');
 													}
 													else{
-														//alert('2');
-														$('hasEditFile').val(1);
+														$('#hasEditFile').val(1);
 													}
 												},
 												error: function (xhr) {
@@ -726,6 +721,14 @@ $(document ).ready(function() {
 												},
 												success: function (response) {
 													console.log('Deleted:', response);
+													//alert(response.count);
+													if(response.count == '0')
+													{
+														$('#hasEditFile').val('');
+													}
+													else{
+														$('#hasEditFile').val(1);
+													}
 												},
 												error: function (xhr) {
 													console.error('Delete failed:', xhr.responseText);
