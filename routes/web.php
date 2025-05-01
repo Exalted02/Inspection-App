@@ -73,6 +73,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('reject-files', [DashboardInspectorController::class, 'single_reject_files'])->name('reject-files');
 	Route::post('reject-file-delete', [DashboardInspectorController::class, 'delete_reject_file'])->name('reject-file-delete');
 	Route::post('checklist-file-delete', [DashboardInspectorController::class, 'checklist_file_delete'])->name('checklist-file-delete');
+	
+	//------
+	Route::post('reject-subchecklist-files', [DashboardInspectorController::class, 'reject_subchecklist_files'])->name('reject-subchecklist-files');
+	Route::post('reject-subckecklist-file-delete', [DashboardInspectorController::class, 'reject_subckecklist_file_delete'])->name('reject-subckecklist-file-delete');
+	Route::post('subchecklist-file-delete', [DashboardInspectorController::class, 'subchecklist_file_delete'])->name('subchecklist-file-delete');
 	//User-Accounts
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	
