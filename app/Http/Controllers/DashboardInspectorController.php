@@ -153,6 +153,25 @@ class DashboardInspectorController extends Controller
 					$model->save();
 					$task_list_checklist_id = $hasid;
 					
+					// if file uploaded and get next or back if i choose tick sign then delete the files
+					if($approveStatus=='1')
+					{
+						$chklistFiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->get();
+						if($chklistFiles->isNotEmpty()){
+							
+							foreach($chklistFiles as $filemn)
+							{
+								$f_name = $filemn->file;
+								$filePath = public_path('uploads/reject-files/' . $f_name);
+								if (file_exists($filePath)) {
+									unlink($filePath);
+								}
+							}
+							
+							Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+						}
+					}
+					
 				}
 				else
 				{
@@ -161,7 +180,7 @@ class DashboardInspectorController extends Controller
 					$model->task_list_id = $task_id ?? null;
 					$model->task_list_subcategory_id = $subcategory_id ?? null;
 					$model->checklist_id = $current_question_id ?? null;
-					$model->rejected_region = $rejectTextsSingle ?? null;
+					$model->rejected_region = $approveStatus == 0 ? $rejectTextsSingle :'';
 					$model->approve 	= $approveStatus;
 					$model->save();
 					$task_list_checklist_id = $model->id;
@@ -181,20 +200,28 @@ class DashboardInspectorController extends Controller
 
 						$sourcePath = public_path('uploads/temp-reject-files/' . $filename);
 						$destinationPath = public_path('uploads/reject-files/' . $filename);
+						
+						if($approveStatus=='0')
+						{
+							if (!file_exists(dirname($destinationPath))) {
+								mkdir(dirname($destinationPath), 0777, true);
+							}
 
-						if (!file_exists(dirname($destinationPath))) {
-							mkdir(dirname($destinationPath), 0777, true);
+							if (file_exists($sourcePath)) {
+								rename($sourcePath, $destinationPath);
+							}
+
+							$fileModel = new Task_list_checklist_rejected_files();
+							$fileModel->task_list_checklist_id = $task_list_checklist_id;
+							$fileModel->file = $filename;
+							$fileModel->save();
 						}
-
-						if (file_exists($sourcePath)) {
-							rename($sourcePath, $destinationPath);
+						else{
+							$filePath = public_path('uploads/temp-reject-files/' . $filename);
+							if(file_exists($filePath)) {
+								unlink($filePath);
+							}
 						}
-
-						$fileModel = new Task_list_checklist_rejected_files();
-						$fileModel->task_list_checklist_id = $task_list_checklist_id;
-						$fileModel->file = $filename;
-						$fileModel->save();
-
 						//$tempFile->delete();
 						Task_list_checklist_temp_rejected_files::where('file', $filename)->delete();
 					}
@@ -219,7 +246,7 @@ class DashboardInspectorController extends Controller
 						{
 							$model = Task_list_subchecklists::find($hasid);
 							
-							$model->rejected_region = $text['approve_status'] == 0 ? $text['text'] : null;
+							$model->rejected_region = $text['approve_status'] == 0 ? $text['text'] : '';
 							$model->approve = $text['approve_status'];
 							$model->save();
 							$task_list_subchecklist_id = $hasid;
@@ -231,7 +258,7 @@ class DashboardInspectorController extends Controller
 							$model->task_list_subcategory_id = $subcategory_id ?? null;
 							$model->task_list_checklist_id = $current_question_id ?? null;
 							$model->subchecklist_id = $subChecklistId ?? null;
-							$model->rejected_region = $text['text'] ?? null;
+							$model->rejected_region = $text['text'] ?? '';
 							$model->approve = $text['approve_status'];
 							$model->save();
 							$task_list_subchecklist_id = $model->id;
@@ -277,7 +304,10 @@ class DashboardInspectorController extends Controller
 		}
 		//-------
 		$subChklistArr = [];
+		$existingFiles = [];
 		$existingSubChecklistFiles = [];
+		$fetchsubChklistArr = '';
+		$next_approve = '';
 		if($nextQuestionExists)
 		{
 			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
@@ -286,6 +316,127 @@ class DashboardInspectorController extends Controller
 			->where('status', '!=', 2)
 			->where('id', '>', $current_question_id)
 			->orderBy('id', 'asc')
+			->first();
+			//echo "<pre>";print_r($nextQuestion);die;
+			$nextId = $nextQuestion->id;
+			$name = $nextQuestion->name;
+			//$subChklistArr = [];
+			if(!empty($nextQuestion->get_subchecklist))
+			{
+				//$subchecklist = $nextQuestion->get_subchecklist;
+				foreach($nextQuestion->get_subchecklist as $subchecklists)
+				{
+					$subChklistArr[] = [
+						'id' => $subchecklists->id,
+						'name' => $subchecklists->name
+					];
+				}
+				
+				$subcategoryname = $nextQuestion->get_subcategory->name;
+			}
+			
+			// fetch data from task_list_checklist
+			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();
+			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
+			$next_approve = $iffetch ? $iffetch->approve : '';
+			
+			// fetch files 
+			$task_list_checklist_id = $iffetch ? $iffetch->id : null;
+			//$existingFiles = [];
+			if (isset($task_list_checklist_id)) {
+				$imageData = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
+				foreach ($imageData as $file) {
+					$filename = $file->file;
+					$existingFiles[] = [
+						'name' => $filename,
+						'size' => file_exists(public_path('uploads/reject-files/' . $filename)) ? filesize(public_path('uploads/reject-files/' . $filename)) : 123456, // default if unknown
+						'url' => asset('uploads/reject-files/' . $filename),
+					];
+				}
+			}
+			
+			// fetch data from task_list_subchecklist
+			$fetchsubChklistArr = [];
+			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('task_list_checklist_id', $nextId)
+							->get();
+			if($ifsubfetch->isNotEmpty())
+			{
+				foreach($ifsubfetch as $subchecklistval)
+				{
+					$fetchsubChklistArr[] = [
+						'subchecklist_id' => $subchecklistval->subchecklist_id,
+						'rejected_region' => $subchecklistval->rejected_region ?? '',
+						'approve' => $subchecklistval->approve
+					];
+					
+					// fetch files for subchecklist
+					if(isset($subchecklistval->id))
+					{
+						$imageSubChecklistData = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistval->id)->get();
+						foreach ($imageSubChecklistData as $file) {
+							$filename = $file->file;
+							$existingSubChecklistFiles[] = [
+								'name' => $filename,
+								//'subchecklist_id' => $file->task_list_subchecklist_id,
+								'subchecklist_id' => $subchecklistval->subchecklist_id,
+								'size' => file_exists(public_path('uploads/reject-files/subchecklist/' . $filename)) ? filesize(public_path('uploads/reject-files/subchecklist/' . $filename)) : 123456, // default if unknown
+								'url' => asset('uploads/reject-files/subchecklist/' . $filename),
+							];
+						}
+					}
+				}
+			}
+			
+			
+			
+		}
+		return response()->json
+		(
+			[
+				'task_id'=>$task_id,
+				'currentid'=> $nextId ?? null,
+				'name' => $name ?? null,
+				'subchecklist' => $subChklistArr,
+				'subcategoryname' => $subcategoryname,
+				'next_rejected_region'=> $next_rejected_region ?? '',
+				'next_approve'=>$next_approve,
+				'existingNextFiles'=>$existingFiles,
+				'fetchsubChklistArr'=>$fetchsubChklistArr,
+				'existingSubChecklistFiles'=>$existingSubChecklistFiles
+			]
+		);
+	}
+	public function checklist_previous_question(Request $request)
+	{
+		$task_id = $request->post('task_id');
+		$current_question_id = $request->post('current_question_id');
+		$category_id = $request->post('category_id');
+		$subcategory_id = $request->post('subcategory_id');
+		$nextQuestionExists = Checklist::where('category_id', $category_id)
+		->where('subcategory_id', $subcategory_id)
+		->where('status', '!=', 2)
+		->where('id', '<', $current_question_id)
+		->orderBy('id', 'desc')
+		->exists();
+		
+		$nextId = '';
+		$name  = '';
+		$subchecklist = '';
+		$subcategoryname = '';
+		
+		$subChklistArr = [];
+		$existingSubChecklistFiles = [];
+		
+		if($nextQuestionExists)
+		{
+			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+			->where('category_id', $category_id)
+			->where('subcategory_id', $subcategory_id)
+			->where('status', '!=', 2)
+			->where('id', '<', $current_question_id)
+			->orderBy('id', 'desc')
 			->first();
 			//echo "<pre>";print_r($nextQuestion);die;
 			$nextId = $nextQuestion->id;
@@ -337,7 +488,7 @@ class DashboardInspectorController extends Controller
 				{
 					$fetchsubChklistArr[] = [
 						'subchecklist_id' => $subchecklistval->subchecklist_id,
-						'rejected_region' => $subchecklistval->rejected_region,
+						'rejected_region' => $subchecklistval->rejected_region ?? '',
 						'approve' => $subchecklistval->approve
 					];
 					
@@ -349,114 +500,12 @@ class DashboardInspectorController extends Controller
 							$filename = $file->file;
 							$existingSubChecklistFiles[] = [
 								'name' => $filename,
-								'subchecklist_id' => $file->task_list_subchecklist_id,
+								'subchecklist_id' => $subchecklistval->subchecklist_id,
 								'size' => file_exists(public_path('uploads/reject-files/subchecklist/' . $filename)) ? filesize(public_path('uploads/reject-files/subchecklist/' . $filename)) : 123456, // default if unknown
 								'url' => asset('uploads/reject-files/subchecklist/' . $filename),
 							];
 						}
 					}
-				}
-			}
-			
-			
-			
-		}
-		return response()->json
-		(
-			[
-				'task_id'=>$task_id,
-				'currentid'=> $nextId ?? null,
-				'name' => $name ?? null,
-				'subchecklist' => $subChklistArr,
-				'subcategoryname' => $subcategoryname,
-				'next_rejected_region'=> $next_rejected_region ?? '',
-				'next_approve'=>$next_approve,
-				'existingNextFiles'=>$existingFiles,
-				'fetchsubChklistArr'=>$fetchsubChklistArr,
-				'existingSubChecklistFiles'=>$existingSubChecklistFiles
-			]
-		);
-	}
-	public function checklist_previous_question(Request $request)
-	{
-		$task_id = $request->post('task_id');
-		$current_question_id = $request->post('current_question_id');
-		$category_id = $request->post('category_id');
-		$subcategory_id = $request->post('subcategory_id');
-		$nextQuestionExists = Checklist::where('category_id', $category_id)
-		->where('subcategory_id', $subcategory_id)
-		->where('status', '!=', 2)
-		->where('id', '<', $current_question_id)
-		->orderBy('id', 'desc')
-		->exists();
-		
-		$nextId = '';
-		$name  = '';
-		$subchecklist = '';
-		$subcategoryname = '';
-		
-		if($nextQuestionExists)
-		{
-			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
-			->where('category_id', $category_id)
-			->where('subcategory_id', $subcategory_id)
-			->where('status', '!=', 2)
-			->where('id', '<', $current_question_id)
-			->orderBy('id', 'desc')
-			->first();
-			//echo "<pre>";print_r($nextQuestion);die;
-			$nextId = $nextQuestion->id;
-			$name = $nextQuestion->name;
-			$subChklistArr = [];
-			if(!empty($nextQuestion->get_subchecklist))
-			{
-				//$subchecklist = $nextQuestion->get_subchecklist;
-				foreach($nextQuestion->get_subchecklist as $subchecklists)
-				{
-					$subChklistArr[] = [
-						'id' => $subchecklists->id,
-						'name' => $subchecklists->name
-					];
-				}
-				
-				$subcategoryname = $nextQuestion->get_subcategory->name;
-			}
-			
-			// fetch data from task_list_checklist
-			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();
-			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
-			$next_approve = $iffetch ? $iffetch->approve : '';
-			
-			// fetch files 
-			$task_list_checklist_id = $iffetch ? $iffetch->id : null;
-			$existingFiles = [];
-			if (isset($task_list_checklist_id)) {
-				$imageData = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
-				foreach ($imageData as $file) {
-					$filename = $file->file;
-					$existingFiles[] = [
-						'name' => $filename,
-						'size' => file_exists(public_path('uploads/reject-files/' . $filename)) ? filesize(public_path('uploads/reject-files/' . $filename)) : 123456, // default if unknown
-						'url' => asset('uploads/reject-files/' . $filename),
-					];
-				}
-			}
-			
-			// fetch data from task_list_subchecklist
-			$fetchsubChklistArr = [];
-			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
-							->where('task_list_checklist_id', $nextId)
-							->get();
-			if($ifsubfetch->isNotEmpty())
-			{
-				foreach($ifsubfetch as $subchecklistval)
-				{
-					$fetchsubChklistArr[] = [
-						'subchecklist_id' => $subchecklistval->subchecklist_id,
-						'rejected_region' => $subchecklistval->rejected_region,
-						'approve' => $subchecklistval->approve
-					];
 				}
 			}
 		}
@@ -470,7 +519,8 @@ class DashboardInspectorController extends Controller
 				'next_rejected_region'=> $next_rejected_region ?? '',
 				'next_approve'=>$next_approve,
 				'existingPreviousFiles'=>$existingFiles,
-				'fetchsubChklistArr'=>$fetchsubChklistArr
+				'fetchsubChklistArr'=>$fetchsubChklistArr,
+				'existingSubChecklistFiles'=>$existingSubChecklistFiles
 			]
 		);
 	}
