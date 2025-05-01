@@ -14,6 +14,8 @@ use App\Models\Subchecklist;
 use App\Models\Task_list_checklist_temp_rejected_files;
 use App\Models\Task_list_checklists;
 use App\Models\Task_list_checklist_rejected_files;
+use App\Models\Task_list_subchecklists;
+use App\Models\Task_list_subchecklist_rejected_files;
 
 class DashboardInspectorController extends Controller
 {
@@ -111,7 +113,13 @@ class DashboardInspectorController extends Controller
 		$rejectTextsSingle = $request->post('rejectTextsSingle');
 		$rejectTextsMultiple = json_decode($request->input('rejectTextsMultiple'), true);
 		//echo "<pre>";print_r($rejectTextsMultiple);die;
-		
+		/*if(!empty($rejectTextsMultiple) && is_array($rejectTextsMultiple)) {
+				foreach ($rejectTextsMultiple as $subChecklistId => $text) {
+					echo "SubChecklist ID: " . $subChecklistId . " - Reason: " . $text['text'] ." status- ".$text['approve_status'] . "<br>";
+				}
+			}
+		echo 'hello '.$request->post('current_question_id') .'--'. $request->post('task_id');die;*/
+		//-------------------------------------
 		$task_id = $request->post('task_id');
 		$current_question_id = $request->post('current_question_id');
 		$category_id = $request->post('category_id');
@@ -197,12 +205,41 @@ class DashboardInspectorController extends Controller
 		{
 			if (!empty($rejectTextsMultiple) && is_array($rejectTextsMultiple)) {
 				foreach ($rejectTextsMultiple as $subChecklistId => $text) {
-					//echo "SubChecklist ID: " . $subChecklistId . " - Reason: " . $text . "<br>";
+					//echo "SubChecklist ID: " . $subChecklistId . " - Reason: " . $text['text'] ." status- ".$text['approve_status'] . "<br>";
+					if($text['approve_status'] !='')
+					{
+						$checkTastSubChecklistExists  = Task_list_subchecklists::where('task_list_id', $task_id)
+						->where('task_list_subcategory_id', $subcategory_id)
+						->where('task_list_checklist_id', $current_question_id)
+						->where('subchecklist_id', $subChecklistId)
+						->first();
+						$hasid = $checkTastSubChecklistExists ? $checkTastSubChecklistExists->id : null;
+						if($hasid)
+						{
+							$model = Task_list_subchecklists::find($hasid);
+							
+							$model->rejected_region = $text['approve_status'] == 0 ? $text['text'] : null;
+							$model->approve = $text['approve_status'];
+							$model->save();
+						}
+						else
+						{
+							$model = new Task_list_subchecklists();
+							$model->task_list_id = $task_id ?? null;
+							$model->task_list_subcategory_id = $subcategory_id ?? null;
+							$model->task_list_checklist_id = $current_question_id ?? null;
+							$model->subchecklist_id = $subChecklistId ?? null;
+							$model->rejected_region = $text['text'] ?? null;
+							$model->approve = $text['approve_status'];
+							$model->save();
+							$task_list_subchecklist_id = $model->id;
+						}
+					}
 				}
 			}
 		}
 		//-------
-		
+		$subChklistArr = [];
 		if($nextQuestionExists)
 		{
 			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
@@ -215,7 +252,7 @@ class DashboardInspectorController extends Controller
 			//echo "<pre>";print_r($nextQuestion);die;
 			$nextId = $nextQuestion->id;
 			$name = $nextQuestion->name;
-			$subChklistArr = [];
+			//$subChklistArr = [];
 			if(!empty($nextQuestion->get_subchecklist))
 			{
 				//$subchecklist = $nextQuestion->get_subchecklist;
@@ -249,6 +286,24 @@ class DashboardInspectorController extends Controller
 					];
 				}
 			}
+			
+			// fetch data from task_list_subchecklist
+			$fetchsubChklistArr = [];
+			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('task_list_checklist_id', $nextId)
+							->get();
+			if($ifsubfetch->isNotEmpty())
+			{
+				foreach($ifsubfetch as $subchecklistval)
+				{
+					$fetchsubChklistArr[] = [
+						'subchecklist_id' => $subchecklistval->subchecklist_id,
+						'rejected_region' => $subchecklistval->rejected_region,
+						'approve' => $subchecklistval->approve
+					];
+				}
+			}
 		}
 		return response()->json
 		(
@@ -260,7 +315,8 @@ class DashboardInspectorController extends Controller
 				'subcategoryname' => $subcategoryname,
 				'next_rejected_region'=> $next_rejected_region ?? '',
 				'next_approve'=>$next_approve,
-				'existingNextFiles'=>$existingFiles
+				'existingNextFiles'=>$existingFiles,
+				'fetchsubChklistArr'=>$fetchsubChklistArr
 			]
 		);
 	}
@@ -413,12 +469,7 @@ class DashboardInspectorController extends Controller
 			unlink($filePath);
 		}
 		
-		/*$checklist_id = $request->post('checklist_id');
-		$task_id = $request->post('task_id');
-		$subcategory_id = $request->post('subcategory_id');
-		$isFiles  = Task_list_checklists::where('task_list_id',$task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $checklist_id)->first();
-		$task_list_checklist_id = $isFiles ? $isFiles->id : null;*/
-		
+		// for check form validation 
 		$count = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->count();
 		
 		return response()->json(['success' => true, 'message' => 'File deleted.', 'count'=>$count]);

@@ -76,6 +76,8 @@
 					<div class="reject-form mb-3" id="rejectForm-{{ $subchecklists->id }}">
 						<textarea placeholder="State why you rejected this..."></textarea>
 						<input type="hidden" id="mode" value="multiple">
+						<input type="hidden" id="approveMultipleStatus{{$subchecklists->id}}" value="">
+						
 						
 						<form action="{{ route('reject-files')}}" class="dropzone" id="dropzon-{{ $subchecklists->id }}">
 							<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="{{ $checklistdata->id ?? '' }}">
@@ -192,6 +194,7 @@ function handleReject(id) {
 	document.getElementById("question-approve-"+id).classList.remove("active");
 	document.getElementById("question-reject-"+id).classList.add("active");
 	$('#approveStatus').val(0);
+	$('#approveMultipleStatus' + id).val(0);
 }
 function handleApprove(id) {
 	document.getElementById('rejectForm-'+id).style.display = 'none';
@@ -199,6 +202,7 @@ function handleApprove(id) {
 	document.getElementById("question-reject-"+id).classList.remove("active");
 	document.getElementById("question-approve-"+id).classList.add("active");
 	$('#approveStatus').val(1);
+	$('#approveMultipleStatus' + id).val(1);
 }
 
 //Dropzone.autoDiscover = false; // very important
@@ -288,49 +292,43 @@ $(document ).ready(function() {
 	}
 	
 	
+	// ========= NEXT BUTTON ==============
+	
     $(document).on('click','.next_question', function(){
 		
+		var mode = $('#mode').val();
+		//alert(mode);
 		var approveStatus = $('#approveStatus').val();
 		
 		//alert("approveStatus" + approveStatus);
-		if(approveStatus == '0')
+		if(mode=='single')
 		{
-			var textIsEmpty = $('#single_rejecttext').val().trim() === '';
-			// Access Dropzone instance
-			//var dzInstance = Dropzone.forElement('#dropzone-1');
-			//var hasFiles = dzInstance.files.length > 0;
-			
-			//var dropzoneElement = document.querySelector('#dropzone-1');
-            //var dzInstance = dropzoneElement ? Dropzone.forElement('#dropzone-1') : null;
-			//var hasFiles = dzInstance && dzInstance.files.length > 0;
-			//alert(hasFiles);
-			var hasEditFile = $('#hasEditFile').val();
-			//alert(hasEditFile);
-			var hasFiles = false;
-			try {
-				var dzInstance = Dropzone.forElement('#dropzone-1');
-				hasFiles = dzInstance.files.length > 0;
-			} catch (e) {
-				console.warn("Dropzone not found or not initialized yet.");
-			}
-			
-			if (textIsEmpty &&  !hasFiles && !hasEditFile) {
-				$('#errormsg').fadeIn().delay(2000).fadeOut();
-				return false;
-			}
-			
-			/*if($('#single_rejecttext').val()=='')
+			if(approveStatus == '0')
 			{
-				$('#errormsg').fadeIn().delay(2000).fadeOut();
-				return false;
-			}*/
+				var textIsEmpty = $('#single_rejecttext').val().trim() === '';
+				var hasEditFile = $('#hasEditFile').val();
+				//alert(hasEditFile);
+				var hasFiles = false;
+				try {
+					var dzInstance = Dropzone.forElement('#dropzone-1');
+					hasFiles = dzInstance.files.length > 0;
+				} catch (e) {
+					console.warn("Dropzone not found or not initialized yet.");
+				}
+				
+				if (textIsEmpty &&  !hasFiles && !hasEditFile) {
+					$('#errormsg').fadeIn().delay(2000).fadeOut();
+					return false;
+				}
+			}
 		}
+		
 		var current_id = $('#current_checklist_id').val();
 		//alert(current_id);
 		var category_id = $('#category_id').val();
 		var subcategory_id = $('#subcategory_id').val();
 		var task_id = $('#task_id').val();
-		var mode = $('#mode').val();
+		//var mode = $('#mode').val();
 		//alert(mode);
 		var rejectTextsSingle = '';
 		let rejectTextsMultiple = {};
@@ -343,10 +341,19 @@ $(document ).ready(function() {
 			$('.reject-form').each(function () {
 				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
 				const text = $(this).find('textarea').val().trim();
+				const approveStatus = $('#approveMultipleStatus' + subchecklistId).val();
 				// Save only if there's any text entered (optional)
-				if (text !== '') {
-					rejectTextsMultiple[subchecklistId] = text;
+				
+				if (text !== '' || approveStatus !== '') {
+					rejectTextsMultiple[subchecklistId] = {
+						text: text,
+						approve_status: approveStatus
+					};
 				}
+				
+				/*if (text !== '') {
+					rejectTextsMultiple[subchecklistId] = text;
+				}*/
 			});
 			//alert(rejectTextsMultiple);
 		}
@@ -374,6 +381,7 @@ $(document ).ready(function() {
 				const rejectFilesRoute = "{{ route('reject-files') }}";
 				if (response.subchecklist.length > 0) {
 				// Has subchecklists
+				let autoClicks = [];
 				let html = '<div class="sub-checklist">';
 				html += '<div class="question-header">' + response.subcategoryname + '</div>';
 				html += '<div class="question-text">';
@@ -382,6 +390,11 @@ $(document ).ready(function() {
 
 				response.subchecklist.forEach((item, index) => {
 					    //alert(item.id);
+						let match = response.fetchsubChklistArr.find(e => e.subchecklist_id == item.id);
+						let rejectedText = match ? match.rejected_region : '';
+						let approveStatus = match ? match.approve : '';
+						//alert(approveStatus);alert(rejectedText);
+						
 						let rejectId = 'rejectForm-' + item.id;
 						html += '<div class="sub-checklist-question">';
 						html += '<div class="action-buttons">';
@@ -392,17 +405,40 @@ $(document ).ready(function() {
 						html += '</div>'; 
 						html += '</div>'; 
 						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
-						html += '<textarea placeholder="State why you rejected this..."></textarea>';
+						html += '<textarea placeholder="State why you rejected this...">' + rejectedText +'</textarea>';
 						html += '<input type="hidden" id="mode" value="multiple">';
-						html += '<input type="hidden" id="approveStatus">';
+						html += '<input type="hidden" id="approveMultipleStatus' + item.id + '">';
 						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '"></form>';
 						html += '</div>'; 
-						html += '</div>'; 
+						html += '</div>';
+						
+						if(approveStatus== '0')
+						{
+							autoClicks.push({ type: 'reject', id: item.id });
+						}
+						
+						if(approveStatus== '1')
+						{
+							autoClicks.push({ type: 'approve', id: item.id });
+						}
 					});
 
 						html += '</div>'; 
 
-						$('.checklist-question').html(html); 
+						$('.checklist-question').html(html);
+						
+						setTimeout(() => {
+							autoClicks.forEach(click => {
+								if (click.type === 'reject') {
+									const btn = document.getElementById('question-reject-' + click.id);
+									if (btn) btn.click();
+								}
+								if (click.type === 'approve') {
+									const btn = document.getElementById('question-approve-' + click.id);
+									if (btn) btn.click();
+								}
+							});
+						}, 0);
 				} else {
 						//alert(response.next_approve);
 						let html = '<div class="single-checklist">';
@@ -583,6 +619,9 @@ $(document ).ready(function() {
 		});
 	});
 	
+	
+	// =============== BACK BUTTON ============
+	
 	$(document).on('click','.previous_question', function(){
 		var current_id = $('#current_checklist_id').val();
 		//alert(current_id);
@@ -626,7 +665,8 @@ $(document ).ready(function() {
 						html += '</div>'; 
 						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
 						html += '<textarea placeholder="State why you rejected this..."></textarea>';
-						html += '<input type="hidden" id="approveStatus">';
+						html += '<input type="hidden" id="mode" value="multiple">';
+						html += '<input type="hidden" id="approveMultipleStatus' + item.id + '">';
 						html += '<form action="/your-upload-route" class="dropzone" id="dropzone-' + item.id + '"></form>';
 						html += '</div>'; 
 						html += '</div>'; 
