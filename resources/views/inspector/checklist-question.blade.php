@@ -647,6 +647,7 @@ $(document ).ready(function() {
 				 const rejectFilesRoute = "{{ route('reject-files') }}";
 				if (response.subchecklist.length > 0) {
 				// Has subchecklists
+				let autoClicks = [];
 				let html = '<div class="sub-checklist">';
 				html += '<div class="question-header">' + response.subcategoryname + '</div>';
 				html += '<div class="question-text">';
@@ -654,6 +655,11 @@ $(document ).ready(function() {
 				html += '</div>';
 
 				response.subchecklist.forEach((item, index) => {
+						
+						let match = response.fetchsubChklistArr.find(e => e.subchecklist_id == item.id);
+						let rejectedText = match ? match.rejected_region : '';
+						let approveStatus = match ? match.approve : '';
+					
 						let rejectId = 'rejectForm-' + item.id;
 						html += '<div class="sub-checklist-question">';
 						html += '<div class="action-buttons">';
@@ -664,17 +670,41 @@ $(document ).ready(function() {
 						html += '</div>'; 
 						html += '</div>'; 
 						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
-						html += '<textarea placeholder="State why you rejected this..."></textarea>';
+						html += '<textarea placeholder="State why you rejected this...">' + rejectedText + '</textarea>';
 						html += '<input type="hidden" id="mode" value="multiple">';
 						html += '<input type="hidden" id="approveMultipleStatus' + item.id + '">';
 						html += '<form action="/your-upload-route" class="dropzone" id="dropzone-' + item.id + '"></form>';
 						html += '</div>'; 
 						html += '</div>'; 
+						
+						if(approveStatus== '0')
+						{
+							autoClicks.push({ type: 'reject', id: item.id });
+						}
+						
+						if(approveStatus== '1')
+						{
+							autoClicks.push({ type: 'approve', id: item.id });
+						}
 					});
 
 						html += '</div>'; 
 
 						$('.checklist-question').html(html); 
+						
+						setTimeout(() => {
+							autoClicks.forEach(click => {
+								if (click.type === 'reject') {
+									const btn = document.getElementById('question-reject-' + click.id);
+									if (btn) btn.click();
+								}
+								if (click.type === 'approve') {
+									const btn = document.getElementById('question-approve-' + click.id);
+									if (btn) btn.click();
+								}
+							});
+						}, 0);
+						
 				} else {
 						
 						let html = '<div class="single-checklist">';

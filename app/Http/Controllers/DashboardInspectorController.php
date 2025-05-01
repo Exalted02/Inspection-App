@@ -384,6 +384,24 @@ class DashboardInspectorController extends Controller
 					];
 				}
 			}
+			
+			// fetch data from task_list_subchecklist
+			$fetchsubChklistArr = [];
+			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('task_list_checklist_id', $nextId)
+							->get();
+			if($ifsubfetch->isNotEmpty())
+			{
+				foreach($ifsubfetch as $subchecklistval)
+				{
+					$fetchsubChklistArr[] = [
+						'subchecklist_id' => $subchecklistval->subchecklist_id,
+						'rejected_region' => $subchecklistval->rejected_region,
+						'approve' => $subchecklistval->approve
+					];
+				}
+			}
 		}
 		return response()->json(
 			[
@@ -394,7 +412,8 @@ class DashboardInspectorController extends Controller
 				'subcategoryname' => $subcategoryname,
 				'next_rejected_region'=> $next_rejected_region ?? '',
 				'next_approve'=>$next_approve,
-				'existingPreviousFiles'=>$existingFiles
+				'existingPreviousFiles'=>$existingFiles,
+				'fetchsubChklistArr'=>$fetchsubChklistArr
 			]
 		);
 	}
