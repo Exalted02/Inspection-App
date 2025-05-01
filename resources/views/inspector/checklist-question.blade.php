@@ -6,6 +6,7 @@
 @section('content')
 @php
 //echo "<pre>";print_r($checklistdata);die;
+$existingFiles = [];
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist-question">
@@ -17,7 +18,7 @@
 			$task_list_checklist_id = $checkImageFile ? $checkImageFile->id : null;
 			$rejected_region = $checkImageFile ? $checkImageFile->rejected_region : '';
 			$approve = $checkImageFile ? $checkImageFile->approve : '';
-			$existingFiles = [];
+			//$existingFiles = [];
 			if (isset($task_list_checklist_id)) {
 				$imageData = App\Models\Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
 				foreach ($imageData as $file) {
@@ -65,6 +66,14 @@
 			</div>
 			@if($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_subchecklist->isNotEmpty())
 				@foreach($checklistdata->get_subchecklist as $subchecklists)
+				@php 
+					$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_subcategory_id',$checklistdata->subcategory_id)
+										->where('task_list_checklist_id', $subchecklists->checklist_id)
+										->where('subchecklist_id', $subchecklists->id)->first();
+					$subChkId			=  $subchecklistData ? $subchecklistData->id : '';
+					$rejected_region	=  $subchecklistData ? $subchecklistData->rejected_region : '';
+					$approve			=  $subchecklistData ? $subchecklistData->approve : '';
+				@endphp
 				<div class="sub-checklist-question">
 					<div class="action-buttons">
 						<span class="d-flex align-items-center">{{ $subchecklists->name ?? ''}}</span>
@@ -74,34 +83,21 @@
 						</div>
 					</div>
 					<div class="reject-form mb-3" id="rejectForm-{{ $subchecklists->id }}">
-						<textarea placeholder="State why you rejected this..."></textarea>
+						<textarea placeholder="State why you rejected this..."> {{ $rejected_region ?? ''}} </textarea>
 						<input type="hidden" id="mode" value="multiple">
 						<input type="hidden" id="approveMultipleStatus{{$subchecklists->id}}" value="">
 						
 						
-						<form action="{{ route('reject-files')}}" class="dropzone" id="dropzon-{{ $subchecklists->id }}">
+						<form action="{{ route('reject-subchecklist-files')}}" class="dropzone" id="dropzon-{{ $subchecklists->id }}">
 							<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="{{ $checklistdata->id ?? '' }}">
 							<input type="hidden" id="category_id" value="{{ $checklistdata->category_id ?? '' }}">
-							<input type="hidden" name="subcategory_id" id="subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
+							<input type="hidden" name="subchecklist_id"  value="{{ $checklistdata->subcategory_id ?? '' }}">
 							<input type="hidden" name="task_id" id="task_id" value="{{ $task_id ?? '' }}">
 						</form>
 					</div>
 				</div>
 				@endforeach
 			@endif
-			{{--<div class="sub-checklist-question">
-				<div class="action-buttons">
-					<span class="d-flex align-items-center">Face shield</span>
-					<div class="btn-div">
-						<button class="rejected" id="question-reject-3" onclick="handleReject(3)"><i class="fa-solid fa-xmark"></i></button>
-						<button class="approved" id="question-approve-3" onclick="handleApprove(3)"><i class="fa-solid fa-check"></i></button>
-					</div>
-				</div>
-				<div class="reject-form mb-3" id="rejectForm-3">
-					<textarea placeholder="State why you rejected this..."></textarea>
-					<form action="/your-upload-route" class="dropzone" id="dropzone-3"></form>
-				</div>
-			</div>--}}
 		</div>
 	@endif
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
@@ -275,6 +271,74 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 });
 
 
+//--- upload new subchecklist files ------- 
+document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+	new Dropzone(dropzoneElement, {
+		url: "{{ route('reject-subchecklist-files') }}",
+		maxFiles: 5,
+		maxFilesize: 2, // MB
+		acceptedFiles: 'image/*',
+		addRemoveLinks: true,
+		headers: {
+			'X-CSRF-TOKEN': csrfToken
+		},
+		dictDefaultMessage: 'Drag & drop or click to upload',
+		dictRemoveFile: 'Delete file',
+		init: function () {
+			this.on("success", function (file, response) {
+				console.log('Uploaded:', response);
+
+				// Attach filename to file object so we can use it on removal
+				file.uploadedFilename = response.filename;
+
+				// Replace default preview with file name
+				file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
+			});
+
+			this.on("removedfile", function (file) {
+				if (file.uploadedFilename) {
+					// Send AJAX request to delete the file from storage and DB
+					$.ajax({
+						url: "{{ route('reject-subckecklist-file-delete') }}", // You need to define this route
+						type: "POST",
+						data: {
+							_token: csrfToken,
+							filename: file.uploadedFilename
+						},
+						success: function (response) {
+							console.log('Deleted:', response);
+						},
+						error: function (xhr) {
+							console.error('Delete failed:', xhr.responseText);
+						}
+					});
+				}
+			});
+		}
+	});
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	@if($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_subchecklist->isNotEmpty())
+		@foreach($checklistdata->get_subchecklist as $subchecklists)
+			@php
+				$approve == '';				
+				$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_subcategory_id',$checklistdata->subcategory_id)
+									->where('task_list_checklist_id', $subchecklists->checklist_id)
+									->where('subchecklist_id', $subchecklists->id)->first();
+				$approve = $subchecklistData ? $subchecklistData->approve : '';
+				echo $approve;
+			@endphp
+			//console.log("Subchecklist ID: {{ $subchecklists->id }}, Approve: {{ $approve }}");
+			@if($approve == '0')
+				document.getElementById('question-reject-{{ $subchecklists->id }}')?.click();
+			@elseif($approve == '1')
+				document.getElementById('question-approve-{{ $subchecklists->id }}')?.click();
+			@endif
+		@endforeach
+	@endif
+});
 </script>
 <script>
 $(document ).ready(function() {
@@ -796,7 +860,7 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="approveMultipleStatus' + item.id + '">';
 						html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
-						html += '<input type="hidden" name="subchecklist_id" id="subchecklist_id" value="' + item.id + '">';
+						html += '<input type="hidden" name="subchecklist_id" value="' + item.id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
 						html += '</form>';
 						html += '</div>'; 
