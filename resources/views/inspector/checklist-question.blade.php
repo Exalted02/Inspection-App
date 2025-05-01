@@ -543,7 +543,7 @@ $(document ).ready(function() {
 							});
 						});
 						
-						//--- upload files ------- 
+						//--- upload new files ------- 
 						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-files') }}",
