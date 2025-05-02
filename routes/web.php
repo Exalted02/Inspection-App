@@ -78,6 +78,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('reject-subchecklist-files', [DashboardInspectorController::class, 'reject_subchecklist_files'])->name('reject-subchecklist-files');
 	Route::post('reject-subckecklist-file-delete', [DashboardInspectorController::class, 'reject_subckecklist_file_delete'])->name('reject-subckecklist-file-delete');
 	Route::post('subchecklist-file-delete', [DashboardInspectorController::class, 'subchecklist_file_delete'])->name('subchecklist-file-delete');
+	
+	Route::get('completed-task/{cat_id}/{subcat_id}', [DashboardInspectorController::class, 'completed_task'])->name('completed-task');
 	//User-Accounts
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	

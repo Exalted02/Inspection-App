@@ -161,7 +161,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 <script>
 //Dropzone.autoDiscover = false;
 document.addEventListener('DOMContentLoaded', function () {
-	//Dropzone.autoDiscover = false;
+	Dropzone.autoDiscover = false;
 	const filesForDropzone = {!! json_encode($existingSubChecklistFiles) !!};
 	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 	//alert(window.existingSubChecklistFiles);
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	//Dropzone.autoDiscover = false;
 	
-	/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+	document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 		//console.log(filesForDropzone);
 		//Dropzone.autoDiscover = false;
 		//if (dropzoneElement.dropzone) {
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				});
 			}
 		});
-	});*/
+	});
 });
 </script>
 
@@ -454,7 +454,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 
 //---------- show subchecklist image when page load ----------
 //"{{ route('reject-subchecklist-files') }}"
-document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 		//console.log(filesForDropzone);
 		//Dropzone.autoDiscover = false;
 		//if (dropzoneElement.dropzone) {
@@ -521,13 +521,15 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 				});
 			}
 		});
-	});
+	});*/
 
 
 // ---------
 </script>
 
 <script>
+const checkoutUrlTemplate = @json(route('completed-task', ['cat_id' => 'CAT_ID', 'subcat_id' => 'SUBCAT_ID']));
+
 $(document ).ready(function() {
 	var approveStatus = $('#approveStatus').val();
 	if(approveStatus == '0')
@@ -658,6 +660,9 @@ $(document ).ready(function() {
 				//alert(response.currentid);
 				if(response.currentid=='')
 				{
+					const redirectUrl = checkoutUrlTemplate.replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
+
+					window.location.href = redirectUrl;
 					 return;
 				}
 				$('#current_checklist_id').val(response.currentid);

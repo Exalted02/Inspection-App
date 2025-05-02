@@ -679,6 +679,17 @@ class DashboardInspectorController extends Controller
 		$subchecklist_id = Task_list_subchecklists::where('id', $task_list_subchecklist_id)->first()->subchecklist_id;
 		return response()->json(['success' => true, 'message' => 'File deleted.', 'count'=>$count, 'subchecklist_id'=>$subchecklist_id]);
 	}
+	public function completed_task($cat_id='', $subcat_id='')
+	{
+		
+		$data['checklistdata'] = Checklist::where('category_id',$cat_id)
+									->where('subcategory_id', $subcat_id)
+									->where('status','!=', 2)->get();
+									
+									
+		//echo "<pre>";print_r($checklistdata);die;
+		return view('inspector.completed-task', $data);
+	}
 
 	
 }
