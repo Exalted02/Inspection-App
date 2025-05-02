@@ -662,8 +662,8 @@ class DashboardInspectorController extends Controller
 			return response()->json(['success' => false, 'message' => 'Filename missing.'], 400);
 		}
 		
-		// --get the task_list_checklist_id for count files
-		$task_list_checklist_id = Task_list_subchecklist_rejected_files::where('file', $filename)->first()->task_list_checklist_id;
+		// --get the task_list_subchecklist_id for count files
+		$task_list_subchecklist_id = Task_list_subchecklist_rejected_files::where('file', $filename)->first()->task_list_subchecklist_id;
 		// ----------------------------------------------
 
 		Task_list_subchecklist_rejected_files::where('file', $filename)->delete();
@@ -674,9 +674,10 @@ class DashboardInspectorController extends Controller
 		}
 		
 		// for check form validation 
-		$count = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->count();
+		$count = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $task_list_subchecklist_id)->count();
 		
-		return response()->json(['success' => true, 'message' => 'File deleted.', 'count'=>$count]);
+		$subchecklist_id = Task_list_subchecklists::where('id', $task_list_subchecklist_id)->first()->subchecklist_id;
+		return response()->json(['success' => true, 'message' => 'File deleted.', 'count'=>$count, 'subchecklist_id'=>$subchecklist_id]);
 	}
 
 	

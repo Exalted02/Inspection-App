@@ -43,12 +43,18 @@
 								@foreach($categoryData[0]->get_subcategory as $subcategories)
 								@php 
 									$tot_checklist = App\Models\Checklist::where('category_id', $categoryData[0]->id)->where('subcategory_id', $subcategories->id)->count();
-									$tot_completed = App\Models\Task_list_checklists::where('task_list_id',$task_id)->where('task_list_subcategory_id', $subcategories->id)->count();
+									$tot_checklist_completed = App\Models\Task_list_checklists::where('task_list_id',$task_id)->where('task_list_subcategory_id', $subcategories->id)->count();
+									$tot_subchecklist_completed = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)
+																	->where('task_list_subcategory_id', $subcategories->id)
+																	->distinct('task_list_checklist_id')
+																	->count();
+									$tot_completed_task = $tot_checklist_completed+$tot_subchecklist_completed ;
+
 								@endphp
 								<div class="checklist-item">
 									<div class="text">
 										<div class="title">{{ $subcategories->name ?? ''}}</div>
-										<div class="subtitle">Completed {{ $tot_completed ?? ''}} of {{ $tot_checklist ?? ''}}</div>
+										<div class="subtitle">Completed {{ $tot_completed_task ?? ''}} of {{ $tot_checklist ?? ''}}</div>
 									</div>
 									{{--<a href="{{route('checklist-question' ,['cat_id'=>$categoryData[0]->id, 'subcat_id'=>$subcategories->id])}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
 									<a href="jacascript:void(0);" class="chk-task-id" data-cat="{{ $categoryData[0]->id ?? ''}}" data-subcat="{{ $subcategories->id ?? '' }}" data-location="{{ $location_id ?? ''}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>

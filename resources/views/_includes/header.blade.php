@@ -68,7 +68,7 @@
 					<!-- menu links -->
 					<ul class="menu-links">
 						<li>
-							<a href="">Dashboard</a>
+							<a href="{{ route('inspector-dashboard')}}">Dashboard</a>
 						</li>
 						<li>
 							<a href="{{route('logout')}}">Logout</a>
