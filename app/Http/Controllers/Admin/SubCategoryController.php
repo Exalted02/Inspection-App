@@ -161,12 +161,11 @@ class SubCategoryController extends Controller
 	public function manage_location_wise_subcategory($id='')
 	{
 		$has_search  = 0;
-		
 		$data['has_search'] = $has_search;
 		$data['category_id'] = $id;
 		
 		$dataArr = Subcategory::with('get_category');
-		$dataArr->where('category_id', 'like', '%' . $id . '%');
+		$dataArr->where('category_id',  $id);
 		$dataArr->where('status', '!=', 2);
 		
 		

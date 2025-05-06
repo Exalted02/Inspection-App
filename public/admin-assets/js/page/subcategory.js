@@ -7,7 +7,7 @@ Version      : 4.0
 $(document).ready(function() {
 	
 	$(document).on('click','.save-subcategory', function(){
-		let category = $('#category').val().trim();
+		//let category = $('#category').val().trim();
 		let subcategory = $('#subcategory').val().trim();
 		
 		let isValid = true;

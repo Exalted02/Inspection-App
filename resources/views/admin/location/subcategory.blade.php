@@ -239,7 +239,7 @@ $(document).ready(function() {
 	$(document).on('click','.add_subcategory', function(){
 		$('#frmsubcategory')[0].reset();
 		$('#id').val('');
-		$('#category').val('').trigger('change');
+		//$('#category').val('').trigger('change');
 		$('#head-label').html(translations.addsubcat);
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
