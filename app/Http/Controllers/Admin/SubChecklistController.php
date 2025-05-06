@@ -23,6 +23,7 @@ class SubChecklistController extends Controller
 			$has_search  = 1;
 		}
 		$data['has_search'] = $has_search;
+		$data['checklist_id'] = $request->src_checklist;
 		
 		$dataArr = Subchecklist::with('get_checklist');
 		
@@ -159,6 +160,27 @@ class SubChecklistController extends Controller
 		
 		$data['result'] = $change_status;
 		echo json_encode($data);
+	}
+	public function manage_location_wise_subcategory_subchecklist($id='')
+	{
+		$has_search  = 0;
+		$data['has_search'] = $has_search;
+		$data['checklist_id'] = $id;
+		
+		$dataArr = Subchecklist::with('get_checklist');
+		
+		$dataArr->where('checklist_id', $id);
+
+		$dataArr->where('status', '!=', 2);
+		
+		
+		$dataArr->orderBy('name', 'ASC'); 
+		$data['subchecklists'] = $dataArr->get();
+		$data['checklists'] = Checklist::where('status','!=',2)->get();
+		
+		
+		
+		return view('admin.location.subchecklist',$data);
 	}
 	 
 }

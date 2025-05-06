@@ -218,6 +218,7 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 										<div class="dropdown-menu dropdown-menu-right">
 											<a class="dropdown-item edit-checklist" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-checklist') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
 											<a class="dropdown-item delete-checklist text-danger" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeletechecklist') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
+											<a class="dropdown-item" href="{{ route('admin.manage-location-wise-subcategory-subchecklist', ['id'=>$val->id]) }}"><i class="fa-solid fa-list m-r-5"></i> {{ __('subchecklist') }}</a>
 										</div>
 									</div>
 								</td>
@@ -247,7 +248,7 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		 var categoryid = $('#categoryid').val();
+		var categoryid = $('#categoryid').val();
 		var subcategoryid = $('#subcategoryid').val();
 
 		var url = "{{ route('admin.manage-location-wise-subcategory-checklist', ['catid' => '__CATEGORY_ID__', 'subcatid' => '__SUBCATEGORY_ID__']) }}";

@@ -31,8 +31,8 @@
 							</div>
 							<div class="modal-body">
 								<form id="frmchecklist" action="{{ route('admin.save-checklist') }}" enctype="multipart/form-data">
-								<input type="hidden" value="{{ $category_id }}" name="category">
-								<input type="hidden" value="{{ $subcategory_id }}" name="subcategory">
+								<input type="hidden" value="{{ $category_id }}" name="category" id="category">
+								<input type="hidden" value="{{ $subcategory_id }}" name="subcategory" id="subcategory">
 								<input type="hidden" id="id" name="id">
 								{{--<div class="row">
 										<div class="col-sm-12">

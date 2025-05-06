@@ -55,6 +55,9 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::get('/manage-location-wise-subcategory-checklist/{catid}/{subcatid}', [ChecklistController::class, 'manage_location_wise_subcategory_checklist'])->name('manage-location-wise-subcategory-checklist');
 	Route::post('/manage-location-wise-subcategory-checklist/{catid}/{subcatid}', [ChecklistController::class, 'index'])->name('manage-location-wise-subcategory-checklist');
 	
+	Route::get('/manage-location-wise-subcategory-subchecklist/{id}', [SubChecklistController::class, 'manage_location_wise_subcategory_subchecklist'])->name('manage-location-wise-subcategory-subchecklist');
+	Route::post('/manage-location-wise-subcategory-subchecklist/{id}', [SubChecklistController::class, 'index'])->name('manage-location-wise-subcategory-subchecklist');
+	
 	// master location 
 	Route::get('/manage-location', [MasterController::class, 'manage_location'])->name('manage-location');
 	Route::post('/manage-location', [MasterController::class, 'manage_location'])->name('manage-location');

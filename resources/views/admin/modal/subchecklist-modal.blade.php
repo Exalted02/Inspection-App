@@ -32,7 +32,8 @@
 							<div class="modal-body">
 								<form id="frmsubchecklist" action="{{ route('admin.save-subchecklist') }}" enctype="multipart/form-data">
 								<input type="hidden" id="id" name="id">
-									<div class="row">
+								<input type="hidden" id="checklist" name="checklist" value="{{ $checklist_id }}">
+								   {{--<div class="row">
 										<div class="col-sm-12">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('checklist_name') }}<span class="text-danger">*</span></label>
@@ -45,7 +46,7 @@
 												<div class="invalid-feedback">{{ __('please_select') }} {{ __('checklist')}}.</div>
 											</div>
 										</div>
-									</div>
+									</div>--}}
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="input-block mb-3">

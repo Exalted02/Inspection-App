@@ -7,18 +7,18 @@ Version      : 4.0
 $(document).ready(function() {
 	
 	$(document).on('click','.save-subchecklist', function(){
-		let checklist = $('#checklist').val().trim();
+		//let checklist = $('#checklist').val().trim();
 		let name = $('#name').val().trim();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
-		if (checklist === '')
+		/*if (checklist === '')
 		{
 			$('#checklist').addClass('is-invalid');
 			$('#checklist').siblings('.invalid-feedback').show();
 			isValid = false;
-		}
+		}*/
 		if (name === '')
 		{
 			$('#name').addClass('is-invalid');
@@ -77,7 +77,8 @@ $(document).on('click','.edit-subchecklist', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
-			$('#checklist').val(response.checklist).trigger('change');
+			//$('#checklist').val(response.checklist).trigger('change');
+			$('#checklist').val(response.checklist);
 			$('#name').val(response.name);
 			$('#head-label').html(response.edit);
 			$('#add_subchecklist').modal('show');

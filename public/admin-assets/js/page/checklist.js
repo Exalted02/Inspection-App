@@ -84,8 +84,10 @@ $(document).on('click','.edit-checklist', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
+			$('#category').val(response.category);
+			$('#subcategory').val(response.subcategory);
 			
-			function waitForDropdownToLoad(selector, value, callback) {
+			/*function waitForDropdownToLoad(selector, value, callback) {
 				const interval = setInterval(() => {
 						if ($(selector).find(`option[value="${value}"]`).length > 0) {
 							$(selector).val(value).trigger('change');
@@ -96,7 +98,7 @@ $(document).on('click','.edit-checklist', function(){
 			}
 			waitForDropdownToLoad('#category', response.category, function() {
 				waitForDropdownToLoad('#subcategory', response.subcategory);
-			});
+			});*/
 			//$('#category').val(response.category).trigger('change');
 			$('#name').val(response.name);
 			$('#head-label').html(response.edit);

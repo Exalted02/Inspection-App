@@ -2,6 +2,9 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($subchecklist);die;
+$checklist_name = '';
+$checklistData = App\Models\Checklist::where('id',$checklist_id)->first();
+$checklist_name = $checklistData ? $checklistData->name : '';
 @endphp
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -15,7 +18,7 @@
 					<h3 class="page-title">{{ __('subchecklist') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ __('subchecklist') }}</li>
+						<li class="breadcrumb-item active">{{ $checklist_name ?? '' }}</li>
 					</ul>
 				</div>
 				<div class="col-md-8 float-end ms-auto">
@@ -40,10 +43,11 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.sub-checklist')}}" id="search-subchecklist-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.manage-location-wise-subcategory-subchecklist',['id'=>$checklist_id])}}" id="search-subchecklist-frm">
+		<input type="hidden" name="src_checklist" value="{{ $checklist_id }}">
 		@csrf
 			<div class="row filter-row">
-				<div class="col-xl-3">  
+			{{--<div class="col-xl-3">  
 					 <div class="input-block">
 						 <select name="src_checklist" class="select">
 							<option value="">{{ __('checklist') }}</option>
@@ -52,7 +56,7 @@
 							@endforeach
 						 </select>
 					 </div>
-				</div>
+				</div>--}}
 				<div class="col-xl-3">  
 					 <div class="input-block">
 						 <input type="text" class="form-control" name="search_name" placeholder="{{ __('subchecklist_name')}}" value="{{ old('search_name', request('search_name'))}}">
@@ -143,7 +147,7 @@
 								</th>
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
-								<th>{{ __('checklist_name') }}</th>
+								{{--<th>{{ __('checklist_name') }}</th>--}}
 								<th>{{ __('subchecklist_name') }}</th>
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
@@ -160,7 +164,7 @@
 									</label>
 								</td>
 								@endif
-								<td class="contact-details">{{ $val->get_checklist->name ?? ''}}</td>
+								{{--<td class="contact-details">{{ $val->get_checklist->name ?? ''}}</td>--}}
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
@@ -194,7 +198,7 @@
 										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 										<div class="dropdown-menu dropdown-menu-right">
 											<a class="dropdown-item edit-subchecklist" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-subchecklist') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
-											<a class="dropdown-item delete-subchecklist" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeletesubchecklist') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
+											<a class="dropdown-item delete-subchecklist  text-danger" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeletesubchecklist') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 										</div>
 									</div>
 								</td>
@@ -207,6 +211,7 @@
 		</div>
 	</div>
 </div>
+<input type="text" id="checklistid" value="$checklist_id">
 	<!-- /Page Content -->
 
 @include('modal.common')
@@ -222,7 +227,11 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "{{ route('admin.sub-checklist')}}";
+		var checklistid = $('#checklistid').val();
+		//window.location.href = "{{ route('admin.sub-checklist')}}";
+		var url = "{{ route('admin.manage-location-wise-subcategory-subchecklist', ['id' => '__CHECKLIST_ID__']) }}";
+		url = url.replace('__CHECKLIST_ID__', checklistid);
+		window.location.href = url;
 	});
 	
 	const translations = {
