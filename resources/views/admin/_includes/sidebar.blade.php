@@ -27,7 +27,7 @@
 					<a href="{{ route('admin.dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
 				
-				<li class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-company-location') || request()->routeIs('admin.manage-company-users') || request()->routeIs('admin.manage-location-wise-category') || request()->routeIs('admin.manage-location-wise-subcategory') || request()->routeIs('admin.manage-location-wise-subcategory-checklist') ? 'active' : '' }}">
+				<li class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-company-location') || request()->routeIs('admin.manage-company-users') || request()->routeIs('admin.manage-location-wise-category') || request()->routeIs('admin.manage-location-wise-subcategory') || request()->routeIs('admin.manage-location-wise-subcategory-checklist') || request()->routeIs('admin.manage-location-wise-subcategory-subchecklist') ? 'active' : '' }}">
 					<a href="{{ route('admin.manage-company')}}"><i class="fa-solid fa-building"></i><span>{{ __('manage_company') }}</span></a>
 				</li>
 				
@@ -49,7 +49,7 @@
 					</ul>
 				</li>--}}
 				
-				<li class="submenu">
+				{{--<li class="submenu">
 					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist','admin.inspector','admin.location-owner', 'admin.location-owner-supervisor','admin.management') ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span>{{ __('location') }}</span> <span class="menu-arrow"></span></a>
 					<ul style="{{ request()->routeIs('admin.category','admin.sub-category','admin.checklist','admin.sub-checklist','admin.inspector','admin.location-owner','admin.location-owner-supervisor','admin.management') ? 'display:block' : '' }}">
 						
@@ -63,7 +63,7 @@
 							</ul>
 						</li>
 						
-						{{--<li class="submenu">
+						<li class="submenu">
 							<a href="javascript:void(0);" class="{{ request()->routeIs('admin.inspector')|| request()->routeIs('admin.location-owner') || request()->routeIs('admin.location-owner-supervisor') || request()->routeIs('admin.management') ? 'subdrop' : '' }}"> <span>{{ __('manage_users') }}</span> <span class="menu-arrow"></span></a>
 							<ul style="{{ request()->routeIs('admin.inspector') || request()->routeIs('admin.location-owner') || request()->routeIs('admin.location-owner-supervisor') || request()->routeIs('admin.management')  ? 'display:block' : '' }}">
 								<li><a href="{{ route('admin.inspector')}}" class="{{ request()->routeIs('admin.inspector') ? 'menu-active' : '' }}"><span>{{ __('inspector') }}</span></a></li>
@@ -71,9 +71,9 @@
 								<li><a href="{{ route('admin.location-owner-supervisor')}}" class="{{ request()->routeIs('admin.location-owner-supervisor') ? 'menu-active' : '' }}"><span>{{ __('LOS') }}</span></a></li>
 								<li><a href="{{ route('admin.management')}}" class="{{ request()->routeIs('admin.management') ? 'menu-active' : '' }}"><span>{{ __('management') }}</span></a></li>
 							</ul>
-						</li>--}}
+						</li>
 					</ul>
-				</li>
+				</li>--}}
 				
 				
 				{{--<li class="{{ request()->routeIs('admin.email-management','admin.email-management-edit') ? 'active' : '' }}">
