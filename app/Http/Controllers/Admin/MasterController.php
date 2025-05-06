@@ -162,6 +162,7 @@ class MasterController extends Controller
 			$has_search  = 1;
 		}
 		$data['has_search'] = $has_search;
+		$data['company_id'] = $request->src_company_id ?? '';
 		
 		$dataArr = Manage_location::with('get_country','get_state','get_city');
 		if($request->search_name)

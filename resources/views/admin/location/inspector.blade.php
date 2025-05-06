@@ -249,7 +249,6 @@ $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
 		var company_id = $('#companyid').val();
-		alert(company_id);
 		var url = "{{ route('admin.manage-company-users', ['id' => 'COMPANY_ID']) }}";
 		url = url.replace('COMPANY_ID', company_id);
 		window.location.href = url;

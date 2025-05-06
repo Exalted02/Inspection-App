@@ -40,8 +40,9 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.manage-location')}}" id="search-location-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.manage-company-location', ['id'=>$company_id])}}" id="search-location-frm">
 		@csrf
+		<input type="hidden" value="{{ $company_id ?? ''}}" name="src_company_id">
 			<div class="row filter-row">
 				<div class="col-xl-3">  
 					 <div class="input-block">
@@ -239,7 +240,7 @@
 		</div>
 	</div>
 </div>
-
+<input type="hidden" id="companyid" value="{{ $company_id ?? ''}}">
 	<!-- /Page Content -->
 
 @include('modal.common')
@@ -255,7 +256,10 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "{{ route('admin.manage-location') }}";
+		var company_id = $('#companyid').val();
+		var url = "{{ route('admin.manage-company-location', ['id' => 'COMPANY_ID']) }}";
+		url = url.replace('COMPANY_ID', company_id);
+		window.location.href = url;
 	});
 	
 	const translations = {

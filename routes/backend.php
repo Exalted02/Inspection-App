@@ -42,6 +42,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/edit-company-name', [MasterController::class, 'edit_company'])->name('edit-company-name');
 	Route::post('/getDeleteCompanyName', [MasterController::class, 'delete_company'])->name('getDeleteCompanyName');
 	Route::get('/manage-company-location/{id}', [MasterController::class, 'manage_company_location'])->name('manage-company-location');
+	Route::post('/manage-company-location/{id}', [MasterController::class, 'manage_location'])->name('manage-company-location');
 	Route::get('/manage-company-users/{id}', [InspectorController::class, 'manage_company_users'])->name('manage-company-users');
 	Route::post('/manage-company-users/{id}', [InspectorController::class, 'index'])->name('manage-company-users');
 	

@@ -7,7 +7,7 @@
 						<i class="la la-trash-restore"></i>
 					</div>
 					<h3>{{ __('are_you_sure') }}, {{ __('you_want_delete') }}</h3>
-					<p>{{ __('company_name') }} "<span id="list_code_name"></span>" {{ __('from_your_account') }}</p>
+					<p>{{ __('company_name') }} "<span id="list_code_name"></span>" {{ __('from_your_account') }} and all related record w.r.t this company</p>
 					<div class="col-lg-12 text-center form-wizard-button">
 						<a href="#" class="button btn-lights" data-bs-dismiss="modal">{{ __('not_now') }}</a>
 						<a href="javascript:void(0);" class="btn btn-primary data-id-pcode-list" data-url="{{ route('admin.deleteManageCompanytList') }}">{{ __('okay') }}</a>
