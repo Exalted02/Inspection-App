@@ -84,9 +84,9 @@ class InspectorController extends Controller
 		
 		if($request->has('search_status') && $request->search_status !== '' && isset($request->search_status))
 		{
-			$dataArr->where('status', $request->search_status);
+			$dataArr->where('company_name', $request->src_company_id)->where('status', $request->search_status);
 		} else {
-			$dataArr->where('status', '!=', 2);
+			$dataArr->where('company_name', $request->src_company_id)->where('status', '!=', 2);
 		}
 		
 		$dataArr->orderBy('name', 'ASC'); 
@@ -301,7 +301,7 @@ class InspectorController extends Controller
 		$data['has_search'] = $has_search;
 		
 		$dataArr = User::with('get_company');
-		$dataArr->where('status', '!=', 2);
+		$dataArr->where('company_name', $id)->where('status', '!=', 2);
 		$dataArr->orderBy('name', 'ASC'); 
 		$data['inspector'] = $dataArr->get();
 		$data['companies'] = Manage_company::where('status','!=',2)->get();

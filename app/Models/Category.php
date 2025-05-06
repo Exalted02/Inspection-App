@@ -18,4 +18,9 @@ class Category extends Model
 	{
 		return $this->hasMany(Subcategory::class, 'category_id', 'id');
 	}
+	
+	public function locationCategories()
+	{
+		return $this->hasMany(Manage_location_category::class, 'category_id');
+	}
 }

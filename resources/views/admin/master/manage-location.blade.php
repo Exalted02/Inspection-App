@@ -2,6 +2,8 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($prospect_stage);die;
+$companyData = App\Models\Manage_company::where('id',$company_id)->first();
+$company_name = $companyData ? $companyData->company_name : '';
 @endphp
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -15,7 +17,7 @@
 					<h3 class="page-title">{{ __('manage_location') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ __('manage_location') }}</li>
+						<li class="breadcrumb-item active">{{ $company_name ?? '' }}</li>
 					</ul>
 				</div>
 				<div class="col-md-8 float-end ms-auto">

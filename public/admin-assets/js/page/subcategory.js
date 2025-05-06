@@ -13,12 +13,12 @@ $(document).ready(function() {
 		let isValid = true;
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
-		if (category === '')
+		/*if (category === '')
 		{
 			$('#category').addClass('is-invalid');
 			$('#category').siblings('.invalid-feedback').show();
 			isValid = false;
-		}
+		}*/
 		if (subcategory === '')
 		{
 			$('#subcategory').addClass('is-invalid');
@@ -77,7 +77,8 @@ $(document).on('click','.edit-subcategory', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
-			$('#category').val(response.category).trigger('change');
+			//$('#category').val(response.category).trigger('change');
+			$('#category').val(response.category);
 			$('#subcategory').val(response.name);
 			$('#head-label').html(response.edit);
 			$('#add_subcategory').modal('show');

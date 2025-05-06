@@ -20,14 +20,16 @@ class SubCategoryController extends Controller
 		{
 			$has_search  = 1;
 		}
+		
 		$data['has_search'] = $has_search;
+		$data['category_id'] = $request->category_id;
 		
 		$dataArr = Subcategory::with('get_category');
 		
-		if($request->category)
+		/*if($request->category)
 		{
 			$dataArr->where('category_id', 'like', '%' . $request->category . '%');
-		}
+		}*/
 		
 		if($request->search_name)
 		{
@@ -63,6 +65,8 @@ class SubCategoryController extends Controller
 				$dataArr->orderBy('created_at', 'DESC');
 			}
 		}
+		
+		$dataArr->where('category_id', $request->category_id);
 		
 		if($request->has('search_status') && $request->search_status !== '' && isset($request->search_status))
 		{
@@ -153,6 +157,23 @@ class SubCategoryController extends Controller
 		
 		$data['result'] = $change_status;
 		echo json_encode($data);
+	}
+	public function manage_location_wise_subcategory($id='')
+	{
+		$has_search  = 0;
+		
+		$data['has_search'] = $has_search;
+		$data['category_id'] = $id;
+		
+		$dataArr = Subcategory::with('get_category');
+		$dataArr->where('category_id', 'like', '%' . $id . '%');
+		$dataArr->where('status', '!=', 2);
+		
+		
+		$dataArr->orderBy('name', 'ASC'); 
+		$data['subcategory'] = $dataArr->get();
+		$data['categories'] = Category::where('status','!=',2)->get();
+		return view('admin.location.subcategory',$data);
 	}
 	 
 }

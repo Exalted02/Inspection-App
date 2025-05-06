@@ -2,6 +2,8 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($category);die;
+$locationData = App\Models\Manage_location::where('id',$location_id)->first();
+$location_name = $locationData ? $locationData->location_name : '';
 @endphp
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -15,7 +17,7 @@
 					<h3 class="page-title">{{ __('category') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ __('category') }}</li>
+						<li class="breadcrumb-item active">{{ $location_name ?? '' }}</li>
 					</ul>
 				</div>
 				<div class="col-md-8 float-end ms-auto">
@@ -40,9 +42,9 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.category')}}" id="search-category-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.manage-location-wise-category', ['id'=>$location_id])}}" id="search-category-frm">
 		@csrf
-		<input type="text" value="{{ $location_id ?? ''}}" name="src_location_id">
+		<input type="hidden" value="{{ $location_id ?? ''}}" name="src_location_id">
 			<div class="row filter-row">
 				<div class="col-xl-3">  
 					 <div class="input-block">
@@ -185,7 +187,8 @@
 										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 										<div class="dropdown-menu dropdown-menu-right">
 											<a class="dropdown-item edit-category" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-category') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
-											<a class="dropdown-item delete-category-name" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteCategory') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
+											<a class="dropdown-item delete-category-name text-danger" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteCategory') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
+											<a class="dropdown-item" href="{{ route('admin.manage-location-wise-subcategory', ['id'=>$val->id]) }}"><i class="fa-solid fa-list m-r-5"></i> {{ __('sub_category') }}</a>
 										</div>
 									</div>
 								</td>
@@ -215,7 +218,10 @@ $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
 		var location_id = $('#locationid').val();
-		window.location.href = "{{ route('admin.category') }}";
+		//window.location.href = "{{ route('admin.category') }}";
+		var url = "{{ route('admin.manage-location-wise-category', ['id' => 'LOCATION_ID']) }}";
+		url = url.replace('LOCATION_ID', location_id);
+		window.location.href = url;
 	});
 	
 	const translations = {
@@ -232,6 +238,7 @@ $(document).ready(function() {
 	});
 	
 	const has_search = @json($has_search);
+	//alert(has_search);
 	if(has_search==1)
 	{
 		$('#filter_search').click();

@@ -19,13 +19,20 @@ class CategoryController extends Controller
     public function index(Request $request)
 	{
 		$has_search  = 0;
+		//print_r($request->all());
 		if($request->all() && count($request->all()) > 0)
 		{
 			$has_search  = 1;
 		}
 		$data['has_search'] = $has_search;
 		
-		$dataArr = Category::query();
+		$data['location_id'] = $request->src_location_id;
+		
+		$dataArr = Category::whereHas('locationCategories', function ($q) use ($id) {
+			$q->where('location_id', $request->src_location_id);
+		});
+		//$dataArr = Category::query();
+		
 		if($request->search_name)
 		{
 			$dataArr->where('name', 'like', '%' . $request->search_name . '%');
@@ -183,13 +190,19 @@ class CategoryController extends Controller
 		$data['has_search'] = $has_search;
 		$data['location_id'] = $id;
 		
-		$dataArr = Category::query();
+		//$dataArr = Category::query();
+		$data['category'] = Category::whereHas('locationCategories', function ($q) use ($id) {
+			$q->where('location_id', $id);
+		})
+		->where('status', '!=', 2)
+		->orderBy('name', 'ASC')
+		->get();
 		
-		$dataArr->where('status', '!=', 2);
+		//$dataArr->where('status', '!=', 2);
 		
 		
-		$dataArr->orderBy('name', 'ASC'); 
-		$data['category'] = $dataArr->get();
+		//$dataArr->orderBy('name', 'ASC'); 
+		//$data['category'] = $dataArr->get();
 		return view('admin.location.category',$data);
 	}
 	 

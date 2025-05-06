@@ -2,6 +2,8 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($category);die;
+$categoryData = App\Models\Category::where('id',$category_id)->first();
+$category_name = $categoryData ? $categoryData->name : '';
 @endphp
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -15,7 +17,7 @@
 					<h3 class="page-title">{{ __('sub_category') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ __('sub_category') }}</li>
+						<li class="breadcrumb-item active">{{ $category_name ?? '' }}</li>
 					</ul>
 				</div>
 				<div class="col-md-8 float-end ms-auto">
@@ -40,10 +42,11 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.sub-category')}}" id="search-category-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.manage-location-wise-subcategory', ['id'=>$category_id])}}" id="search-category-frm">
 		@csrf
+		<input type="hidden" value="{{ $category_id ?? ''}}" name="category_id">
 			<div class="row filter-row">
-				<div class="col-xl-3">  
+			{{--<div class="col-xl-3">  
 					 <div class="input-block">
 						 <select name="category" class="select">
 							<option value="">{{ __('category') }}</option>
@@ -52,7 +55,7 @@
 							@endforeach
 						 </select>
 					 </div>
-				</div>
+				</div>--}}
 				<div class="col-xl-3">  
 					 <div class="input-block">
 						 <input type="text" class="form-control" name="search_name" placeholder="{{ __('sub_category_name')}}" value="{{ old('search_name', request('search_name'))}}">
@@ -143,7 +146,7 @@
 								</th>
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
-								<th>{{ __('category_name') }}</th>
+								{{--<th>{{ __('category_name') }}</th>--}}
 								<th>{{ __('sub_category_name') }}</th>
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
@@ -160,7 +163,7 @@
 									</label>
 								</td>
 								@endif
-								<td class="contact-details">{{ $val->get_category->name ?? ''}}</td>
+								{{--<td class="contact-details">{{ $val->get_category->name ?? ''}}</td>--}}
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
@@ -207,6 +210,7 @@
 		</div>
 	</div>
 </div>
+<input type="hidden" value="{{ $category_id ?? ''}}" id="categoryid">
 	<!-- /Page Content -->
 
 @include('modal.common')
@@ -222,7 +226,10 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "{{ route('admin.sub-category')}}";
+		var category_id = $('#categoryid').val();
+		var url = "{{ route('admin.manage-location-wise-subcategory', ['id' => 'CATEGORY_ID']) }}";
+		url = url.replace('CATEGORY_ID', category_id);
+		window.location.href = url;
 	});
 	
 	const translations = {
