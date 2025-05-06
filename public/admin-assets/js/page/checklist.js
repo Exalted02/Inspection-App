@@ -7,14 +7,14 @@ Version      : 4.0
 $(document).ready(function() {
 	
 	$(document).on('click','.save-checklist', function(){
-		let category = $('#category').val().trim();
-		let subcategory = $('#subcategory').val().trim();
+		//let category = $('#category').val().trim();
+		//let subcategory = $('#subcategory').val().trim();
 		let checklist = $('#name').val().trim();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
-		if (category === '')
+		/*if (category === '')
 		{
 			$('#category').addClass('is-invalid');
 			$('#category').siblings('.invalid-feedback').show();
@@ -25,7 +25,7 @@ $(document).ready(function() {
 			$('#subcategory').addClass('is-invalid');
 			$('#subcategory').siblings('.invalid-feedback').show();
 			isValid = false;
-		}
+		}*/
 		if (checklist === '')
 		{
 			$('#name').addClass('is-invalid');

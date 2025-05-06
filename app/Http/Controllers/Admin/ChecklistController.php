@@ -22,18 +22,15 @@ class ChecklistController extends Controller
 			$has_search  = 1;
 		}
 		$data['has_search'] = $has_search;
+		$data['category_id'] = $request->src_category;
+		$data['subcategory_id'] = $request->src_subcategory;
 		
 		$dataArr = Checklist::with('get_category','get_subcategory');
 		
-		if($request->src_category)
-		{
-			$dataArr->where('category_id', 'like', '%' . $request->src_category . '%');
-		}
+		$dataArr->where('category_id', $request->src_category);
 		
-		if($request->subcategory)
-		{
-			$dataArr->where('subcategory_id', 'like', '%' . $request->subcategory . '%');
-		}
+		$dataArr->where('subcategory_id', $request->src_subcategory);
+		
 		
 		if($request->search_name)
 		{
@@ -169,7 +166,6 @@ class ChecklistController extends Controller
 	}
 	public function manage_location_wise_subcategory_checklist($catid='', $subcatid='')
 	{
-		//echo $catid.' '.$subcatid; die;
 		$has_search  = 0;
 		
 		$data['has_search'] = $has_search;

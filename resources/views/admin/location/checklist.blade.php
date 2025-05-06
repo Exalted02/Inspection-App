@@ -47,9 +47,9 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.checklist')}}" id="search-checklist-frm">
-		<input type="text" value="{{ $category_id }}" name="category_id">
-		<input type="text" value="{{ $subcategory_id }}" name="subcategory_id">
+		<form name="search-frm" method="post" action="{{ route('admin.manage-location-wise-subcategory-checklist', ['catid'=>$category_id, 'subcatid'=> $subcategory_id])}}" id="search-checklist-frm">
+		<input type="hidden" value="{{ $category_id }}" name="src_category">
+		<input type="hidden" value="{{ $subcategory_id }}" name="src_subcategory">
 		@csrf
 			<div class="row filter-row">
 			{{--<div class="col-xl-3">  
@@ -217,7 +217,7 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 										<div class="dropdown-menu dropdown-menu-right">
 											<a class="dropdown-item edit-checklist" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-checklist') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
-											<a class="dropdown-item delete-checklist" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeletechecklist') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
+											<a class="dropdown-item delete-checklist text-danger" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeletechecklist') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 										</div>
 									</div>
 								</td>
@@ -230,6 +230,8 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 		</div>
 	</div>
 </div>
+<input type="hidden" value="{{ $category_id }}" id="categoryid">
+<input type="hidden" value="{{ $subcategory_id }}" id="subcategoryid">
 	<!-- /Page Content -->
 
 @include('modal.common')
@@ -245,7 +247,14 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "{{ route('admin.checklist')}}";
+		 var categoryid = $('#categoryid').val();
+		var subcategoryid = $('#subcategoryid').val();
+
+		var url = "{{ route('admin.manage-location-wise-subcategory-checklist', ['catid' => '__CATEGORY_ID__', 'subcatid' => '__SUBCATEGORY_ID__']) }}";
+		url = url.replace('__CATEGORY_ID__', categoryid);
+		url = url.replace('__SUBCATEGORY_ID__', subcategoryid);
+		
+		window.location.href = url;
 	});
 	
 	const translations = {
@@ -255,7 +264,7 @@ $(document).ready(function() {
 	$(document).on('click','.add_checklist', function(){
 		$('#frmchecklist')[0].reset();
 		$('#id').val('');
-		$('#category').val('').trigger('change');
+		//$('#category').val('').trigger('change');
 		$('#head-label').html(translations.addsubcat);
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
