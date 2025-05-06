@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Models\Category;
+use App\Models\Manage_location_category;
 use App\Models\Countries;
 use App\Models\States;
 use App\Models\Cities;
@@ -111,6 +112,11 @@ class CategoryController extends Controller
 			$model->save();
 			
 			$id = $model->id;
+			
+			$mngCatmodel = new Manage_location_category();
+			$mngCatmodel->location_id = $request->post('location_id');
+			$mngCatmodel->category_id = $id;
+			$mngCatmodel->save();
 		}
 		
 		$fileName = '';
@@ -169,6 +175,22 @@ class CategoryController extends Controller
 		
 		$data['result'] = $change_status;
 		echo json_encode($data);
+	}
+	public function manage_location_wise_category($id='')
+	{
+		$has_search  = 0;
+		
+		$data['has_search'] = $has_search;
+		$data['location_id'] = $id;
+		
+		$dataArr = Category::query();
+		
+		$dataArr->where('status', '!=', 2);
+		
+		
+		$dataArr->orderBy('name', 'ASC'); 
+		$data['category'] = $dataArr->get();
+		return view('admin.location.category',$data);
 	}
 	 
 }

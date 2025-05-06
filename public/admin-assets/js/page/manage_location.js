@@ -57,7 +57,7 @@ $(document).ready(function() {
 		}
 		
 		
-		let selectedCategories = [];
+		/*let selectedCategories = [];
 		console.log('Checkbox found?', $('input[name="category[]"]:checked').length);
 		$('input[name="category[]"]:checked').each(function() {
 			selectedCategories.push($(this).val());
@@ -67,7 +67,7 @@ $(document).ready(function() {
 			$('input[name="category[]"]').first().addClass('is-invalid');
 			$('input[name="category[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();
 			isValid = false;
-		}
+		}*/
 
 		
 		if (isValid) {
@@ -146,7 +146,7 @@ $(document).on('click','.edit-location', function(){
 			var app_url = response.app_url; 
 			$('#preview').attr('src', app_url + '/' + response.location_image).show();
 			
-			let selectedCategories = Array.isArray(response.categary_data)? response.categary_data : String(response.categary_data).split(',');
+			/*let selectedCategories = Array.isArray(response.categary_data)? response.categary_data : String(response.categary_data).split(',');
 			selectedCategories = selectedCategories.map(String);
 			
 			$('input[name="category[]"]').each(function () {
@@ -154,7 +154,7 @@ $(document).on('click','.edit-location', function(){
 				if (selectedCategories.includes(val)) {
 					$(this).prop('checked', true);
 				}
-			});
+			});*/
 			
 			$('#head-label').html(response.edit);
 			$('#add_location').modal('show');

@@ -46,6 +46,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::get('/manage-company-users/{id}', [InspectorController::class, 'manage_company_users'])->name('manage-company-users');
 	Route::post('/manage-company-users/{id}', [InspectorController::class, 'index'])->name('manage-company-users');
 	
+	Route::get('/manage-location-wise-category/{id}', [CategoryController::class, 'manage_location_wise_category'])->name('manage-location-wise-category');
+	
 	// master location 
 	Route::get('/manage-location', [MasterController::class, 'manage_location'])->name('manage-location');
 	Route::post('/manage-location', [MasterController::class, 'manage_location'])->name('manage-location');

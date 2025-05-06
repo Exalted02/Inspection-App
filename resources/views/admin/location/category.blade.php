@@ -42,6 +42,7 @@
 		<div class="filter-filelds" id="filter_inputs">
 		<form name="search-frm" method="post" action="{{ route('admin.category')}}" id="search-category-frm">
 		@csrf
+		<input type="text" value="{{ $location_id ?? ''}}" name="src_location_id">
 			<div class="row filter-row">
 				<div class="col-xl-3">  
 					 <div class="input-block">
@@ -197,6 +198,7 @@
 		</div>
 	</div>
 </div>
+<input type="text" value="{{ $location_id ?? ''}}" id="locationid">
 	<!-- /Page Content -->
 
 @include('modal.common')
@@ -212,6 +214,7 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
+		var location_id = $('#locationid').val();
 		window.location.href = "{{ route('admin.category') }}";
 	});
 	

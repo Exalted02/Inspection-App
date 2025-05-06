@@ -27,7 +27,7 @@
 					<a href="{{ route('admin.dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
 				
-				<li class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-company-location') || request()->routeIs('admin.manage-company-users') ? 'active' : '' }}">
+				<li class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-company-location') || request()->routeIs('admin.manage-company-users') || request()->routeIs('admin.manage-location-wise-category') ? 'active' : '' }}">
 					<a href="{{ route('admin.manage-company')}}"><i class="fa-solid fa-building"></i><span>{{ __('manage_company') }}</span></a>
 				</li>
 				

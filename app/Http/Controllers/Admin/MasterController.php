@@ -215,9 +215,9 @@ class MasterController extends Controller
 		
 		if($request->has('search_status') && $request->search_status !== '' && isset($request->search_status))
 		{
-			$dataArr->where('status', $request->search_status);
+			$dataArr->where('company_id', $request->src_company_id)->where('status', $request->search_status);
 		} else {
-			$dataArr->where('status', '!=', 2);
+			$dataArr->where('company_id', $request->src_company_id)->where('status', '!=', 2);
 		}
 		
 		$dataArr->orderBy('location_name', 'ASC'); 
@@ -272,7 +272,7 @@ class MasterController extends Controller
 			$model->save();
 			$id = $request->post('id');
 			
-			if(!empty($categoryData))
+			/*if(!empty($categoryData))
 			{
 				Manage_location_category::where('location_id', $request->post('id'))->delete();
 				foreach($categoryData as $category)
@@ -282,7 +282,7 @@ class MasterController extends Controller
 					$mngCatmodel->category_id = $category;
 					$mngCatmodel->save();
 				}
-			}
+			}*/
 		}
 		else{
 			$model=new Manage_location();
@@ -299,7 +299,7 @@ class MasterController extends Controller
 			$model->save();
 			$id = $model->id;
 			
-			if(!empty($categoryData))
+			/*if(!empty($categoryData))
 			{
 				foreach($categoryData as $category)
 				{
@@ -308,7 +308,7 @@ class MasterController extends Controller
 					$mngCatmodel->category_id = $category;
 					$mngCatmodel->save();
 				}
-			}
+			}*/
 		}
 		
 		$fileName = '';
@@ -365,13 +365,13 @@ class MasterController extends Controller
 		$data['app_url']  = url('uploads/location');
 		$data['edit']  =  Lang::get('edit_location');
 		
-		$catArry = array();
+		/*$catArry = array();
 		$location_category = Manage_location_category::where('location_id', $request->id)->get();
 		foreach($location_category as $val)
 		{
 			$catArry[] = $val->category_id;
 		}
-		$data['categary_data']  = $catArry;
+		$data['categary_data']  = $catArry;*/
 		
 		return $data;
 	}
@@ -394,14 +394,13 @@ class MasterController extends Controller
 	}
 	public function manage_company_location(Request $request ,$id='')
 	{
-
 		$data = [];
 		$data['company_id'] = $id;
 		$has_search  = 0;
 		$data['has_search'] = $has_search;
 		$dataArr = Manage_location::with('get_country','get_state','get_city');
 		
-		$dataArr->where('status', '!=', 2);
+		$dataArr->where('company_id', $id)->where('status', '!=', 2);
 		$dataArr->orderBy('location_name', 'ASC'); 
 		$data['manage_location'] = $dataArr->get();
 		$data['countries'] = Countries::all();
@@ -409,7 +408,5 @@ class MasterController extends Controller
 		
 		return view('admin.master.manage-location',$data);
 	}
-	
-    
 }
 

@@ -95,7 +95,7 @@
 										</div>
 									</div>
 									
-									<div class="row">
+									{{--<div class="row">
 										<div class="tab-content" id="pills-tabContent">
 											<div class="tab-pane fade" id="pills-public" role="tabpanel" aria-labelledby="pills-public-tab">
 
@@ -120,7 +120,7 @@
 												</div>
 											</div>
 										</div>
-									</div>
+									</div>--}}
 
 									<div class="row">
 										<div class="col-sm-6">

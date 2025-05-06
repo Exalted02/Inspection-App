@@ -185,8 +185,8 @@
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ $val->email ?? ''}}</td>
 								<td>{{ $val->get_company->company_name ?? ''}}</td>
-								<td><img src="{{ url('uploads/profile/' . $val->id. '/inspector/'.$val->profile_image) }}" width="50" height="50"></td>
-								<td><img src="{{ url('uploads/profile/' . $val->id. '/inspector/'. $val->background_image) }}" width="50" height="50"></td>
+								<td><img src="{{  !empty($val->profile_image) ? url('uploads/profile/' . $val->id. '/inspector/'.$val->profile_image) : url('images/noimage.png') }}" width="50" height="50"></td>
+								<td><img src="{{ !empty($val->background_image) ? url('uploads/profile/' . $val->id. '/inspector/'. $val->background_image) : url('images/noimage.png') }}" width="50" height="50"></td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
@@ -219,7 +219,7 @@
 										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 										<div class="dropdown-menu dropdown-menu-right">
 											<a class="dropdown-item edit-inspector" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-inspector') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
-											<a class="dropdown-item delete-inspector-name" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteinspector') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
+											<a class="dropdown-item delete-inspector-name text-danger" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteinspector') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 										</div>
 									</div>
 								</td>
