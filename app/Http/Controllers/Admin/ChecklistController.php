@@ -167,6 +167,31 @@ class ChecklistController extends Controller
 		$data['result'] = $change_status;
 		echo json_encode($data);
 	}
+	public function manage_location_wise_subcategory_checklist($catid='', $subcatid='')
+	{
+		//echo $catid.' '.$subcatid; die;
+		$has_search  = 0;
+		
+		$data['has_search'] = $has_search;
+		$data['category_id'] = $catid;
+		$data['subcategory_id'] = $subcatid;
+		
+		$dataArr = Checklist::with('get_category','get_subcategory');
+		
+		$dataArr->where('category_id', $catid)->where('subcategory_id', $subcatid);
+		
+		$dataArr->where('status', '!=', 2);
+		
+		
+		$dataArr->orderBy('name', 'ASC'); 
+		$data['checklists'] = $dataArr->get();
+		$data['categories'] = Category::where('status','!=',2)->get();
+		
+		//$data['src_subcategories'] = Subcategory::where('category_id', $request->src_category)->get();
+		//$data['src_subcategory'] = $request->src_subcategory;
+		
+		return view('admin.location.checklist',$data);
+	}
 	 
 }
 

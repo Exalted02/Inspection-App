@@ -197,7 +197,8 @@ $category_name = $categoryData ? $categoryData->name : '';
 										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 										<div class="dropdown-menu dropdown-menu-right">
 											<a class="dropdown-item edit-subcategory" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-subcategory') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
-											<a class="dropdown-item delete-subcategory" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteSubCategory') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
+											<a class="dropdown-item delete-subcategory text-danger" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteSubCategory') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
+											<a class="dropdown-item" href="{{ route('admin.manage-location-wise-subcategory-checklist', ['catid'=>$category_id,'subcatid'=>$val->id]) }}"><i class="fa-solid fa-list m-r-5"></i> {{ __('checklist') }}</a>
 										</div>
 									</div>
 								</td>

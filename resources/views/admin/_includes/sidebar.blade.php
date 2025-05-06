@@ -27,7 +27,7 @@
 					<a href="{{ route('admin.dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
 				
-				<li class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-company-location') || request()->routeIs('admin.manage-company-users') || request()->routeIs('admin.manage-location-wise-category') || request()->routeIs('admin.manage-location-wise-subcategory') ? 'active' : '' }}">
+				<li class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-company-location') || request()->routeIs('admin.manage-company-users') || request()->routeIs('admin.manage-location-wise-category') || request()->routeIs('admin.manage-location-wise-subcategory') || request()->routeIs('admin.manage-location-wise-subcategory-checklist') ? 'active' : '' }}">
 					<a href="{{ route('admin.manage-company')}}"><i class="fa-solid fa-building"></i><span>{{ __('manage_company') }}</span></a>
 				</li>
 				

@@ -2,6 +2,13 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($checklist);die;
+$category_name = '';
+$subcategory_name = '';
+$categoryData = App\Models\Category::where('id',$category_id)->first();
+$category_name = $categoryData ? $categoryData->name : '';
+
+$subcategoryData = App\Models\Subcategory::where('id',$subcategory_id)->where('category_id', $category_id)->first();
+$subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 @endphp
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -15,7 +22,7 @@
 					<h3 class="page-title">{{ __('checklist') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ __('checklist') }}</li>
+						<li class="breadcrumb-item active">{{ $category_name .'/'.$subcategory_name }}</li>
 					</ul>
 				</div>
 				<div class="col-md-8 float-end ms-auto">
@@ -41,9 +48,11 @@
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
 		<form name="search-frm" method="post" action="{{ route('admin.checklist')}}" id="search-checklist-frm">
+		<input type="text" value="{{ $category_id }}" name="category_id">
+		<input type="text" value="{{ $subcategory_id }}" name="subcategory_id">
 		@csrf
 			<div class="row filter-row">
-				<div class="col-xl-3">  
+			{{--<div class="col-xl-3">  
 					 <div class="input-block">
 						 <select name="src_category" class="select select_category" data-url="{{ route('admin.get-subcategory')}}">
 							<option value="">{{ __('category') }}</option>
@@ -64,7 +73,7 @@
 						@endif
 						</select>
 					</div>
-				</div>
+				</div>--}}
 				<div class="col-xl-3">  
 					 <div class="input-block">
 						 <input type="text" class="form-control" name="search_name" placeholder="{{ __('checklist_name')}}" value="{{ old('search_name', request('search_name'))}}">
@@ -155,8 +164,8 @@
 								</th>
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
-								<th>{{ __('category_name') }}</th>
-								<th>{{ __('sub_category_name') }}</th>
+									{{--<th>{{ __('category_name') }}</th>
+								<th>{{ __('sub_category_name') }}</th>--}}
 								<th>{{ __('checklist_name') }}</th>
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
@@ -173,8 +182,8 @@
 									</label>
 								</td>
 								@endif
-								<td class="contact-details">{{ $val->get_category->name ?? ''}}</td>
-								<td class="contact-details">{{ $val->get_subcategory->name ?? ''}}</td>
+								{{--<td class="contact-details">{{ $val->get_category->name ?? ''}}</td>
+								<td class="contact-details">{{ $val->get_subcategory->name ?? ''}}</td>--}}
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
