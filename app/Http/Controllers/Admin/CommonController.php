@@ -14,6 +14,8 @@ use App\Models\States;
 use App\Models\Cities;
 use App\Models\Category;
 use App\Models\Subcategory;
+use App\Models\Manage_location;
+use App\Models\User;
 use Lang;
 
 class CommonController extends Controller
@@ -51,11 +53,20 @@ class CommonController extends Controller
 	public function delete_multi_data(Request $request)
 	{
 		$modelClass = $request->model;
+		
+		
+		
+		
 		$cat_ids = explode(',',$request->id);
 		$module = '';
 		$updated = $modelClass::whereIn('id',$cat_ids)
 				->update(['status'=>2]);	
-		
+		if ($modelClass === 'App\Models\Manage_company') {
+			Manage_location::whereIn('company_id',$cat_ids)
+				->update(['status'=>2]);
+			User::whereIn('company_name',$cat_ids)
+				->update(['status'=>2]);
+		}
 		
 		if($module != ''){
 			if(!check_module_option_permission($module, 'delete')){
