@@ -20,7 +20,7 @@ class InspectorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, $id='')
 	{
 		$has_search  = 0;
 		if($request->all() && count($request->all()) > 0)
@@ -28,8 +28,15 @@ class InspectorController extends Controller
 			$has_search  = 1;
 		}
 		$data['has_search'] = $has_search;
+		$data['company_id'] = $request->src_company_id ?? '';
 		
-		$dataArr = User::with('get_company');
+		$dataArr = User::with('get_company'); 
+		
+		if($request->src_user_type)
+		{
+			$dataArr->where('user_type', 'like', '%' . $request->src_user_type . '%');
+		}
+		
 		if($request->search_name)
 		{
 			$dataArr->where('name', 'like', '%' . $request->search_name . '%');
@@ -77,9 +84,9 @@ class InspectorController extends Controller
 		
 		if($request->has('search_status') && $request->search_status !== '' && isset($request->search_status))
 		{
-			$dataArr->where('user_type', 1)->where('status', $request->search_status);
+			$dataArr->where('status', $request->search_status);
 		} else {
-			$dataArr->where('user_type', 1)->where('status', '!=', 2);
+			$dataArr->where('status', '!=', 2);
 		}
 		
 		$dataArr->orderBy('name', 'ASC'); 
@@ -131,13 +138,14 @@ class InspectorController extends Controller
 		{
 			$model= User::find($request->post('id'));
 			$model->name =	$request->post('name');
+			$model->user_type =	$request->post('user_type');
 			$model->email		=	$request->post('email');
 			if(!empty($request->input('password')))
 			{
 				$model->password = Hash::make($request->input('password'));
 			}
 			
-			$model->company_name =	$request->post('company_name');
+			$model->company_name =	$request->post('company_id');
 			$model->created_at	=	date('Y-m-d');
 			$model->save();
 			$id = $request->post('id');
@@ -156,11 +164,11 @@ class InspectorController extends Controller
 		}
 		else{
 			$model=new User();
-			$model->user_type	=	1;
+			$model->user_type	=	$request->post('user_type');
 			$model->name		=	$request->post('name');
 			$model->email		=	$request->post('email');
 			$model->password	=	Hash::make($request->input('password'));
-			$model->company_name =	$request->post('company_name');
+			$model->company_name =	$request->post('company_id');
 			$model->remember_token =	Str::random(60);
 			$model->status		=	1;
 			$model->created_at	=	date('Y-m-d');
@@ -235,6 +243,7 @@ class InspectorController extends Controller
 		$inspector = User::where('id', $request->id)->first();
 		$data = array();
 		$data['id']  = $inspector->id ;
+		$data['user_type']  = $inspector->user_type ;
 		$data['name']  = $inspector->name ;
 		$data['email']  = $inspector->email ;
 		$data['password']  = $inspector->password ;
@@ -243,7 +252,7 @@ class InspectorController extends Controller
 		$data['avatar']  = $inspector->profile_image;
 		$data['background_image']  = $inspector->background_image;
 		$data['app_url']  = url('uploads/profile/' . $request->id .'/inspector/');
-		$data['edit']  =  Lang::get('edit_inspector');
+		$data['edit']  =  Lang::get('edit_user');
 		
 		$inspLocArry = array();
 		$inspector_location  = Users_location::where('user_id', $request->id)->get();
@@ -281,6 +290,24 @@ class InspectorController extends Controller
 		
 		$data['result'] = $change_status;
 		echo json_encode($data);
+	}
+	public function manage_company_users(Request $request ,$id='')
+	{
+		
+		$data = [];
+		$data['company_id'] = $id;
+		$has_search  = 0;
+		
+		$data['has_search'] = $has_search;
+		
+		$dataArr = User::with('get_company');
+		$dataArr->where('status', '!=', 2);
+		$dataArr->orderBy('name', 'ASC'); 
+		$data['inspector'] = $dataArr->get();
+		$data['companies'] = Manage_company::where('status','!=',2)->get();
+		$data['locations'] = Manage_location::where('status','!=',2)->get();
+		return view('admin.location.inspector',$data);
+		
 	}
 	 
 }

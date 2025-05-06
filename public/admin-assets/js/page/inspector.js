@@ -11,7 +11,8 @@ $(document).ready(function() {
 		let email = $('#email').val().trim();
 		let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		let passwords = $('#password').val().trim();
-		let company_name = $('#company_name').val().trim();
+		//let company_name = $('#company_name').val().trim();
+		let user_type = $('#user_type').val().trim();
 		var edit_id = $('#id').val(); 
 		
 		let isValid = true;
@@ -45,10 +46,10 @@ $(document).ready(function() {
 			}
 		}
 		
-		if (company_name === '')
+		if (user_type === '')
 		{
-			$('#company_name').addClass('is-invalid');
-			$('#company_name').siblings('.invalid-feedback').show();
+			$('#user_type').addClass('is-invalid');
+			$('#user_type').siblings('.invalid-feedback').show();
 			isValid = false;
 		}
 		
@@ -130,10 +131,11 @@ $(document).on('click','.edit-inspector', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
+			$('#user_type').val(response.user_type).trigger('change');
 			$('#name').val(response.name);
 			$('#email').val(response.email);
 			$('#password').val('');
-			$('#company_name').val(response.company_name).trigger('change');
+			$('#company_id').val(response.company_name);
 			
 			$('#hid_avatar').val(response.avatar);
 			$('#hid_back_grd_image').val(response.background_image);

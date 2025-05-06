@@ -185,6 +185,7 @@
 											{{--<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_contact"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>--}}
 											<a class="dropdown-item delete-company-name" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteCompanyName') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 											<a class="dropdown-item" href="{{ route('admin.manage-company-location', ['id'=>$val->id]) }}"><i class="fa-solid fa-location-dot m-r-5"></i> {{ __('location') }}</a>
+											<a class="dropdown-item" href="{{ route('admin.manage-company-users', ['id'=>$val->id]) }}"><i class="fa-solid fa-user m-r-5"></i> {{ __('users') }}</a>
 										</div>
 									</div>
 								</td>

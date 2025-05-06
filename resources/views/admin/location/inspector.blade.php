@@ -12,10 +12,10 @@
 		<div class="page-header">
 			<div class="row align-items-center">
 				<div class="col-md-4">
-					<h3 class="page-title">{{ __('inspector') }}</h3>
+					<h3 class="page-title">{{ __('users') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ __('inspector') }}</li>
+						<li class="breadcrumb-item active">{{ __('users') }}</li>
 					</ul>
 				</div>
 				<div class="col-md-8 float-end ms-auto">
@@ -40,9 +40,21 @@
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.inspector')}}" id="search-inspector-frm">
+		<form name="search-frm" method="post" action="{{ route('admin.manage-company-users', ['id'=>$company_id])}}" id="search-inspector-frm">
 		@csrf
+		<input type="hidden" value="{{ $company_id ?? ''}}" name="src_company_id">
 			<div class="row filter-row">
+				<div class="col-xl-3">  
+					<div class="input-block">
+						<select class="select" name="src_user_type" id="src_user_type">
+							<option value="">{{ __('user_type') }}</option>
+							<option value="1" {{ old('src_user_type', request('src_user_type')) == "1" ? 'selected' : '' }}>Inspector</option>
+							<option value="2" {{ old('src_user_type', request('src_user_type')) == "2" ? 'selected' : '' }}>LO</option>
+							<option value="3" {{ old('src_user_type', request('src_user_type')) == "3" ? 'selected' : '' }}>LOC</option>
+							<option value="4" {{ old('src_user_type', request('src_user_type')) == "4" ? 'selected' : '' }}>Management</option>
+						</select>
+					</div>
+				</div>
 				<div class="col-xl-3">  
 					 <div class="input-block">
 						 <input type="text" class="form-control" name="search_name" placeholder="{{ __('inspector_name')}}" value="{{ old('search_name', request('search_name'))}}">
@@ -53,7 +65,7 @@
 						 <input type="text" class="form-control" name="search_email" placeholder="{{ __('email')}}" value="{{ old('search_email', request('search_email'))}}">
 					 </div>
 				</div>
-				<div class="col-xl-3">  
+				{{--<div class="col-xl-3">  
 					 <div class="input-block">
 						 <select class="select" name="search_company_name">
 							<option value="">{{ __('company_name') }}</option>
@@ -62,7 +74,7 @@
 							@endforeach
 						 </select>
 					 </div>
-				</div>
+				</div>--}}
 				<div class="col-xl-3">  
 					 <div class="input-block">
 						<input type="text" class="form-control date-range" name="date_range_phone" placeholder="{{ __('from_to_date')}}" id="src_inspector_name_date_range" value="{{ old('date_range_phone', request('date_range_phone')) }}">
@@ -148,7 +160,8 @@
 								</th>
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
-								<th>{{ __('inspector_name') }}</th>
+								<th>{{ __('user_type') }}</th>
+								<th>{{ __('Name') }}</th>
 								<th>{{ __('email') }}</th>
 								<th>{{ __('company_name') }}</th>
 								<th>{{ __('avatar') }}</th>
@@ -168,6 +181,7 @@
 									</label>
 								</td>
 								@endif
+								<td>{{ $val->user_type==1 ? 'Inspector' : ($val->user_type==2 ? 'LO' : ($val->user_type==3 ? 'LOS': 'Management' )) }}</td>
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ $val->email ?? ''}}</td>
 								<td>{{ $val->get_company->company_name ?? ''}}</td>
@@ -218,6 +232,7 @@
 		</div>
 	</div>
 </div>
+<input type="text" id="companyid" value="{{ $company_id ?? '' }}">
 	<!-- /Page Content -->
 
 @include('modal.common')
@@ -233,7 +248,11 @@
 $(document).ready(function() {
 	
 	$(document).on('click',".reset-button", function(){
-		window.location.href = "{{ route('admin.inspector')}}";
+		var company_id = $('#companyid').val();
+		alert(company_id);
+		var url = "{{ route('admin.manage-company-users', ['id' => 'COMPANY_ID']) }}";
+		url = url.replace('COMPANY_ID', company_id);
+		window.location.href = url;
 	});
 	
 	const translations = {

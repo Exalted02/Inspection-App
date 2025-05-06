@@ -400,7 +400,7 @@ class MasterController extends Controller
 		$data['has_search'] = $has_search;
 		$dataArr = Manage_location::with('get_country','get_state','get_city');
 		
-		
+		$dataArr->where('status', '!=', 2);
 		$dataArr->orderBy('location_name', 'ASC'); 
 		$data['manage_location'] = $dataArr->get();
 		$data['countries'] = Countries::all();
@@ -408,6 +408,7 @@ class MasterController extends Controller
 		
 		return view('admin.master.manage-location',$data);
 	}
+	
     
 }
 

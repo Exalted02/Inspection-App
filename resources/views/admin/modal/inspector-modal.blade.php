@@ -24,7 +24,7 @@
 					<div class="modal-dialog modal-dialog-centered" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title"><span id="head-label">{{ __('add_location') }}</span></h5>
+								<h5 class="modal-title"><span id="head-label">{{ __('add_user') }}</span></h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
@@ -32,14 +32,37 @@
 							<div class="modal-body">
 								<form id="frminspector" action="{{ route('admin.save-inspector') }}" enctype="multipart/form-data">
 								<input type="hidden" id="id" name="id">
+								<input type="hidden" value="{{ $company_id ?? ''}}" name="company_id" id="company_id">
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
-												<label class="col-form-label">{{ __('inspector_name') }}<span class="text-danger">*</span></label>
+												<label class="col-form-label">{{ __('user_type') }}<span class="text-danger">*</span></label>
+												<select class="select" name="user_type" id="user_type">
+													<option value="">{{ __('please_select') }}</option>
+													<option value="1">Inspector</option>
+													<option value="2">LO</option>
+													<option value="3">LOC</option>
+													<option value="4">Management	</option>
+												</select>
+												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('company_name')}}.</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="input-block mb-3">
+												<label class="col-form-label">{{ __('Name') }}<span class="text-danger">*</span></label>
 												<input class="form-control" type="text" name="name" id="name">
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('name')}}.</div>
 											</div>
 										</div>
+										{{--<div class="col-sm-6">
+											<div class="input-block mb-3">
+												<label class="col-form-label">{{ __('email') }}<span class="text-danger">*</span></label>
+												<input class="form-control" type="text" name="email" id="email">
+												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('email')}}.</div>
+											</div>
+										</div>--}}
+									</div>
+									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('email') }}<span class="text-danger">*</span></label>
@@ -47,8 +70,6 @@
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('email')}}.</div>
 											</div>
 										</div>
-									</div>
-									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('password') }}<span class="text-danger">*</span></label>
@@ -56,7 +77,7 @@
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('password')}}.</div>
 											</div>
 										</div>
-										<div class="col-sm-6">
+										{{--<div class="col-sm-6">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('company_name') }}<span class="text-danger">*</span></label>
 												<select class="select" name="company_name" id="company_name">
@@ -68,7 +89,7 @@
 												</select>
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('company_name')}}.</div>
 											</div>
-										</div>
+										</div>--}}
 									</div>
 									
 									<div class="row">

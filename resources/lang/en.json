@@ -155,6 +155,12 @@
 	"management_name": "Management name",
 	"add_management": "Add management",
 	"edit_management": "Edit management",
-	"add": "Add"
+	"add": "Add",
+	
+	"user": "User",
+	"user_name": "Inspector name",
+	"add_user": "Add user",
+	"edit_user": "Edit user",
+	"user_type": "User type"
 	
 }
