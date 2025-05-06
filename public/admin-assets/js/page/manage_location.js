@@ -11,6 +11,7 @@ $(document).ready(function() {
 		let address = $('#address').val().trim();
 		let zipcode = $('#zipcode').val().trim();
 		let country = $('#country').val();
+		let company_id = $('#company_id').val();
 		//alert(country);
 		let state = $('#state').val();
 		let city = $('#city').val();
@@ -119,6 +120,7 @@ $(document).on('click','.edit-location', function(){
 		success: function(response) {
 			//alert(response.categary_data);
 			$('#id').val(response.id);
+			$('#company_id').val(response.company_id);
 			$('#location_name').val(response.location_name);
 			$('#address').val(response.address);
 			$('#zipcode').val(response.zipcode);

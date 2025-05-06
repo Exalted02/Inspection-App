@@ -32,6 +32,7 @@
 							<div class="modal-body">
 								<form id="frmlocation" action="{{ route('admin.save-location') }}" enctype="multipart/form-data">
 								<input type="hidden" id="id" name="id">
+								<input type="hidden" value="{{ $company_id ?? ''}}" name="company_id" id="company_id">
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">

@@ -156,6 +156,7 @@ class MasterController extends Controller
 	public function manage_location(Request $request)
 	{
 		$has_search  = 0;
+		$data['company_location_id'] = '';
 		if($request->all() && count($request->all()) > 0)
 		{
 			$has_search  = 1;
@@ -258,7 +259,7 @@ class MasterController extends Controller
 		if($request->post('id')>0)
 		{
 			$model= Manage_location::find($request->post('id'));
-			
+			$model->company_id 		=	$request->post('company_id');
 			$model->location_name 	=	$request->post('location_name');
 			$model->address 		=	$request->post('address');
 			$model->zipcode 		=	$request->post('zipcode');
@@ -284,6 +285,7 @@ class MasterController extends Controller
 		}
 		else{
 			$model=new Manage_location();
+			$model->company_id 		=	$request->post('company_id');
 			$model->location_name 	=	$request->post('location_name');
 			$model->address 		=	$request->post('address');
 			$model->zipcode 		=	$request->post('zipcode');
@@ -351,6 +353,7 @@ class MasterController extends Controller
 		$location = Manage_location::where('id', $request->id)->first();
 		$data = array();
 		$data['id']  = $location->id ;
+		$data['company_id']  = $location->company_id ;
 		$data['location_name']  = $location->location_name;
 		$data['address']  = $location->address;
 		$data['zipcode']  = $location->zipcode;
@@ -387,6 +390,23 @@ class MasterController extends Controller
 			//$data['result'] ='error';
 		//}
 		echo json_encode($data);
+	}
+	public function manage_company_location(Request $request ,$id='')
+	{
+
+		$data = [];
+		$data['company_id'] = $id;
+		$has_search  = 0;
+		$data['has_search'] = $has_search;
+		$dataArr = Manage_location::with('get_country','get_state','get_city');
+		
+		
+		$dataArr->orderBy('location_name', 'ASC'); 
+		$data['manage_location'] = $dataArr->get();
+		$data['countries'] = Countries::all();
+		$data['categories'] = Category::where('status','!=',2)->get();
+		
+		return view('admin.master.manage-location',$data);
 	}
     
 }

@@ -10,6 +10,7 @@ class Manage_location extends Model
     use HasFactory;
 	protected $table = 'manage_locations';
 	protected $fillable = [
+        'company_id', 
         'location_name', 
         'image', 
         'address', 

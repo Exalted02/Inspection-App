@@ -239,6 +239,7 @@
 		</div>
 	</div>
 </div>
+
 	<!-- /Page Content -->
 
 @include('modal.common')

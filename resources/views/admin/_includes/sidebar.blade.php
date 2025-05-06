@@ -27,13 +27,17 @@
 					<a href="{{ route('admin.dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
 				
-				<li class="submenu">
+				<li class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-company-location') ? 'active' : '' }}">
+					<a href="{{ route('admin.manage-company')}}"><i class="fa-solid fa-building"></i><span>{{ __('manage_company') }}</span></a>
+				</li>
+				
+				{{--<li class="submenu">
 					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-location')  ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span> {{ __('masters') }} </span><span class="menu-arrow"></span></a>
-					<ul style="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-location') ? 'display:block' : '' }}">
+					<ul style="{{ request()->routeIs('admin.manage-company') || request()->routeIs('admin.manage-location') || request()->routeIs('admin.manage-company-location') ? 'display:block' : '' }}">
 						<li><a href="{{ route('admin.manage-company')}}" class="{{ request()->routeIs('admin.manage-company') ? 'menu-active' : '' }}"><span>{{ __('manage_company') }}</span></a></li>
 						<li><a href="{{ route('admin.manage-location')}}" class="{{ request()->routeIs('admin.manage-location') ? 'menu-active' : '' }}"><span>{{ __('manage_location') }}</span></a></li>
 					</ul>
-				</li>
+				</li>--}}
 				
 				{{--<li class="submenu">
 					<a href="javascript:void(0);" class="{{ request()->routeIs('admin.category') || request()->routeIs('admin.sub-category') || request()->routeIs('admin.checklist') || request()->routeIs('admin.sub-checklist')  ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span> {{ __('location') }} </span><span class="menu-arrow"></span></a>
