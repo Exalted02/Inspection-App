@@ -1660,7 +1660,7 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="approveStatus">';
 						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
-						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + subcategory_id + '">';
+						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + response.subcategory_id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
 						html += '</form>';
 						html += '</div>'; 
