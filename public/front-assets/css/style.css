@@ -9858,10 +9858,9 @@ footer.footer-bg {
 .step-block {    
 	flex: 1;
 	height: 6px;
-	background-color: red !important;
+	background-color: red;
 	border-radius: 1px;
 }
-   
 .step-block.completed {
-	background: black !important;  
+	background-color: black !important;  
 }

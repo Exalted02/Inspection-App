@@ -32,7 +32,7 @@
 							<div class="modal-body">
 								<form id="frmsubcategory" action="{{ route('admin.save-subcategory') }}" enctype="multipart/form-data">
 								<input type="hidden" id="id" name="id">
-								<input type="hidden" value="1" name="category" id="category">
+								<input type="hidden" value="{{ $category_id ?? ''}}" name="category" id="category">
 									{{--<div class="row">
 										<div class="col-sm-12">
 											<div class="input-block mb-3">

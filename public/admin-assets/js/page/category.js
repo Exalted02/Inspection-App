@@ -71,6 +71,7 @@ $(document).on('click','.edit-category', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
+			$('#location_id').val(response.location_id);
 			$('#name').val(response.name);
 			
 			

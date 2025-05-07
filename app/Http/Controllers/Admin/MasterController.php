@@ -239,7 +239,7 @@ class MasterController extends Controller
 	public function save_location(Request $request)
 	{
 		
-		$existingName = Manage_location::where('location_name', $request->post('location_name'))->where('status', '!=', 2)
+		$existingName = Manage_location::where('location_name', $request->post('location_name'))->where('company_id', $request->post('company_id'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })

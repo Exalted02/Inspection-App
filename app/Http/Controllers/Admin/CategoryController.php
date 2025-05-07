@@ -88,7 +88,7 @@ class CategoryController extends Controller
 		//echo "<pre>";print_r($request->all());die;
 		
 		
-		$existingStage = Category::where('name', $request->post('name'))->where('status', '!=', 2)
+		$existingStage = Category::where('name', $request->post('name'))->where('location_id', $request->post('location_id'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
@@ -113,6 +113,7 @@ class CategoryController extends Controller
 		}
 		else{
 			$model=new Category();
+			$model->location_id		=	$request->post('location_id');
 			$model->name		=	$request->post('name');
 			$model->status		=	1;
 			$model->created_at	=	date('Y-m-d');
@@ -150,6 +151,7 @@ class CategoryController extends Controller
 		$category = Category::where('id', $request->id)->first();
 		$data = array();
 		$data['id']  = $category->id ;
+		$data['location_id']  = $category->location_id ;
 		$data['name']  = $category->name ;
 		$data['category_image']  = $category->image ;
 		$data['app_url']  = url('uploads/category') ;
@@ -190,19 +192,18 @@ class CategoryController extends Controller
 		$data['has_search'] = $has_search;
 		$data['location_id'] = $id;
 		
-		//$dataArr = Category::query();
-		$data['category'] = Category::whereHas('locationCategories', function ($q) use ($id) {
+		$dataArr = Category::query();
+		/*$data['category'] = Category::whereHas('locationCategories', function ($q) use ($id) {
 			$q->where('location_id', $id);
 		})
 		->where('status', '!=', 2)
 		->orderBy('name', 'ASC')
-		->get();
+		->get();*/
 		
-		//$dataArr->where('status', '!=', 2);
-		
-		
-		//$dataArr->orderBy('name', 'ASC'); 
-		//$data['category'] = $dataArr->get();
+		$dataArr->where('location_id', $id);
+		$dataArr->where('status', '!=', 2);
+		$dataArr->orderBy('name', 'ASC'); 
+		$data['category'] = $dataArr->get();
 		return view('admin.location.category',$data);
 	}
 	 

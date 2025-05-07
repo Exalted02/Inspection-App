@@ -393,12 +393,28 @@ class DashboardInspectorController extends Controller
 			
 		}
 		//-------- if no next checklist ----
-		$checklistdata = '';
+		//$chklistdata = '';
+		$checklistdata = [];
 		if(empty($nextId) && $nextId=='')
 		{
-			$checklistdata = Checklist::where('category_id',$category_id)
+			$checklists = Checklist::where('category_id',$category_id)
 									->where('subcategory_id', $subcategory_id)
 									->where('status','!=', 2)->get();
+									
+			foreach ($checklists as $chklist) {
+				$status = Task_list_checklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('checklist_id', $chklist->id)
+							->value('approve');
+
+				$checklistdata[] = [
+					'id' => $chklist->id,
+					'name' => $chklist->name,
+					'approve' => $status,
+				];
+			}						
+									
+									
 			$subcategoryname = Subcategory::where('id', $subcategory_id)->first()->name;
 		}
 		//----------------------------------
@@ -828,26 +844,15 @@ class DashboardInspectorController extends Controller
 					'subcategory_id'=>$subcategory_id
 				]
 			);
-			
-			/*$html = view('inspector.checklist-question', compact(
-				'task_id',
-				'checklistdata',
-				'nextId',
-				'name',
-				'subChklistArr',
-				'subcategoryname',
-				'next_rejected_region',
-				'next_approve',
-				'existingFiles',
-				'fetchsubChklistArr',
-				'existingSubChecklistFiles'
-			))->render();
-
-			return response()->json([
-				'html' => $html
-			]);*/
-		
 	}
-
+	public function get_checklist_page_status(Request $request)
+	{
+		$task_id = $request->task_id;
+		$subcategory_id = $request->subcategory_id;
+		$checklist_id = $request->checklist_id;
+		$res = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $checklist_id)->first();
+		$status = $res ? $res->approve : '';
+		return response()->json(['status'=> $status]);
+	}
 	
 }

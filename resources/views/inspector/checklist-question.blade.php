@@ -654,8 +654,24 @@ $(document ).ready(function() {
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.subcategoryname);
+				
+
 				if(response.currentid=='')
 				{
+					if (!document.querySelector('link[href*="bootstrap.min.css"]')) {
+						var bootstrapCSS = document.createElement('link');
+						bootstrapCSS.rel = 'stylesheet';
+						bootstrapCSS.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
+						document.head.appendChild(bootstrapCSS);
+					}
+					
+					var esCssUrl = "{{ url('front-assets/css/es.css') }}";
+					if (!document.querySelector('link[href="${esCssUrl}"]')) {
+						var esCSS = document.createElement('link');
+						esCSS.rel = 'stylesheet';
+						esCSS.href = esCssUrl;
+						document.head.appendChild(esCSS);
+					}
 					//const redirectUrl = checkoutUrlTemplate.replace('TASK_ID', task_id).replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
 					//window.location.href = redirectUrl;
 					//return;
@@ -672,15 +688,31 @@ $(document ).ready(function() {
 							htmlCompleted += '<div class="tab-content">';
 							htmlCompleted += '<div role="tabpanel" class="tab-pane active" id="uncomplete_tab">';
 							response.checklistdata.forEach((chklist, index) => {
+								
+								var aprvStatusHtml = '';
+								var approveStatus = chklist.approve;
+								if(approveStatus=='0')
+								{
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-danger" style="pointer-events: none; background-color: transparent; border-color: #dc3545; color: #dc3545;">Rejected</button>';
+								}
+								else if(approveStatus=='1')
+								{
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754;">Accepted</button>';
+								}
+								else
+								{
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Pending</button>';
+								}
+								
 								htmlCompleted += '<div class="checklist-item">';
 									htmlCompleted += '<div class="text">';
 									htmlCompleted += '<div class="title">' + chklist.name + '</div>';
-									htmlCompleted += '<div class="subtitle">Accepted </div>';
+									htmlCompleted += '<div class="subtitle">' + aprvStatusHtml + '</div>';
 									htmlCompleted += '</div>';
 									htmlCompleted += '<a href="javascript:void(0)"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '"><small>Edit</small></div></a>';
 								htmlCompleted += '</div>';
 							})
-								htmlCompleted += '<div class="sticky-footer">';
+								htmlCompleted += '<div class="sticky-footer" style="position: fixed;bottom: 0;left: 0;width: 100%;background-color: #002b5c;padding: 16px;text-align: center;z-index: 1000;">';
 									htmlCompleted += '<button class="submit_task">Submit checklist</button>';
 								htmlCompleted += '</div>';
 								
@@ -1797,6 +1829,25 @@ $(document ).ready(function() {
 			},
 		});
 	   
+   });
+   
+    $(document).on('click','.submit_task', function(){
+		var task_id  = $('#task_id').val();
+		var category_id = $('#category_id').val();
+		var subcategory_id = $('#subcategory_id').val();
+		//var URL = "{{ route('submit-completed-task') }}";
+		alert(task_id);alert(category_id);alert(subcategory_id);
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {task_id:task_id, category_id:category_id, subcategory_id:subcategory_id, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response);
+				//$('#addressInput').val('');
+				//$('#successMessage').fadeIn().delay(2000).fadeOut();
+			},
+		});
    });
 });
 </script>

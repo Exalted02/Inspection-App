@@ -106,7 +106,7 @@ $(document ).ready(function() {
 		});
    });
    
-   $(document).on('click','.get_checklist', function(){
+   /*$(document).on('click','.get_checklist', function(){
 	   var cat_id = $(this).data('cat');
 	   var subcat_id = $(this).data('subcat');
 	   var task_id = $(this).data('task');
@@ -126,7 +126,7 @@ $(document ).ready(function() {
 			},
 		});
 	   
-   });
+   });*/
 });
 </script>
 @endsection

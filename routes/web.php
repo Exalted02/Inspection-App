@@ -83,6 +83,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('submit-completed-task', [DashboardInspectorController::class, 'submit_completed_task'])->name('submit-completed-task');
 	
 	Route::post('get-checklist-page', [DashboardInspectorController::class, 'get_checklist_page'])->name('get-checklist-page');
+	Route::post('get-checklist-page-status', [DashboardInspectorController::class, 'get_checklist_page_status'])->name('get-checklist-page-status');
 	//User-Accounts
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	
