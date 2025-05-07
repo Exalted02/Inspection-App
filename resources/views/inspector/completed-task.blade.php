@@ -35,7 +35,6 @@
 										<div class="subtitle">Accepted </div>
 									</div>
 									<a href="javascript:void(0)"><div class="arrow get_checklist" data-checklist="{{ $checklists->id }}" data-task="{{ $task_id }}" data-cat="{{ $category_id }}" data-subcat="{{ $subcategory_id }}"><small>Edit</small></div></a>
-									{{--<a href="javascript:void(0)"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
 								</div>
 								@endforeach
 								
@@ -121,7 +120,8 @@ $(document ).ready(function() {
 			success: function(response) {
 				//alert(response.hasData);
 				if (response.html) {
-					$('#checklist-container').html(response.html);
+					 alert(response.html);
+					$('.checklist-question').html(response.html);
 				}
 			},
 		});

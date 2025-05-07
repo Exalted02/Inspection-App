@@ -390,9 +390,17 @@ class DashboardInspectorController extends Controller
 				}
 			}
 			
-			
+		}
+		//-------- if no next checklist ----
+		$checklistdata = '';
+		if(empty($nextId) && $nextId=='')
+		{
+			$checklistdata = Checklist::where('category_id',$category_id)
+									->where('subcategory_id', $subcategory_id)
+									->where('status','!=', 2)->get();
 			
 		}
+		//----------------------------------
 		return response()->json
 		(
 			[
@@ -405,7 +413,8 @@ class DashboardInspectorController extends Controller
 				'next_approve'=>$next_approve,
 				'existingNextFiles'=>$existingFiles,
 				'fetchsubChklistArr'=>$fetchsubChklistArr,
-				'existingSubChecklistFiles'=>$existingSubChecklistFiles
+				'existingSubChecklistFiles'=>$existingSubChecklistFiles,
+				'checklistdata'=>$checklistdata
 			]
 		);
 	}
@@ -717,9 +726,10 @@ class DashboardInspectorController extends Controller
 		$existingFiles = [];
 		$existingSubChecklistFiles = [];
 		
-		$checklistdata= Checklist::with('get_subchecklist','get_category','get_subcategory')
+		/*$checklistdata= Checklist::with('get_subchecklist','get_category','get_subcategory')
 		->where('category_id',$category_id)->where('subcategory_id', $subcategory_id)
-		->where('status','!=', 2)->first();
+		->where('status','!=', 2)->first();*/
+		
 		// fetch record with respect ti checklist
 		$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
 			->where('category_id', $category_id)
@@ -800,7 +810,7 @@ class DashboardInspectorController extends Controller
 				}
 			}
 			
-			/*return response()->json
+			return response()->json
 			(
 				[
 					'task_id'=>$task_id,
@@ -812,11 +822,13 @@ class DashboardInspectorController extends Controller
 					'next_approve'=>$next_approve,
 					'existingNextFiles'=>$existingFiles,
 					'fetchsubChklistArr'=>$fetchsubChklistArr,
-					'existingSubChecklistFiles'=>$existingSubChecklistFiles
+					'existingSubChecklistFiles'=>$existingSubChecklistFiles,
+					'category_id'=>$category_id,
+					'subcategory_id'=>$subcategory_id
 				]
-			);*/
+			);
 			
-			$html = view('inspector.checklist-question', compact(
+			/*$html = view('inspector.checklist-question', compact(
 				'task_id',
 				'checklistdata',
 				'nextId',
@@ -832,7 +844,7 @@ class DashboardInspectorController extends Controller
 
 			return response()->json([
 				'html' => $html
-			]);
+			]);*/
 		
 	}
 

@@ -656,10 +656,50 @@ $(document ).ready(function() {
 				//alert(response.currentid);
 				if(response.currentid=='')
 				{
-					const redirectUrl = checkoutUrlTemplate.replace('TASK_ID', task_id).replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
-
-					window.location.href = redirectUrl;
-					 return;
+					//const redirectUrl = checkoutUrlTemplate.replace('TASK_ID', task_id).replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
+					//window.location.href = redirectUrl;
+					//return;
+					let htmlCompleted = '<div class="container checklist">';
+						htmlCompleted += '<h2 class="checklist-title">Review your checklist</h2>'; 
+						htmlCompleted += 'Review and check before moving on to </br>next section. Checmical bonding & stor';
+						htmlCompleted += '<div class="location-section">';
+						htmlCompleted += '<div class="location-label">' + response.subcategoryname + '</div>';
+						htmlCompleted += '</div>';
+					htmlCompleted += '<div class="main-content-area clearfix">';
+						htmlCompleted += '<section class="custom-padding1">';
+							htmlCompleted += '<div class="container1">';
+							htmlCompleted += '<div class="custom-tab">';
+							htmlCompleted += '<div class="tab-content">';
+							htmlCompleted += '<div role="tabpanel" class="tab-pane active" id="uncomplete_tab">';
+							response.checklistdata.forEach((chklist, index) => {
+								htmlCompleted += '<div class="checklist-item">';
+									htmlCompleted += '<div class="text">';
+									htmlCompleted += '<div class="title">' + chklist.name + '</div>';
+									htmlCompleted += '<div class="subtitle">Accepted </div>';
+									htmlCompleted += '</div>';
+									htmlCompleted += '<a href="javascript:void(0)"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '"><small>Edit</small></div></a>';
+								htmlCompleted += '</div>';
+							})
+								htmlCompleted += '<div class="sticky-footer">';
+									htmlCompleted += '<button class="submit_task">Submit checklist</button>';
+								htmlCompleted += '</div>';
+								
+							htmlCompleted += '</div>';
+								htmlCompleted += '<div role="tabpanel" class="tab-pane" id="reject_tab">';
+								htmlCompleted += 'Not have any data';
+								htmlCompleted += '</div>';
+							
+							htmlCompleted += '</div>';
+							htmlCompleted += '</div>';
+							htmlCompleted += '</div>';
+						htmlCompleted += '</section>';
+					
+					
+					htmlCompleted += '</div>';  // main-content-area end
+					htmlCompleted += '</div>'; // main div end
+					//alert(htmlCompleted);
+					$('.checklist-question').html(htmlCompleted);
+					return;
 				}
 				$('#current_checklist_id').val(response.currentid);
 				 //$('#single-question').html(response.name);
@@ -1407,6 +1447,357 @@ $(document ).ready(function() {
 			},
 		});
 	});
+	
+	$(document).on('click','.get_checklist', function(){
+	   var cat_id = $(this).data('cat');
+	   var subcat_id = $(this).data('subcat');
+	   var task_id = $(this).data('task');
+	   var checklist_id = $(this).data('checklist');
+	   var URL = "{{ route('get-checklist-page') }}";
+	   $.ajax({
+			url: URL,
+			type: "POST",
+			data: {checklist_id:checklist_id, task_id:task_id, cat_id:cat_id, subcat_id:subcat_id, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				
+				$('#current_checklist_id').val(response.currentid);
+				const rejectFilesRoute = "{{ route('reject-files') }}";
+				const rejectSubcheckFilesRoute = "{{ route('reject-subchecklist-files') }}";
+				if (response.subchecklist.length > 0) {
+				// Has subchecklists
+				let autoClicks = [];
+				let html = '<div class="sub-checklist">';
+				html += '<div class="question-header">' + response.subcategoryname + '</div>';
+				html += '<div class="question-text">';
+				html += '<span id="multiple-question">' + response.name + '</span>';
+				html += '</div>';
+
+				response.subchecklist.forEach((item, index) => {
+					    //alert(item.id);
+						let match = response.fetchsubChklistArr.find(e => e.subchecklist_id == item.id);
+						let rejectedText = match ? match.rejected_region : '';
+						let approveStatus = match ? match.approve : '';
+						//alert(approveStatus);alert(rejectedText);
+						
+						let rejectId = 'rejectForm-' + item.id;
+						html += '<div class="sub-checklist-question">';
+						html += '<div class="action-buttons">';
+						html += '<span class="d-flex align-items-center">' + item.name + '</span>';
+						html += '<div class="btn-div">';
+						html += '<button class="rejected" id="question-reject-' + item.id + '" onclick="handleReject(' + item.id + ')"><i class="fa-solid fa-xmark"></i></button>';
+						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
+						html += '</div>'; 
+						html += '</div>';
+						html += '<span id="errorMulmsg'+ item.id +'" style="display: none; color: red;">Please enter text or file.</span>';
+						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
+						html += '<textarea placeholder="State why you rejected this...">' + rejectedText +'</textarea>';
+						html += '<input type="hidden" id="mode" value="multiple">';
+						html += '<input type="hidden" id="approveMultipleStatus' + item.id + '">';
+						html += '<input type="hidden" id="hasEditMultipleFile' + item.id +'" value="">'
+						html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
+						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
+						html += '<input type="hidden" name="subchecklist_id" value="' + item.id + '">';
+						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
+						html += '</form>';
+						html += '</div>'; 
+						html += '</div>';
+						
+						if(approveStatus== '0')
+						{
+							autoClicks.push({ type: 'reject', id: item.id });
+						}
+						
+						if(approveStatus== '1')
+						{
+							autoClicks.push({ type: 'approve', id: item.id });
+						}
+					});
+
+						html += '</div>'; 
+
+						$('.checklist-question').html(html);
+						
+						setTimeout(() => {
+							autoClicks.forEach(click => {
+								if (click.type === 'reject') {
+									const btn = document.getElementById('question-reject-' + click.id);
+									if (btn) btn.click();
+								}
+								if (click.type === 'approve') {
+									const btn = document.getElementById('question-approve-' + click.id);
+									if (btn) btn.click();
+								}
+							});
+						}, 0);
+						
+						// dropzone work
+						Dropzone.autoDiscover = false;
+						
+						//---------- show image when page load ----------
+						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+							let myDropzone = new Dropzone(dropzoneElement, {
+								url: "{{ route('reject-subchecklist-files') }}",
+								maxFiles: 5,
+								maxFilesize: 2, // MB
+								acceptedFiles: 'image/*',
+								addRemoveLinks: true,
+								dictRemoveFile: 'Delete file',
+								headers: {
+									'X-CSRF-TOKEN': csrfToken
+								},
+								init: function () {
+									let dz = this;
+									let subchecklistId = dropzoneElement.querySelector('[name="subchecklist_id"]').value;
+									// Add existing files (preloaded from server)
+									response.existingSubChecklistFiles
+									.filter(file => file.subchecklist_id == subchecklistId)
+									.forEach(function (file) {
+										let mockFile = { name: file.name, size: file.size, accepted: true };
+
+										dz.emit("addedfile", mockFile);
+										dz.emit("thumbnail", mockFile, file.url);
+										dz.emit("complete", mockFile);
+
+										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
+										mockFile.uploadedFilename = file.name;
+										$('#hasEditMultipleFile' + subchecklistId).val(1);
+									});
+
+									this.on("removedfile", function (file) {
+										if (file.uploadedFilename) {
+											$.ajax({
+												url: "{{ route('subchecklist-file-delete') }}", // handle deletion logic on server
+												type: "POST",
+												data: {
+													_token: csrfToken,
+													filename: file.uploadedFilename
+												},
+												success: function (response) {
+													console.log('Deleted:', response);
+													//alert(response.count);
+													if(response.count == '0')
+													{
+														$('#hasEditMultipleFile' + response.subchecklist_id).val('');
+													}
+													else{
+														$('#hasEditMultipleFile' + response.subchecklist_id).val(1);
+													}
+												},
+												error: function (xhr) {
+													console.error('Delete failed:', xhr.responseText);
+												}
+											});
+										}
+									});
+								}
+							});
+						});
+						
+						//--- upload new files ------- 
+						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+							new Dropzone(dropzoneElement, {
+								url: "{{ route('reject-subchecklist-files') }}",
+								maxFiles: 5,
+								maxFilesize: 2, // MB
+								acceptedFiles: 'image/*',
+								addRemoveLinks: true,
+								headers: {
+									'X-CSRF-TOKEN': csrfToken
+								},
+								dictDefaultMessage: 'Drag & drop or click to upload',
+								dictRemoveFile: 'Delete file',
+								init: function () {
+									this.on("success", function (file, response) {
+										console.log('Uploaded:', response);
+
+										// Attach filename to file object so we can use it on removal
+										file.uploadedFilename = response.filename;
+										//alert(response.filename);
+										// Replace default preview with file name
+										file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
+									});
+
+									this.on("removedfile", function (file) {
+										if (file.uploadedFilename) {
+											// Send AJAX request to delete the file from storage and DB
+											$.ajax({
+												url: "{{ route('reject-subckecklist-file-delete') }}", // You need to define this route
+												type: "POST",
+												data: {
+													_token: csrfToken,
+													filename: file.uploadedFilename
+												},
+												success: function (response) {
+													console.log('Deleted:', response);
+												},
+												error: function (xhr) {
+													console.error('Delete failed:', xhr.responseText);
+												}
+											});
+										}
+									});
+								}
+							});
+						});
+						
+						
+				} else {
+						//alert(response.next_approve);
+						let html = '<div class="single-checklist">';
+						html += '<div class="question-header">' + response.subcategoryname + '</div>';
+						html += '<div class="question-text">';
+						html += '<span id="single-question">' + response.name + '</span>';
+						html += '<input type="hidden" id="current_id" value="' + response.currentid + '">';
+						html += '<input type="hidden" id="category_id" value="' + response.category_id + '">';
+						html += '<input type="hidden" id="subcategory_id" value="' + response.subcategory_id + '">';
+						html += '</div>'; 
+						html += '<span id="errormsg" style="display: none; color: red;">Please enter text or file.</span>';
+						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
+						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this...">' + response.next_rejected_region + '</textarea>';
+						html += '<input type="hidden" id="mode" value="single">';
+						html += '<input type="hidden" id="hasEditFile" value="">';
+						html += '<input type="hidden" id="approveStatus">';
+						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
+						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
+						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + subcategory_id + '">';
+						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
+						html += '</form>';
+						html += '</div>'; 
+						html += '<div class="action-buttons-without-text">';
+						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
+						html += '<button class="approved" id="question-approve-' + response.currentid + '" onclick="handleApprove(' + response.currentid + ')"><i class="fa-solid fa-check"></i></button>';
+						html += '</div>'; 
+						html += '</div>'; 
+
+						$('.checklist-question').html(html); 
+						
+						if(response.next_approve== '0')
+						{
+							const rejectButton = document.getElementById('question-reject-' + response.currentid);
+							rejectButton.click();
+						}
+						
+						if(response.next_approve== '1')
+						{
+							const approveButton = document.getElementById('question-approve-' + response.currentid);
+							approveButton.click();
+						}
+						
+						// dropzone work
+						Dropzone.autoDiscover = false;
+						//---------- show image when page load ----------
+						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+							let myDropzone = new Dropzone(dropzoneElement, {
+								url: "{{ route('reject-files') }}",
+								maxFiles: 5,
+								maxFilesize: 2, // MB
+								acceptedFiles: 'image/*',
+								addRemoveLinks: true,
+								dictRemoveFile: 'Delete file',
+								headers: {
+									'X-CSRF-TOKEN': csrfToken
+								},
+								init: function () {
+									let dz = this;
+
+									// Add existing files (preloaded from server)
+									response.existingNextFiles.forEach(function (file) {
+										let mockFile = { name: file.name, size: file.size, accepted: true };
+
+										dz.emit("addedfile", mockFile);
+										dz.emit("thumbnail", mockFile, file.url);
+										dz.emit("complete", mockFile);
+
+										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
+
+										// Store filename for deletion
+										mockFile.uploadedFilename = file.name;
+										$('#hasEditFile').val(1);
+									});
+
+									this.on("removedfile", function (file) {
+										if (file.uploadedFilename) {
+											$.ajax({
+												url: "{{ route('checklist-file-delete') }}", // handle deletion logic on server
+												type: "POST",
+												data: {
+													_token: csrfToken,
+													filename: file.uploadedFilename
+												},
+												success: function (response) {
+													console.log('Deleted:', response);
+													//alert(response.count);
+													if(response.count == '0')
+													{
+														$('#hasEditFile').val('');
+													}
+													else{
+														$('#hasEditFile').val(1);
+													}
+												},
+												error: function (xhr) {
+													console.error('Delete failed:', xhr.responseText);
+												}
+											});
+										}
+									});
+								}
+							});
+						});
+						
+						//--- upload new files ------- 
+						Dropzone.autoDiscover = false; // very important
+						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+							new Dropzone(dropzoneElement, {
+								url: "{{ route('reject-files') }}",
+								maxFiles: 5,
+								maxFilesize: 2, // MB
+								acceptedFiles: 'image/*',
+								addRemoveLinks: true,
+								headers: {
+									'X-CSRF-TOKEN': csrfToken
+								},
+								dictDefaultMessage: 'Drag & drop or click to upload',
+								dictRemoveFile: 'Delete file',
+								init: function () {
+									this.on("success", function (file, response) {
+										console.log('Uploadedsss:', response);
+
+										// Attach filename to file object so we can use it on removal
+										file.uploadedFilename = response.filename;
+										alert(response.filename);
+										// Replace default preview with file name
+										file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
+									});
+
+									this.on("removedfile", function (file) {
+										if (file.uploadedFilename) {
+											// Send AJAX request to delete the file from storage and DB
+											$.ajax({
+												url: "{{ route('reject-file-delete') }}", // You need to define this route
+												type: "POST",
+												data: {
+													_token: csrfToken,
+													filename: file.uploadedFilename
+												},
+												success: function (response) {
+													console.log('Deleted:', response);
+												},
+												error: function (xhr) {
+													console.error('Delete failed:', xhr.responseText);
+												}
+											});
+										}
+									});
+								}
+							});
+						});
+					}
+			},
+		});
+	   
+   });
 });
 </script>
 @endsection
