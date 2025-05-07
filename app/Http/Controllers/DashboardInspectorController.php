@@ -17,6 +17,7 @@ use App\Models\Task_list_checklist_rejected_files;
 use App\Models\Task_list_subchecklists;
 use App\Models\Task_list_subchecklist_rejected_files;
 use App\Models\Task_list_subchecklist_temp_rejected_files;
+use App\Models\Task_list_subcategories;
 
 class DashboardInspectorController extends Controller
 {
@@ -679,16 +680,160 @@ class DashboardInspectorController extends Controller
 		$subchecklist_id = Task_list_subchecklists::where('id', $task_list_subchecklist_id)->first()->subchecklist_id;
 		return response()->json(['success' => true, 'message' => 'File deleted.', 'count'=>$count, 'subchecklist_id'=>$subchecklist_id]);
 	}
-	public function completed_task($cat_id='', $subcat_id='')
+	public function completed_task($task_id ='', $cat_id='', $subcat_id='')
 	{
 		
 		$data['checklistdata'] = Checklist::where('category_id',$cat_id)
 									->where('subcategory_id', $subcat_id)
 									->where('status','!=', 2)->get();
 									
-									
+		$data['task_id'] = 	$task_id;						
+		$data['category_id'] = 	$cat_id;						
+		$data['subcategory_id'] = 	$subcat_id;						
 		//echo "<pre>";print_r($checklistdata);die;
 		return view('inspector.completed-task', $data);
+	}
+	public function submit_completed_task(Request $request)
+	{
+		$task_id = $request->task_id;
+		$category_id = $request->category_id;
+		$subcategory_id = $request->subcategory_id;
+		$model = new Task_list_subcategories();
+		$model->task_list_id = $task_id ?? null;
+		$model->task_list_category_id = $category_id ?? null;
+		$model->subcategory_id = $subcategory_id ?? null;
+		$model->total_task = 0;
+		$model->completed_task = 0;
+		$model->is_submit = 1;
+		$model->save();
+	}
+	public function get_checklist_page(Request $request)
+	{
+		$current_question_id = $request->checklist_id;
+		$task_id = $request->task_id;
+		$category_id = $request->cat_id;
+		$subcategory_id = $request->subcat_id;
+		$subChklistArr = [];
+		$existingFiles = [];
+		$existingSubChecklistFiles = [];
+		
+		$checklistdata= Checklist::with('get_subchecklist','get_category','get_subcategory')
+		->where('category_id',$category_id)->where('subcategory_id', $subcategory_id)
+		->where('status','!=', 2)->first();
+		// fetch record with respect ti checklist
+		$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+			->where('category_id', $category_id)
+			->where('subcategory_id', $subcategory_id)
+			->where('status', '!=', 2)
+			->where('id', $current_question_id)
+			->orderBy('id', 'asc')
+			->first();
+			//echo "<pre>";print_r($nextQuestion);die;
+			$nextId = $nextQuestion->id;
+			$name = $nextQuestion->name;
+			
+			if(!empty($nextQuestion->get_subchecklist))
+			{
+				//$subchecklist = $nextQuestion->get_subchecklist;
+				foreach($nextQuestion->get_subchecklist as $subchecklists)
+				{
+					$subChklistArr[] = [
+						'id' => $subchecklists->id,
+						'name' => $subchecklists->name
+					];
+				}
+				
+				$subcategoryname = $nextQuestion->get_subcategory->name;
+			}
+			
+			// fetch data from task_list_checklist
+			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();
+			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
+			$next_approve = $iffetch ? $iffetch->approve : '';
+			
+			// fetch files 
+			$task_list_checklist_id = $iffetch ? $iffetch->id : null;
+			//$existingFiles = [];
+			if (isset($task_list_checklist_id)) {
+				$imageData = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
+				foreach ($imageData as $file) {
+					$filename = $file->file;
+					$existingFiles[] = [
+						'name' => $filename,
+						'size' => file_exists(public_path('uploads/reject-files/' . $filename)) ? filesize(public_path('uploads/reject-files/' . $filename)) : 123456, // default if unknown
+						'url' => asset('uploads/reject-files/' . $filename),
+					];
+				}
+			}
+			
+			// fetch data from task_list_subchecklist
+			$fetchsubChklistArr = [];
+			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('task_list_checklist_id', $nextId)
+							->get();
+			if($ifsubfetch->isNotEmpty())
+			{
+				foreach($ifsubfetch as $subchecklistval)
+				{
+					$fetchsubChklistArr[] = [
+						'subchecklist_id' => $subchecklistval->subchecklist_id,
+						'rejected_region' => $subchecklistval->rejected_region ?? '',
+						'approve' => $subchecklistval->approve
+					];
+					
+					// fetch files for subchecklist
+					if(isset($subchecklistval->id))
+					{
+						$imageSubChecklistData = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistval->id)->get();
+						foreach ($imageSubChecklistData as $file) {
+							$filename = $file->file;
+							$existingSubChecklistFiles[] = [
+								'name' => $filename,
+								//'subchecklist_id' => $file->task_list_subchecklist_id,
+								'subchecklist_id' => $subchecklistval->subchecklist_id,
+								'size' => file_exists(public_path('uploads/reject-files/subchecklist/' . $filename)) ? filesize(public_path('uploads/reject-files/subchecklist/' . $filename)) : 123456, // default if unknown
+								'url' => asset('uploads/reject-files/subchecklist/' . $filename),
+							];
+						}
+					}
+				}
+			}
+			
+			/*return response()->json
+			(
+				[
+					'task_id'=>$task_id,
+					'currentid'=> $nextId ?? null,
+					'name' => $name ?? null,
+					'subchecklist' => $subChklistArr,
+					'subcategoryname' => $subcategoryname,
+					'next_rejected_region'=> $next_rejected_region ?? '',
+					'next_approve'=>$next_approve,
+					'existingNextFiles'=>$existingFiles,
+					'fetchsubChklistArr'=>$fetchsubChklistArr,
+					'existingSubChecklistFiles'=>$existingSubChecklistFiles
+				]
+			);*/
+			
+			$html = view('inspector.checklist-question', compact(
+				'task_id',
+				'checklistdata',
+				'nextId',
+				'name',
+				'subChklistArr',
+				'subcategoryname',
+				'next_rejected_region',
+				'next_approve',
+				'existingFiles',
+				'fetchsubChklistArr',
+				'existingSubChecklistFiles'
+			))->render();
+
+			return response()->json([
+				'html' => $html
+			]);
+		
 	}
 
 	

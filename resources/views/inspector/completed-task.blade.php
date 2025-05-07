@@ -34,13 +34,13 @@
 										<div class="title">{{ $checklists->name ?? ''}}</div>
 										<div class="subtitle">Accepted </div>
 									</div>
-									<a href="javascript:void(0)"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
-									
+									<a href="javascript:void(0)"><div class="arrow get_checklist" data-checklist="{{ $checklists->id }}" data-task="{{ $task_id }}" data-cat="{{ $category_id }}" data-subcat="{{ $subcategory_id }}"><small>Edit</small></div></a>
+									{{--<a href="javascript:void(0)"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
 								</div>
 								@endforeach
 								
 								<div class="sticky-footer">
-									<button>Submit checklist</button>
+									<button class="submit_task">Submit checklist</button>
 								</div>
 							</div>
 							<div role="tabpanel" class="tab-pane" id="reject_tab">
@@ -52,6 +52,9 @@
 			</section>
 		</div>
     </div>
+	<input type="text" value="{{ $task_id ?? ''}}" id="task_id">
+	<input type="text" value="{{ $category_id ?? ''}}" id="category_id">
+	<input type="text" value="{{ $subcategory_id ?? ''}}" id="subcategory_id">
 @endsection 
 @section('scripts')
 <script>
@@ -85,53 +88,40 @@
 </script>
 <script>
 $(document ).ready(function() {
-   $(document).on('click','.donesubmit', function(){
-		var location_id = $('#location_id').val();
+   $(document).on('click','.submit_task', function(){
+		var task_id  = $('#task_id').val();
 		var category_id = $('#category_id').val();
-		var details  = $('#addressInput').val();
-		if(details=='')
-		{
-			$('#errorMessage').fadeIn().delay(2000).fadeOut();
-			return false;
-		}
-	    //alert(location_id);alert(category_id);alert(details);
-		var URL = "{{ route('send-location-details') }}";
+		var subcategory_id = $('#subcategory_id').val();
+		var URL = "{{ route('submit-completed-task') }}";
 		
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id,category_id:category_id,details:details, _token: csrfToken},
+			data: {task_id:task_id, category_id:category_id, subcategory_id:subcategory_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response);
-				$('#addressInput').val('');
-				$('#successMessage').fadeIn().delay(2000).fadeOut();
+				//$('#addressInput').val('');
+				//$('#successMessage').fadeIn().delay(2000).fadeOut();
 			},
 		});
    });
    
-   $(document).on('click','.chk-task-id', function(){
+   $(document).on('click','.get_checklist', function(){
 	   var cat_id = $(this).data('cat');
 	   var subcat_id = $(this).data('subcat');
-	   var location_id = $(this).data('location');
-	   var URL = "{{ route('check-task-id') }}";
+	   var task_id = $(this).data('task');
+	   var checklist_id = $(this).data('checklist');
+	   var URL = "{{ route('get-checklist-page') }}";
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {cat_id:cat_id,location_id:location_id, _token: csrfToken},
+			data: {checklist_id:checklist_id, task_id:task_id, cat_id:cat_id, subcat_id:subcat_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.hasData);
-				$('#taskid').val(response.taskid);
-				if(!response.hasData)
-				{
-					$('#errorMessage').fadeIn().delay(2000).fadeOut();
-				}
-				else {
-					var taskid = $('#taskid').val();
-					var baseUrl = "{{ url('/checklist-question') }}";
-					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + subcat_id;
-					window.location.href = redirectUrl;
+				if (response.html) {
+					$('#checklist-container').html(response.html);
 				}
 			},
 		});

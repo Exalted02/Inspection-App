@@ -15,5 +15,6 @@ class Task_list_subcategories extends Model
         'subcategory_id', 
         'total_task', 
         'completed_task', 
+        'is_submit', 
     ];
 }

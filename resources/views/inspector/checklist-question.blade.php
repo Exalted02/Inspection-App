@@ -188,14 +188,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	@endif
 	
 	//Dropzone.autoDiscover = false;
-	
 	document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
-		//console.log(filesForDropzone);
-		//Dropzone.autoDiscover = false;
-		//if (dropzoneElement.dropzone) {
-            //console.log('Dropzone already attached to:', dropzoneElement);
-            //return;
-        //}
+		
 		let myDropzone = new Dropzone(dropzoneElement, {
 			url: dropzoneElement.getAttribute('action'),
 			maxFiles: 5,
@@ -263,13 +257,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <script>
 let existingFiles = @json($existingFiles);
-//---------- show image when page load ----------
+//---------- show single image when page load ----------
 Dropzone.autoDiscover = false; // very important
 
 //"{{ route('reject-files') }}"
 document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     let myDropzone = new Dropzone(dropzoneElement, {
-        url: dropzoneElement.getAttribute('action'), // still needed for new uploads
+        url: dropzoneElement.getAttribute('action'), 
         maxFiles: 5,
         maxFilesize: 2, // MB
         acceptedFiles: 'image/*',
@@ -335,7 +329,7 @@ function handleApprove(id) {
 	$('#approveMultipleStatus' + id).val(1);
 }
 
-//Dropzone.autoDiscover = false; // very important
+Dropzone.autoDiscover = false; // very important
 
 /*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     new Dropzone(dropzoneElement, {
@@ -357,6 +351,7 @@ function handleApprove(id) {
     });
 });*/
 
+// when single file upload 
 //"{{ route('reject-files') }}"
 document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     new Dropzone(dropzoneElement, {
@@ -373,7 +368,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
         init: function () {
             this.on("success", function (file, response) {
                 console.log('Uploaded:', response);
-
+                alert('response.filename');
                 // Attach filename to file object so we can use it on removal
                 file.uploadedFilename = response.filename;
 
@@ -405,7 +400,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 });
 
 //url: "{{ route('reject-subchecklist-files') }}",
-//--- upload new subchecklist files first time when getpage no next no back  ------- 
+//--- 07-05-2025 upload new subchecklist files first time when getpage no next no back  ------- 
 document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 	new Dropzone(dropzoneElement, {
 		url: dropzoneElement.getAttribute('action'),
@@ -452,7 +447,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 	});
 });
 
-//---------- show subchecklist image when page load ----------
+//---------- show subchecklist image when page load 02-05-2025----------
 //"{{ route('reject-subchecklist-files') }}"
 /*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 		//console.log(filesForDropzone);
@@ -528,7 +523,8 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 </script>
 
 <script>
-const checkoutUrlTemplate = @json(route('completed-task', ['cat_id' => 'CAT_ID', 'subcat_id' => 'SUBCAT_ID']));
+
+const checkoutUrlTemplate = "{{ url('completed-task/TASK_ID/CAT_ID/SUBCAT_ID') }}";
 
 $(document ).ready(function() {
 	var approveStatus = $('#approveStatus').val();
@@ -660,7 +656,7 @@ $(document ).ready(function() {
 				//alert(response.currentid);
 				if(response.currentid=='')
 				{
-					const redirectUrl = checkoutUrlTemplate.replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
+					const redirectUrl = checkoutUrlTemplate.replace('TASK_ID', task_id).replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
 
 					window.location.href = redirectUrl;
 					 return;
@@ -952,6 +948,7 @@ $(document ).ready(function() {
 						});
 						
 						//--- upload new files ------- 
+						Dropzone.autoDiscover = false; // very important
 						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-files') }}",
@@ -966,11 +963,11 @@ $(document ).ready(function() {
 								dictRemoveFile: 'Delete file',
 								init: function () {
 									this.on("success", function (file, response) {
-										console.log('Uploaded:', response);
+										console.log('Uploadedsss:', response);
 
 										// Attach filename to file object so we can use it on removal
 										file.uploadedFilename = response.filename;
-
+										alert(response.filename);
 										// Replace default preview with file name
 										file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
 									});
