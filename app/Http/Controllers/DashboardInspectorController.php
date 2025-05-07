@@ -18,6 +18,7 @@ use App\Models\Task_list_subchecklists;
 use App\Models\Task_list_subchecklist_rejected_files;
 use App\Models\Task_list_subchecklist_temp_rejected_files;
 use App\Models\Task_list_subcategories;
+use App\Models\Subcategory;
 
 class DashboardInspectorController extends Controller
 {
@@ -398,7 +399,7 @@ class DashboardInspectorController extends Controller
 			$checklistdata = Checklist::where('category_id',$category_id)
 									->where('subcategory_id', $subcategory_id)
 									->where('status','!=', 2)->get();
-			
+			$subcategoryname = Subcategory::where('id', $subcategory_id)->first()->name;
 		}
 		//----------------------------------
 		return response()->json

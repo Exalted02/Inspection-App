@@ -653,7 +653,7 @@ $(document ).ready(function() {
 			traditional: true,
 			dataType: 'json',
 			success: function(response) {
-				//alert(response.currentid);
+				//alert(response.subcategoryname);
 				if(response.currentid=='')
 				{
 					//const redirectUrl = checkoutUrlTemplate.replace('TASK_ID', task_id).replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
