@@ -156,7 +156,7 @@ $(document).on('click','.data-id-list', function(){
 		dataType: 'json',
 		success: function(response) {
 			if(response.result == 'success'){
-				$('#delete-msg').html('<font color="green">Record Deleted Successfully</font>');
+				$('#delete-msg').html('<font color="red">Record Deleted Successfully</font>');
 			}else{
 				$('#data_already_use').modal('show');
 			}

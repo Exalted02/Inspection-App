@@ -3,9 +3,10 @@
 		<div class="modal-content">
 			<div class="modal-body">
 				<div class="success-message text-center">
-					<div class="success-popup-icon bg-danger" id="delete-prospect-msg">
+					<div class="success-popup-icon bg-danger">
 						<i class="la la-trash-restore"></i>
 					</div>
+					<div id="delete-prospect-msg"></div>
 					<h3>{{ __('are_you_sure') }}, {{ __('you_want_delete') }}</h3>
 					<p>{{ __('company_name') }} "<span id="list_code_name"></span>" {{ __('from_your_account') }} and all related record w.r.t this company</p>
 					<div class="col-lg-12 text-center form-wizard-button">
