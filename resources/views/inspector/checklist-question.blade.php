@@ -62,7 +62,6 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 			<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>
 			<div class="question-text">
 				<span id="single-question">{{ $checklistdata->name ?? '' }}</span>
-
 			</div>
 			<span id="errormsg" style="display: none; color: red;">
 				Please enter text or file.
@@ -89,6 +88,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 			<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>
 			<div class="question-text">
 				<span id="multiple-question">{{ $checklistdata->name ?? '' }}:</span>
+				<a href="#" class="get_checklist" id="getchecklist" data-cat="{{ $checklistdata->category_id }}" data-subcat="{{ $checklistdata->subcategory_id }}" data-task="{{ $task_id }}" data-checklist="{{ $checklistdata->id }}"></a>
 			</div>
 			@if($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_subchecklist->isNotEmpty())
 				@foreach($checklistdata->get_subchecklist as $subchecklists)
@@ -156,6 +156,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 			<button class="next_question ms-auto">Next</button>
 		</div>
 	</div>
+	{{--<button type="button" class="get_checklist" data-cat="1" data-subcat="2" data-task="1" data-checklist="6"></button>--}}
 @endsection 
 @section('scripts')
 <script>
@@ -593,6 +594,10 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 const checkoutUrlTemplate = "{{ url('completed-task/TASK_ID/CAT_ID/SUBCAT_ID') }}";
 
 $(document ).ready(function() {
+	setTimeout(function() {
+        $('#getchecklist').trigger('click');
+    }, 100); 
+	
 	var approveStatus = $('#approveStatus').val();
 	if(approveStatus == '0')
 	{
@@ -651,11 +656,12 @@ $(document ).ready(function() {
 				if(approveMulStatus == '0')
 				{
 	
-					//const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
-					//const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
+					const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
+					const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
 					
-					//if (text === '' && files.length === 0 && !hasEditMultipleFile)
-					if (text === ''  && !hasEditMultipleFile)
+					
+					//if (text === ''  && !hasEditMultipleFile)
+					if (text === '' && files.length === 0 && !hasEditMultipleFile)
 					{
 						$('#errorMulmsg' + subchecklistId).fadeIn().delay(2000).fadeOut();
 						hasError = true;
