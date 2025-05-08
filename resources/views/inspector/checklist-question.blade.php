@@ -658,6 +658,11 @@ $(document ).ready(function() {
 
 				if(response.currentid=='')
 				{
+					//$(".question-navigation").hide();
+					//$('.question-navigation').css('display', 'none');
+					$('.checklist-question-sticky-footer').addClass('d-none');
+					$('.sticky-footer-completed').addClass('d-none');
+					
 					if (!document.querySelector('link[href*="bootstrap.min.css"]')) {
 						var bootstrapCSS = document.createElement('link');
 						bootstrapCSS.rel = 'stylesheet';
@@ -673,7 +678,7 @@ $(document ).ready(function() {
 						document.head.appendChild(esCSS);
 					}
 					//const redirectUrl = checkoutUrlTemplate.replace('TASK_ID', task_id).replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
-					//window.location.href = redirectUrl;
+					//window.location.href = redirectUrl; hidden
 					//return;
 					let htmlCompleted = '<div class="container checklist">';
 						htmlCompleted += '<h2 class="checklist-title">Review your checklist</h2>'; 
@@ -712,7 +717,7 @@ $(document ).ready(function() {
 									htmlCompleted += '<a href="javascript:void(0)"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '"><small>Edit</small></div></a>';
 								htmlCompleted += '</div>';
 							})
-								htmlCompleted += '<div class="sticky-footer" style="position: fixed;bottom: 0;left: 0;width: 100%;background-color: #002b5c;padding: 16px;text-align: center;z-index: 1000;">';
+								htmlCompleted += '<div class="sticky-footer-completed">';
 									htmlCompleted += '<button class="submit_task">Submit checklist</button>';
 								htmlCompleted += '</div>';
 								
@@ -724,6 +729,9 @@ $(document ).ready(function() {
 							htmlCompleted += '</div>';
 							htmlCompleted += '</div>';
 							htmlCompleted += '</div>';
+							htmlCompleted += '<input type="hidden" id="completed_task_id" value="' + task_id+ '">';
+							htmlCompleted += '<input type="hidden" id="completed_category_id" value="' + subcategory_id+ '">';
+							htmlCompleted += '<input type="hidden" id="completed_subcategory_id" value="' + subcategory_id+ '">';
 						htmlCompleted += '</section>';
 					
 					
@@ -733,11 +741,15 @@ $(document ).ready(function() {
 					$('.checklist-question').html(htmlCompleted);
 					return;
 				}
+				
 				$('#current_checklist_id').val(response.currentid);
 				 //$('#single-question').html(response.name);
 				const rejectFilesRoute = "{{ route('reject-files') }}";
 				const rejectSubcheckFilesRoute = "{{ route('reject-subchecklist-files') }}";
 				if (response.subchecklist.length > 0) {
+				
+				$('.checklist-question-sticky-footer').removeClass('d-none');
+				$('.sticky-footer-completed').addClass('d-none');
 				// Has subchecklists
 				let autoClicks = [];
 				let html = '<div class="sub-checklist">';
@@ -748,6 +760,7 @@ $(document ).ready(function() {
 
 				response.subchecklist.forEach((item, index) => {
 					    //alert(item.id);
+						
 						let match = response.fetchsubChklistArr.find(e => e.subchecklist_id == item.id);
 						let rejectedText = match ? match.rejected_region : '';
 						let approveStatus = match ? match.approve : '';
@@ -916,6 +929,8 @@ $(document ).ready(function() {
 						
 						
 				} else {
+						$('.checklist-question-sticky-footer').removeClass('d-none');
+						$('.sticky-footer-completed').addClass('d-none');
 						//alert(response.next_approve);
 						let html = '<div class="single-checklist">';
 						html += '<div class="question-header">' + response.subcategoryname + '</div>';
@@ -1497,6 +1512,9 @@ $(document ).ready(function() {
 				const rejectFilesRoute = "{{ route('reject-files') }}";
 				const rejectSubcheckFilesRoute = "{{ route('reject-subchecklist-files') }}";
 				if (response.subchecklist.length > 0) {
+					
+				$('.checklist-question-sticky-footer').removeClass('d-none');
+				$('.sticky-footer').addClass('d-none');
 				// Has subchecklists
 				let autoClicks = [];
 				let html = '<div class="sub-checklist">';
@@ -1675,6 +1693,8 @@ $(document ).ready(function() {
 						
 						
 				} else {
+						$('.checklist-question-sticky-footer').removeClass('d-none');
+						$('.sticky-footer').addClass('d-none');
 						//alert(response.next_approve);
 						let html = '<div class="single-checklist">';
 						html += '<div class="question-header">' + response.subcategoryname + '</div>';
@@ -1832,11 +1852,11 @@ $(document ).ready(function() {
    });
    
     $(document).on('click','.submit_task', function(){
-		var task_id  = $('#task_id').val();
-		var category_id = $('#category_id').val();
-		var subcategory_id = $('#subcategory_id').val();
-		//var URL = "{{ route('submit-completed-task') }}";
-		alert(task_id);alert(category_id);alert(subcategory_id);
+		var task_id  = $('#completed_task_id').val();
+		var category_id = $('#completed_category_id').val();
+		var subcategory_id = $('#completed_subcategory_id').val();
+		var URL = "{{ route('submit-completed-task') }}";
+		//alert(completed_task_id);alert(completed_category_id);alert(completed_subcategory_id);
 		$.ajax({
 			url: URL,
 			type: "POST",

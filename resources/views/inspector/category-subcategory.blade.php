@@ -61,9 +61,9 @@
 								</div>
 								@endforeach
 								
-								<div class="sticky-footer">
+								{{--<div class="sticky-footer">
 									<button>Submit checklist</button>
-								</div>
+								</div>--}}
 							</div>
 							<div role="tabpanel" class="tab-pane" id="reject_tab">
 								Not have any data
