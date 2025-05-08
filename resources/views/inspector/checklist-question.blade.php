@@ -676,7 +676,7 @@ $(document ).ready(function() {
 					//return;
 					let htmlCompleted = '<div class="container checklist">';
 						htmlCompleted += '<h2 class="checklist-title">Review your checklist</h2>'; 
-						htmlCompleted += 'Review and check before moving on to </br>next section. Checmical bonding & stor';
+						htmlCompleted += '<h4>Review and check before moving on to </br>next section. Checmical bonding & stor</h4>';
 						htmlCompleted += '<div class="location-section">';
 						htmlCompleted += '<div class="location-label">' + response.subcategoryname + '</div>';
 						htmlCompleted += '</div>';
