@@ -6,8 +6,17 @@
 @section('content')
 @php
 //echo "<pre>";print_r($checklistdata->get_subchecklist);die;
+$total_checklist = [];
+$countCheklist = 0;
+$percentage = '';
+if(!empty($checklistdata->category_id) && !empty($checklistdata->subcategory_id))
+{
+	$total_checklist = App\Models\Checklist::where('category_id', $checklistdata->category_id)
+	->where('subcategory_id', $checklistdata->subcategory_id)->get();
+	$countCheklist  = $total_checklist->count();
+	$percentage = ceil(100/$countCheklist);
+}
 $existingFiles = [];
-
 
 $existingSubChecklistFiles = [];
 
@@ -88,7 +97,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 			<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>
 			<div class="question-text">
 				<span id="multiple-question">{{ $checklistdata->name ?? '' }}:</span>
-				<a href="#" class="get_checklist" id="getchecklist" data-cat="{{ $checklistdata->category_id }}" data-subcat="{{ $checklistdata->subcategory_id }}" data-task="{{ $task_id }}" data-checklist="{{ $checklistdata->id }}"></a>
+				<a href="#" class="get_checklist" id="getchecklist" data-cat="{{ $checklistdata->category_id ?? '' }}" data-subcat="{{ $checklistdata->subcategory_id ?? '' }}" data-task="{{ $task_id }}" data-checklist="{{ $checklistdata->id ?? '' }}"></a>
 			</div>
 			@if($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_subchecklist->isNotEmpty())
 				@foreach($checklistdata->get_subchecklist as $subchecklists)
@@ -139,17 +148,19 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	<input type="hidden" id="subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
 	<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
 	<div class="checklist-question-sticky-footer">
-	{{--<div class="progress-bar">
-			<span style="width: 40%;"></span>
-	</div>--}}
-		<div class="progress-block-bar mb-4">
-			<div class="step-block completed"></div>
-			<div class="step-block completed"></div>
-			<div class="step-block completed"></div>
-			<div class="step-block completed"></div>
-			<div class="step-block"></div>    
-			<div class="step-block"></div> 
+	
+		<div class="d-flex justify-content-between mb-3" style="gap: 4px;">
+		@if(!empty($total_checklist))
+			@foreach($total_checklist as $val)
+				<div class="step-block completed" style="width:{{ $percentage  }}%;"></div>
+			@endforeach
+	    @endif
+		  {{--<div class="step-block" style="width:20%;"></div>
+		  <div class="step-block" style="width:20%;"></div>
+		  <div class="step-block" style="width:20%;"></div>
+		  <div class="step-block" style="width:20%;"></div>--}}
 		</div>
+	
 		<div class="clearfix"></div>
 		<div class="footer-content question-navigation d-flex justify-content-between">
 			<button class="previous_question">Back</button>

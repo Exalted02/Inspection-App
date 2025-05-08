@@ -9857,10 +9857,10 @@ footer.footer-bg {
 }
 .step-block {    
 	flex: 1;
-	height: 6px;
-	background-color: red;
+	height: 10px;
 	border-radius: 1px;
+	background-color: #EDEDED;
 }
 .step-block.completed {
-	background-color: black !important;  
+	background-color: #0D345E;  
 }
