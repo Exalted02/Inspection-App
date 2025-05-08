@@ -724,15 +724,18 @@ class DashboardInspectorController extends Controller
 		$task_id = $request->task_id;
 		$category_id = $request->category_id;
 		$subcategory_id = $request->subcategory_id;
-		$exist = Task_list_subcategories::where('task_list_id', $task_id)->where('task_list_category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
-		$model = new Task_list_subcategories();
-		$model->task_list_id = $task_id ?? null;
-		$model->task_list_category_id = $category_id ?? null;
-		$model->subcategory_id = $subcategory_id ?? null;
-		$model->total_task = 0;
-		$model->completed_task = 0;
-		$model->is_submit = 1;
-		$model->save();
+		$exists = Task_list_subcategories::where('task_list_id', $task_id)->where('task_list_category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
+		if(!$exists)
+		{
+			$model = new Task_list_subcategories();
+			$model->task_list_id = $task_id ?? null;
+			$model->task_list_category_id = $category_id ?? null;
+			$model->subcategory_id = $subcategory_id ?? null;
+			$model->total_task = 0;
+			$model->completed_task = 0;
+			$model->is_submit = 1;
+			$model->save();
+		}
 		return response()->json(['msg'=>'success']);
 	}
 	public function get_checklist_page(Request $request)
@@ -848,9 +851,11 @@ class DashboardInspectorController extends Controller
 			);
 	}
 	
-	public function thank_you()
+	public function thank_you($id='')
 	{
-		return view('inspector.thankyou');
+		$data = [];
+		$data['task_id'] = $id;
+		return view('inspector.thankyou', $data);
 	}
 	/*public function get_checklist_page_status(Request $request)
 	{

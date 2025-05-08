@@ -161,8 +161,11 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 <script>
 //Dropzone.autoDiscover = false;
 document.addEventListener('DOMContentLoaded', function () {
+	initializeDropzones();
 	Dropzone.autoDiscover = false;
 	const filesForDropzone = {!! json_encode($existingSubChecklistFiles) !!};
+	//const filesForDropzone = JSON.stringify(filesForDropzones, null, 2);
+	
 	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 	//alert(window.existingSubChecklistFiles);
 	@if($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_subchecklist->isNotEmpty())
@@ -188,10 +191,86 @@ document.addEventListener('DOMContentLoaded', function () {
 	@endif
 	
 	//Dropzone.autoDiscover = false;
+	console.log('Dropzones found:', document.querySelectorAll('.dropzone').length);
+
 	document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+		Dropzone.autoDiscover = false;
+		//console.log(dropzoneElement);
 		
+			let subchecklistInput = dropzoneElement.querySelector('[name="subchecklist_id"]');
+			if (!subchecklistInput) {
+				console.warn('No subchecklist_id input in:', dropzoneElement);
+				return; // skip this dropzone
+			}
+			let subchecklistId = subchecklistInput ? subchecklistInput.value : null;
+			//alert('Outside init: ' + subchecklistId);
 		let myDropzone = new Dropzone(dropzoneElement, {
 			url: dropzoneElement.getAttribute('action'),
+			maxFiles: 5,
+			maxFilesize: 2, // MB
+			acceptedFiles: 'image/*',
+			addRemoveLinks: true,
+			dictRemoveFile: 'Delete file',
+			headers: {
+				'X-CSRF-TOKEN': csrfToken
+			},
+			init: function () {
+				let dz = this;
+				let subchecklistId = dropzoneElement.querySelector('[name="subchecklist_id"]').value;
+				// Add existing files (preloaded from server)
+				response.filesForDropzone
+				.filter(file => file.subchecklist_id == subchecklistId)
+				.forEach(function (file) {
+					let mockFile = { name: file.name, size: file.size, accepted: true };
+
+					dz.emit("addedfile", mockFile);
+					dz.emit("thumbnail", mockFile, file.url);
+					dz.emit("complete", mockFile);
+
+					mockFile.previewElement.classList.add('dz-success', 'dz-complete');
+					mockFile.uploadedFilename = file.name;
+					$('#hasEditMultipleFile' + subchecklistId).val(1);
+				});
+
+				this.on("removedfile", function (file) {
+					if (file.uploadedFilename) {
+						$.ajax({
+							url: "{{ route('subchecklist-file-delete') }}", // handle deletion logic on server
+							type: "POST",
+							data: {
+								_token: csrfToken,
+								filename: file.uploadedFilename
+							},
+							success: function (response) {
+								console.log('Deleted:', response);
+								//alert(response.count);
+								if(response.count == '0')
+								{
+									$('#hasEditMultipleFile' + response.subchecklist_id).val('');
+								}
+								else{
+									$('#hasEditMultipleFile' + response.subchecklist_id).val(1);
+								}
+							},
+							error: function (xhr) {
+								console.error('Delete failed:', xhr.responseText);
+							}
+						});
+					}
+				});
+			}
+		});
+	});
+	
+	/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+		
+		//if (dropzoneElement.dropzone) return;
+		
+		let subchecklistInput = dropzoneElement.querySelector('[name="subchecklist_id"]');
+		let subchecklistId = subchecklistInput ? subchecklistInput.value : null;
+		alert(filesForDropzone);
+		let myDropzone = new Dropzone(dropzoneElement, {
+			url: dropzoneElement.getAttribute('action')  || "{{ route('subchecklist-file-delete') }}",
 			maxFiles: 5,
 			maxFilesize: 2, // MB
 			acceptedFiles: 'image/*',
@@ -250,12 +329,14 @@ document.addEventListener('DOMContentLoaded', function () {
 				});
 			}
 		});
-	});
+	});*/
 });
 </script>
 
 
 <script>
+const filesForDropzone = {!! json_encode($existingSubChecklistFiles) !!};
+
 let existingFiles = @json($existingFiles);
 //---------- show single image when page load ----------
 Dropzone.autoDiscover = false; // very important
@@ -312,6 +393,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     });
 });
 //alert(existingFiles);
+
 function handleReject(id) {
 	document.getElementById('rejectForm-'+id).style.display = 'flex';
 	
@@ -331,26 +413,7 @@ function handleApprove(id) {
 
 Dropzone.autoDiscover = false; // very important
 
-/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
-    new Dropzone(dropzoneElement, {
-        url: "{{ route('reject-files')}}", // your upload URL
-        maxFiles: 5,
-        maxFilesize: 2, // MB
-        acceptedFiles: 'image/*',
-        addRemoveLinks: true,
-		headers: {
-			'X-CSRF-TOKEN': csrfToken
-		},
-        dictDefaultMessage: 'Drag & drop or click to upload',
-        success: function (file, response) {
-            console.log('File uploaded', response);
-        },
-        error: function (file, errorMessage) {
-            console.error('Upload error', errorMessage);
-        }
-    });
-});*/
-
+//alert(filesForDropzone);
 // when single file upload 
 //"{{ route('reject-files') }}"
 document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
@@ -398,10 +461,10 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
         }
     });
 });
-
+//alert(filesForDropzone);
 //url: "{{ route('reject-subchecklist-files') }}",
 //--- 07-05-2025 upload new subchecklist files first time when getpage no next no back  ------- 
-document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 	new Dropzone(dropzoneElement, {
 		url: dropzoneElement.getAttribute('action'),
 		maxFiles: 5,
@@ -445,19 +508,22 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 			});
 		}
 	});
-});
+});*/
 
 //---------- show subchecklist image when page load 02-05-2025----------
 //"{{ route('reject-subchecklist-files') }}"
+//Dropzone.autoDiscover = false;
+//alert(filesForDropzone);
 /*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 		//console.log(filesForDropzone);
 		//Dropzone.autoDiscover = false;
-		//if (dropzoneElement.dropzone) {
-            //console.log('Dropzone already attached to:', dropzoneElement);
-            //return; {{ route('reject-subchecklist-files')}}
-        //}
+		
+		if (dropzoneElement.dropzone) return;
+		let subchecklistInput = dropzoneElement.querySelector('[name="subchecklist_id"]');
+		let subchecklistId = subchecklistInput ? subchecklistInput.value : null;		
+		
 		let myDropzone = new Dropzone(dropzoneElement, {
-			url: "{{ route('reject-subchecklist-files')}}",
+			url: dropzoneElement.getAttribute('action') || "{{ route('reject-subchecklist-files')}}",
 			maxFiles: 5,
 			maxFilesize: 2, // MB
 			acceptedFiles: 'image/*',
@@ -591,7 +657,6 @@ $(document ).ready(function() {
 					//if (text === '' && files.length === 0 && !hasEditMultipleFile)
 					if (text === ''  && !hasEditMultipleFile)
 					{
-						alert('ok');
 						$('#errorMulmsg' + subchecklistId).fadeIn().delay(2000).fadeOut();
 						hasError = true;
 						return false;
@@ -729,7 +794,7 @@ $(document ).ready(function() {
 							htmlCompleted += '</div>';
 							htmlCompleted += '</div>';
 							htmlCompleted += '<input type="hidden" id="completed_task_id" value="' + task_id+ '">';
-							htmlCompleted += '<input type="hidden" id="completed_category_id" value="' + subcategory_id+ '">';
+							htmlCompleted += '<input type="hidden" id="completed_category_id" value="' + category_id+ '">';
 							htmlCompleted += '<input type="hidden" id="completed_subcategory_id" value="' + subcategory_id+ '">';
 						htmlCompleted += '</section>';
 					
@@ -818,7 +883,7 @@ $(document ).ready(function() {
 						
 						// dropzone work
 						Dropzone.autoDiscover = false;
-						
+						//alert(response.existingSubChecklistFiles);
 						//---------- show image when page load ----------
 						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							let myDropzone = new Dropzone(dropzoneElement, {
@@ -1180,7 +1245,7 @@ $(document ).ready(function() {
 						
 						// dropzone work
 						Dropzone.autoDiscover = false;
-						
+						//alert(response.existingSubChecklistFiles);
 						//---------- show image when page load ----------
 						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							let myDropzone = new Dropzone(dropzoneElement, {
@@ -1822,11 +1887,31 @@ $(document ).ready(function() {
 			data: {task_id:task_id, category_id:category_id, subcategory_id:subcategory_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
-				window.location.href = "{{ route('thank-you') }}";
+				const thankyouUrlTemplate = "{{ url('thank-you/TASK_ID') }}";
+				const redirectUrl = thankyouUrlTemplate.replace('TASK_ID', task_id);
+				window.location.href = redirectUrl;
 			},
 		});
    });
 });
+
+function initializeDropzones() {
+	document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+		if (dropzoneElement.dropzone) return; // Avoid initializing twice
+
+		let subchecklistInput = dropzoneElement.querySelector('[name="subchecklist_id"]');
+		let subchecklistId = subchecklistInput ? subchecklistInput.value : null;
+		console.log('Initializing dropzone for ID:', subchecklistId);
+
+		let myDropzone = new Dropzone(dropzoneElement, {
+			// same config...
+		});
+	});
+}
+
+// call this after dynamic HTML is loaded
+//initializeDropzones();
+
 </script>
 @endsection
 

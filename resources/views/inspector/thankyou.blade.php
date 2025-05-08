@@ -43,19 +43,25 @@
 			padding: 10px 20px;
 			text-align: center;
 			border-radius: 8px;
-			margin: 135px auto 20px;
+			margin: 200px auto 20px;
 			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 			cursor:pointer;
         }
     </style>
 </head>
+@php 
+	use Carbon\Carbon;
+	$datetimeExists = App\Models\Task_list_subcategories::where('task_list_id', $task_id)->first();
+	$datetime = $datetimeExists ? $datetimeExists->created_at : '';
+@endphp
 <body>
     <div class="thank-you-content">
         <div class="checkmark-circle">
             <i class="fas fa-check"></i>
         </div>
-        <h1>Thank You!</h1>
+        <h1>Thank {{ auth()->user()->name ?? '' }}!</h1>
         <p>Thanks for your hardwork ! Your safety</br>inspection has been submitted</p>
+		<p>{{ Carbon::parse($datetime)->format('d M Y, H:i'); }}</p>
 		<div class="thank-you-home">
 			<span id="inspector-dashboard">Home</span>
 		</div>
