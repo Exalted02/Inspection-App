@@ -670,13 +670,7 @@ $(document ).ready(function() {
 						document.head.appendChild(bootstrapCSS);
 					}
 					
-					var esCssUrl = "{{ url('front-assets/css/es.css') }}";
-					if (!document.querySelector('link[href="${esCssUrl}"]')) {
-						var esCSS = document.createElement('link');
-						esCSS.rel = 'stylesheet';
-						esCSS.href = esCssUrl;
-						document.head.appendChild(esCSS);
-					}
+					
 					//const redirectUrl = checkoutUrlTemplate.replace('TASK_ID', task_id).replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
 					//window.location.href = redirectUrl; hidden
 					//return;
