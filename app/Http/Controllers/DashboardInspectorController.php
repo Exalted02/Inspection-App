@@ -732,6 +732,7 @@ class DashboardInspectorController extends Controller
 		$model->completed_task = 0;
 		$model->is_submit = 1;
 		$model->save();
+		return response()->json(['msg'=>'success']);
 	}
 	public function get_checklist_page(Request $request)
 	{
@@ -845,7 +846,12 @@ class DashboardInspectorController extends Controller
 				]
 			);
 	}
-	public function get_checklist_page_status(Request $request)
+	
+	public function thank_you()
+	{
+		return view('inspector.thankyou');
+	}
+	/*public function get_checklist_page_status(Request $request)
 	{
 		$task_id = $request->task_id;
 		$subcategory_id = $request->subcategory_id;
@@ -853,6 +859,6 @@ class DashboardInspectorController extends Controller
 		$res = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $checklist_id)->first();
 		$status = $res ? $res->approve : '';
 		return response()->json(['status'=> $status]);
-	}
+	}*/
 	
 }

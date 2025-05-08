@@ -1857,9 +1857,7 @@ $(document ).ready(function() {
 			data: {task_id:task_id, category_id:category_id, subcategory_id:subcategory_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
-				//alert(response);
-				//$('#addressInput').val('');
-				//$('#successMessage').fadeIn().delay(2000).fadeOut();
+				window.location.href = "{{ route('thank-you') }}";
 			},
 		});
    });
