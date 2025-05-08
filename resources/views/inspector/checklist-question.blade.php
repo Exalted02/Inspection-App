@@ -454,10 +454,10 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 		//Dropzone.autoDiscover = false;
 		//if (dropzoneElement.dropzone) {
             //console.log('Dropzone already attached to:', dropzoneElement);
-            //return;
+            //return; {{ route('reject-subchecklist-files')}}
         //}
 		let myDropzone = new Dropzone(dropzoneElement, {
-			url: dropzoneElement.getAttribute('action'),
+			url: "{{ route('reject-subchecklist-files')}}",
 			maxFiles: 5,
 			maxFilesize: 2, // MB
 			acceptedFiles: 'image/*',
@@ -573,6 +573,7 @@ $(document ).ready(function() {
 		}
 		else
 		{
+			
 			let hasError = false;
 			$('.reject-form').each(function () {
 				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
@@ -583,10 +584,14 @@ $(document ).ready(function() {
 				//alert(hasEditMultipleFile); //if 1 get then has files if 0 no files
 				if(approveMulStatus == '0')
 				{
-					const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
-					const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
-					if (text === '' && files.length === 0 && !hasEditMultipleFile)
+	
+					//const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
+					//const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
+					
+					//if (text === '' && files.length === 0 && !hasEditMultipleFile)
+					if (text === ''  && !hasEditMultipleFile)
 					{
+						alert('ok');
 						$('#errorMulmsg' + subchecklistId).fadeIn().delay(2000).fadeOut();
 						hasError = true;
 						return false;
@@ -635,6 +640,7 @@ $(document ).ready(function() {
 			});
 			//alert(rejectTextsMultiple);
 		}
+		
 		var URL = "{{ route('checklist-next-question') }}";
 		$.ajax({
 			url: URL,
@@ -655,13 +661,12 @@ $(document ).ready(function() {
 			success: function(response) {
 				//alert(response.subcategoryname);
 				
-
 				if(response.currentid=='')
 				{
 					//$(".question-navigation").hide();
 					//$('.question-navigation').css('display', 'none');
 					$('.checklist-question-sticky-footer').addClass('d-none');
-					$('.sticky-footer-completed').addClass('d-none');
+					$('.sticky-footer-completed').removeClass('d-none');
 					
 					if (!document.querySelector('link[href*="bootstrap.min.css"]')) {
 						var bootstrapCSS = document.createElement('link');
@@ -1076,31 +1081,6 @@ $(document ).ready(function() {
 							});
 						});
 					}
-					
-					
-					/*Dropzone.autoDiscover = false;
-					document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
-						// Avoid double-initializing if Dropzone was already applied
-						if (!dropzoneElement.classList.contains("dz-clickable")) {
-							new Dropzone(dropzoneElement, {
-								url: "{{ route('reject-files') }}",
-								maxFiles: 5,
-								maxFilesize: 2,
-								acceptedFiles: 'image/*',
-								addRemoveLinks: true,
-								headers: {
-									'X-CSRF-TOKEN': csrfToken
-								},
-								dictDefaultMessage: 'Drag & drop or click to upload',
-								success: function (file, response) {
-									console.log('File uploaded', response);
-								},
-								error: function (file, errorMessage) {
-									console.error('Upload error', errorMessage);
-								}
-							});
-						}
-					});*/
 			},
 		});
 	});
@@ -1460,31 +1440,7 @@ $(document ).ready(function() {
 							});
 						});
 						
-						
-						
-						
 					}
-					
-					/*Dropzone.autoDiscover = false;
-					document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
-						// Avoid double-initializing if Dropzone was already applied
-						if (!dropzoneElement.classList.contains("dz-clickable")) {
-							new Dropzone(dropzoneElement, {
-								url: "/your-upload-route",
-								maxFiles: 5,
-								maxFilesize: 2,
-								acceptedFiles: 'image/*',
-								addRemoveLinks: true,
-								dictDefaultMessage: 'Drag & drop or click to upload',
-								success: function (file, response) {
-									console.log('File uploaded', response);
-								},
-								error: function (file, errorMessage) {
-									console.error('Upload error', errorMessage);
-								}
-							});
-						}
-					});*/
 			},
 		});
 	});
@@ -1501,6 +1457,15 @@ $(document ).ready(function() {
 			data: {checklist_id:checklist_id, task_id:task_id, cat_id:cat_id, subcat_id:subcat_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
+				
+				//--implement 08-05-2025
+				if (!document.querySelector('link[href*="bootstrap.min.css"]')) {
+					var bootstrapCSS = document.createElement('link');
+					bootstrapCSS.rel = 'stylesheet';
+					bootstrapCSS.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
+					document.head.appendChild(bootstrapCSS);
+				}
+				//------
 				
 				$('#current_checklist_id').val(response.currentid);
 				const rejectFilesRoute = "{{ route('reject-files') }}";
