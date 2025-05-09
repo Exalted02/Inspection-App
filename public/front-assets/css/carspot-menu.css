@@ -2095,3 +2095,11 @@ box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 @media (max-width: 1272px) {
 .mega-menu .drop-down.grid-col-5 { width: 61.666667%; }
 }
+@media screen and (max-width: 992px) {
+	.mega-menu .menu-links { 
+		position: absolute; 
+		width: 125px;
+		right: 0px;
+		top: 40px;
+	}
+}
