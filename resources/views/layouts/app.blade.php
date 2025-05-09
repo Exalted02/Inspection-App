@@ -75,10 +75,10 @@
 		@endif
 		
 			@yield('content')
-			
+			{{--	
 		@if(!request()->routeIs('login'))
 			@include('_includes/footer')
-		@endif
+			@endif  --}}
 		<!-- =-=-=-=-=-=-= JQUERY =-=-=-=-=-=-= -->
 		<script src="{{ url('front-assets/js/jquery.min.js') }}"></script>
 		<!-- Bootstrap Core Css  -->
