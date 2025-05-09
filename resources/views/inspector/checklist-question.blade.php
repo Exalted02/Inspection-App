@@ -5,7 +5,11 @@
 @endsection
 @section('content')
 @php
+//echo $previous_checklist_id; die;
+//echo "<pre>";print_r($checklistdata);die;
 //echo "<pre>";print_r($checklistdata->get_subchecklist);die;
+
+
 $total_checklist = [];
 $countCheklist = 0;
 $percentage = '';
@@ -16,6 +20,7 @@ if(!empty($checklistdata->category_id) && !empty($checklistdata->subcategory_id)
 	$countCheklist  = $total_checklist->count();
 	$percentage = ceil(100/$countCheklist);
 }
+
 $existingFiles = [];
 
 $existingSubChecklistFiles = [];
@@ -149,16 +154,32 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
 	<div class="checklist-question-sticky-footer">
 	
-		<div class="d-flex justify-content-between mb-3" style="gap: 4px;">
+		<div class="d-flex justify-content-between mb-3" style="gap: 4px;" id="progress-bar-section">
 		@if(!empty($total_checklist))
 			@foreach($total_checklist as $val)
-				<div class="step-block completed" style="width:{{ $percentage  }}%;"></div>
+				@php 
+					$progressStatus = '';
+					$hasTaskChecklist = App\Models\Task_list_checklists::where('task_list_id', $task_id)
+									->where('task_list_subcategory_id', $checklistdata->subcategory_id)
+									->where('checklist_id', $val->id)->exists();
+					if($hasTaskChecklist)
+					{
+						$progressStatus = 'completed';
+					}
+					else 
+					{
+						$hasTaskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)
+									->where('task_list_subcategory_id', $checklistdata->subcategory_id)
+									->where('task_list_checklist_id', $val->id)->exists();
+						if($hasTaskSubChecklist)
+						{
+							$progressStatus = 'completed';
+						}
+					}
+				@endphp
+				<div class="step-block {{ $progressStatus ?? '' }}" style="width:{{ $percentage  }}%;" id="progress-status-{{ $val->id }}"></div>
 			@endforeach
 	    @endif
-		  {{--<div class="step-block" style="width:20%;"></div>
-		  <div class="step-block" style="width:20%;"></div>
-		  <div class="step-block" style="width:20%;"></div>
-		  <div class="step-block" style="width:20%;"></div>--}}
 		</div>
 	
 		<div class="clearfix"></div>
@@ -742,7 +763,12 @@ $(document ).ready(function() {
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.subcategoryname);
-				
+				// -- progress bar work -----------------
+				if(response.progressStatus!='')
+				{
+					$('#progress-status-' + current_id).addClass('completed');
+				}
+				//---------------------------------------
 				if(response.currentid=='')
 				{
 					//$(".question-navigation").hide();
@@ -1540,6 +1566,10 @@ $(document ).ready(function() {
 			dataType: 'json',
 			success: function(response) {
 				
+				// ------progress bar work ----------
+				
+					$('#progress-bar-section').append(response.barHtml);
+				// ----------------------------------
 				//--implement 08-05-2025
 				if (!document.querySelector('link[href*="bootstrap.min.css"]')) {
 					var bootstrapCSS = document.createElement('link');

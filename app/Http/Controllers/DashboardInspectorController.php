@@ -106,6 +106,7 @@ class DashboardInspectorController extends Controller
 		->where('id', '>', $current_question_id)
 		->orderBy('id', 'asc')
 		->first();*/
+		$data['previous_checklist_id'] = '';
 		$data['task_id'] = $taskid;
         return view('inspector.checklist-question', $data);
     }
@@ -310,6 +311,8 @@ class DashboardInspectorController extends Controller
 		$existingSubChecklistFiles = [];
 		$fetchsubChklistArr = '';
 		$next_approve = '';
+		$previous_checklist_id = '';
+		
 		if($nextQuestionExists)
 		{
 			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
@@ -393,6 +396,7 @@ class DashboardInspectorController extends Controller
 			
 		}
 		//-------- if no next checklist ----
+		
 		//$chklistdata = '';
 		$checklistdata = [];
 		if(empty($nextId) && $nextId=='')
@@ -417,7 +421,28 @@ class DashboardInspectorController extends Controller
 									
 			$subcategoryname = Subcategory::where('id', $subcategory_id)->first()->name;
 		}
-		//----------------------------------
+		//--------------------------------------------
+			// for progress bar 
+			//$previous_checklist_id = $current_question_id;
+			$progressStatus = '';
+			$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('checklist_id', $current_question_id)->exists();
+			if($hasTaskChecklist)
+			{
+				$progressStatus = 1;
+			}
+			else 
+			{
+				$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('task_list_checklist_id', $current_question_id)->exists();
+				if($hasTaskSubChecklist)
+				{
+					$progressStatus = 1;
+				}
+			}
+		//---------------------------------------------
 		return response()->json
 		(
 			[
@@ -431,7 +456,8 @@ class DashboardInspectorController extends Controller
 				'existingNextFiles'=>$existingFiles,
 				'fetchsubChklistArr'=>$fetchsubChklistArr,
 				'existingSubChecklistFiles'=>$existingSubChecklistFiles,
-				'checklistdata'=>$checklistdata
+				'checklistdata'=>$checklistdata,
+				'progressStatus'=>$progressStatus
 			]
 		);
 	}
@@ -832,6 +858,45 @@ class DashboardInspectorController extends Controller
 				}
 			}
 			
+			//------- progress bar work ---------------
+			$total_checklist = Checklist::where('category_id', $category_id)
+								->where('subcategory_id', $subcategory_id)->get();
+			$countCheklist  = $total_checklist->count();
+			$percentage = ceil(100/$countCheklist);
+			
+			if(!empty($total_checklist))
+			{
+				$barHtml = '<div class="d-flex justify-content-between mb-3" style="gap: 4px;" id="progress-bar-section">';
+				foreach($total_checklist as $val)
+				{
+						$progressStatus = '';
+						$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
+										->where('task_list_subcategory_id', $subcategory_id)
+										->where('checklist_id', $val->id)->exists();
+						if($hasTaskChecklist)
+						{
+							$progressStatus = 'completed';
+						}
+						else 
+						{
+							$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
+										->where('task_list_subcategory_id', $subcategory_id)
+										->where('task_list_checklist_id', $val->id)->exists();
+							if($hasTaskSubChecklist)
+							{
+								$progressStatus = 'completed';
+							}
+						}
+					
+					$barHtml .= '<div class="step-block '.$progressStatus .'" style="width:{{ $percentage  }}%;" id="progress-status-{{ $val->id }}"></div>';
+				}
+				$barHtml .= '</div>';
+			}
+			
+			
+			
+			//-----------------------------------------
+			
 			return response()->json
 			(
 				[
@@ -846,7 +911,8 @@ class DashboardInspectorController extends Controller
 					'fetchsubChklistArr'=>$fetchsubChklistArr,
 					'existingSubChecklistFiles'=>$existingSubChecklistFiles,
 					'category_id'=>$category_id,
-					'subcategory_id'=>$subcategory_id
+					'subcategory_id'=>$subcategory_id,
+					'barHtml'=>$barHtml
 				]
 			);
 	}
