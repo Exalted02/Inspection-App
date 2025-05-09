@@ -2,6 +2,7 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($location_categories);die;
+use Carbon\Carbon;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container location-details">
@@ -29,13 +30,16 @@
 								@foreach($location_categories[0]->category_by_location as $categories)
 								@php 
 								   $categoryData = App\Models\Category::where('id', $categories->category_id)->first();
+								   $month = Carbon::parse($categoryData->created_at)->format('M');
+								   $day = Carbon::parse($categoryData->created_at)->format('d');
+								   $week = strtoupper(Carbon::parse($categoryData->created_at)->format('D'));
 								@endphp
 								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
-											<div class="day">FEB</div>
-											<div class="dow">15</div>
-											<div class="dod">FRI</div>
+											<div class="day"> {{ $month ?? '' }} </div>
+											<div class="dow">{{ $day ?? '' }}</div>
+											<div class="dod"> {{ $week ?? '' }}</div>
 										</div>
 									</div>
 									<div class="flex-grow-1">
