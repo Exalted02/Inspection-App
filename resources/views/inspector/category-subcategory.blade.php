@@ -48,7 +48,7 @@
 																	->where('task_list_subcategory_id', $subcategories->id)
 																	->distinct('task_list_checklist_id')
 																	->count();
-									$tot_completed_task = $tot_checklist_completed+$tot_subchecklist_completed ;
+									$tot_completed_task = $tot_checklist_completed+$tot_subchecklist_completed;
 
 								@endphp
 								<div class="checklist-item">

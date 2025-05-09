@@ -803,6 +803,7 @@ $(document ).ready(function() {
 								
 								var aprvStatusHtml = '';
 								var approveStatus = chklist.approve;
+								//alert(approveStatus);
 								if(approveStatus=='0')
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-danger" style="pointer-events: none; background-color: transparent; border-color: #dc3545; color: #dc3545;">Rejected</button>';

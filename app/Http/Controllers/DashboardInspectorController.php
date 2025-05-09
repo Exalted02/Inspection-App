@@ -406,10 +406,28 @@ class DashboardInspectorController extends Controller
 									->where('status','!=', 2)->get();
 									
 			foreach ($checklists as $chklist) {
-				$status = Task_list_checklists::where('task_list_id', $task_id)
+				$status = '';
+				$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
 							->where('task_list_subcategory_id', $subcategory_id)
-							->where('checklist_id', $chklist->id)
-							->value('approve');
+							->where('checklist_id', $chklist->id)->exists();
+				if($hasTaskChecklist)
+				{
+					$status = Task_list_checklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('checklist_id', $chklist->id)->first()->approve;
+				}
+				else
+				{
+					$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('task_list_checklist_id', $chklist->id)->exists();
+					if($hasTaskSubChecklist)
+					{
+						$status = Task_list_subchecklists::where('task_list_id', $task_id)
+							->where('task_list_subcategory_id', $subcategory_id)
+							->where('task_list_checklist_id', $chklist->id)->first()->approve;
+					}
+				}
 
 				$checklistdata[] = [
 					'id' => $chklist->id,
@@ -417,7 +435,8 @@ class DashboardInspectorController extends Controller
 					'approve' => $status,
 				];
 			}						
-									
+			
+				//echo "<pre>"; print_r($checklistdata);die;
 									
 			$subcategoryname = Subcategory::where('id', $subcategory_id)->first()->name;
 		}
