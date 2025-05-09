@@ -38,8 +38,45 @@ class DashboardInspectorController extends Controller
     }
 	public function category($lid='',$catid='')
     {
-		
 		$data = [];
+		//--- if location owner login ---
+		$checkListArray = [];
+		$subcheckListArray = [];
+		if(auth()->user()->user_type == 2)
+		{
+			$user_type = auth()->user()->user_type;
+			$taskData = Task_lists::where('location_id', $lid)->where('category_id', $catid)->get();
+			if($taskData->isNotEmpty())
+			{
+				foreach($taskData as $val)
+				{
+					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->where('approve', 0)->get();
+					if($taskChklist->isNotEmpty())
+					{
+						foreach($taskChklist as $task)
+						{
+							$isfiles = '';
+							$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+							$images = $isfiles ? $isfiles->file  : '';
+							$subcheckListArray[] = [
+										'task_id' => $val->id,
+										'checklist_id' => $task->task_list_checklist_id,
+										'rejected_region' => $task->rejected_region,
+										'image' => $images,
+									];
+						}
+					}
+					
+				}
+				echo "<pre>";print_r($subcheckListArray);die;
+			}
+			
+			return view('inspector.location-owner', $data);
+		}
+		
+		
+		// -- if inspector login 
+		
 		$data['categoryData'] = Category::with('get_subcategory')->where('id', $catid)->get();
 		$data['location_id'] = $lid;
 		$details = Task_lists::where('inspector_id', auth()->user()->id)->where('location_id', $lid)->where('category_id', $catid)->first();

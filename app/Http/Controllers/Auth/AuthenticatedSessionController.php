@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-		if(Auth::user()->user_type == 1){
+		if(Auth::user()->user_type == 1 || Auth::user()->user_type == 2){
 			return redirect()->intended(RouteServiceProvider::INSPECTOR_HOME);
 		}else{
 			Auth::guard('web')->logout();
