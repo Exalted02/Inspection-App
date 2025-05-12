@@ -3,6 +3,9 @@
 @php 
 //echo "<pre>";print_r($location_categories);die;
 use Carbon\Carbon;
+$month = '';
+$day = '';
+$week= '';
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container location-details">
@@ -30,9 +33,11 @@ use Carbon\Carbon;
 								@foreach($location_categories[0]->category_by_location as $categories)
 								@php 
 								   $categoryData = App\Models\Category::where('id', $categories->category_id)->first();
-								   $month = Carbon::parse($categoryData->created_at)->format('M');
-								   $day = Carbon::parse($categoryData->created_at)->format('d');
-								   $week = strtoupper(Carbon::parse($categoryData->created_at)->format('D'));
+								   $month = $categoryData ?  Carbon::parse($categoryData->created_at)->format('M'): '';
+								   $day = $categoryData ?  Carbon::parse($categoryData->created_at)->format('d') : '';
+								   $week= $categoryData ?   strtoupper(Carbon::parse($categoryData->created_at)->format('D')) : '';
+								   
+								   $img = $categoryData ? $categoryData->image : '';
 								@endphp
 								<div class="d-flex mb-3 task">
 									<div class="date-box">
@@ -43,8 +48,11 @@ use Carbon\Carbon;
 										</div>
 									</div>
 									<div class="flex-grow-1">
-										<a href="{{ route('category', ['location_id'=>$categories->location_id, 'cat_id' => $categoryData->id]) }}">
-											<img src="{{url('uploads/category/' .$categoryData->image )}}" alt="Task"/>
+										<a href="{{ route('category', ['location_id'=>$categories->location_id, 'cat_id' => $categories->category_id ?? '']) }}">
+										
+										@if($categoryData && $categoryData->image)
+										<img src="{{url('uploads/category/'  . $categoryData->image  )}}" alt="Task"/>
+										@endif
 											<h6>{{ $categoryData->name ?? '' }}</h6>
 											<p class="text-muted mb-0">Set corrective actions</p>
 										</a>

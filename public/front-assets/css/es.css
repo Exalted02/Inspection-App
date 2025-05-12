@@ -208,7 +208,7 @@
 }
 .location-details .task img {
 	width: 100%;
-	height: 140px;
+	height: 100px;
 	object-fit: cover;
 	border-radius: 8px;
 	margin-bottom: 8px;
@@ -538,4 +538,47 @@
 	font-size: 16px;
 	font-weight: bold;
 	cursor: pointer;
+}
+
+.location-owner-details .task img {
+	width: 100%;
+	height: 100px;
+	object-fit: cover;
+	border-radius: 8px;
+	margin-bottom: 8px;
+}
+.location-owner-details .date-box {
+	width: 118px !important;
+	text-align: center;
+	margin-right: 12px;
+}
+.location-owner-details .date-box .date {
+	background-color: #eee;
+	border-radius: 8px;
+	padding: 3px;
+	font-weight: bold;
+}
+.location-owner-details .date-box .day {
+	background-color: #fff;
+    border-radius: 8px 8px 0 0;
+    padding: 3px 5px 0 5px;
+    font-weight: bold;
+    font-size: 15px;
+}
+.location-owner-details .date-box .dow {
+	font-size: 18px;
+    color: #000;
+    padding-top: 5px;
+}
+.location-owner-details .date-box .dod {
+	font-size: 18px;
+    color: #888;
+}
+.location-owner-details .tab-content h6 {
+	font-size: 15px;
+	font-weight: 700;
+	color: #000000;
+}
+.location-owner-details .tab-content .flex-grow-1 p {
+	font-size: 13px;
 }

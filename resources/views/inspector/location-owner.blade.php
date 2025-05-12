@@ -2,68 +2,125 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($userdata);die;
+//echo "<pre>";print_r($results);die;
+$location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
-	<div class="profile-card">
-		<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->background_image )}} ')"></div>
-		<div class="profile-info">
-			<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->profile_image)}}" alt="Profile Picture">
-			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
-			<p class="profile-description">
-				Inspector at {{ $userdata->get_company->company_name ?? '' }},<br>
-			</p>
+	
+		<div class="profile-card">
+		<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/locationowner/'. $userdata->background_image )}} ')"></div>
+			<div class="profile-info">
+				<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/locationowner/'. $userdata->profile_image)}}" alt="Profile Picture">
+				<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
+				<p class="profile-description">
+					Location Owner at {{ $userdata->get_company->company_name ?? '' }},<br>
+						{{ $location_name ?? '' }}
+						
+				</p>
+			</div>
 		</div>
-	</div>
     <!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
     <!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
-    <div class="main-content-area clearfix">
-        <section class="custom-padding gray">
-            <div class="container">
-               <div class="row">
-					<!-- Heading Area -->
-					<div class="heading-panel">
-					   <div class="col-xs-12 col-md-7 col-sm-6 left-side">
-						  <!-- Main Title -->
-						  <h1>All your locations</h1>
-					   </div>
-					</div>
-					<!-- Heading Area End -->        
-					<div class="col-sm-12 col-xs-12 col-md-12">                     
-                    <!-- Latest Featured Ads  -->
-                    <div class="row ">
-                     	<div class="grid-style-2">
-						@foreach($userdata->get_user_location as $locations)
-						@php
-							$lacationData = App\Models\Manage_location::where('id',$locations->location_id)->first();
-							$city = App\Models\Cities::where('id', $lacationData->city_id)->first()->name;
-							$state = App\Models\States::where('id', $lacationData->state_id)->first()->name;
-							$country = App\Models\Countries::where('id', $lacationData->country_id)->first()->name;
-						@endphp
-                            <div class="col-md-4 col-xs-6 col-sm-6">
-								<div class="category-grid-box-1">
-								<a title="" href="{{route('location-details', ['id' => $locations->location_id ])}}">
-									<div class="image" style="background-image: url('{{url('uploads/location/' .$lacationData->image)}}')">
-										<img alt="Test" src="{{url('uploads/location/' .$lacationData->image)}}" class="img-responsive d-none">
-										<div class="ribbon popular"></div>
-										<div class="price-tag">
-											<div class="price"><span>4 pending tasks</span></div>
-										</div>
+	<div class="container location-owner-details">
+	<div class="main-content-area clearfix">
+			<section class="custom-padding1">
+				<div class="container">
+					<div class="row custom-tab">
+						<!-- Tabs -->
+						<ul class="nav nav-tabs" role="tablist">
+							<li role="presentation" class="active"><a href="#inprogress_tab" aria-controls="inprogress_tab" role="tab" data-toggle="tab">4 In progress</a></li>
+							<li role="presentation"><a href="#completed_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Completed</a></li>
+						</ul>
+						<!-- Tab panes -->
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="inprogress_tab">
+								@foreach($results as $result)
+								@php 
+									$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
+									
+									$subchecklistData = App\Models\Subchecklist::where('id', $result['checklist_id'])->first();
+									
+									$checklistName = $checklistData ? $checklistData->name : ($subchecklistData ?  $subchecklistData->name : '');
+									
+									$rejectedRegionData = $result['type'] == 'checklist'
+									? App\Models\Task_list_checklists::where('checklist_id', $result['checklist_id'])->first()
+									: App\Models\Task_list_subchecklists::where('task_list_checklist_id', $result['checklist_id'])->first();
+
+									
+									$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+									
+								@endphp
+								<div class="d-flex mb-3 task">
+									<div class="date-box">
+										<img src="{{ $images }}" width="50" height="50">
 									</div>
-									<div class="short-description-1 clearfix">
-										<h3>{{ $lacationData->location_name ?? '' }}</h3>
-								</a>
-										<div class="category-title"> <span>{{ $city ?? '' }}, {{ $state ?? '' }}, {{ $country ?? '' }}, {{ $lacationData->zipcode ?? '' }}</span> </div>
+									<div class="flex-grow-1">
+										<a href="">
+										<h6>{{ $checklistName ?? '' }}</h6>
+											<p class="text-muted mb-0">
+											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+											</p>
+										</a>
 									</div>
 								</div>
-                            </div>
-						@endforeach
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-        </section>
-    </div>
+								@endforeach
+							</div>
+							<div role="tabpanel" class="tab-pane" id="completed_tab">
+								<div class="d-flex mb-3 task">
+									<div class="date-box">
+										<div class="date">
+											<div class="day">JAN</div>
+											<div class="dow">31</div>
+											<div class="dod">FRI</div>
+										</div>
+									</div>
+									<div class="flex-grow-1">
+										<a href="{{route('category', ['location_id'=>1,'cat_id'=>1])}}">
+											<img src="{{url('front-assets/static-image/3.jpg')}}" alt="Task" />
+											<h6>Respirator user has a training sticker on employee badge</h6>
+											<p class="text-muted mb-0">Set corrective actions</p>
+										</a>
+									</div>
+								</div>
+								<div class="d-flex mb-3 task">
+									<div class="date-box">
+										<div class="date">
+											<div class="day">JULY</div>
+											<div class="dow">11</div>
+											<div class="dod">TUE</div>
+										</div>
+									</div>
+									<div class="flex-grow-1">
+										<a href="{{route('category', ['location_id'=>1,'cat_id'=>1]) }}">
+											<img src="{{url('front-assets/static-image/2.jpg')}}" alt="Task" />
+											<h6>Respirator user has a training sticker on employee badge</h6>
+											<p class="text-muted mb-0">Set corrective actions</p>
+										</a>
+									</div>
+								</div>
+								<div class="d-flex mb-3 task">
+									<div class="date-box">
+										<div class="date">
+											<div class="day">FEB</div>
+											<div class="dow">15</div>
+											<div class="dod">FRI</div>
+										</div>
+									</div>
+									<div class="flex-grow-1">
+										<a href="{{route('category', ['location_id'=>1,'cat_id'=>1])}}">
+											<img src="{{url('front-assets/static-image/1.jpg')}}" alt="Task" />
+											<h6>Respirator user has a training sticker on employee badge</h6>
+											<p class="text-muted mb-0">Set corrective actions</p>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
 @endsection 
 @section('scripts')
 

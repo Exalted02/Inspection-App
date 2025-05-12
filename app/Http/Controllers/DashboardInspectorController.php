@@ -50,26 +50,59 @@ class DashboardInspectorController extends Controller
 			{
 				foreach($taskData as $val)
 				{
+					// checklist and  respective files 
 					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->where('approve', 0)->get();
 					if($taskChklist->isNotEmpty())
 					{
 						foreach($taskChklist as $task)
 						{
 							$isfiles = '';
+							$images = '';
 							$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
 							$images = $isfiles ? $isfiles->file  : '';
-							$subcheckListArray[] = [
+							$checkListArray[] = [
+										'type' => 'checklist',
 										'task_id' => $val->id,
-										'checklist_id' => $task->task_list_checklist_id,
+										'checklist_id' => $task->checklist_id,
 										'rejected_region' => $task->rejected_region,
 										'image' => $images,
 									];
 						}
 					}
 					
+					// subchecklist and respective files
+					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->where('approve', 0)->get();
+					if($taskSubChklist->isNotEmpty())
+					{
+						foreach($taskSubChklist as $subtask)
+						{
+							$isSubChecklistfiles = '';
+							$subChecklistimages = '';
+							$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+							
+							$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+							$subcheckListArray[] = [
+										'type' => 'subchecklist',
+										'task_id' => $val->id,
+										'checklist_id' => $subtask->task_list_checklist_id,
+										'rejected_region' => $subtask->rejected_region,
+										'image' => $subChecklistimages,
+									];
+						}
+						
+					}
+					
+					
 				}
-				echo "<pre>";print_r($subcheckListArray);die;
+				//echo "<pre>";print_r($checkListArray); "</br>";
+				//echo "<pre>";print_r($subcheckListArray); "</br>";
+				$data['results'] = array_merge($checkListArray, $subcheckListArray);
+				
+				//echo "<pre>";print_r($checklistAndSubchecklist); die;
 			}
+			
+			$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
+			$data['location_id'] = $lid;
 			
 			return view('inspector.location-owner', $data);
 		}
