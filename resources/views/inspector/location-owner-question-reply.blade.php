@@ -29,7 +29,7 @@
 		<div class="main-content-area clearfix">
 			<section class="custom-padding1">
 				<div class="container1">
-					<div class="custom-tab">
+					<div class="custom-tab" style="margin-bottom: 80px;">
 						<div class="row">
 							<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
 						</div>
@@ -117,10 +117,11 @@
 						</div>
 					@endif
 					
-						<div class="sticky-footer">
+						
+					</div>
+					<div class="sticky-footer">
 							<button>Submit checklist</button>
 						</div>
-					</div>
 				</div>
 			</section>
 		</div>
