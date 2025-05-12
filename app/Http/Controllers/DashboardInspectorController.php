@@ -1012,7 +1012,16 @@ class DashboardInspectorController extends Controller
 			return view('inspector.location-owner', $data);
 		}
 	}
-	public function location_owner_question_reply($task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
+	public function location_owner_question_reply($task_id='',$checklist_id='',$type='', $tab='')
+	{
+		$data = [];
+		$data['task_id'] = $task_id ?? '';
+		$data['checklist_id'] = $checklist_id ?? '';
+		$data['type'] = $type ?? '';
+		$data['tab'] = $tab ?? '';
+		return view('inspector.location-owner-question-reply', $data);
+	}
+	public function location_owner_subchecklist_question_reply($task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
 	{
 		$data = [];
 		$data['task_id'] = $task_id ?? '';

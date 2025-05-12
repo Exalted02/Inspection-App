@@ -8,13 +8,14 @@
 	 $taskChecklist = App\Models\Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 	 
 	 $images = App\Models\Task_list_checklist_rejected_files::where('task_list_checklist_id', $taskChecklist->id)->get();
-	 //echo "<pre>";print_r($images);die;
+	 
  }
  
+ $taskSubChecklist = null;
  if($type == 'subchecklist')
  {
 	 
-	 $taskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $checklist_id)->where('approve', 0)->get();
+	 $taskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('approve', 0)->first();
  }
  
  
@@ -65,53 +66,55 @@
 							<input type="text" class="form-control" name="reply_date" placeholder="set timeline">
 							</div>
 						</div>
-						
-						
 					@else 
-						@if($taskSubChecklist->isNotEmpty())
-							@foreach($taskSubChecklist as $subchecklist)
-								@php
-									$subImages = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $subchecklist->task_list_checklist_id )->where('task_list_subchecklist_id', $subchecklist->id)->get();
-									
-									$subChecklistName = App\Models\Subchecklist::where('id', $subchecklist->subchecklist_id)->first()->name;
-									
-								@endphp
-								<div class="row">
-									<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
-								</div>
-								<div class="row">
-									<div class="owner-checklist-title">Reason</div>
-								</div>
-								<div class="row">
-									<div class="owner-checklist">{{ $subchecklist->rejected_region ?? '' }}</div>
-								</div>
+						@php
+							$subImages = collect();
+							$subChecklistName = '';
+							$rejected_region = '';
+							
+							if ($taskSubChecklist) {
+								$subImages = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id',$taskSubChecklist->task_list_checklist_id)->where('task_list_subchecklist_id', $taskSubChecklist->id)->get();
 								
+								$subChecklistName = App\Models\Subchecklist::where('id', $taskSubChecklist->subchecklist_id)->first()->name;
 								
-								<div class="row">
-									<div class="owner-checklist">
-										@if($subImages->isNotEmpty())
-											@foreach($subImages as $image)
-											<div class="cheklist-reply-images">
-												<img src="{{ url('uploads/reject-files/subchecklist/' .$image->file ) }}">
-											</div>
-											@endforeach
-										@endif
+								$rejected_region = $taskSubChecklist->rejected_region;
+							}
+							
+						@endphp
+						<div class="row">
+							<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+						</div>
+						<div class="row">
+							<div class="owner-checklist-title">Reason</div>
+						</div>
+						<div class="row">
+							<div class="owner-checklist">{{ $rejected_region ?? '' }}</div>
+						</div>
+						
+						
+						<div class="row">
+							<div class="owner-checklist">
+								@if($subImages->isNotEmpty())
+									@foreach($subImages as $image)
+									<div class="cheklist-reply-images">
+										<img src="{{ url('uploads/reject-files/subchecklist/' .$image->file ) }}">
 									</div>
-								</div>
-								<div class="row">
-									<div class="owner-checklist">
-									<label>How to solve the issue ?</label>
-									<textarea name="reply-question" placeholder="Input corrective action plan" class="form-control"></textarea>
-									</div>
-								</div>
-								<div class="row">
-									<div class="owner-checklist">
-									<label></label>
-									<input type="text" class="form-control" name="reply_date" placeholder="set timeline">
-									</div>
-								</div>
-							@endforeach
-						@endif
+									@endforeach
+								@endif
+							</div>
+						</div>
+						<div class="row">
+							<div class="owner-checklist">
+							<label>How to solve the issue ?</label>
+							<textarea name="reply-question" placeholder="Input corrective action plan" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="owner-checklist">
+							<label></label>
+							<input type="text" class="form-control" name="reply_date" placeholder="set timeline">
+							</div>
+						</div>
 					@endif
 					
 						<div class="sticky-footer">
