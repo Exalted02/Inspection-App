@@ -56,7 +56,7 @@ use Carbon\Carbon;
 										<img src="{{ $images }}" width="50" height="50">
 									</div>
 									<div class="flex-grow-1">
-										<a href="">
+										<a href="{{ route('location-owner-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 										<h6>{{ $checklistName ?? '' }}</h6>
 											<p class="text-muted mb-0">
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}

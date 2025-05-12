@@ -582,3 +582,25 @@
 .location-owner-details .tab-content .flex-grow-1 p {
 	font-size: 13px;
 }
+.owner-checklist{
+	margin-left: 19px;
+}
+.owner-checklist-title {
+	font-size: 18px;
+	font-weight: 700;
+	margin-bottom: 20px;
+	color: #000000;
+	margin-left: 19px;
+}
+.cheklist-reply-images{
+	display: inline-block !important;
+    margin-right: 4px;
+    margin-bottom: 4px; 
+	
+}
+.cheklist-reply-images img {
+    height: 70px !important;
+    width: 70px !important;
+    object-fit: cover;
+    display: block;
+}
