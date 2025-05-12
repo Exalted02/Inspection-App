@@ -604,3 +604,12 @@
     object-fit: cover;
     display: block;
 }
+.owner-subchecklist-title {
+	font-size: 18px;
+	font-weight: 700;
+	margin-bottom: 20px;
+	color: #000000;
+	margin-left: 19px;
+	border-bottom: 2px solid #DDD;
+	margin-top: 30px;
+}
