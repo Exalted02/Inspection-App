@@ -70,10 +70,8 @@ use Carbon\Carbon;
 													'id' => $subcheck->id,
 													'name' => $subchecklistName ? $subchecklistName->name : '',
 													'image' => $images,
+													'subchecklist_id' => $subcheck->subchecklist_id,
 												];
-												
-												
-												
 											}
 										}
 									}
@@ -86,7 +84,7 @@ use Carbon\Carbon;
 										<img src="{{ $val['image'] }}" width="50" height="50">
 									</div>
 									<div class="flex-grow-1">
-										<a href="{{ route('location-owner-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+										<a href="{{ route('location-owner-subchecklist-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 										<h6>{{ $checklistName ?? '' }} 
 										@if($val!='')
 											-> {{$val['name'] ?? ''}}
@@ -112,7 +110,7 @@ use Carbon\Carbon;
 										<img src="{{ $images }}" width="50" height="50">
 									</div>
 									<div class="flex-grow-1">
-										<a href="{{ route('location-owner-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+										<a href="{{ route('location-owner-checklist-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 										<h6>{{ $checklistName ?? '' }} 
 										</h6>
 											<p class="text-muted mb-0">
