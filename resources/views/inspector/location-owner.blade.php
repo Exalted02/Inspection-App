@@ -4,6 +4,7 @@
 //echo "<pre>";print_r($userdata);die;
 //echo "<pre>";print_r($results);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
+use Carbon\Carbon;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	
@@ -59,6 +60,12 @@ $location_name = App\Models\Manage_location::where('id', $location_id)->first()-
 										<h6>{{ $checklistName ?? '' }}</h6>
 											<p class="text-muted mb-0">
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+											</p>
+											<p class="text-muted mb-0">
+											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+											</p>
+											<p class="text-muted mb-0">
+											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 											</p>
 										</a>
 									</div>

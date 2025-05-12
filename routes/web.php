@@ -84,6 +84,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::post('get-checklist-page', [DashboardInspectorController::class, 'get_checklist_page'])->name('get-checklist-page');
 	Route::get('thank-you/{id}', [DashboardInspectorController::class, 'thank_you'])->name('thank-you');
+	
+	Route::get('location-owner/{location_id}/{cat_id}', [DashboardInspectorController::class, 'location_owner'])->name('location-owner');
 	//User-Accounts
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	
