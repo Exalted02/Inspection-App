@@ -66,7 +66,7 @@
 
 .mega-menu > section.menu-list-items {
   margin: 0;
-  padding: 20px 0;
+  padding: 0;
   display: block;
   float: left;
   width: 100%;
@@ -113,7 +113,7 @@
 .mega-menu .menu-logo > li > a {
   margin: 0;
   float: left;
-  width: 100%;
+  /* width: 100%; */
   padding: 0 15px 0 0;
 
 }
@@ -175,8 +175,8 @@
 }
 @media screen and (min-width: 993px) {
   .mega-menu .menu-links ,   .mega-menu .menu-links-right{
-    display: block !important;
-    max-height: 100% !important;
+    /* display: block !important; */
+    /* max-height: 100% !important; */
     overflow: visible !important;
   }
   .mega-menu .menu-links.menu-links-align-right {

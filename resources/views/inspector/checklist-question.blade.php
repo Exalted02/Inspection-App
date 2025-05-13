@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			maxFilesize: 2, // MB
 			acceptedFiles: 'image/*',
 			addRemoveLinks: true,
-			dictDefaultMessage: 'Upload File',
+			dictDefaultMessage: 'Upload File 1',
 			dictRemoveFile: 'Delete file',
 			headers: {
 				'X-CSRF-TOKEN': csrfToken
@@ -383,7 +383,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
         maxFilesize: 2, // MB
         acceptedFiles: 'image/*',
         addRemoveLinks: true,
-		dictDefaultMessage: 'Upload File',
+		dictDefaultMessage: 'Upload File 2',
         dictRemoveFile: 'Delete file',
         headers: {
             'X-CSRF-TOKEN': csrfToken
@@ -461,7 +461,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
         headers: {
             'X-CSRF-TOKEN': csrfToken
         },
-        dictDefaultMessage: 'Upload File',
+        dictDefaultMessage: 'Upload File 3',
         dictRemoveFile: 'Delete file',
         init: function () {
             this.on("success", function (file, response) {
@@ -938,7 +938,7 @@ $(document ).ready(function() {
 								maxFilesize: 2, // MB
 								acceptedFiles: 'image/*',
 								addRemoveLinks: true,
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 4',
 								dictRemoveFile: 'Delete file',
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
@@ -1002,7 +1002,7 @@ $(document ).ready(function() {
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 5',
 								dictRemoveFile: 'Delete file',
 								init: function () {
 									this.on("success", function (file, response) {
@@ -1094,7 +1094,7 @@ $(document ).ready(function() {
 								acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 6',
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
@@ -1158,7 +1158,7 @@ $(document ).ready(function() {
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 7',
 								dictRemoveFile: 'Delete file',
 								init: function () {
 									this.on("success", function (file, response) {
@@ -1303,7 +1303,7 @@ $(document ).ready(function() {
 								acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 8',
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
@@ -1365,7 +1365,7 @@ $(document ).ready(function() {
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 9',
 								dictRemoveFile: 'Delete file',
 								init: function () {
 									this.on("success", function (file, response) {
@@ -1455,7 +1455,7 @@ $(document ).ready(function() {
 								acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 10',
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
@@ -1519,7 +1519,7 @@ $(document ).ready(function() {
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 11',
 								dictRemoveFile: 'Delete file',
 								init: function () {
 									this.on("success", function (file, response) {
@@ -1671,7 +1671,7 @@ $(document ).ready(function() {
 								acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 12',
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
@@ -1734,7 +1734,7 @@ $(document ).ready(function() {
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 13',
 								dictRemoveFile: 'Delete file',
 								init: function () {
 									this.on("success", function (file, response) {
@@ -1826,7 +1826,7 @@ $(document ).ready(function() {
 								acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 14',
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
@@ -1890,7 +1890,7 @@ $(document ).ready(function() {
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
 								},
-								dictDefaultMessage: 'Upload File',
+								dictDefaultMessage: 'Upload File 15',
 								dictRemoveFile: 'Delete file',
 								init: function () {
 									this.on("success", function (file, response) {

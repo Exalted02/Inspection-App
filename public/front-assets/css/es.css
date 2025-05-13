@@ -46,10 +46,30 @@
 	border-bottom: 1px solid #DDD;
     margin-bottom: 10px !important;
 }
+.mega-menu .menu-logo {
+	width: 100%;
+}
+.mega-menu .menu-links {
+	position: absolute;
+    width: 125px;
+    right: 0px;
+    top: 40px;
+}
 .menu-logo span {
 	font-size: 25px;
     text-transform: uppercase;
     color: #000000;
+}
+.mega-menu .menu-logo > li {
+	width: 100%;
+}
+.mega-menu .menu-logo > li > a {
+	width: auto;
+}
+.mega-menu .menu-links {
+	background: #fff !important;
+	max-height: 400px !important;
+	margin-top: 10px !important;
 }
 .mega-menu .menu-mobile-collapse-trigger {
 	height: 36px !important;
@@ -58,6 +78,7 @@
     top: 10px !important;
 	background: #777 !important;
     border-radius: 25%;
+	display: block !important;
 }
 .mega-menu .menu-mobile-collapse-trigger:before {
 	/* top: 12px !important; */
@@ -651,9 +672,9 @@
 
 @media screen and (min-width: 993px) {
 	.header-icon {
-		display: none;
+		/* display: none; */
 	}
 	.menu-list-items {
-		border: 0;
+		/* border: 0; */
 	}
 }

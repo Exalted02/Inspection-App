@@ -35,7 +35,7 @@ if(!empty($userdata->profile_image))
 						<div class="menu-mobile-collapse-trigger"><span></span></div>
 					</li>
 				</ul>
-				<ul class="menu-links" style="display: none; max-height: 400px; overflow: auto;">
+				<ul class="menu-links" style="display: none !important; max-height: 400px; overflow: auto;">
 					<li>
 						<a href="{{ route('inspector-dashboard')}}">Dashboard</a>
 					</li>
