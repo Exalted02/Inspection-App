@@ -2,12 +2,35 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($userdata);die;
+if(auth()->user()->user_type == 1)
+{
+	$path = 'inspector';
+}
+
+if(auth()->user()->user_type == 2)
+{
+	$path = 'locationowner';
+}
+
+$backgroung_img = '';
+$profile_img = '';
+
+if(!empty($userdata->background_image))
+{
+	$backgroung_img = url('uploads/profile/' .$userdata->id .'/'. $path .'/'. $userdata->background_image);
+}
+
+if(!empty($userdata->profile_image))
+{
+	$profile_img = url('uploads/profile/' .$userdata->id .'/'. $path  . '/'. $userdata->profile_image);
+}
+
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
-		<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->background_image )}} ')"></div>
+		<div class="profile-banner" style="background-image: url( '{{ $backgroung_img ?? '' }} ')"></div>
 		<div class="profile-info">
-			<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->profile_image)}}" alt="Profile Picture">
+			<img class="profile-avatar" src="{{ $profile_img ?? '' }}" alt="Profile Picture">
 			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
 			<p class="profile-description">
 				Inspector at {{ $userdata->get_company->company_name ?? '' }},<br>
