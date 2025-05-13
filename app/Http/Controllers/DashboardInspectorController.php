@@ -947,8 +947,11 @@ class DashboardInspectorController extends Controller
 	public function location_owner($lid='',$catid='')
 	{
 		//--- if location owner login ---
-		$checkListArray = [];
-		$subcheckListArray = [];
+		$correctiveActionChecklistArray = [];
+		$correctiveActionSubcheckListArray = [];
+		$correctiveCheckChecklistArray = [];
+		$correctiveCheckSubcheckListArray = [];
+		
 		if(auth()->user()->user_type == 2)
 		{
 			$user_type = auth()->user()->user_type;
@@ -963,17 +966,39 @@ class DashboardInspectorController extends Controller
 					{
 						foreach($taskChklist as $task)
 						{
-							$isfiles = '';
-							$images = '';
-							$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
-							$images = $isfiles ? $isfiles->file  : '';
-							$checkListArray[] = [
-										'type' => 'checklist',
-										'task_id' => $val->id,
-										'checklist_id' => $task->checklist_id,
-										'rejected_region' => $task->rejected_region,
-										'image' => $images,
-									];
+							
+							$task_list_checklist_corrective_action = Task_list_corrective_action::where('task_list_id', $val->id)
+							->where('checklist_id', $task->checklist_id)
+							->first();
+							
+							if(!$task_list_checklist_corrective_action)
+							{								
+								$isfiles = '';
+								$images = '';
+								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+								$images = $isfiles ? $isfiles->file  : '';
+								$correctiveActionChecklistArray[] = [
+											'type' => 'checklist',
+											'task_id' => $val->id,
+											'checklist_id' => $task->checklist_id,
+											'rejected_region' => $task->rejected_region,
+											'image' => $images,
+										];
+							}
+							else
+							{
+								$isfiles = '';
+								$images = '';
+								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+								$images = $isfiles ? $isfiles->file  : '';
+								$correctiveCheckChecklistArray[] = [
+											'type' => 'checklist',
+											'task_id' => $val->id,
+											'checklist_id' => $task->checklist_id,
+											'rejected_region' => $task->rejected_region,
+											'image' => $images,
+										];
+							}
 						}
 					}
 					
@@ -983,18 +1008,42 @@ class DashboardInspectorController extends Controller
 					{
 						foreach($taskSubChklist as $subtask)
 						{
-							$isSubChecklistfiles = '';
-							$subChecklistimages = '';
-							$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+							$task_list_subchecklist_corrective_action = Task_list_corrective_action::where('task_list_id', $val->id)
+							->where('checklist_id', $subtask->task_list_checklist_id)
+							->where('subchecklist_id', $subtask->subchecklist_id)
+							->first();
 							
-							$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
-							$subcheckListArray[] = [
-										'type' => 'subchecklist',
-										'task_id' => $val->id,
-										'checklist_id' => $subtask->task_list_checklist_id,
-										'rejected_region' => $subtask->rejected_region,
-										'image' => $subChecklistimages,
-									];
+							if(!$task_list_subchecklist_corrective_action)
+							{
+								$isSubChecklistfiles = '';
+								$subChecklistimages = '';
+								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+								
+								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+								$correctiveActionSubcheckListArray[] = [
+											'type' => 'subchecklist',
+											'task_id' => $val->id,
+											'checklist_id' => $subtask->task_list_checklist_id,
+											'rejected_region' => $subtask->rejected_region,
+											'image' => $subChecklistimages,
+										];
+							}
+							else
+							{
+								$isSubChecklistfiles = '';
+								$subChecklistimages = '';
+								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+								
+								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+								$correctiveCheckSubcheckListArray[] = [
+											'type' => 'subchecklist',
+											'task_id' => $val->id,
+											'checklist_id' => $subtask->task_list_checklist_id,
+											'rejected_region' => $subtask->rejected_region,
+											'image' => $subChecklistimages,
+										];
+								
+							}
 						}
 						
 					}
@@ -1002,8 +1051,12 @@ class DashboardInspectorController extends Controller
 					
 				}
 				
-				$data['results'] = array_merge($checkListArray, $subcheckListArray);
+				//echo count($correctiveActionSubcheckListArray); die;
+				$data['correctiveAction'] = array_merge($correctiveActionChecklistArray, $correctiveActionSubcheckListArray);
 				
+				$data['correctiveCheck'] = array_merge($correctiveCheckChecklistArray, $correctiveCheckSubcheckListArray);
+				
+				$data['total_corrective_action'] = count($correctiveActionChecklistArray) + count($correctiveActionSubcheckListArray);
 				//echo "<pre>";print_r($checklistAndSubchecklist); die;
 			}
 			
@@ -1043,6 +1096,8 @@ class DashboardInspectorController extends Controller
 		
 		$taskData  = Task_lists::where('id', $task_list_id)->first();
 		$inspector_id = $taskData ? $taskData->inspector_id : null;
+		$location_id = $taskData ? $taskData->location_id : null;
+		$category_id = $taskData ? $taskData->category_id : null;
 		
 		$model = new Task_list_corrective_action();
 		$model->task_list_id = $task_list_id;
@@ -1054,6 +1109,8 @@ class DashboardInspectorController extends Controller
 		$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0;
 		$model->inspector_id = $inspector_id;
 		$model->save();
+		
+		return response()->json(['location_id'=>$location_id, 'category_id'=>$category_id]);
 	}
 	/*public function get_checklist_page_status(Request $request)
 	{

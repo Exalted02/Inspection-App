@@ -167,18 +167,13 @@ $(document).ready(function() {
 				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,lo_completed_by:lo_completed_by, _token: csrfToken},
 				dataType: 'json',
 				success: function(response) {
-					//alert(response.hasData);
-					/*$('#taskid').val(response.taskid);
-					if(!response.hasData)
-					{
-						$('#errorMessage').fadeIn().delay(2000).fadeOut();
-					}
-					else {
-						var taskid = $('#taskid').val();
-						var baseUrl = "{{ url('/checklist-question') }}";
-						var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + subcat_id;
-						window.location.href = redirectUrl;
-					}*/
+					let location_id = response.location_id;
+					let category_id = response.category_id;
+					
+					var baseUrl = "{{ url('/location-owner') }}";
+					var redirectUrl = baseUrl + '/'+ location_id + '/' + category_id;
+					window.location.href = redirectUrl;
+					
 				},
 			});
 		
