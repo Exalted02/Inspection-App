@@ -2,7 +2,7 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($userdata);die;
-//echo "<pre>";print_r($results);die;
+echo "<pre>";print_r($results);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
 @endphp
