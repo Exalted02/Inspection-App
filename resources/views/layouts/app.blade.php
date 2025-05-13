@@ -117,6 +117,11 @@
 		<!-- Template Core JS -->
 		<script src="{{ url('front-assets/js/custom.js') }}"></script>
 		
+		<!-- Datetimepicker  JS -->
+		<script src="{{url('front-assets/js/moment.min.js') }}"></script>
+		<script src="{{url('front-assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+		<!-- /Datetimepicker  JS -->
+		
 		<script src="https://unpkg.com/simplebar/dist/simplebar.min.js"></script>
 		
 		<link rel="stylesheet" href="{{ url('common-assets/css/toastr.min.css') }}"/>
