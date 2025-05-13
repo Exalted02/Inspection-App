@@ -360,8 +360,8 @@
 }
 .checklist-item {
 	background-color: #fff;
-	/* padding: 16px; */
-	margin-bottom: 12px;
+	padding: 12px 0;
+	/* margin-bottom: 12px; */
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -380,7 +380,7 @@
 .checklist-item .text .subtitle {
 	font-size: 14px;
 	color: #777;
-	padding-bottom: 12px;
+	/* padding-bottom: 12px; */
 }
 .arrow {
 	font-size: 20px;
