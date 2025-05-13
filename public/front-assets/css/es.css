@@ -413,7 +413,7 @@
 /**********************************FOR CHECKLIST PAGE***********************************/
 /******************************FOR CHECKLIST QUESTION PAGE*******************************/
 .checklist-question {
-	margin-bottom: 50px;
+	/* margin-bottom: 50px; */
 }
 .question-header {
 	font-size: 14px;
@@ -512,6 +512,10 @@
 }
 .reject-form .dropzone .dz-preview .dz-details {
 	padding: 5px;
+}
+.dropzone .dz-message span i {
+	font-size: 30px;
+    color: #ccc;
 }
 .upload-box {
 	display: flex;
