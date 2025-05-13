@@ -103,8 +103,8 @@
 							<div class="owner-checklist">
 								<label class="d-block col-form-label"></label>
 								<div class="status-toggle">
-									<input type="checkbox" id="contact_status" class="check">
-									<label for="contact_status" class="checktoggle">Approve</label>
+									<input type="checkbox" name="lo_direct_approve" id="lo_direct_approve" class="check">
+									<label for="lo_direct_approve" class="checktoggle">Approve</label>
 								</div>
 							</div>
 						</div>
@@ -150,22 +150,21 @@ $(document).ready(function() {
 	   var type = $('#type').val();
 	   var tab = $('#tab').val();
 	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
-	   let date = $('#lo_completed_by').val();
-	   alert(date);
+	   let lo_completed_by = $('#lo_completed_by').val();
+	   let lo_direct_approve = $('#lo_direct_approve').is(':checked');
+	   //alert(lo_direct_approve);
 	   
 	   if(lo_corrective_action_plan=='')
 	   {
 		   $('#action_plan').fadeIn().delay(2000).fadeOut();
 		   return false;
 	   }
-	   //alert(task_id);alert(type);alert(checklist_id);alert(subchecklist_id);alert(tab);
-	   
-		
+	  
 		   var URL = "{{ route('submit-lo-corrective-action') }}";
 		   $.ajax({
 				url: URL,
 				type: "POST",
-				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan, _token: csrfToken},
+				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,lo_completed_by:lo_completed_by, _token: csrfToken},
 				dataType: 'json',
 				success: function(response) {
 					//alert(response.hasData);

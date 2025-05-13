@@ -1039,15 +1039,19 @@ class DashboardInspectorController extends Controller
 		$checklist_id 		= $request->checklist_id;
 		$subchecklist_id 	= $request->subchecklist_id ?? null;
 		$tab 				= $request->tab;
+		//echo $request->lo_direct_approve; die;
+		
+		$taskData  = Task_lists::where('id', $task_list_id)->first();
+		$inspector_id = $taskData ? $taskData->inspector_id : null;
 		
 		$model = new Task_list_corrective_action();
 		$model->task_list_id = $task_list_id;
 		$model->checklist_id = $checklist_id;
 		$model->subchecklist_id = $subchecklist_id;
 		$model->lo_id = auth()->user()->id;
-		$model->lo_corrective_action_plan = $lo_corrective_action_plan ?? '';
-		$model->lo_completed_by = $lo_completed_by;
-		$model->lo_direct_approve = $lo_direct_approve;
+		$model->lo_corrective_action_plan = $request->lo_corrective_action_plan ?? '';
+		$model->lo_completed_by = date('Y-m-d h:i:s', strtotime($request->lo_completed_by));
+		$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0;
 		$model->inspector_id = $inspector_id;
 		$model->save();
 	}
