@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="{{ url('front-assets/css/es.css') }}">
 		<!-- =-=-=-=-=-=-= Bootstrap CSS Style =-=-=-=-=-=-= -->
 		<link rel="stylesheet" href="{{ url('front-assets/css/bootstrap.css') }}">
+		
 		<!-- =-=-=-=-=-=-= Template CSS Style =-=-=-=-=-=-= -->
 		<link rel="stylesheet" href="{{ url('front-assets/css/style.css') }}">
 		
@@ -49,6 +50,8 @@
 		<link rel="stylesheet" id="color" href="{{ url('front-assets/css/colors/defualt.css') }}">
 		<link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600%7CSource+Sans+Pro:400,400i,600" rel="stylesheet">
 		
+		<!-- Datetimepicker CSS -->
+		<link rel="stylesheet" href="{{ url('front-assets/css/bootstrap-datetimepicker.min.css') }}">
 		
 		<link rel="stylesheet" href="https://unpkg.com/simplebar/dist/simplebar.min.css">
 		<!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">

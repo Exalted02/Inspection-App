@@ -63,7 +63,9 @@
 						<div class="row">
 							<div class="owner-checklist">
 							<label></label>
-							<input type="text" class="form-control" name="reply_date" placeholder="set timeline">
+							<div class="cal-icon">
+							<input type="text" class="form-control datetimepicker" name="reply_date" placeholder="set timeline">
+							</div>
 							</div>
 						</div>
 					@else 
@@ -112,7 +114,8 @@
 						<div class="row">
 							<div class="owner-checklist">
 							<label></label>
-							<input type="text" class="form-control" name="reply_date" placeholder="set timeline">
+							{{--<input type="text" class="form-control datetimepicker" name="reply_date" placeholder="set timeline">--}}
+							<div class="cal-icon"><input class="form-control datetimepicker" type="text" name="reply_date"></div>
 							</div>
 						</div>
 					@endif
@@ -128,7 +131,8 @@
     </div>
 @endsection 
 @section('scripts')
-
+<script src="{{url('front-assets/js/moment.min.js') }}"></script>
+<script src="{{url('front-assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 <script>
 $(document ).ready(function() {
   
