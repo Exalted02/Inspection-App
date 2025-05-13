@@ -55,24 +55,25 @@ use Carbon\Carbon;
 									
 									if($result['type'] == 'subchecklist')
 									{
-										$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('approve',0)->get();
-										if($subchecklistData->isNotEmpty())
+										$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
+										if($subchecklistData)
 										{
-											foreach($subchecklistData as $subcheck)
-											{
-												$subchecklistName = App\Models\Subchecklist::where('id', $subcheck->subchecklist_id)->first();
+											//foreach($subchecklistData as $subcheck)
+											//{
+												//$arrSubchecklist = [];
+												$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
 												
-												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subcheck->id)->first();
+												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 												
 												$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
 												
 												$arrSubchecklist[] = [
-													'id' => $subcheck->id,
+													'id' => $subchecklistData->id,
 													'name' => $subchecklistName ? $subchecklistName->name : '',
 													'image' => $images,
-													'subchecklist_id' => $subcheck->subchecklist_id,
+													'subchecklist_id' => $subchecklistData->subchecklist_id,
 												];
-											}
+											//}
 										}
 									}
 									
@@ -149,24 +150,24 @@ use Carbon\Carbon;
 									
 									if($result['type'] == 'subchecklist')
 									{
-										$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('approve',0)->get();
-										if($subchecklistData->isNotEmpty())
+										$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
+										if($subchecklistData)
 										{
-											foreach($subchecklistData as $subcheck)
-											{
-												$subchecklistName = App\Models\Subchecklist::where('id', $subcheck->subchecklist_id)->first();
+											//foreach($subchecklistData as $subcheck)
+											//{
+												$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
 												
-												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subcheck->id)->first();
+												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 												
 												$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
 												
 												$arrSubchecklist[] = [
-													'id' => $subcheck->id,
+													'id' => $subchecklistData->id,
 													'name' => $subchecklistName ? $subchecklistName->name : '',
 													'image' => $images,
-													'subchecklist_id' => $subcheck->subchecklist_id,
+													'subchecklist_id' => $subchecklistData->subchecklist_id,
 												];
-											}
+											//}
 										}
 									}
 									

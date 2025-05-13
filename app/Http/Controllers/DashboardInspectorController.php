@@ -1024,6 +1024,7 @@ class DashboardInspectorController extends Controller
 											'type' => 'subchecklist',
 											'task_id' => $val->id,
 											'checklist_id' => $subtask->task_list_checklist_id,
+											'subchecklist_id'=>$subtask->subchecklist_id,
 											'rejected_region' => $subtask->rejected_region,
 											'image' => $subChecklistimages,
 										];
@@ -1039,6 +1040,7 @@ class DashboardInspectorController extends Controller
 											'type' => 'subchecklist',
 											'task_id' => $val->id,
 											'checklist_id' => $subtask->task_list_checklist_id,
+											'subchecklist_id'=>$subtask->subchecklist_id,
 											'rejected_region' => $subtask->rejected_region,
 											'image' => $subChecklistimages,
 										];
@@ -1073,6 +1075,7 @@ class DashboardInspectorController extends Controller
 		$data['checklist_id'] = $checklist_id ?? '';
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
+		
 		return view('inspector.location-owner-question-reply', $data);
 	}
 	public function location_owner_subchecklist_question_reply($task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
