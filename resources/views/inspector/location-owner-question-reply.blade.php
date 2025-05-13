@@ -77,7 +77,7 @@
 							<div class="owner-checklist-title">Reason</div>
 						</div>
 						<div class="row">
-						<div class="owner-checklist">{{ $taskChecklist->rejected_region ?? '' }}</div>
+						<div class="owner-checklist">{{ $rejected_region ?? '' }}</div>
 						</div>
 						
 						
@@ -94,8 +94,9 @@
 						</div>
 						<div class="row">
 							<div class="owner-checklist">
-							<label>How to solve the issue ?</label>
-							<textarea name="reply-question" placeholder="Input corrective action plan" class="form-control"></textarea>
+								<label>How to solve the issue ?</label>
+								<textarea name="lo_corrective_action_plan" id="lo_corrective_action_plan" placeholder="Input corrective action plan" class="form-control"></textarea>
+								<span id="action_plan" style="display: none; color: red;">This field is require.</span>
 							</div>
 						</div>
 						<div class="row">
@@ -111,7 +112,7 @@
 							<div class="owner-checklist">
 							<label></label>
 							<div class="cal-icon">
-							<input type="date" class="form-control datetimepicker" name="reply_date" placeholder="set timeline">
+							<input type="date" class="form-control datetimepicker" name="lo_completed_by" id="lo_completed_by" placeholder="set timeline">
 							</div>
 							</div>
 						</div>
@@ -148,34 +149,40 @@ $(document).ready(function() {
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var type = $('#type').val();
 	   var tab = $('#tab').val();
+	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
+	   let date = $('#lo_completed_by').val();
+	   alert(date);
 	   
-	   //alert(task_id);alert(type);alert(checklist_id);alert(subchecklist_id);alert(tab);
-	   if(type=='checklist')
+	   if(lo_corrective_action_plan=='')
 	   {
-		   
+		   $('#action_plan').fadeIn().delay(2000).fadeOut();
+		   return false;
 	   }
-	  
-	   var URL = "{{ route('submit-lo-corrective-action') }}";
-	   $.ajax({
-			url: URL,
-			type: "POST",
-			data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab, _token: csrfToken},
-			dataType: 'json',
-			success: function(response) {
-				//alert(response.hasData);
-				/*$('#taskid').val(response.taskid);
-				if(!response.hasData)
-				{
-					$('#errorMessage').fadeIn().delay(2000).fadeOut();
-				}
-				else {
-					var taskid = $('#taskid').val();
-					var baseUrl = "{{ url('/checklist-question') }}";
-					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + subcat_id;
-					window.location.href = redirectUrl;
-				}*/
-			},
-		});
+	   //alert(task_id);alert(type);alert(checklist_id);alert(subchecklist_id);alert(tab);
+	   
+		
+		   var URL = "{{ route('submit-lo-corrective-action') }}";
+		   $.ajax({
+				url: URL,
+				type: "POST",
+				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan, _token: csrfToken},
+				dataType: 'json',
+				success: function(response) {
+					//alert(response.hasData);
+					/*$('#taskid').val(response.taskid);
+					if(!response.hasData)
+					{
+						$('#errorMessage').fadeIn().delay(2000).fadeOut();
+					}
+					else {
+						var taskid = $('#taskid').val();
+						var baseUrl = "{{ url('/checklist-question') }}";
+						var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + subcat_id;
+						window.location.href = redirectUrl;
+					}*/
+				},
+			});
+		
 	   
    });
 });
