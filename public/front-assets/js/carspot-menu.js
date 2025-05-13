@@ -102,9 +102,9 @@
                     // check if the collapse true
                     if (settings.mobile_settings.collapse === true) {
                         // append the mobile collapse trigger button
-                        menu_logo_li.append('<div class="menu-mobile-collapse-trigger">' +
+                        /*menu_logo_li.append('<div class="menu-mobile-collapse-trigger">' +
                             '<span></span>' +
-                            '</div>');
+                            '</div>');*/
                         // hide the menu links, menu social bar
                         var drop_down = menu_links.add(menu_socialBar);
                         drop_down.hide(0);
@@ -396,3 +396,7 @@
     };
     /*global $, jQuery, document*/
 }(jQuery));
+
+$('.menu-mobile-collapse-trigger').on('click', function () {
+    $('.menu-links').toggle(); // show/hide
+});

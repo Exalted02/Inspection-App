@@ -29,26 +29,56 @@
 	display: none !important;
 }
 /**********************************FOR HEADER SECTION***********************************/
+.header-icon {
+	float: right;
+    display: flex;
+    gap: 20px;
+    /* margin-top: 5px; */
+}
+.header-icon i {
+    color: #000000;
+    background: #EAEAEA;
+    border: 1px solid #EAEAEA;
+    border-radius: 50%;
+    padding: 5px;
+}
+.menu-list-items {
+	border-bottom: 1px solid #DDD;
+    margin-bottom: 10px !important;
+}
 .menu-logo span {
-	font-size: 38px;
+	font-size: 25px;
     text-transform: uppercase;
     color: #000000;
 }
 .mega-menu .menu-mobile-collapse-trigger {
-	height: 45px !important;
-    width: 45px !important;
+	height: 36px !important;
+    width: 36px !important;
+	right: 10px !important;
+    top: 10px !important;
+	background: #777 !important;
+    border-radius: 25%;
 }
 .mega-menu .menu-mobile-collapse-trigger:before {
-	top: 12px !important;
-	width: 30px !important;
+	/* top: 12px !important; */
+	/* width: 30px !important; */
+	height: 3px !important;
+	top: 10px !important;
+    width: 20px !important;
 }
 .mega-menu .menu-mobile-collapse-trigger span {
-    top: 21px !important;
-	width: 30px !important;
+    /* top: 21px !important; */
+	/* width: 30px !important; */
+	height: 3px !important;
+	top: 17px !important;
+    width: 20px !important;
 }
 .mega-menu .menu-mobile-collapse-trigger:after {
-    top: 30px !important;
-	width: 30px !important;
+    /* top: 30px !important; */
+	/* width: 30px !important; */
+	height: 3px !important;
+	top: 24px !important;
+    width: 20px !important;
 }
 .mega-menu .menu-mobile-collapse-trigger.active:before {
     -webkit-transform: rotate(35deg) !important;
@@ -612,4 +642,13 @@
 	margin-left: 19px;
 	border-bottom: 2px solid #DDD;
 	margin-top: 30px;
+}
+
+@media screen and (min-width: 993px) {
+	.header-icon {
+		display: none;
+	}
+	.menu-list-items {
+		border: 0;
+	}
 }
