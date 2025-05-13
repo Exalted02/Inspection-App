@@ -28,7 +28,7 @@ if(!empty($userdata->profile_image))
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
-		<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->background_image )}} ')">
+		<div class="profile-banner" style="background-image: url( '{{ $backgroung_img ?? '' }} ')">
 			<div class="mega-menu">
 				<ul class="menu-logo">
 					<li>
@@ -45,7 +45,6 @@ if(!empty($userdata->profile_image))
 				</ul>
 			</div>
 		</div>
-		<div class="profile-banner" style="background-image: url( '{{ $backgroung_img ?? '' }} ')"></div>
 		<div class="profile-info">
 			<img class="profile-avatar" src="{{ $profile_img ?? '' }}" alt="Profile Picture">
 			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>

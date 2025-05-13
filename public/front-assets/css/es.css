@@ -185,7 +185,8 @@
 }
 .custom-tab .nav-tabs> li.active> a, .custom-tab .nav-tabs> li.active> a:focus, .custom-tab .nav-tabs> li.active> a:hover {
 	border-width: 0;
-	color: #E52D27;
+	/* color: #E52D27; */
+	color: #000000;
 }
 .custom-tab .nav-tabs> li> a {
 	border: none;
@@ -231,10 +232,12 @@
 	/* padding: 20px */
 }
 .custom-tab .nav-tabs > li > a::after {
-	background: #E52D27 none repeat scroll 0 0;
+	/* background: #E52D27 none repeat scroll 0 0; */
+	background: #000000 none repeat scroll 0 0;
 }
 .custom-tab .nav-tabs > li.active > a {
-	color: #E52D27;
+	/* color: #E52D27; */
+	color: #000000;
 }
 .location-details .task img {
 	width: 100%;
@@ -349,8 +352,9 @@
 .checklist-item .text .title {
 	font-weight: 600;
 	font-size: 16px;
-	margin-bottom: 4px;
+	/* margin-bottom: 4px; */
 	color: #000000;
+	    line-height: 1em;
 }
 .checklist-item .text .subtitle {
 	font-size: 14px;
@@ -417,7 +421,8 @@
 .action-buttons {
 	display: flex;
 	justify-content: space-between;
-	padding: 15px 0;
+	/* padding: 15px 0; */
+	padding: 26px 0;
 }
 .action-buttons .btn-div {
 	display: flex;
