@@ -17,4 +17,9 @@ class Task_list_subchecklists extends Model
         'rejected_region', 
         'approve',
     ];
+	
+	public function get_subchecklist_files()
+	{
+		return $this->hasMany(Task_list_subchecklist_rejected_files::class, 'task_list_subchecklist_id');
+	}
 }

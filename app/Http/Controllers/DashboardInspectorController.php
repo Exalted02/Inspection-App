@@ -47,6 +47,57 @@ class DashboardInspectorController extends Controller
 		$details = Task_lists::where('inspector_id', auth()->user()->id)->where('location_id', $lid)->where('category_id', $catid)->first();
 		$data['location_details'] = $details ? $details->location_details : null;
 		$data['task_id'] = $details ? $details->id : null;
+		
+		// for corrective checked work 
+		$correctiveActionChecklistArray = [];
+		$taskData = Task_lists::where('location_id', $lid)->where('category_id', $catid)->get();
+		if($taskData->isNotEmpty())
+		{
+			foreach($taskData as $val)
+			{
+				$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
+				if($correctiveActions->isNotEmpty())
+				{
+					foreach($correctiveActions as $correctiveAction)
+					{
+						$type = '';
+						$image = '';
+						//$type = $correctiveAction->subchecklist_id == null ? 'checklist' : 'subchecklist';
+						
+						if($correctiveAction->subchecklist_id == null)
+						{
+							$type = 'checklist';
+							
+							$checklistFile = Task_list_checklists::with('get_checklist_files')->where('task_list_id', $val->id)->where('checklist_id', $correctiveAction->checklist_id)->first();
+							
+							$image = $checklistFile && $checklistFile->get_checklist_files->isNotEmpty() ? $checklistFile->get_checklist_files->first()->file : null;
+							
+						}
+						else
+						{
+							$type = 'subchecklist';
+							
+							$subChecklistFile = Task_list_subchecklists::with('get_subchecklist_files')->where('task_list_id', $val->id)->where('task_list_checklist_id', $correctiveAction->checklist_id)->where('subchecklist_id', $correctiveAction->subchecklist_id)->first();
+							
+							$image = $subChecklistFile && $subChecklistFile->get_subchecklist_files->isNotEmpty() ? $subChecklistFile->get_subchecklist_files->first()->file : null;
+						}
+						
+						$correctiveActionChecklistArray[] = [
+							'type' => $type ,
+							'task_id' => $val->id,
+							'checklist_id' => $correctiveAction->checklist_id,
+							'subchecklist_id' => $correctiveAction->subchecklist_id,
+							'rejected_region' => $correctiveAction->lo_corrective_action_plan,
+							'image' => $image,
+						];
+					}
+				}
+			}
+		}
+		
+		//echo "<pre>";print_r($correctiveActionChecklistArray);die;
+		$data['correctiveAction'] = $correctiveActionChecklistArray;
+		//-----
 		return view('inspector.category-subcategory', $data);
     }
 	public function send_location_details(Request $request)
