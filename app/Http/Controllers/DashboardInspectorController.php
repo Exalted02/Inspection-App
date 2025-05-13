@@ -19,6 +19,7 @@ use App\Models\Task_list_subchecklist_rejected_files;
 use App\Models\Task_list_subchecklist_temp_rejected_files;
 use App\Models\Task_list_subcategories;
 use App\Models\Subcategory;
+use App\Models\Task_list_corrective_action;
 
 class DashboardInspectorController extends Controller
 {
@@ -1030,6 +1031,25 @@ class DashboardInspectorController extends Controller
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
 		return view('inspector.location-owner-question-reply', $data);
+	}
+	public function submit_lo_corrective_action(Request $request)
+	{
+		$type 				= $request->type;
+		$task_list_id 		= $request->task_id;
+		$checklist_id 		= $request->checklist_id;
+		$subchecklist_id 	= $request->subchecklist_id ?? null;
+		$tab 				= $request->tab;
+		
+		$model = new Task_list_corrective_action();
+		$model->task_list_id = $task_list_id;
+		$model->checklist_id = $checklist_id;
+		$model->subchecklist_id = $subchecklist_id;
+		$model->lo_id = auth()->user()->id;
+		$model->lo_corrective_action_plan = $lo_corrective_action_plan ?? '';
+		$model->lo_completed_by = $lo_completed_by;
+		$model->lo_direct_approve = $lo_direct_approve;
+		$model->inspector_id = $inspector_id;
+		$model->save();
 	}
 	/*public function get_checklist_page_status(Request $request)
 	{

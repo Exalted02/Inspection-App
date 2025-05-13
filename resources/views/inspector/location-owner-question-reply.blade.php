@@ -2,12 +2,25 @@
 @section('content')
 @php 
  //echo "<pre>";print_r($categoryData);die;
+ 
+ $rejected_region = '';
+ $image_arr = [];
+ 
  $checklist = App\Models\Checklist::where('id', $checklist_id)->first();
  if($type == 'checklist')
  {
 	 $taskChecklist = App\Models\Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 	 
 	 $images = App\Models\Task_list_checklist_rejected_files::where('task_list_checklist_id', $taskChecklist->id)->get();
+	 
+	 foreach($images as $image)
+	 {
+		 $image_arr[] = [
+					'url'=> url('uploads/reject-files/' .$image->file ),
+			 ];
+	 }
+	 
+	 $rejected_region = $taskChecklist->rejected_region;
 	 
  }
  
@@ -16,6 +29,26 @@
  {
 	 
 	 $taskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('approve', 0)->first();
+	 
+	 
+	$subImages = collect();
+	$subChecklistName = '';
+	
+	
+	if ($taskSubChecklist) {
+		$subImages = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id',$taskSubChecklist->task_list_checklist_id)->where('task_list_subchecklist_id', $taskSubChecklist->id)->get();
+		
+		$subChecklistName = App\Models\Subchecklist::where('id', $taskSubChecklist->subchecklist_id)->first()->name;
+		
+		$rejected_region = $taskSubChecklist->rejected_region;
+		
+		foreach($subImages as $image)
+		{
+		 $image_arr[] = [
+					'url'=> url('uploads/reject-files/subchecklist/' .$image->file ),
+			 ];
+		}
+	}
  }
  
  
@@ -33,7 +66,12 @@
 						<div class="row">
 							<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
 						</div>
-					@if($type == 'checklist')
+						@if(!empty($subChecklistName))
+						<div class="row">
+							<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+						</div>
+						@endif
+					
 						
 						<div class="row">
 							<div class="owner-checklist-title">Reason</div>
@@ -45,10 +83,10 @@
 						
 						<div class="row">
 							<div class="owner-checklist">
-								@if($images->isNotEmpty())
-									@foreach($images as $image)
+								@if(!empty($image_arr))
+									@foreach($image_arr as $url)
 									<div class="cheklist-reply-images">
-										<img src="{{ url('uploads/reject-files/' .$image->file ) }}">
+										<img src="{{ $url['url'] ?? '' }}">
 									</div>
 									@endforeach
 								@endif
@@ -58,98 +96,74 @@
 							<div class="owner-checklist">
 							<label>How to solve the issue ?</label>
 							<textarea name="reply-question" placeholder="Input corrective action plan" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="owner-checklist">
+								<label class="d-block col-form-label"></label>
+								<div class="status-toggle">
+									<input type="checkbox" id="contact_status" class="check">
+									<label for="contact_status" class="checktoggle">Approve</label>
+								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="owner-checklist">
 							<label></label>
 							<div class="cal-icon">
-							<input type="text" class="form-control datetimepicker" name="reply_date" placeholder="set timeline">
+							<input type="date" class="form-control datetimepicker" name="reply_date" placeholder="set timeline">
 							</div>
 							</div>
 						</div>
-					@else 
-						@php
-							$subImages = collect();
-							$subChecklistName = '';
-							$rejected_region = '';
-							
-							if ($taskSubChecklist) {
-								$subImages = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id',$taskSubChecklist->task_list_checklist_id)->where('task_list_subchecklist_id', $taskSubChecklist->id)->get();
-								
-								$subChecklistName = App\Models\Subchecklist::where('id', $taskSubChecklist->subchecklist_id)->first()->name;
-								
-								$rejected_region = $taskSubChecklist->rejected_region;
-							}
-							
-						@endphp
-						<div class="row">
-							<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
-						</div>
-						<div class="row">
-							<div class="owner-checklist-title">Reason</div>
-						</div>
-						<div class="row">
-							<div class="owner-checklist">{{ $rejected_region ?? '' }}</div>
-						</div>
-						
-						
-						<div class="row">
-							<div class="owner-checklist">
-								@if($subImages->isNotEmpty())
-									@foreach($subImages as $image)
-									<div class="cheklist-reply-images">
-										<img src="{{ url('uploads/reject-files/subchecklist/' .$image->file ) }}">
-									</div>
-									@endforeach
-								@endif
-							</div>
-						</div>
-						<div class="row">
-							<div class="owner-checklist">
-							<label>How to solve the issue ?</label>
-							<textarea name="reply-question" placeholder="Input corrective action plan" class="form-control"></textarea>
-							</div>
-						</div>
-						<div class="row">
-							<div class="owner-checklist">
-							<label></label>
-							{{--<input type="text" class="form-control datetimepicker" name="reply_date" placeholder="set timeline">--}}
-							<div class="cal-icon"><input class="form-control datetimepicker" type="text" name="reply_date"></div>
-							</div>
-						</div>
-					@endif
 					
+					<input type="hidden" id="task_id" value="{{ $task_id ?? ''}}">
+					<input type="hidden" id="checklist_id" value="{{ $checklist_id  ?? ''}}">
+					<input type="hidden" id="subchecklist_id" value="{{ $subchecklist_id ?? ''}}">
+					<input type="hidden" id="type" value="{{ $type ?? ''}}">
+					<input type="hidden" id="tab" value="{{ $tab ?? ''}}">
 						
 					</div>
 					<div class="sticky-footer">
-							<button>Submit checklist</button>
-						</div>
+						<button class="submitChecklist">Submit checklist</button>
+					</div>
 				</div>
 			</section>
 		</div>
     </div>
 @endsection 
 @section('scripts')
-<script src="{{url('front-assets/js/moment.min.js') }}"></script>
-<script src="{{url('front-assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+<script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
+	{{--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
+		{{--<script src="{{url('front-assets/js/moment.min.js') }}"></script>
+<script src="{{url('front-assets/js/bootstrap-datetimepicker.min.js') }}"></script>--}}
 <script>
-$(document ).ready(function() {
-  
+$(document).ready(function() {
+	/*$('.datetimepicker').datetimepicker({
+		format: 'YYYY-MM-DD HH:mm' // Adjust format as needed
+	});*/
    
-   /*$(document).on('click','.chk-task-id', function(){
-	   var cat_id = $(this).data('cat');
-	   var subcat_id = $(this).data('subcat');
-	   var location_id = $(this).data('location');
-	   var URL = "{{ route('check-task-id') }}";
+   $(document).on('click','.submitChecklist', function(){
+	   var task_id = $('#task_id').val();
+	   var checklist_id = $('#checklist_id').val();
+	   var subchecklist_id = $('#subchecklist_id').val();
+	   var type = $('#type').val();
+	   var tab = $('#tab').val();
+	   
+	   //alert(task_id);alert(type);alert(checklist_id);alert(subchecklist_id);alert(tab);
+	   if(type=='checklist')
+	   {
+		   
+	   }
+	  
+	   var URL = "{{ route('submit-lo-corrective-action') }}";
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {cat_id:cat_id,location_id:location_id, _token: csrfToken},
+			data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.hasData);
-				$('#taskid').val(response.taskid);
+				/*$('#taskid').val(response.taskid);
 				if(!response.hasData)
 				{
 					$('#errorMessage').fadeIn().delay(2000).fadeOut();
@@ -159,11 +173,11 @@ $(document ).ready(function() {
 					var baseUrl = "{{ url('/checklist-question') }}";
 					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + subcat_id;
 					window.location.href = redirectUrl;
-				}
+				}*/
 			},
 		});
 	   
-   });*/
+   });
 });
 </script>
 @endsection
