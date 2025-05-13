@@ -28,6 +28,23 @@ if(!empty($userdata->profile_image))
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
+		<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->background_image )}} ')">
+			<div class="mega-menu">
+				<ul class="menu-logo">
+					<li>
+						<div class="menu-mobile-collapse-trigger"><span></span></div>
+					</li>
+				</ul>
+				<ul class="menu-links" style="display: none; max-height: 400px; overflow: auto;">
+					<li>
+						<a href="{{ route('inspector-dashboard')}}">Dashboard</a>
+					</li>
+					<li>
+						<a href="{{route('logout')}}">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<div class="profile-banner" style="background-image: url( '{{ $backgroung_img ?? '' }} ')"></div>
 		<div class="profile-info">
 			<img class="profile-avatar" src="{{ $profile_img ?? '' }}" alt="Profile Picture">
