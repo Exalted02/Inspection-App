@@ -132,9 +132,12 @@ use Carbon\Carbon;
 											<p class="text-muted mb-0">
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
+											@if($rejectedRegionData)	
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+											<i class="fa fa-clock">
+											{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 											</p>
+											@endif
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 											</p>
@@ -155,9 +158,11 @@ use Carbon\Carbon;
 											<p class="text-muted mb-0">
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
+											@if($rejectedRegionData)
 											<p class="text-muted mb-0">
 											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 											</p>
+											@endif
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 											</p>
