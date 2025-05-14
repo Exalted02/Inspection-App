@@ -91,8 +91,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::post('submit-lo-corrective-action', [DashboardInspectorController::class, 'submit_lo_corrective_action'])->name('submit-lo-corrective-action');
 	
+	Route::post('save-task-data', [DashboardInspectorController::class, 'save_task_data'])->name('save-task-data');
 	
-	//User-Accounts
+	//User-Accounts 
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	
 	//Challenges

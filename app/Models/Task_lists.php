@@ -16,6 +16,8 @@ class Task_lists extends Model
         'lo_id', 
         'los_id', 
         'management_id', 
+        'task_title', 
+        'image', 
         'location_details', 
         'status', 
     ];

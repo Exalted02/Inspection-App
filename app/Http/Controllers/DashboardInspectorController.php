@@ -35,6 +35,36 @@ class DashboardInspectorController extends Controller
     {
 		$data = [];
 		$data['location_categories'] = Manage_location::with('category_by_location')->where('id', $id)->get();
+		
+		//$data['task_list'] = Task_lists::where('location_id', $id)->where('inspector_id', auth()->user()->id)->get();
+		
+		$data['task_list_data'] = collect(); // default empty collection
+
+		if (auth()->user()->user_type == 1) {
+			// Only return data if a match is found
+			$hasData = Task_lists::where('location_id', $id)
+						->where('inspector_id', auth()->user()->id)
+						->exists();
+
+			if ($hasData) {
+				$data['task_list_data'] = Task_lists::where('location_id', $id)
+											->where('inspector_id', auth()->user()->id)
+											->get();
+			}
+
+		} elseif (auth()->user()->user_type == 2) {
+			$hasData = Task_lists::where('location_id', $id)->exists();
+
+			if ($hasData) {
+				$data['task_list_data'] = Task_lists::where('location_id', $id)->get();
+			}
+		}
+
+		
+		//$data['task_list_data'] = $dataArr->get();
+		
+		$data['locationcategory'] = Category::where('location_id', $id)->where('status' ,'!=', 2)->get(); // use in dropdown for add task
+		$data['location_id'] = $id;
         return view('inspector.location-details', $data);
     }
 	public function category($lid='',$catid='')
@@ -1165,6 +1195,47 @@ class DashboardInspectorController extends Controller
 		$model->save();
 		
 		return response()->json(['location_id'=>$location_id, 'category_id'=>$category_id]);
+	}
+	public function save_task_data(Request $request)
+	{
+		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('category_id', $request->post('category_id'))->where('task_title', $request->post('task_title'))->where('status', '!=', 2)
+        ->first();
+		
+		if ($existingTask) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Task name name already exists.'
+			]);
+		}
+		
+		$model=new Task_lists();
+		$model->inspector_id	=	auth()->user()->id;
+		$model->location_id		=	$request->post('location_id');
+		$model->category_id		=	$request->post('category_id');
+		$model->task_title		=	$request->post('task_title');
+		$model->status		=	1;
+		$model->created_at	=	date('Y-m-d');
+		$model->save();
+		$id = $model->id;
+		
+		$fileName = '';
+		if($request->hasFile('task_image')) {
+			$destinationPath = public_path('uploads/task/');
+			if (!file_exists($destinationPath)) {
+				mkdir($destinationPath, 0777, true);
+			}
+			$file = $request->file('task_image');
+			$fileName = time() . '_' . $file->getClientOriginalName();
+			$file->move($destinationPath, $fileName);
+			
+			$updtmodel= Task_lists::find($id);
+			$updtmodel->image = $fileName;
+			$updtmodel->save();
+		}
+		
+		return response()->json([
+			'success' => true
+		]);
 	}
 	/*public function get_checklist_page_status(Request $request)
 	{

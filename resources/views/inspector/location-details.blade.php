@@ -1,7 +1,13 @@
 @extends('layouts.app')
 @section('content')
+@push('styles')
+
+{{--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">--}}
+
+@endpush
 @php 
 //echo "<pre>";print_r($location_categories);die;
+//echo "<pre>";print_r($task_list_data);die;
 use Carbon\Carbon;
 $month = '';
 $day = '';
@@ -12,7 +18,7 @@ $week= '';
 		<div class="d-flex align-items-center location-header mb-3">
 			<img src="{{url('uploads/location/' . $location_categories[0]->image )}}" alt="Location" />
 			<div>
-				<div class="title">{{ $location_categories[0]->location_name ?? ''}}</div>
+				<div class="title">{{ ucfirst($location_categories[0]->location_name) ?? ''}}</div>
 				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>{{ $location_categories[0]->address ?? ''}}, {{ $location_categories[0]->zipcode ?? ''}}</small>
 			</div>
 		</div>
@@ -21,23 +27,16 @@ $week= '';
 		<div class="main-content-area clearfix">
 			<section class="custom-padding1">
 				<div class="container">
-				    
-					{{--<div class="col-md-12 col-sm-12">
-						<div class="form-group">
-							<label>Add new text <span class="required">*</span></label>
-							<textarea cols="6" rows="8" placeholder="Are you sure, you want to delete your account?" class="form-control"></textarea>
-						</div>
-				    </div>--}}
-					
-					<div class="col-md-12 col-sm-12">
-						<div class="form-group text-center">
-							
+				@if(auth()->user()->user_type == 1)
+				    <div class="col-md-12 col-sm-12">
+						<div class="form-group text-center add-new-category">
 							<div class="add-task-box">
 								<span class="plus-sign">+</span>
-								<div class="add-task-text">Add task</div>
+								<div class="add-task-text">Add Tasks</div>
 							</div>
 						</div>
 					</div>
+				@endif
 				
 					<div class="row custom-tab">
 						<!-- Tabs -->
@@ -48,14 +47,16 @@ $week= '';
 						<!-- Tab panes -->
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane active" id="inprogress_tab">
-								@foreach($location_categories[0]->category_by_location as $categories)
-								@php 
-								   $categoryData = App\Models\Category::where('id', $categories->category_id)->first();
-								   $month = $categoryData ?  Carbon::parse($categoryData->created_at)->format('M'): '';
-								   $day = $categoryData ?  Carbon::parse($categoryData->created_at)->format('d') : '';
-								   $week= $categoryData ?   strtoupper(Carbon::parse($categoryData->created_at)->format('D')) : '';
+								@foreach($task_list_data as $tasks)
+								@php
+								
+								   /*$categoryData = App\Models\Category::where('id', $categories->category_id)->first();*/
 								   
-								   $img = $categoryData ? $categoryData->image : '';
+								   $month = Carbon::parse($tasks->created_at)->format('M');
+								   $day =   Carbon::parse($tasks->created_at)->format('d');
+								   $week= strtoupper(Carbon::parse($tasks->created_at)->format('D'));
+								   
+								   //$img = $categoryData ? $categoryData->image : '';
 								@endphp
 								<div class="d-flex mb-3 task">
 									<div class="date-box">
@@ -67,14 +68,14 @@ $week= '';
 									</div>
 									<div class="flex-grow-1">
 									@if(auth()->user()->user_type == 1)
-										<a href="{{ route('category', ['location_id'=>$categories->location_id, 'cat_id' => $categories->category_id ?? '']) }}">
+										<a href="{{ route('category', ['location_id'=>$tasks->location_id, 'cat_id' => $tasks->category_id ?? '']) }}">
 									@elseif(auth()->user()->user_type == 2)
-										<a href="{{ route('location-owner', ['location_id'=>$categories->location_id, 'cat_id' => $categories->category_id ?? '']) }}">
+										<a href="{{ route('location-owner', ['location_id'=>$tasks->location_id, 'cat_id' => $tasks->category_id ?? '']) }}">
 									@endif
-										@if($categoryData && $categoryData->image)
-										<img src="{{url('uploads/category/'  . $categoryData->image  )}}" alt="Task"/>
-										@endif
-											<h6>{{ $categoryData->name ?? '' }}</h6>
+										
+										<img src="{{url('uploads/task/' . $tasks->image  )}}" alt="Task"/>
+										
+											<h6>{{ $tasks->task_title ?? '' }}</h6>
 											<p class="text-muted mb-0">Set corrective actions</p>
 										</a>
 									</div>
@@ -137,8 +138,159 @@ $week= '';
 			</section>
 		</div>
     </div>
+	
+	<div id="add_category" class="modal custom-modal-frontend fade" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title"><span id="head-label">{{ __('Add task') }}</span></h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="frmcategory" action="{{ route('save-task-data') }}" enctype="multipart/form-data">
+					<input type="hidden" id="id" name="id">
+					<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
+					@csrf
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="input-block mb-3">
+									<label class="col-form-label">{{ __('Category') }}<span class="text-danger">*</span></label>
+									<select class="select form-control" name="category_id" id="category_id">
+										<option value="">Select category</option>
+										@foreach($locationcategory as $category)
+											<option value="{{ $category->id ?? '' }}">{{ $category->name ?? ''}}</option>
+										@endforeach
+									</select>
+									<span id="category_id_error" style="display:none;  color: red;"></span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="input-block mb-3">
+									<label class="col-form-label">{{ __('Task Title') }}<span class="text-danger">*</span></label>
+									<input class="form-control" type="text" name="task_title" id="task_title">
+									<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="input-block mb-3">
+									<label class="col-form-label">{{ __('image') }}</label>
+									<input class="form-control" type="file" name="task_image" id="task_image" accept="image/*">
+									
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="input-block mb-3">
+								<label class="col-form-label"></label>
+								<img id="preview" src="#" alt="" style="max-width: 70px; margin-top: 25px; display: none;" />
+								</div>
+							</div>
+						</div>
+						<div class="submit-section">
+							<button class="btn btn-primary submit-btn save-task" type="button">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{--<div class="modal fade" id="add_category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>--}}
 @endsection 
 @section('scripts')
-
+{{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>--}}
+<script>
+$(document ).ready(function() {
+	$(document).on('click', '.add-new-category', function(){
+		$('#add_category').modal('show');
+	});
+	
+	$(document).on('click','.save-task', function(){
+		let category_id = $('#category_id').val().trim();
+		let task_title = $('#task_title').val().trim();
+		
+		if (category_id === '') {
+			//$('#category_id').addClass('is-invalid');
+			$('#category_id_error').text('Please enter category').fadeIn().delay(2000).fadeOut(); // use specific ID to avoid conflicts
+			//isValid = false;
+			return false;
+		}
+		
+		if (task_title === '') {
+			//$('#category_id').addClass('is-invalid');
+			$('#tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut(); // use specific ID to avoid conflicts
+			//isValid = false;
+			return false;
+		}
+		
+		
+		
+			//var form = $("#frmlocation");
+			var URL = $('#frmcategory').attr('action');
+			var id = $('#id').val();
+			
+			let formData = new FormData($('#frmcategory')[0]);
+			formData.append('_token', csrfToken);
+			//alert(URL);
+			$.ajax({
+				url: URL,
+				type: "POST",
+				data: formData,
+				processData: false,
+				contentType: false,
+				//dataType: 'json',
+				success: function(response) {
+					if (!response.success) {
+						
+						$('#tasktitle_id_error').text('Task title already exists.').fadeIn().delay(2000).fadeOut(); 
+						//$('#task_title').addClass('is-invalid');
+						//$('#task_title').next('.invalid-feedback').text(response.message).show();
+					} else {
+						$('#category_id').val('').trigger('change');
+						$('#task_title').val('');
+						setTimeout(() => {
+							window.location.reload();
+						}, "2000");
+					}
+				},
+			});
+		
+	});
+	
+	$('#task_image').on('change', function (event) {
+		const [file] = event.target.files;
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				$('#preview').attr('src', e.target.result).show();
+			}
+			reader.readAsDataURL(file);
+		}
+	});
+});
+</script>
 @endsection
+
 
