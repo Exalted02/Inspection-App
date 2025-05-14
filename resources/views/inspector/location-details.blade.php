@@ -21,6 +21,24 @@ $week= '';
 		<div class="main-content-area clearfix">
 			<section class="custom-padding1">
 				<div class="container">
+				    
+					{{--<div class="col-md-12 col-sm-12">
+						<div class="form-group">
+							<label>Add new text <span class="required">*</span></label>
+							<textarea cols="6" rows="8" placeholder="Are you sure, you want to delete your account?" class="form-control"></textarea>
+						</div>
+				    </div>--}}
+					
+					<div class="col-md-12 col-sm-12">
+						<div class="form-group text-center">
+							
+							<div class="add-task-box">
+								<span class="plus-sign">+</span>
+								<div class="add-task-text">Add task</div>
+							</div>
+						</div>
+					</div>
+				
 					<div class="row custom-tab">
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
