@@ -31,7 +31,7 @@ use Carbon\Carbon;
 		</div>
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
-		<div class="main-content-area clearfix">
+		<div class="main-content-area clearfix corrective-checked">
 			<section class="custom-padding1">
 				<div class="container1">
 					<div class="custom-tab">

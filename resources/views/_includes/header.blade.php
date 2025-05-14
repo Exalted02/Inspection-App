@@ -13,9 +13,11 @@
 					<!-- menu logo -->
 					<ul class="menu-logo">
 					   <li style="margin-top: 7px;">
-							<a href="{{ route('inspector-dashboard')}}">
-							{{--<img src="{{url('front-assets/images/logo.png')}}" alt="logo">--}}
-							<span>Inspection</span>
+							{{--<a href="{{ route('inspector-dashboard')}}">
+								<span>Inspection</span>
+							</a>--}}
+							<a href="javascript:history.back()">
+								<span><i class="fa fa-angle-left"></i></span>
 							</a>
 							<div class="header-icon">
 								<a href="{{ route('inspector-dashboard')}}"><i class="fa-solid fa-house"></i></a>
