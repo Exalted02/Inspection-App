@@ -14,6 +14,7 @@ class Task_list_corrective_action extends Model
         'subchecklist_id', 
         'lo_id', 
         'lo_corrective_action_plan', 
+        'lo_corrective_action_plan_second_check', 
         'lo_completed_by', 
         'lo_direct_approve', 
         'inspector_id', 

@@ -2,7 +2,7 @@
 @section('content')
 @php 
  //echo "<pre>";print_r($categoryData);die;
- 
+  use Carbon\Carbon;
  $rejected_region = '';
  $image_arr = [];
  
@@ -22,6 +22,10 @@
 	 
 	 $rejected_region = $taskChecklist->rejected_region;
 	 
+	$corrective_action = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+	$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
+	
+	$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
  }
  
  $taskSubChecklist = null;
@@ -59,6 +63,7 @@
 			
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
+		
 		<div class="main-content-area clearfix">
 			<section class="custom-padding1">
 				<div class="container1">
@@ -95,90 +100,175 @@
 						<div class="row">
 							<div class="owner-checklist">
 								<label>Requirement to solve it</label>
-								<textarea name="lo_corrective_action_plan" id="lo_corrective_action_plan" placeholder="Input corrective action plan" class="form-control"></textarea>
-								<span id="action_plan" style="display: none; color: red;">This field is require.</span>
-							</div>
-						</div>
-						<div class="row">
-							<div class="owner-checklist">
-								<label class="d-block col-form-label"></label>
-								<div class="status-toggle">
-									<input type="checkbox" name="lo_direct_approve" id="lo_direct_approve" class="check">
-									<label for="lo_direct_approve" class="checktoggle">Approve</label>
+								<div class="mt-1">
+								{{ $corrective_plan ?? ''}}
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="owner-checklist">
-							<label></label>
-							<div class="cal-icon">
-							<input type="date" class="form-control datetimepicker" name="lo_completed_by" id="lo_completed_by" placeholder="set timeline">
-							</div>
+								<label>Completed By</label>
+								<div class="mt-1">
+								{{ Carbon::parse($inspector_action_date)->format('d M Y') }}
+								</div>
 							</div>
 						</div>
-					
-					<input type="hidden" id="task_id" value="{{ $task_id ?? ''}}">
-					<input type="hidden" id="checklist_id" value="{{ $checklist_id  ?? ''}}">
-					<input type="hidden" id="subchecklist_id" value="{{ $subchecklist_id ?? ''}}">
-					<input type="hidden" id="type" value="{{ $type ?? ''}}">
-					<input type="hidden" id="tab" value="{{ $tab ?? ''}}">
+						{{--<form id="frmreply" action="{{ route('save-lo-reply-rejected-question') }}" enctype="multipart/form-data" method="post">--}}
+							<div class="row">
+								<div class="owner-checklist">
+									<label>Second checks</label>
+									<textarea name="lo_corrective_action_plan" id="lo_corrective_action_plan" placeholder="Add some remarks (optional)" class="form-control"></textarea>
+									<span id="action_plan" style="display: none; color: red;">This field is require.</span>
+								</div>
+							</div>
+							<div class="row align-items-center">
+								<div class="col-md-4">
+									<label for="lo_file"></label>
+									<div class="upload-wrapper">
+									  <input type="file" name="lo_file[]" id="lo_file" multiple style="display: none;">
+									  <label for="lo_file" class="custom-upload-label">
+										<span class="upload-text">Upload image</span>
+										<i class="fa fa-upload upload-icon"></i>
+									  </label>
+									</div>
+								</div>
+								<div class="col-md-8 d-flex flex-wrap gap-2" id="preview-container">
+								</div>
+							</div>
+							<input type="hidden" id="task_id" value="{{ $task_id ?? ''}}">
+							<input type="hidden" id="checklist_id" value="{{ $checklist_id  ?? ''}}">
+							<input type="hidden" id="subchecklist_id" value="{{ $subchecklist_id ?? ''}}">
+							<input type="hidden" id="type" value="{{ $type ?? ''}}">
+							<input type="hidden" id="tab" value="{{ $tab ?? ''}}">
+						
 						
 					</div>
-					<div class="sticky-footer">
-						<button class="submitChecklist">Submit checklist</button>
-					</div>
+					
 				</div>
 			</section>
 		</div>
     </div>
+	<div class="checklist-question-sticky-footer">
+		<div class="clearfix"></div>
+		<div class="footer-content question-navigation d-flex justify-content-between">
+			<button class="reject-class-button location-owner-rejected">Reject</button>
+			<button class="ms-auto location-owner-approve">Approve</button>
+		</div>
+	</div>
+	{{--</form>--}}
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
 	{{--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
 		{{--<script src="{{url('front-assets/js/moment.min.js') }}"></script>
 <script src="{{url('front-assets/js/bootstrap-datetimepicker.min.js') }}"></script>--}}
+
+<script>
+/*document.getElementById('lo_file').addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name || "Upload image";
+    document.querySelector('.upload-text').textContent = fileName;
+});*/
+</script>
+
 <script>
 $(document).ready(function() {
-	/*$('.datetimepicker').datetimepicker({
-		format: 'YYYY-MM-DD HH:mm' // Adjust format as needed
-	});*/
+	
+  
+let previewContainer = $('#preview-container');
+
+  $('#lo_file').on('change', function (e) {
+    let files = e.target.files;
+
+    previewContainer.empty(); // Clear previous previews
+
+    Array.from(files).forEach((file, index) => {
+      if (file.type.startsWith('image/')) {
+        let reader = new FileReader();
+		//$('#preview-container').show();
+        reader.onload = function (e) {
+          let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image">&times;</div></div>';
+          
+          previewContainer.append(imgHtml);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+
+  // Delegate remove button click
+  previewContainer.on('click', '.remove-image', function () {
+    $(this).parent().remove();
+  });
    
-   $(document).on('click','.submitChecklist', function(){
+   $(document).on('click','.location-owner-approve', function(){
 	   var task_id = $('#task_id').val();
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var type = $('#type').val();
-	   var tab = $('#tab').val();
-	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
-	   let lo_completed_by = $('#lo_completed_by').val();
-	   let lo_direct_approve = $('#lo_direct_approve').is(':checked');
-	   //alert(lo_direct_approve);
 	   
+	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
 	   if(lo_corrective_action_plan=='')
 	   {
 		   $('#action_plan').fadeIn().delay(2000).fadeOut();
 		   return false;
 	   }
-	  
-		   var URL = "{{ route('submit-lo-corrective-action') }}";
-		   $.ajax({
-				url: URL,
-				type: "POST",
-				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,lo_completed_by:lo_completed_by, _token: csrfToken},
-				dataType: 'json',
-				success: function(response) {
-					let location_id = response.location_id;
+	   
+	   let files = $('#lo_file')[0].files;
+	   if (files.length === 0) {
+			alert('Please select at least one image.');
+			return;
+		}
+
+		let formData = new FormData();
+
+		// Append all selected files to formData
+		$.each(files, function (index, file) {
+			formData.append('lo_file[]', file);
+		});
+		
+		alert(csrfToken) // show ok 
+		// Optional: Add other data
+		formData.append('task_id', task_id);
+		formData.append('checklist_id', checklist_id);
+		formData.append('subchecklist_id', subchecklist_id);
+		formData.append('type', type);
+		formData.append('content', lo_corrective_action_plan);
+		formData.append('_token', csrfToken);
+		var URL = "{{ route('save-lo-reply-rejected-question') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: formData,
+			contentType: false,
+			processData: false,  
+			success: function(response) {
+				//alert(response.message);
+				if(response.message=='success')
+				{
+					
+					/*let location_id = response.location_id;
 					let category_id = response.category_id;
 					
 					var baseUrl = "{{ url('/location-owner') }}";
 					var redirectUrl = baseUrl + '/'+ location_id + '/' + category_id;
-					window.location.href = redirectUrl;
-					
-				},
-			});
-		
-	   
-   });
+					window.location.href = redirectUrl;*/
+				}
+				
+			},
+		});
+	});
+   
+   /*$('#lo_file').on('change', function (event) {
+		const [file] = event.target.files;
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				$('#preview').attr('src', e.target.result).show();
+			}
+			reader.readAsDataURL(file);
+		}
+	});*/
 });
 </script>
 @endsection

@@ -20,6 +20,7 @@ use App\Models\Task_list_subchecklist_temp_rejected_files;
 use App\Models\Task_list_subcategories;
 use App\Models\Subcategory;
 use App\Models\Task_list_corrective_action;
+use App\Models\Task_list_corrective_action_file;
 
 class DashboardInspectorController extends Controller
 {
@@ -1304,14 +1305,49 @@ class DashboardInspectorController extends Controller
 		return view('inspector.location-owner-rejected-question-reply', $data);
 	}
 	
-	/*public function get_checklist_page_status(Request $request)
+	public function save_lo_reply_rejected_question(Request $request)
 	{
+		echo "<pre>";print_r($request->all());die;
+		//Task_list_corrective_action
+		//Task_list_corrective_action_file
+		
 		$task_id = $request->task_id;
-		$subcategory_id = $request->subcategory_id;
 		$checklist_id = $request->checklist_id;
-		$res = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $checklist_id)->first();
-		$status = $res ? $res->approve : '';
-		return response()->json(['status'=> $status]);
-	}*/
+		$subchecklist_id = $request->subchecklist_id ?? null;
+		$type = $request->type;
+		$content = $request->content ?? null;
+		
+		$corrective_action_data = Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		
+		$id = $corrective_action_data ? $corrective_action_data->id : '';
+		
+		$model = Task_list_corrective_action::find($id);
+		$model->lo_corrective_action_plan_second_check = $content;
+		$model->save();
+		
+		$lo_files = $request->file('lo_file');
+
+		if ($lo_files && is_array($lo_files)) {
+			foreach ($lo_files as $file) {
+				
+				$destinationPath = public_path('uploads/corrective_action');
+				if (!file_exists($destinationPath)) {
+					mkdir($destinationPath, 0777, true);
+				}
+				
+				$filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+				$file->move($destinationPath, $filename);
+
+				$fileModel = new Task_list_corrective_action_file();
+				$fileModel->task_list_corrective_actions_id = $id;
+				$fileModel->file = $filename;
+				$fileModel->save();
+			}
+		}
+
+		return response()->json(['message'=>'success']);
+	}
+	
+	
 	
 }
