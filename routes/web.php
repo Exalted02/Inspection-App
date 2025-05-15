@@ -100,6 +100,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::post('submit-inspector-status', [DashboardInspectorController::class, 'submit_inspector_status'])->name('submit-inspector-status');
 	
+	Route::get('location-owner-checklist-rejected-question-reply/{task_id}/{checklist_id}/{type}}', [DashboardInspectorController::class, 'location_owner_checklist_rejected_question_reply'])->name('location-owner-checklist-rejected-question-reply');
+	
+	Route::get('location-owner-subchecklist-rejected-question-reply/{task_id}/{checklist_id}/{subchecklist_id}/{type}', [DashboardInspectorController::class, 'location_owner_subchecklist_rejected_question_reply'])->name('location-owner-subchecklist-rejected-question-reply');
+	
 	//User-Accounts  
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	

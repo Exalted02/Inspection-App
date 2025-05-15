@@ -1057,6 +1057,7 @@ class DashboardInspectorController extends Controller
 								$isfiles = '';
 								$images = '';
 								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+								
 								$images = $isfiles ? $isfiles->file  : '';
 								$correctiveActionChecklistArray[] = [
 											'type' => 'checklist',
@@ -1078,8 +1079,11 @@ class DashboardInspectorController extends Controller
 											'checklist_id' => $task->checklist_id,
 											'rejected_region' => $task->rejected_region,
 											'image' => $images,
+											'inspector_action'=> $task_list_checklist_corrective_action->inspector_action,
 										];
 							}
+							
+							
 						}
 					}
 					
@@ -1124,6 +1128,7 @@ class DashboardInspectorController extends Controller
 											'subchecklist_id'=>$subtask->subchecklist_id,
 											'rejected_region' => $subtask->rejected_region,
 											'image' => $subChecklistimages,
+											'inspector_action'=> $task_list_subchecklist_corrective_action->inspector_action,
 										];
 								
 							}
@@ -1276,7 +1281,27 @@ class DashboardInspectorController extends Controller
 		$model->save();
 		
 		return response()->json(['message'=>'success']);
+	}
+	
+	public function location_owner_checklist_rejected_question_reply($task_id='',$checklist_id='',$type='')
+	{
+		$data = [];
+		$data['task_id'] = $task_id ?? '';
+		$data['checklist_id'] = $checklist_id ?? '';
+		$data['type'] = $type ?? '';
+		$data['tab'] = $tab ?? '';
 		
+		return view('inspector.location-owner-rejected-question-reply', $data);
+	}
+	public function location_owner_subchecklist_rejected_question_reply($task_id='',$checklist_id='',$subchecklist_id='',$type='')
+	{
+		$data = [];
+		$data['task_id'] = $task_id ?? '';
+		$data['checklist_id'] = $checklist_id ?? '';
+		$data['subchecklist_id'] = $subchecklist_id ?? '';
+		$data['type'] = $type ?? '';
+		$data['tab'] = $tab ?? '';
+		return view('inspector.location-owner-rejected-question-reply', $data);
 	}
 	
 	/*public function get_checklist_page_status(Request $request)
