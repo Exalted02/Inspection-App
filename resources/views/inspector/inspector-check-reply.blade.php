@@ -128,13 +128,7 @@
 						
 					</div>
 					
-					{{--<div class="checklist-question-sticky-footer">
-						<div class="clearfix"></div>
-						<div class="footer-content question-navigation d-flex justify-content-between">
-							<button class="">Reject</button>
-							<button class="ms-auto">Agree</button>
-						</div>
-					</div>--}}
+					
 					
 					{{--<div class="sticky-footer">
 						<button class="submitChecklist">Submit checklist</button>
@@ -143,6 +137,13 @@
 			</section>
 		</div>
     </div>
+	<div class="checklist-question-sticky-footer">
+						<div class="clearfix"></div>
+						<div class="footer-content question-navigation d-flex justify-content-between">
+							<button class="reject-class-button">Reject</button>
+							<button class="ms-auto">Agree</button>
+						</div>
+					</div>
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>

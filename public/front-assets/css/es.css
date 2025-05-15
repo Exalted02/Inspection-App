@@ -904,3 +904,17 @@
   background-color: transparent;
   color: #667eea;
 }
+
+.button-color{
+	background:#0b2b57;
+}
+.reject-class-button{
+	/*background:#e3dfdf !important;*/
+	background:#F2F2F2 !important;
+	color: #000000 !important;
+	font-weight: 600;
+	font-size: 16px;
+	border-radius: 8px;
+	padding: 32px 20px;
+	
+}
