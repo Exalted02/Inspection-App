@@ -94,7 +94,7 @@
 						</div>
 						<div class="row">
 							<div class="owner-checklist">
-								<label>How to solve the issue ?</label>
+								<label>Requirement to solve it</label>
 								<textarea name="lo_corrective_action_plan" id="lo_corrective_action_plan" placeholder="Input corrective action plan" class="form-control"></textarea>
 								<span id="action_plan" style="display: none; color: red;">This field is require.</span>
 							</div>
