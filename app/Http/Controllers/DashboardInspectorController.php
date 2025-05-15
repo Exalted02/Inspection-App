@@ -1237,25 +1237,45 @@ class DashboardInspectorController extends Controller
 			'success' => true
 		]);
 	}
-	public function inspector_checklist_question_reply($task_id='',$checklist_id='',$type='', $tab='')
+	public function inspector_checklist_question_reply($location_id='',$task_id='',$checklist_id='',$type='', $tab='')
 	{
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
+		$data['location_id'] = $location_id ?? '';
 		$data['checklist_id'] = $checklist_id ?? '';
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
 		
 		return view('inspector.inspector-check-reply', $data);
 	}
-	public function inspector_subchecklist_question_reply($task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
+	public function inspector_subchecklist_question_reply($location_id='',$task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
 	{
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
+		$data['location_id'] = $location_id ?? '';
 		$data['checklist_id'] = $checklist_id ?? '';
 		$data['subchecklist_id'] = $subchecklist_id ?? '';
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
 		return view('inspector.inspector-check-reply', $data);
+	}
+	public function submit_inspector_agree(Request $request)
+	{
+		$task_list_id = $request->task_id;
+		$checklist_id = $request->checklist_id;
+		$subchecklist_id = $request->subchecklist_id ?? null;
+		$inspector_id = auth()->user()->id;
+		
+		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;
+		
+		$model = Task_list_corrective_action::find($id);
+		$model->inspector_action_date = date('Y-m-d h:i:s');
+		$model->inspector_action = 1;
+		$model->inspector_id = $inspector_id;
+		$model->save();
+		
+		return response()->json(['message'=>'success']);
+		
 	}
 	
 	/*public function get_checklist_page_status(Request $request)

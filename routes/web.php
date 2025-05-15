@@ -94,11 +94,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('save-task-data', [DashboardInspectorController::class, 'save_task_data'])->name('save-task-data');
 	
 	
-	Route::get('inspector-checklist-question-reply/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_checklist_question_reply'])->name('inspector-checklist-question-reply');
+	Route::get('inspector-checklist-question-reply/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_checklist_question_reply'])->name('inspector-checklist-question-reply');
 	
-	Route::get('inspector-subchecklist-question-reply/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_subchecklist_question_reply'])->name('inspector-subchecklist-question-reply');
+	Route::get('inspector-subchecklist-question-reply/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_subchecklist_question_reply'])->name('inspector-subchecklist-question-reply');
 	
-	//User-Accounts 
+	Route::post('submit-inspector-agree', [DashboardInspectorController::class, 'submit_inspector_agree'])->name('submit-inspector-agree');
+	
+	//User-Accounts  
 	Route::get('/users', [UserController::class, 'index'])->name('users');
 	
 	//Challenges

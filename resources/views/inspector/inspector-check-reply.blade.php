@@ -120,6 +120,7 @@
 							</div>
 						</div>
 					
+					<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 					<input type="hidden" id="task_id" value="{{ $task_id ?? ''}}">
 					<input type="hidden" id="checklist_id" value="{{ $checklist_id  ?? ''}}">
 					<input type="hidden" id="subchecklist_id" value="{{ $subchecklist_id ?? ''}}">
@@ -141,7 +142,7 @@
 						<div class="clearfix"></div>
 						<div class="footer-content question-navigation d-flex justify-content-between">
 							<button class="reject-class-button">Reject</button>
-							<button class="ms-auto">Agree</button>
+							<button class="ms-auto inspector-agree">Agree</button>
 						</div>
 					</div>
 @endsection 
@@ -156,40 +157,36 @@ $(document).ready(function() {
 		format: 'YYYY-MM-DD HH:mm' // Adjust format as needed
 	});*/
    
-   $(document).on('click','.submitChecklist', function(){
+   $(document).on('click','.inspector-agree', function(){
 	   var task_id = $('#task_id').val();
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
-	   var type = $('#type').val();
-	   var tab = $('#tab').val();
-	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
-	   let lo_completed_by = $('#lo_completed_by').val();
-	   let lo_direct_approve = $('#lo_direct_approve').is(':checked');
-	   //alert(lo_direct_approve);
+	   var location_id = $('#location_id').val();
 	   
-	   if(lo_corrective_action_plan=='')
-	   {
-		   $('#action_plan').fadeIn().delay(2000).fadeOut();
-		   return false;
-	   }
-	  
-		   var URL = "{{ route('submit-lo-corrective-action') }}";
-		   $.ajax({
-				url: URL,
-				type: "POST",
-				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,lo_completed_by:lo_completed_by, _token: csrfToken},
-				dataType: 'json',
-				success: function(response) {
-					let location_id = response.location_id;
-					let category_id = response.category_id;
-					
-					var baseUrl = "{{ url('/location-owner') }}";
-					var redirectUrl = baseUrl + '/'+ location_id + '/' + category_id;
+	   //alert(lo_direct_approve);
+	   var URL = "{{ route('submit-inspector-agree') }}";
+	   $.ajax({
+			url: URL,
+			type: "POST",
+			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				if(response.message=='success')
+				{
+					var baseUrl = "{{ url('/location-details') }}";
+					var redirectUrl = baseUrl + '/'+ location_id ;
 					window.location.href = redirectUrl;
-					
-				},
-			});
-		
+				}
+				/*let location_id = response.location_id;
+				let category_id = response.category_id;
+				
+				var baseUrl = "{{ url('/location-owner') }}";
+				var redirectUrl = baseUrl + '/'+ location_id + '/' + category_id;
+				window.location.href = redirectUrl;*/
+				
+			},
+		});
+	
 	   
    });
 });
