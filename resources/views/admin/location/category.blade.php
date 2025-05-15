@@ -137,7 +137,7 @@ $location_name = $locationData ? $locationData->location_name : '';
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
 								<th>{{ __('category_name') }}</th>
-								<th>{{ __('image') }}</th>
+									{{--<th>{{ __('image') }}</th>--}}
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
 								<th class="text-end">Action</th>
@@ -154,7 +154,7 @@ $location_name = $locationData ? $locationData->location_name : '';
 								</td>
 								@endif
 								<td class="contact-details">{{ $val->name ?? ''}}</td>
-								<td><img src="{{ url('uploads/category/' . $val->image) }}" width="50" height="50"></td>
+									{{--<td><img src="{{ url('uploads/category/' . $val->image) }}" width="50" height="50"></td>--}}
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)

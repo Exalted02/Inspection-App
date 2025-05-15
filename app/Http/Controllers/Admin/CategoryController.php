@@ -128,7 +128,7 @@ class CategoryController extends Controller
 		}
 		
 		$fileName = '';
-		if($request->hasFile('category_image')) {
+		/*if($request->hasFile('category_image')) {
 			$destinationPath = public_path('uploads/category/');
 			if (!file_exists($destinationPath)) {
 				mkdir($destinationPath, 0777, true);
@@ -140,7 +140,7 @@ class CategoryController extends Controller
 			$updtmodel= Category::find($id);
 			$updtmodel->image = $fileName;
 			$updtmodel->save();
-		}
+		}*/
 		
 		return response()->json([
 			'success' => true

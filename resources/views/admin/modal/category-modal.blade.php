@@ -60,7 +60,7 @@
 										</div>
 									</div>--}}
 									
-									<div class="row">
+									{{--<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('image') }}</label>
@@ -74,7 +74,7 @@
 											<img id="preview" src="#" alt="" style="max-width: 70px; margin-top: 25px; display: none;" />
 											</div>
 										</div>
-									</div>
+									</div>--}}
 									<div class="submit-section">
 										<button class="btn btn-primary submit-btn save-category" type="button">Submit</button>
 									</div>
