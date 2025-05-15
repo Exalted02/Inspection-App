@@ -141,7 +141,7 @@
 	<div class="checklist-question-sticky-footer">
 						<div class="clearfix"></div>
 						<div class="footer-content question-navigation d-flex justify-content-between">
-							<button class="reject-class-button">Reject</button>
+							<button class="reject-class-button inspector-rejected">Reject</button>
 							<button class="ms-auto inspector-agree">Agree</button>
 						</div>
 					</div>
@@ -162,13 +162,13 @@ $(document).ready(function() {
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var location_id = $('#location_id').val();
-	   
+	   var inspector_action = 1;
 	   //alert(lo_direct_approve);
-	   var URL = "{{ route('submit-inspector-agree') }}";
+	   var URL = "{{ route('submit-inspector-status') }}";
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id, _token: csrfToken},
+			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id, inspector_action:inspector_action,_token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				if(response.message=='success')
@@ -186,9 +186,32 @@ $(document).ready(function() {
 				
 			},
 		});
+	});
 	
+	$(document).on('click','.inspector-rejected', function(){
+	   var task_id = $('#task_id').val();
+	   var checklist_id = $('#checklist_id').val();
+	   var subchecklist_id = $('#subchecklist_id').val();
+	   var location_id = $('#location_id').val();
+	   var inspector_action = 0;
 	   
-   });
+	   //alert(lo_direct_approve);
+	   var URL = "{{ route('submit-inspector-status') }}";
+	   $.ajax({
+			url: URL,
+			type: "POST",
+			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,inspector_action:inspector_action, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				if(response.message=='success')
+				{
+					var baseUrl = "{{ url('/location-details') }}";
+					var redirectUrl = baseUrl + '/'+ location_id ;
+					window.location.href = redirectUrl;
+				}
+			},
+		});
+	});
 });
 </script>
 @endsection

@@ -31,6 +31,8 @@ use Carbon\Carbon;
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#inprogress_tab" aria-controls="inprogress_tab" role="tab" data-toggle="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
 							<li role="presentation"><a href="#completed_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">5 Corrective checks</a></li>
+							<li role="presentation"><a href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Approved</a></li>
+							<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Approved</a></li>
 						</ul>
 						<!-- Tab panes -->
 						<div class="tab-content">
@@ -223,56 +225,12 @@ use Carbon\Carbon;
 								@endif
 								@endforeach
 							</div>
-							{{--<div role="tabpanel" class="tab-pane" id="completed_tab">
-								<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<div class="date">
-											<div class="day">JAN</div>
-											<div class="dow">31</div>
-											<div class="dod">FRI</div>
-										</div>
-									</div>
-									<div class="flex-grow-1">
-										<a href="{{route('category', ['location_id'=>1,'cat_id'=>1])}}">
-											<img src="{{url('front-assets/static-image/3.jpg')}}" alt="Task" />
-											<h6>Respirator user has a training sticker on employee badge</h6>
-											<p class="text-muted mb-0">Set corrective actions</p>
-										</a>
-									</div>
-								</div>
-								<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<div class="date">
-											<div class="day">JULY</div>
-											<div class="dow">11</div>
-											<div class="dod">TUE</div>
-										</div>
-									</div>
-									<div class="flex-grow-1">
-										<a href="{{route('category', ['location_id'=>1,'cat_id'=>1]) }}">
-											<img src="{{url('front-assets/static-image/2.jpg')}}" alt="Task" />
-											<h6>Respirator user has a training sticker on employee badge</h6>
-											<p class="text-muted mb-0">Set corrective actions</p>
-										</a>
-									</div>
-								</div>
-								<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<div class="date">
-											<div class="day">FEB</div>
-											<div class="dow">15</div>
-											<div class="dod">FRI</div>
-										</div>
-									</div>
-									<div class="flex-grow-1">
-										<a href="{{route('category', ['location_id'=>1,'cat_id'=>1])}}">
-											<img src="{{url('front-assets/static-image/1.jpg')}}" alt="Task" />
-											<h6>Respirator user has a training sticker on employee badge</h6>
-											<p class="text-muted mb-0">Set corrective actions</p>
-										</a>
-									</div>
-								</div>
-							</div>--}}
+							<div role="tabpanel" class="tab-pane" id="approved_by_inspector_tab">
+								approved
+							</div>
+							<div role="tabpanel" class="tab-pane" id="rejected_by_inspector_tab">
+								rejected
+							</div>
 						</div>
 					</div>
 				</div>
