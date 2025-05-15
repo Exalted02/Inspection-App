@@ -1081,6 +1081,7 @@ class DashboardInspectorController extends Controller
 											'rejected_region' => $task->rejected_region,
 											'image' => $images,
 											'inspector_action'=> $task_list_checklist_corrective_action->inspector_action,
+											'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 										];
 							}
 							
@@ -1130,6 +1131,7 @@ class DashboardInspectorController extends Controller
 											'rejected_region' => $subtask->rejected_region,
 											'image' => $subChecklistimages,
 											'inspector_action'=> $task_list_subchecklist_corrective_action->inspector_action,
+											'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 										];
 								
 							}
@@ -1151,6 +1153,7 @@ class DashboardInspectorController extends Controller
 			
 			$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 			$data['location_id'] = $lid;
+			$data['category_id'] = $catid;
 			
 			return view('inspector.location-owner', $data);
 		}
@@ -1307,10 +1310,7 @@ class DashboardInspectorController extends Controller
 	
 	public function save_lo_reply_rejected_question(Request $request)
 	{
-		echo "<pre>";print_r($request->all());die;
-		//Task_list_corrective_action
-		//Task_list_corrective_action_file
-		
+		//echo "<pre>";print_r($request->all());die;
 		$task_id = $request->task_id;
 		$checklist_id = $request->checklist_id;
 		$subchecklist_id = $request->subchecklist_id ?? null;

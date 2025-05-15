@@ -55,7 +55,9 @@
 	}
  }
  
- 
+	$taskData = App\Models\Task_lists::where('id',$task_id)->first();
+	$task_location_id = $taskData ? $taskData->location_id : '';
+	$task_category_id = $taskData ? $taskData->category_id : '';
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -140,8 +142,9 @@
 							<input type="hidden" id="subchecklist_id" value="{{ $subchecklist_id ?? ''}}">
 							<input type="hidden" id="type" value="{{ $type ?? ''}}">
 							<input type="hidden" id="tab" value="{{ $tab ?? ''}}">
-						
-						
+							<input type="hidden" id="location_id" value="{{ $task_location_id ?? ''}}">
+							<input type="hidden" id="category_id" value="{{ $task_category_id ?? ''}}">
+							
 					</div>
 					
 				</div>
@@ -175,10 +178,12 @@ $(document).ready(function() {
 	
   
 let previewContainer = $('#preview-container');
-
+	
+	
   $('#lo_file').on('change', function (e) {
-    let files = e.target.files;
-
+    //let files = e.target.files;
+	let files = Array.from(e.target.files); // new
+	selectedFiles = files; // new
     previewContainer.empty(); // Clear previous previews
 
     Array.from(files).forEach((file, index) => {
@@ -187,7 +192,6 @@ let previewContainer = $('#preview-container');
 		//$('#preview-container').show();
         reader.onload = function (e) {
           let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image">&times;</div></div>';
-          
           previewContainer.append(imgHtml);
         };
 
@@ -198,7 +202,10 @@ let previewContainer = $('#preview-container');
 
   // Delegate remove button click
   previewContainer.on('click', '.remove-image', function () {
+	const indexToRemove = $(this).data('index');
     $(this).parent().remove();
+	selectedFiles[indexToRemove] = null;
+	selectedFiles = selectedFiles.filter(file => file !== null);
   });
    
    $(document).on('click','.location-owner-approve', function(){
@@ -206,6 +213,8 @@ let previewContainer = $('#preview-container');
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var type = $('#type').val();
+	   var category_id = $('#category_id').val();
+	   var location_id = $('#location_id').val();
 	   
 	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
 	   if(lo_corrective_action_plan=='')
@@ -223,11 +232,15 @@ let previewContainer = $('#preview-container');
 		let formData = new FormData();
 
 		// Append all selected files to formData
-		$.each(files, function (index, file) {
+		/*$.each(files, function (index, file) {
+			formData.append('lo_file[]', file);
+		});*/
+		
+		selectedFiles.forEach(file => {
 			formData.append('lo_file[]', file);
 		});
 		
-		alert(csrfToken) // show ok 
+		//alert(csrfToken) // show ok 
 		// Optional: Add other data
 		formData.append('task_id', task_id);
 		formData.append('checklist_id', checklist_id);
@@ -246,29 +259,15 @@ let previewContainer = $('#preview-container');
 				//alert(response.message);
 				if(response.message=='success')
 				{
-					
-					/*let location_id = response.location_id;
-					let category_id = response.category_id;
-					
+					//history.back();
 					var baseUrl = "{{ url('/location-owner') }}";
 					var redirectUrl = baseUrl + '/'+ location_id + '/' + category_id;
-					window.location.href = redirectUrl;*/
+					window.location.href = redirectUrl;
 				}
 				
 			},
 		});
 	});
-   
-   /*$('#lo_file').on('change', function (event) {
-		const [file] = event.target.files;
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = function (e) {
-				$('#preview').attr('src', e.target.result).show();
-			}
-			reader.readAsDataURL(file);
-		}
-	});*/
 });
 </script>
 @endsection
