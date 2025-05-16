@@ -109,6 +109,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 		
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
+	Route::get('/management-location', [ManagementController::class, 'management_location'])->name('management-location');
 	
 	//User-Accounts  
 	Route::get('/users', [UserController::class, 'index'])->name('users');

@@ -19,6 +19,9 @@
 .mr-5px {
 	margin-right: 5px !important;
 }
+.justify-between {
+	justify-content: space-between !important;
+}
 .d-flex {
 	display: flex !important;
 }
