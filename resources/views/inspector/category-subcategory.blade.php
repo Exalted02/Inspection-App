@@ -244,7 +244,7 @@ $(document ).ready(function() {
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {cat_id:cat_id,location_id:location_id, _token: csrfToken},
+			data: {cat_id:cat_id,subcat_id:subcat_id,location_id:location_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.hasData);

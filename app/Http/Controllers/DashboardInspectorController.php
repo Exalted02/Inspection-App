@@ -165,12 +165,27 @@ class DashboardInspectorController extends Controller
 	public function check_task_id(Request $request)
 	{
 		$category_id = $request->post('cat_id');
+		$subcategory_id = $request->post('subcat_id');
 		$location_id = $request->post('location_id');
 		$inspector_id = auth()->user()->id;
 		$exists = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->exists();
 		if($exists)
 		{
 			$taskid = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->first()->id;
+			
+			$taskLocationDtls = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->first()->location_details ;
+			
+			$hasChecklists = Checklist::where('category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
+			if(!$hasChecklists)
+			{
+				return response()->json(['hasData'=> false, 'id'=>NULL]);
+			}
+			
+			if(!$taskLocationDtls)
+			{
+				return response()->json(['hasData'=> false, 'id'=>NULL]);
+			}
+			
 			return response()->json(['hasData'=> true, 'taskid'=>$taskid]);
 		}
 		else{
