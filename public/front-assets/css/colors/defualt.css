@@ -71,8 +71,10 @@ span.app-store-btn:hover, .social-links-two a:hover , .search-section .search-op
 }
 .btn-theme { 
   color: #ffffff; 
-  background-color: #E52D27; 
-  border-color: #E52D27; 
+  /*background-color: #E52D27; 
+  border-color: #E52D27;*/ 
+  background-color: #0b2b57;
+   border-color: #0b2b57;
 } 
  
 .btn-theme:hover, 
@@ -81,8 +83,11 @@ span.app-store-btn:hover, .social-links-two a:hover , .search-section .search-op
 .btn-theme.active, 
 .open .dropdown-toggle.btn-theme { 
   color: #ffffff; 
-  background-color: #B31217; 
-  border-color: #B31217; 
+  /*background-color: #B31217; 
+  border-color: #B31217; */
+  
+  background-color: #0b2b57;
+  border-color: #0b2b57;
 } 
  
 .btn-theme:active, 

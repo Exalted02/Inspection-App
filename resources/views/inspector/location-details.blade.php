@@ -47,6 +47,7 @@ $week= '';
 						<!-- Tab panes -->
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane active" id="inprogress_tab">
+							@if($task_list_data->isNotEmpty())
 								@foreach($task_list_data as $tasks)
 								@php
 								
@@ -81,56 +82,12 @@ $week= '';
 									</div>
 								</div>
 								@endforeach
+							@else
+								<div class="text-center"><strong><h3>No record found</h3></strong></div>
+							@endif
 							</div>
 							<div role="tabpanel" class="tab-pane" id="completed_tab">
-								<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<div class="date">
-											<div class="day">JAN</div>
-											<div class="dow">31</div>
-											<div class="dod">FRI</div>
-										</div>
-									</div>
-									<div class="flex-grow-1">
-										<a href="{{route('category', ['location_id'=>1,'cat_id'=>1])}}">
-											<img src="{{url('front-assets/static-image/3.jpg')}}" alt="Task" />
-											<h6>Respirator user has a training sticker on employee badge</h6>
-											<p class="text-muted mb-0">Set corrective actions</p>
-										</a>
-									</div>
-								</div>
-								<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<div class="date">
-											<div class="day">JULY</div>
-											<div class="dow">11</div>
-											<div class="dod">TUE</div>
-										</div>
-									</div>
-									<div class="flex-grow-1">
-										<a href="{{route('category', ['location_id'=>1,'cat_id'=>1]) }}">
-											<img src="{{url('front-assets/static-image/2.jpg')}}" alt="Task" />
-											<h6>Respirator user has a training sticker on employee badge</h6>
-											<p class="text-muted mb-0">Set corrective actions</p>
-										</a>
-									</div>
-								</div>
-								<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<div class="date">
-											<div class="day">FEB</div>
-											<div class="dow">15</div>
-											<div class="dod">FRI</div>
-										</div>
-									</div>
-									<div class="flex-grow-1">
-										<a href="{{route('category', ['location_id'=>1,'cat_id'=>1])}}">
-											<img src="{{url('front-assets/static-image/1.jpg')}}" alt="Task" />
-											<h6>Respirator user has a training sticker on employee badge</h6>
-											<p class="text-muted mb-0">Set corrective actions</p>
-										</a>
-									</div>
-								</div>
+								
 							</div>
 						</div>
 					</div>
@@ -139,7 +96,64 @@ $week= '';
 		</div>
     </div>
 	
-	<div id="add_category" class="modal custom-modal-frontend fade" role="dialog">
+	<!-- =-=-=-=-=-=-= Quote Modal =-=-=-=-=-=-= -->
+      <div class="modal fade price-quote" id="add_category" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                  <h3 class="modal-title" id="lineModalLabel">{{ __('Add task') }}</h3>
+               </div>
+               <div class="modal-body">
+                  
+                  <!-- content goes here -->
+                  <form id="frmcategory" action="{{ route('save-task-data') }}" enctype="multipart/form-data">
+					<input type="hidden" id="id" name="id">
+					<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
+					@csrf
+                     <div class="form-group  col-md-12  col-sm-12">
+                        <label>Category</label>
+						<span class="text-danger">*</span></label>
+                        <select class="select form-control" name="category_id" id="category_id">
+							<option value="">Select category</option>
+							@foreach($locationcategory as $category)
+								<option value="{{ $category->id ?? '' }}">{{ $category->name ?? ''}}</option>
+							@endforeach
+						</select>
+						<span id="category_id_error" style="display:none;  color: red;"></span>
+                     </div>
+                     <div class="form-group  col-md-12  col-sm-12">
+                        <label>{{ __('Task Title') }}</label>
+                        <input class="form-control" type="text" name="task_title" id="task_title">
+						<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
+                     </div>
+					 <div class="row margin-bottom-20">
+						<div class="form-group">
+							<div class="col-md-9">
+								<div class="input-group" style="margin-left: 16px;">
+									<span class="input-group-btn">
+									<span class="btn btn-default btn-file">
+									Browse… <input type="file" id="imgInp">
+									</span>
+									</span>
+									<input type="text" class="form-control" readonly name="task_image" id="task_image" accept="image/*">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<img id="img-upload" class="img-responsive" src="images/users/2.jpg" alt="" />
+							</div>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+                    <div class="col-md-12  col-sm-12 margin-bottom-20 margin-top-20">
+                        <button type="submit" class="btn btn-theme btn-block save-task button-color">Submit</button>
+                    </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+	{{--<div id="add_category" class="modal custom-modal-frontend fade" role="dialog">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -198,26 +212,8 @@ $week= '';
 				</div>
 			</div>
 		</div>
-	</div>
-	{{--<div class="modal fade" id="add_category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>--}}
+	</div>--}}
+	
 @endsection 
 @section('scripts')
 {{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>--}}
