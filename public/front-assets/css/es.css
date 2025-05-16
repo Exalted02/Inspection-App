@@ -639,6 +639,26 @@
 	border-top: 5px solid #F7F7F7;
 }
 /**********************************FOR MANAGEMENT PAGE***********************************/
+/****************************FOR MANAGEMENT OBSERVATION PAGE*****************************/
+.location-observation-title {
+	font-size: 15px;
+    font-weight: 700;
+    color: #000000;
+}
+.location-observation-title {
+	font-size: 13px;
+}
+.small-card-odd {
+    padding-left: 15px !important;
+	padding-right: 5px !important;
+	padding-bottom: 10px !important;
+}
+.small-card-even {
+    padding-left: 5px !important;
+	padding-right: 15px !important;
+	padding-bottom: 10px !important;
+}
+/****************************FOR MANAGEMENT OBSERVATION PAGE*****************************/
 .sticky-footer-completed {
 	position: fixed;
 	bottom: 0;
