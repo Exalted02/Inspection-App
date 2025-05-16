@@ -13,4 +13,10 @@ class ManagementController extends Controller
 		
         return view('management.management-dashboard', $data);
     }
+    public function management_location()
+    {
+		$data = [];
+		
+        return view('management.management-location', $data);
+    }
 }

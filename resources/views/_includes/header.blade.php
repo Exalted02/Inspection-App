@@ -12,13 +12,15 @@
 				 <div class="col-lg-12 col-md-12">
 					<!-- menu logo -->
 					<ul class="menu-logo">
-					   <li style="margin-top: 7px;">
+					   <li style="margin-top: 7px;" class="d-flex justify-between">
 							{{--<a href="{{ route('inspector-dashboard')}}">
 								<span>Inspection</span>
 							</a>--}}
-							<a href="javascript:history.back()">
-								<span><i class="fa fa-angle-left"></i></span>
-							</a>
+							<div>
+								<a href="javascript:history.back()">
+									<span><i class="fa fa-angle-left"></i></span>
+								</a>
+							</div>
 							<div class="header-icon">
 								<a href="{{ route('inspector-dashboard')}}"><i class="fa-solid fa-house"></i></a>
 								<a href="{{ route('logout')}}"><i class="fa-solid fa-right-from-bracket"></i></a>

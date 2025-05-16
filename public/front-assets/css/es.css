@@ -1,3 +1,9 @@
+.pt-2 {
+	padding-top: 2rem !important;
+}
+.pb-2 {
+	padding-bottom: 2rem !important;
+}
 .pt-3 {
 	padding-top: 3rem !important;
 }
@@ -12,6 +18,9 @@
 }
 .mr-5px {
 	margin-right: 5px !important;
+}
+.justify-between {
+	justify-content: space-between !important;
 }
 .d-flex {
 	display: flex !important;
@@ -592,25 +601,42 @@
 	font-size: 14px;
     color: #777;
 }
-.bg.small-card {
+.small-card-first {
+	padding-right: 5px !important;
+    padding-left: 15px !important;
+}
+.small-card-second {
+	padding-right: 5px !important;
+    padding-left: 5px !important;
+}
+.small-card-third {
+	padding-right: 15px !important;
+    padding-left: 5px !important;
+}
+.small-card {
 	padding: 10px;
+}
+.bg.small-card {
 	background-color: #F7F7F7;
 	border: 1px solid #F7F7F7;
     border-radius: 12px;
 }
-.bg.small-card-title {
+.small-card-title {
 	font-size: 12px;
 	font-weight: 700;
 }
-.bg.small-card-counter {
+.small-card-counter {
 	font-size: 40px;
 	font-weight: 700;
 	color: #000;
 }
-.bg.small-card-counter-title {
+.small-card-counter-title {
 	font-size: 10px;
 	font-weight: 700;
 	text-transform: uppercase;
+}
+.management-location-card {
+	border-top: 5px solid #F7F7F7;
 }
 /**********************************FOR MANAGEMENT PAGE***********************************/
 .sticky-footer-completed {
