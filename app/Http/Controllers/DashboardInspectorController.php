@@ -1207,6 +1207,7 @@ class DashboardInspectorController extends Controller
 	}
 	public function save_task_data(Request $request)
 	{
+		//echo "<pre>";print_r($request->all());die;
 		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('category_id', $request->post('category_id'))->where('task_title', $request->post('task_title'))->where('status', '!=', 2)
         ->first();
 		
