@@ -91,7 +91,7 @@ if(!empty($userdata->profile_image))
 									<div class="short-description-1 clearfix">
 										<h3>{{ $lacationData->location_name ?? '' }}</h3>
 								</a>
-										<div class="category-title"> <span>{{ $city ?? '' }}, {{ $state ?? '' }}, {{ $country ?? '' }}, {{ $lacationData->zipcode ?? '' }}</span> </div>
+								{{--<div class="category-title"> <span>{{ $city ?? '' }}, {{ $state ?? '' }}, {{ $country ?? '' }}, {{ $lacationData->zipcode ?? '' }}</span> </div>--}}
 									</div>
 								</div>
                             </div>
