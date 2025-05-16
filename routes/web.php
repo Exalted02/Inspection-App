@@ -107,7 +107,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::post('save-lo-reply-rejected-question', [DashboardInspectorController::class, 'save_lo_reply_rejected_question'])->name('save-lo-reply-rejected-question');
 		
-	//User-Accounts  
+	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
 	
 	//User-Accounts  
