@@ -15,6 +15,7 @@ use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChallengesController;
 use App\Http\Controllers\DashboardInspectorController;
+use App\Http\Controllers\ManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,6 +106,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('location-owner-subchecklist-rejected-question-reply/{task_id}/{checklist_id}/{subchecklist_id}/{type}', [DashboardInspectorController::class, 'location_owner_subchecklist_rejected_question_reply'])->name('location-owner-subchecklist-rejected-question-reply');
 	
 	Route::post('save-lo-reply-rejected-question', [DashboardInspectorController::class, 'save_lo_reply_rejected_question'])->name('save-lo-reply-rejected-question');
+		
+	//User-Accounts  
+	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
 	
 	//User-Accounts  
 	Route::get('/users', [UserController::class, 'index'])->name('users');
