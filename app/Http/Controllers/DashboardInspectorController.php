@@ -68,14 +68,14 @@ class DashboardInspectorController extends Controller
 		$data['location_id'] = $id;
         return view('inspector.location-details', $data);
     }
-	public function category($lid='',$catid='')
+	public function category($task_id='',$lid='',$catid='')
     {
 		$data = [];
 		// -- if inspector login 
 		
 		$data['categoryData'] = Category::with('get_subcategory')->where('id', $catid)->get();
 		$data['location_id'] = $lid;
-		$details = Task_lists::where('inspector_id', auth()->user()->id)->where('location_id', $lid)->where('category_id', $catid)->first();
+		$details = Task_lists::where('id',$task_id)->where('inspector_id', auth()->user()->id)->where('location_id', $lid)->where('category_id', $catid)->first();
 		$data['location_details'] = $details ? $details->location_details : null;
 		$data['task_id'] = $details ? $details->id : null;
 		

@@ -5,6 +5,7 @@
  //echo "<pre>";print_r($correctiveAction);die;
  $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
+echo $task_id; die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">

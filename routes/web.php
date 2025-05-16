@@ -63,7 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('/checklist-question/{taskid}/{cat_id}/{subcat_id}', [DashboardInspectorController::class, 'checklist_question'])->name('checklist-question');
 	Route::post('checklist-next-question', [DashboardInspectorController::class, 'checklist_next_question'])->name('checklist-next-question');
 	Route::post('checklist-previous-question', [DashboardInspectorController::class, 'checklist_previous_question'])->name('checklist-previous-question');
-	Route::get('/category/{location_id}/{cat_id}', [DashboardInspectorController::class, 'category'])->name('category');
+	Route::get('/category/{task_id}/{location_id}/{cat_id}', [DashboardInspectorController::class, 'category'])->name('category');
 	
 	Route::get('/location-details/{id}', [DashboardInspectorController::class, 'location_details'])->name('location-details');
 	Route::get('/inspector-dashboard', [DashboardInspectorController::class, 'inspector_dashboard'])->name('inspector-dashboard');
