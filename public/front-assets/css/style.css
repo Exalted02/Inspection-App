@@ -578,7 +578,7 @@ ul {
 /* =-=-=-=-=-=-= Heading Styles =-=-=-=-=-=-= */
 
 .heading-panel, .heading-panel-2 {
-	margin-bottom: 30px;
+	/* margin-bottom: 30px; */
 	overflow: hidden;
 }
 
@@ -636,7 +636,7 @@ ul {
 }
 
 .heading-panel h1::before {
-	background-color: #242424;
+	/* background-color: #242424; */
 	bottom: 6px;
 	content: "";
 	height: 1px;
@@ -648,7 +648,7 @@ ul {
 }
 
 .heading-panel h1::after {
-	background-color: #242424;
+	/* background-color: #242424; */
 	bottom: 0;
 	content: "";
 	height: 1px;
@@ -1519,7 +1519,8 @@ img.resize {
 
 .category-grid-box-1 h3 {
 	color: #232323;
-	font-size: 18px;
+	font-size: 15px;
+    font-weight: 700;
 	margin-bottom: 4px;
 	text-transform: capitalize;
 }
