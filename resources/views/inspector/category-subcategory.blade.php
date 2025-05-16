@@ -5,7 +5,7 @@
  //echo "<pre>";print_r($correctiveAction);die;
  $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
-echo $task_id; die;
+//echo $task_id; die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -62,7 +62,7 @@ echo $task_id; die;
 										<div class="subtitle">Completed {{ $tot_completed_task ?? ''}} of {{ $tot_checklist ?? ''}}</div>
 									</div>
 									{{--<a href="{{route('checklist-question' ,['cat_id'=>$categoryData[0]->id, 'subcat_id'=>$subcategories->id])}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
-									<a href="jacascript:void(0);" class="chk-task-id" data-cat="{{ $categoryData[0]->id ?? ''}}" data-subcat="{{ $subcategories->id ?? '' }}" data-location="{{ $location_id ?? ''}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
+									<a href="jacascript:void(0);" class="chk-task-id" data-cat="{{ $categoryData[0]->id ?? ''}}" data-subcat="{{ $subcategories->id ?? '' }}" data-location="{{ $location_id ?? ''}}" data-taskid="{{ $task_id }}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
 								</div>
 								@endforeach
 							@else	
@@ -275,11 +275,12 @@ $(document ).ready(function() {
 	   var cat_id = $(this).data('cat');
 	   var subcat_id = $(this).data('subcat');
 	   var location_id = $(this).data('location');
+	   var task_id = $(this).data('taskid');
 	   var URL = "{{ route('check-task-id') }}";
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {cat_id:cat_id,subcat_id:subcat_id,location_id:location_id, _token: csrfToken},
+			data: {cat_id:cat_id,subcat_id:subcat_id,location_id:location_id,task_id:task_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.hasData);

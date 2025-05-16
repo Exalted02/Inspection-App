@@ -68,12 +68,12 @@ class DashboardInspectorController extends Controller
 		$data['location_id'] = $id;
         return view('inspector.location-details', $data);
     }
-	public function category($task_id='',$lid='',$catid='')
+	public function category($lid='',$catid='',$task_id='')
     {
 		$data = [];
 		// -- if inspector login 
 		
-		$data['categoryData'] = Category::with('get_subcategory')->where('id', $catid)->get();
+		$data['categoryData'] = Category::with('get_subcategory')->where('id', $catid)->where('location_id', $lid)->get();
 		$data['location_id'] = $lid;
 		$details = Task_lists::where('id',$task_id)->where('inspector_id', auth()->user()->id)->where('location_id', $lid)->where('category_id', $catid)->first();
 		$data['location_details'] = $details ? $details->location_details : null;
@@ -168,12 +168,13 @@ class DashboardInspectorController extends Controller
 		$subcategory_id = $request->post('subcat_id');
 		$location_id = $request->post('location_id');
 		$inspector_id = auth()->user()->id;
-		$exists = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->exists();
+		$task_id = $request->post('task_id');
+		$exists = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->where('id', $task_id)->exists();
 		if($exists)
 		{
-			$taskid = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->first()->id;
+			//$taskid = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->first()->id;
 			
-			$taskLocationDtls = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->first()->location_details ;
+			$taskLocationDtls = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->where('id', $task_id)->first()->location_details ;
 			
 			$hasChecklists = Checklist::where('category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
 			
@@ -187,7 +188,7 @@ class DashboardInspectorController extends Controller
 				return response()->json(['hasData'=> false,'message'=>'This subcategory has no checklist. Create checklist and subchecklist', 'id'=>NULL]);
 			}
 			
-			return response()->json(['hasData'=> true, 'taskid'=>$taskid]);
+			return response()->json(['hasData'=> true, 'taskid'=>$task_id]);
 		}
 		else{
 			return response()->json(['hasData'=> false, 'id'=>NULL]);
