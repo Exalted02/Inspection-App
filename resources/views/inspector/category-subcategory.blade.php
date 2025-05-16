@@ -18,9 +18,8 @@ use Carbon\Carbon;
 			<span id="successMessage" style="display: none; color: green;">
 				Details saved successfully!
 			</span>
-			<span id="errorMessage" style="display: none; color: red;">
-				Please enter details.
-			</span>
+			{{--<span id="errorMessage" style="display: none; color: red;"></span>--}}
+				
 			<div class="location-edit" id="editBox">
 				<input type="text" id="addressInput" placeholder="Add location" value="{{ $location_details ?? ''}}"/>
 				<button id="doneBtn" class="donesubmit">Done</button>
@@ -178,6 +177,41 @@ use Carbon\Carbon;
 			</section>
 		</div>
     </div>
+	
+	<!----------- delete modal -------------->
+	<div class="modal fade" id="error-msg-modal" tabindex="-1" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content" style="height: 180px;">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">
+			  <span aria-hidden="true">×</span><span class="sr-only">Close</span>
+			</button>
+			<h3 class="modal-title" id="lineModalLabel"></h3>
+		  </div>
+		  <div class="modal-body d-flex justify-content-center align-items-center text-center">
+			<span id="successMessage" class="text-success d-none">Details saved successfully!</span>
+			<span id="errorMessage" class="text-danger font-weight-bold"></span>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+	{{--<div class="modal fade" id="error-msg-modal" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal-dialog">
+            <div class="modal-content"  style="height:180px;">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                  <h3 class="modal-title" id="lineModalLabel"></h3>
+               </div>
+                <div class="modal-body">
+					<span id="successMessage" style="display: none; color: green;">
+						Details saved successfully!
+					</span>
+					<span id="errorMessage" style="color: red;text:center"></span>
+				</div>
+            </div>
+         </div>
+      </div>--}}
 @endsection 
 @section('scripts')
 <script>
@@ -251,7 +285,8 @@ $(document ).ready(function() {
 				$('#taskid').val(response.taskid);
 				if(!response.hasData)
 				{
-					$('#errorMessage').fadeIn().delay(2000).fadeOut();
+					$('#error-msg-modal').modal('show');
+					$('#errorMessage').text(response.message).fadeIn().delay(4000).fadeOut();
 				}
 				else {
 					var taskid = $('#taskid').val();

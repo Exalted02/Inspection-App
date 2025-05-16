@@ -176,14 +176,15 @@ class DashboardInspectorController extends Controller
 			$taskLocationDtls = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->first()->location_details ;
 			
 			$hasChecklists = Checklist::where('category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
-			if(!$hasChecklists)
-			{
-				return response()->json(['hasData'=> false, 'id'=>NULL]);
-			}
 			
 			if(!$taskLocationDtls)
 			{
-				return response()->json(['hasData'=> false, 'id'=>NULL]);
+				return response()->json(['hasData'=> false,'message'=>'Please enter details.', 'id'=>NULL]);
+			}
+			
+			if(!$hasChecklists)
+			{
+				return response()->json(['hasData'=> false,'message'=>'This subcategory has no checklist', 'id'=>NULL]);
 			}
 			
 			return response()->json(['hasData'=> true, 'taskid'=>$taskid]);
