@@ -826,7 +826,7 @@ $(document ).ready(function() {
 								htmlCompleted += '<div class="checklist-item">';
 									htmlCompleted += '<div class="text">';
 									htmlCompleted += '<div class="title">' + chklist.name + '</div>';
-									htmlCompleted += '<div class="subtitle">' + aprvStatusHtml + '</div>';
+									htmlCompleted += '<div class="subtitle mt-3">' + aprvStatusHtml + '</div>';
 									htmlCompleted += '</div>';
 									htmlCompleted += '<a href="javascript:void(0)" style="text-decoration: none;"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '"><small>Edit</small></div></a>';
 								htmlCompleted += '</div>';

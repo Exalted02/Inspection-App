@@ -140,11 +140,16 @@ $week= '';
 								</div>
 								<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
 							</div>
-							<div class="col-md-3">
+							{{--<div class="col-md-3">
 								<img id="img-upload" class="img-responsive" src="images/users/2.jpg" alt="" />
-							</div>
+							</div>--}}
 						</div>
 					</div>
+					 <div class="form-group  col-md-12  col-sm-12">
+					 <div class="col-md-3">
+								<img id="img-upload" class="img-responsive" src="images/users/2.jpg" alt="" />
+							</div>
+					 </div>
 					<div class="clearfix"></div>
                     <div class="col-md-12  col-sm-12 margin-bottom-20 margin-top-20">
                         <button type="button" class="btn btn-theme btn-block save-task button-color">Submit</button>
