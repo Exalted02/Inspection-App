@@ -96,7 +96,7 @@ $week= '';
 		</div>
     </div>
 	
-	<!-- =-=-=-=-=-=-= Quote Modal =-=-=-=-=-=-= -->
+	<!-- =-=-=-=-=-=-= Task add  Modal =-=-=-=-=-=-= -->
       <div class="modal fade price-quote" id="add_category" tabindex="-1" role="dialog" aria-hidden="true">
          <div class="modal-dialog">
             <div class="modal-content">
@@ -133,11 +133,12 @@ $week= '';
 								<div class="input-group" style="margin-left: 16px;">
 									<span class="input-group-btn">
 									<span class="btn btn-default btn-file">
-									Browse… <input type="file" id="imgInp" name="task_image">
+									Browse… <input type="file" id="task_image" name="task_image">
 									</span>
 									</span>
 									<input type="text" class="form-control" readonly name="task_image" id="task_image" accept="image/*">
 								</div>
+								<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
 							</div>
 							<div class="col-md-3">
 								<img id="img-upload" class="img-responsive" src="images/users/2.jpg" alt="" />
@@ -153,66 +154,6 @@ $week= '';
             </div>
          </div>
       </div>
-	{{--<div id="add_category" class="modal custom-modal-frontend fade" role="dialog">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title"><span id="head-label">{{ __('Add task') }}</span></h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form id="frmcategory" action="{{ route('save-task-data') }}" enctype="multipart/form-data">
-					<input type="hidden" id="id" name="id">
-					<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
-					@csrf
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="input-block mb-3">
-									<label class="col-form-label">{{ __('Category') }}<span class="text-danger">*</span></label>
-									<select class="select form-control" name="category_id" id="category_id">
-										<option value="">Select category</option>
-										@foreach($locationcategory as $category)
-											<option value="{{ $category->id ?? '' }}">{{ $category->name ?? ''}}</option>
-										@endforeach
-									</select>
-									<span id="category_id_error" style="display:none;  color: red;"></span>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="input-block mb-3">
-									<label class="col-form-label">{{ __('Task Title') }}<span class="text-danger">*</span></label>
-									<input class="form-control" type="text" name="task_title" id="task_title">
-									<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="input-block mb-3">
-									<label class="col-form-label">{{ __('image') }}</label>
-									<input class="form-control" type="file" name="task_image" id="task_image" accept="image/*">
-									
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="input-block mb-3">
-								<label class="col-form-label"></label>
-								<img id="preview" src="#" alt="" style="max-width: 70px; margin-top: 25px; display: none;" />
-								</div>
-							</div>
-						</div>
-						<div class="submit-section">
-							<button class="btn btn-primary submit-btn save-task" type="button">Submit</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>--}}
 	
 @endsection 
 @section('scripts')
@@ -223,10 +164,14 @@ $(document ).ready(function() {
 		$('#add_category').modal('show');
 	});
 	
+	$("#task_image").change(function() {
+        readURL(this);
+    });
+	
 	$(document).on('click','.save-task', function(){
 		let category_id = $('#category_id').val().trim();
 		let task_title = $('#task_title').val().trim();
-		
+		let task_image = $('#task_image')[0].files.length;
 		if (category_id === '') {
 			$('#category_id_error').text('Please enter category').fadeIn().delay(2000).fadeOut();
 			return false;
@@ -237,6 +182,10 @@ $(document ).ready(function() {
 			return false;
 		}
 		
+		if (task_image === 0) {
+			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
+			return false;
+		}
 		
 		
 		//var form = $("#frmlocation");
@@ -282,6 +231,15 @@ $(document ).ready(function() {
 		}
 	});
 });
+function readURL(input) {
+	if (input.files && input.files[0]) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			$('#img-upload').attr('src', e.target.result);
+		};
+		reader.readAsDataURL(input.files[0]);
+	}
+}
 </script>
 @endsection
 

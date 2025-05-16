@@ -44,6 +44,7 @@ use Carbon\Carbon;
 						<!-- Tab panes -->
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane active" id="uncomplete_tab">
+							@if($categoryData[0]->get_subcategory->isNotEmpty())
 								@foreach($categoryData[0]->get_subcategory as $subcategories)
 								@php 
 									$tot_checklist = App\Models\Checklist::where('category_id', $categoryData[0]->id)->where('subcategory_id', $subcategories->id)->count();
@@ -64,10 +65,9 @@ use Carbon\Carbon;
 									<a href="jacascript:void(0);" class="chk-task-id" data-cat="{{ $categoryData[0]->id ?? ''}}" data-subcat="{{ $subcategories->id ?? '' }}" data-location="{{ $location_id ?? ''}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
 								</div>
 								@endforeach
-								
-								{{--<div class="sticky-footer">
-									<button>Submit checklist</button>
-								</div>--}}
+							@else	
+								<div class="text-center"><strong><h3>No record found</h3></strong></div>
+							@endif
 							</div>
 							<div role="tabpanel" class="tab-pane" id="reject_tab">
 								Not have any data
