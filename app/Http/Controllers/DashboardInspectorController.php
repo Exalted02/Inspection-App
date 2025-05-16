@@ -179,12 +179,12 @@ class DashboardInspectorController extends Controller
 			
 			if(!$taskLocationDtls)
 			{
-				return response()->json(['hasData'=> false,'message'=>'Please enter details.', 'id'=>NULL]);
+				return response()->json(['hasData'=> false,'message'=>'Please enter location details.', 'id'=>NULL]);
 			}
 			
 			if(!$hasChecklists)
 			{
-				return response()->json(['hasData'=> false,'message'=>'This subcategory has no checklist', 'id'=>NULL]);
+				return response()->json(['hasData'=> false,'message'=>'This subcategory has no checklist. Create checklist and subchecklist', 'id'=>NULL]);
 			}
 			
 			return response()->json(['hasData'=> true, 'taskid'=>$taskid]);

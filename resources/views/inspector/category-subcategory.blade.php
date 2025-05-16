@@ -286,7 +286,7 @@ $(document ).ready(function() {
 				if(!response.hasData)
 				{
 					$('#error-msg-modal').modal('show');
-					$('#errorMessage').text(response.message).fadeIn().delay(4000).fadeOut();
+					$('#errorMessage').text(response.message).fadeIn().delay(8000).fadeOut();
 				}
 				else {
 					var taskid = $('#taskid').val();
