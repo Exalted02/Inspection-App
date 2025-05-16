@@ -228,50 +228,46 @@ $(document ).ready(function() {
 		let task_title = $('#task_title').val().trim();
 		
 		if (category_id === '') {
-			//$('#category_id').addClass('is-invalid');
-			$('#category_id_error').text('Please enter category').fadeIn().delay(2000).fadeOut(); // use specific ID to avoid conflicts
-			//isValid = false;
+			$('#category_id_error').text('Please enter category').fadeIn().delay(2000).fadeOut();
 			return false;
 		}
 		
 		if (task_title === '') {
-			//$('#category_id').addClass('is-invalid');
-			$('#tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut(); // use specific ID to avoid conflicts
-			//isValid = false;
+			$('#tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut();
 			return false;
 		}
 		
 		
 		
-			//var form = $("#frmlocation");
-			var URL = $('#frmcategory').attr('action');
-			var id = $('#id').val();
-			
-			let formData = new FormData($('#frmcategory')[0]);
-			formData.append('_token', csrfToken);
-			//alert(URL);
-			$.ajax({
-				url: URL,
-				type: "POST",
-				data: formData,
-				processData: false,
-				contentType: false,
-				//dataType: 'json',
-				success: function(response) {
-					if (!response.success) {
-						
-						$('#tasktitle_id_error').text('Task title already exists.').fadeIn().delay(2000).fadeOut(); 
-						//$('#task_title').addClass('is-invalid');
-						//$('#task_title').next('.invalid-feedback').text(response.message).show();
-					} else {
-						$('#category_id').val('').trigger('change');
-						$('#task_title').val('');
-						setTimeout(() => {
-							window.location.reload();
-						}, "2000");
-					}
-				},
-			});
+		//var form = $("#frmlocation");
+		var URL = $('#frmcategory').attr('action');
+		var id = $('#id').val();
+		
+		let formData = new FormData($('#frmcategory')[0]);
+		formData.append('_token', csrfToken);
+		//alert(URL);
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: formData,
+			processData: false,
+			contentType: false,
+			//dataType: 'json',
+			success: function(response) {
+				if (!response.success) {
+					
+					$('#tasktitle_id_error').text('Task title already exists.').fadeIn().delay(2000).fadeOut(); 
+					//$('#task_title').addClass('is-invalid');
+					//$('#task_title').next('.invalid-feedback').text(response.message).show();
+				} else {
+					$('#category_id').val('').trigger('change');
+					$('#task_title').val('');
+					setTimeout(() => {
+						window.location.reload();
+					}, "2000");
+				}
+			},
+		});
 		
 	});
 	
