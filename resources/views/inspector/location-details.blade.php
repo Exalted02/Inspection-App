@@ -133,7 +133,7 @@ $week= '';
 								<div class="input-group" style="margin-left: 16px;">
 									<span class="input-group-btn">
 									<span class="btn btn-default btn-file">
-									Browse… <input type="file" id="imgInp">
+									Browse… <input type="file" id="imgInp" name="task_image">
 									</span>
 									</span>
 									<input type="text" class="form-control" readonly name="task_image" id="task_image" accept="image/*">
@@ -146,7 +146,7 @@ $week= '';
 					</div>
 					<div class="clearfix"></div>
                     <div class="col-md-12  col-sm-12 margin-bottom-20 margin-top-20">
-                        <button type="submit" class="btn btn-theme btn-block save-task button-color">Submit</button>
+                        <button type="button" class="btn btn-theme btn-block save-task button-color">Submit</button>
                     </div>
                   </form>
                </div>
