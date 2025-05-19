@@ -41,7 +41,7 @@
 													<option value="">{{ __('please_select') }}</option>
 													<option value="1">Inspector</option>
 													<option value="2">LO</option>
-													<option value="3">LOC</option>
+													<option value="3">LOS</option>
 													<option value="4">Management	</option>
 												</select>
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('company_name')}}.</div>

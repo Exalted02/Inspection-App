@@ -187,9 +187,10 @@ class InspectorController extends Controller
 			}
 		}
 		
+		$userFolderName = $request->post('user_type') ==1 ? 'inspector' : ($request->post('user_type') == 2 ? 'locationowner' : 'locationownersupervisor');
 		$fileName = '';
 		if($request->hasFile('avatar')) {
-			$destinationPath = public_path('uploads/profile/' . $id .'/inspector/');
+			$destinationPath = public_path('uploads/profile/' . $id .'/'. $userFolderName .'/');
 			if (!file_exists($destinationPath)) {
 				mkdir($destinationPath, 0777, true);
 			}
@@ -204,7 +205,7 @@ class InspectorController extends Controller
 			// unlink avatar
 			if(!empty($request->post('hid_avatar')))
 			{
-				$path = public_path('uploads/profile/' . $id  . '/inspector/' . $request->post('hid_avatar'));
+				$path = public_path('uploads/profile/' . $id  . '/' . $userFolderName . '/' . $request->post('hid_avatar'));
 				if (file_exists($path)) {
 					unlink($path);
 				}
@@ -213,7 +214,7 @@ class InspectorController extends Controller
 		
 		$backgroundImgfileName = '';
 		if($request->hasFile('backgroung_image')) {
-			$destinationPath = public_path('uploads/profile/' . $id .'/inspector/');
+			$destinationPath = public_path('uploads/profile/' . $id .'/'. $userFolderName .'/');
 			if (!file_exists($destinationPath)) {
 				mkdir($destinationPath, 0777, true);
 			}
@@ -227,7 +228,7 @@ class InspectorController extends Controller
 			// unlink background img
 			if(!empty($request->post('hid_back_grd_image')))
 			{
-				$path = public_path('uploads/profile/' . $id  . '/inspector/' . $request->post('hid_back_grd_image'));
+				$path = public_path('uploads/profile/' . $id  . '/'. $userFolderName .'/' . $request->post('hid_back_grd_image'));
 				if (file_exists($path)) {
 					unlink($path);
 				}

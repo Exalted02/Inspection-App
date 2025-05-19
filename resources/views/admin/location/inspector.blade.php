@@ -4,6 +4,7 @@
 //echo "<pre>";print_r($inspector);die;
 $companyData = App\Models\Manage_company::where('id',$company_id)->first();
 $company_name = $companyData ? $companyData->company_name : '';
+$userFolderName = ''
 @endphp
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -175,6 +176,10 @@ $company_name = $companyData ? $companyData->company_name : '';
 						</thead>
 						<tbody>
 						@foreach($inspector as $val)
+						@php 
+							
+							$userFolderName = $val->user_type==1 ? 'inspector' : ($val->user_type==2 ? 'locationowner' : ($val->user_type==3 ? 'locationownersupervisor': 'management'));
+						@endphp
 							<tr>
 								@if($inspector->count() > 0)
 								<td>
@@ -187,8 +192,8 @@ $company_name = $companyData ? $companyData->company_name : '';
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ $val->email ?? ''}}</td>
 								<td>{{ $val->get_company->company_name ?? ''}}</td>
-								<td><img src="{{  !empty($val->profile_image) ? url('uploads/profile/' . $val->id. '/inspector/'.$val->profile_image) : url('images/noimage.png') }}" width="50" height="50"></td>
-								<td><img src="{{ !empty($val->background_image) ? url('uploads/profile/' . $val->id. '/inspector/'. $val->background_image) : url('images/noimage.png') }}" width="50" height="50"></td>
+								<td><img src="{{  !empty($val->profile_image) ? url('uploads/profile/' . $val->id. '/' . $userFolderName . '/'.$val->profile_image) : url('images/noimage.png') }}" width="50" height="50"></td>
+								<td><img src="{{ !empty($val->background_image) ? url('uploads/profile/' . $val->id. '/'. $userFolderName .'/'. $val->background_image) : url('images/noimage.png') }}" width="50" height="50"></td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)

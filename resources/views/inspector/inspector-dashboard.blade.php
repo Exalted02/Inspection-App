@@ -14,6 +14,12 @@ if(auth()->user()->user_type == 2)
 	$user_type_name = 'Location owner';
 }
 
+if(auth()->user()->user_type == 3)
+{
+	$path = 'locationownersupervisor';
+	$user_type_name = 'Location owner supervisor';
+}
+
 $backgroung_img = '';
 $profile_img = '';
 

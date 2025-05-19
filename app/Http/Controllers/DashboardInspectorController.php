@@ -53,7 +53,7 @@ class DashboardInspectorController extends Controller
 											->get();
 			}
 
-		} elseif (auth()->user()->user_type == 2) {
+		} elseif (auth()->user()->user_type == 2 || auth()->user()->user_type == 3) {
 			$hasData = Task_lists::where('location_id', $id)->exists();
 
 			if ($hasData) {
@@ -1241,6 +1241,8 @@ class DashboardInspectorController extends Controller
 		$model->inspector_id	=	auth()->user()->id;
 		$model->location_id		=	$request->post('location_id');
 		$model->category_id		=	$request->post('category_id');
+		//$model->lo_id			=	;
+		//$model->los_id			=	;
 		$model->task_title		=	$request->post('task_title');
 		$model->status		=	1;
 		$model->created_at	=	date('Y-m-d');
@@ -1368,6 +1370,28 @@ class DashboardInspectorController extends Controller
 		return response()->json(['message'=>'success']);
 	}
 	
+	public function inspector_checklist_second_approve_by_lo($location_id='',$task_id='',$checklist_id='',$type='', $tab='')
+	{
+		$data = [];
+		$data['task_id'] = $task_id ?? '';
+		$data['location_id'] = $location_id ?? '';
+		$data['checklist_id'] = $checklist_id ?? '';
+		$data['type'] = $type ?? '';
+		$data['tab'] = $tab ?? '';
+		
+		return view('inspector.inspector-check-reply-approved-by-lo', $data);
+	}
+	public function inspector_subchecklist_second_approve_by_lo($location_id='',$task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
+	{
+		$data = [];
+		$data['task_id'] = $task_id ?? '';
+		$data['location_id'] = $location_id ?? '';
+		$data['checklist_id'] = $checklist_id ?? '';
+		$data['subchecklist_id'] = $subchecklist_id ?? '';
+		$data['type'] = $type ?? '';
+		$data['tab'] = $tab ?? '';
+		return view('inspector.inspector-check-reply-approved-by-lo', $data);
+	}
 	
 	
 }
