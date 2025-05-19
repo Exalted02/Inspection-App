@@ -75,7 +75,7 @@ use Carbon\Carbon;
 							</div>
 							<div role="tabpanel" class="tab-pane" id="corrective_checked_tab">
 								@foreach($correctiveAction as $result)
-								@if($result['inspector_action'] ==2 && $result['second_checked'] == '')
+								@if($result['inspector_action'] ==0 && $result['second_checked'] == '')
 									@php 
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();

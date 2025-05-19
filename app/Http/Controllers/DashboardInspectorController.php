@@ -1210,6 +1210,7 @@ class DashboardInspectorController extends Controller
 		$inspector_id = $taskData ? $taskData->inspector_id : null;
 		$location_id = $taskData ? $taskData->location_id : null;
 		$category_id = $taskData ? $taskData->category_id : null;
+		$los_id = $taskData ? $taskData->los_id : null;
 		
 		$model = new Task_list_corrective_action();
 		$model->task_list_id = $task_list_id;
@@ -1220,6 +1221,7 @@ class DashboardInspectorController extends Controller
 		$model->lo_completed_by = date('Y-m-d h:i:s', strtotime($request->lo_completed_by));
 		$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0;
 		$model->inspector_id = $inspector_id;
+		$model->los_id = $los_id;
 		$model->save();
 		
 		return response()->json(['location_id'=>$location_id, 'category_id'=>$category_id]);
@@ -1237,12 +1239,14 @@ class DashboardInspectorController extends Controller
 			]);
 		}
 		
+		$los_id = User::where('company_id', auth()->user()->company_name)->where('user_type', 3)->first()->id;
+		
 		$model=new Task_lists();
 		$model->inspector_id	=	auth()->user()->id;
 		$model->location_id		=	$request->post('location_id');
 		$model->category_id		=	$request->post('category_id');
 		//$model->lo_id			=	;
-		//$model->los_id			=	;
+		$model->los_id			=	$los_id ?? null;
 		$model->task_title		=	$request->post('task_title');
 		$model->status		=	1;
 		$model->created_at	=	date('Y-m-d');
@@ -1303,6 +1307,7 @@ class DashboardInspectorController extends Controller
 		$model = Task_list_corrective_action::find($id);
 		$model->inspector_action_date = date('Y-m-d h:i:s');
 		$model->inspector_action = $inspector_action;
+		$model->los_action = $inspector_action;
 		$model->inspector_id = $inspector_id;
 		$model->save();
 		
