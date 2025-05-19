@@ -32,7 +32,21 @@
 	 
 	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
 	 
+	 $corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $task_id)->get();
+	 
+	 $corrective_action_files = [];
+	 if($corrective_action_file_data->isNotEmpty())
+	 {
+		 foreach($corrective_action_file_data as $corrective_files)
+		 {
+			$corrective_action_files[] = [
+				'url' => url('uploads/corrective_action/' .$corrective_files->file),
+			];
+		 }
+	 }
+	 
  }
+ 
  
  $taskSubChecklist = null;
  if($type == 'subchecklist')
@@ -119,6 +133,23 @@
 								</div>
 							</div>
 						</div>
+						
+						<div class="row mt-4">
+							<div class="col-12 owner-checklist">
+								<label class="d-block mb-2 fw-bold">Final checks</label>
+
+								@if(!empty($corrective_action_files))
+									<div class="d-flex flex-wrap gap-3">
+										@foreach($corrective_action_files as $fileurl)
+											<div class="cheklist-reply-images">
+												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+											</div>
+										@endforeach
+									</div>
+								@endif
+							</div>
+						</div>
+
 					
 					<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 					<input type="hidden" id="task_id" value="{{ $task_id ?? ''}}">
@@ -141,8 +172,8 @@
 	<div class="checklist-question-sticky-footer">
 						<div class="clearfix"></div>
 						<div class="footer-content question-navigation d-flex justify-content-between">
-							<button class="reject-class-button inspector-rejected">Reject</button>
-							<button class="ms-auto inspector-agree">Agree</button>
+							<button class="reject-class-button inspector-rejected_ss">Reject</button>
+							<button class="ms-auto inspector-approve">Approve</button>
 						</div>
 					</div>
 @endsection 
@@ -188,15 +219,15 @@ $(document).ready(function() {
 		});
 	});
 	
-	$(document).on('click','.inspector-rejected', function(){
+	$(document).on('click','.inspector-approve', function(){
 	   var task_id = $('#task_id').val();
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var location_id = $('#location_id').val();
-	   var inspector_action = 2;
+	   var inspector_action = 1;
 	   
 	   //alert(lo_direct_approve);
-	   var URL = "{{ route('submit-inspector-status') }}";
+	   var URL = "{{ route('submit-inspector-approved') }}";
 	   $.ajax({
 			url: URL,
 			type: "POST",

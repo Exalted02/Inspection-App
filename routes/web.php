@@ -111,6 +111,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('inspector-checklist-second-approve-by-lo/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_checklist_second_approve_by_lo'])->name('inspector-checklist-second-approve-by-lo');
 	
 	Route::get('inspector-subchecklist-second-approve-by-lo/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_subchecklist_second_approve_by_lo'])->name('inspector-subchecklist-second-approve-by-lo');
+	
+	Route::post('submit-inspector-approved', [DashboardInspectorController::class, 'submit_inspector_approved'])->name('submit-inspector-approved');
 		
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
