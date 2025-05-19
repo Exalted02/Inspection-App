@@ -5,11 +5,13 @@
 if(auth()->user()->user_type == 1)
 {
 	$path = 'inspector';
+	$user_type_name = 'Inspector';
 }
 
 if(auth()->user()->user_type == 2)
 {
 	$path = 'locationowner';
+	$user_type_name = 'Location owner';
 }
 
 $backgroung_img = '';
@@ -49,7 +51,7 @@ if(!empty($userdata->profile_image))
 			<img class="profile-avatar" src="{{ $profile_img ?? '' }}" alt="Profile Picture">
 			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
 			<p class="profile-description">
-				Inspector at {{ $userdata->get_company->company_name ?? '' }},<br>
+			{{$user_type_name ?? ''}} at {{ $userdata->get_company->company_name ?? '' }},<br>
 			</p>
 		</div>
 	</div>

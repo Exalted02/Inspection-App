@@ -81,7 +81,7 @@
 						</div>
 						
 						
-						<div class="row">
+						<div class="row" style="margin-top:17px;">
 							<div class="owner-checklist">
 								@if(!empty($image_arr))
 									@foreach($image_arr as $url)

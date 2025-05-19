@@ -38,8 +38,8 @@ use Carbon\Carbon;
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab" data-toggle="tab">12 Uncompleted</a></li>
-							<li role="presentation"><a href="#reject_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Rejected</a></li>
 							<li role="presentation"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Corrective checked</a></li>
+							<li role="presentation"><a href="#reject_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Rejected</a></li>
 						</ul>
 						<!-- Tab panes -->
 						<div class="tab-content">
