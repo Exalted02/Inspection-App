@@ -37,14 +37,17 @@ use Carbon\Carbon;
 					<div class="custom-tab">
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
+						@if(auth()->user()->user_type == 1)
 							<li role="presentation" class="active"><a href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab" data-toggle="tab">12 Uncompleted</a></li>
 							<li role="presentation"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Corrective checked</a></li>
+						@endif
 							<li role="presentation"><a href="#process_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Final checks</a></li> 
 							<li role="presentation"><a href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Approved final checked</a></li>
 							{{--<li role="presentation"><a href="#reject_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Rejected</a></li>--}}
 						</ul>
 						<!-- Tab panes -->
 						<div class="tab-content">
+						@if(auth()->user()->user_type == 1)
 							<div role="tabpanel" class="tab-pane active" id="uncomplete_tab">
 							@if($categoryData[0]->get_subcategory->isNotEmpty())
 								@foreach($categoryData[0]->get_subcategory as $subcategories)
@@ -71,6 +74,7 @@ use Carbon\Carbon;
 								<div class="text-center"><strong><h3>No record found</h3></strong></div>
 							@endif
 							</div>
+						@endif
 							<div role="tabpanel" class="tab-pane" id="reject_tab">
 								Not have any data
 							</div>

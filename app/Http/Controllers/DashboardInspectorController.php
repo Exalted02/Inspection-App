@@ -86,7 +86,10 @@ class DashboardInspectorController extends Controller
 		{
 			foreach($taskData as $val)
 			{
-				$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
+				//$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
+				
+				$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();
+				
 				if($correctiveActions->isNotEmpty())
 				{
 					foreach($correctiveActions as $correctiveAction)
