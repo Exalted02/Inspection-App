@@ -119,6 +119,8 @@ class DashboardInspectorController extends Controller
 							'checklist_id' => $correctiveAction->checklist_id,
 							'subchecklist_id' => $correctiveAction->subchecklist_id,
 							'rejected_region' => $correctiveAction->lo_corrective_action_plan,
+							'inspector_action' => $correctiveAction->inspector_action,
+							'second_checked' => $correctiveAction->lo_corrective_action_plan_second_check,
 							'image' => $image,
 						];
 					}

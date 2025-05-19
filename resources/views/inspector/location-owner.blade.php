@@ -32,9 +32,10 @@ use Carbon\Carbon;
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#inprogress_tab" aria-controls="inprogress_tab" role="tab" data-toggle="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
 							<li role="presentation"><a href="#completed_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">5 Corrective checks</a></li>
-							<li role="presentation"><a href="#final_checked_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Final checked</a></li>
-							<li role="presentation"><a href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Approved</a></li>
 							<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>
+							{{--<li role="presentation"><a href="#final_checked_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Final checked</a></li>--}}
+							<li role="presentation"><a href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Approved</a></li>
+							{{--<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>--}}
 							
 						</ul>
 						<!-- Tab panes -->

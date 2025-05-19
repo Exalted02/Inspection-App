@@ -39,6 +39,7 @@ use Carbon\Carbon;
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab" data-toggle="tab">12 Uncompleted</a></li>
 							<li role="presentation"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Corrective checked</a></li>
+							<li role="presentation"><a href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Approved final checked</a></li>
 							<li role="presentation"><a href="#reject_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Rejected</a></li>
 						</ul>
 						<!-- Tab panes -->
@@ -74,101 +75,205 @@ use Carbon\Carbon;
 							</div>
 							<div role="tabpanel" class="tab-pane" id="corrective_checked_tab">
 								@foreach($correctiveAction as $result)
-								@php 
-								    $arrSubchecklist = [];
-									$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
-									
-									/*$subchecklistData = App\Models\Subchecklist::where('id', $result['checklist_id'])->first();*/
-									
-									/*$checklistName = $checklistData ? $checklistData->name : ($subchecklistData ?  $subchecklistData->name : '');*/
-									
-									$checklistName = $checklistData ? $checklistData->name : '';
-									
-									$rejectedRegionData = $result['type'] == 'checklist'
-									? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-									: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+								@if($result['inspector_action'] ==2 && $result['second_checked'] == '')
+									@php 
+										$arrSubchecklist = [];
+										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
+										
+										/*$subchecklistData = App\Models\Subchecklist::where('id', $result['checklist_id'])->first();*/
+										
+										/*$checklistName = $checklistData ? $checklistData->name : ($subchecklistData ?  $subchecklistData->name : '');*/
+										
+										$checklistName = $checklistData ? $checklistData->name : '';
+										
+										$rejectedRegionData = $result['type'] == 'checklist'
+										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
+										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
-									
-									$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
-									
-									if($result['type'] == 'subchecklist')
-									{
-										$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
-										if($subchecklistData)
+										
+										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+										
+										if($result['type'] == 'subchecklist')
 										{
-											//foreach($subchecklistData as $subcheck)
-											//{
-												//$arrSubchecklist = [];
-												$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
-												
-												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
-												
-												$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
-												
-												$arrSubchecklist[] = [
-													'id' => $subchecklistData->id,
-													'name' => $subchecklistName ? $subchecklistName->name : '',
-													'image' => $images,
-													'subchecklist_id' => $subchecklistData->subchecklist_id,
-												];
-											//}
+											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
+											if($subchecklistData)
+											{
+												//foreach($subchecklistData as $subcheck)
+												//{
+													//$arrSubchecklist = [];
+													$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
+													
+													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+													
+													$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
+													
+													$arrSubchecklist[] = [
+														'id' => $subchecklistData->id,
+														'name' => $subchecklistName ? $subchecklistName->name : '',
+														'image' => $images,
+														'subchecklist_id' => $subchecklistData->subchecklist_id,
+													];
+												//}
+											}
 										}
-									}
-									
-								@endphp
-								@if(!empty($arrSubchecklist))
-									@foreach($arrSubchecklist as $val)
-								<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<img src="{{ $val['image'] }}" width="50" height="50">
-									</div>
-									<div class="flex-grow-1">
-										<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-										<h6>{{ $checklistName ?? '' }} 
-										@if($val!='')
-											-> {{$val['name'] ?? ''}}
-										@endif
-										</h6>
-											<p class="text-muted mb-0">
-											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
-											</p>
-											@if($rejectedRegionData)	
-											<p class="text-muted mb-0">
-											<i class="fa fa-clock">
-											{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
-											</p>
-											@endif
-											<p class="text-muted mb-0">
-											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-											</p>
-										</a>
-									</div>
-								</div>
-								@endforeach
-								
-								@else 
+										
+									@endphp
+									@if(!empty($arrSubchecklist))
+										@foreach($arrSubchecklist as $val)
 									<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<img src="{{ $images }}" width="50" height="50">
-									</div>
-									<div class="flex-grow-1">
-										<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-										<h6>{{ $checklistName ?? '' }} 
-										</h6>
-											<p class="text-muted mb-0">
-											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
-											</p>
-											@if($rejectedRegionData)
-											<p class="text-muted mb-0">
-											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
-											</p>
+										<div class="date-box">
+											<img src="{{ $val['image'] }}" width="50" height="50">
+										</div>
+										<div class="flex-grow-1">
+											<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<h6>{{ $checklistName ?? '' }} 
+											@if($val!='')
+												-> {{$val['name'] ?? ''}}
 											@endif
-											<p class="text-muted mb-0">
-											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-											</p>
-										</a>
+											</h6>
+												<p class="text-muted mb-0">
+												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+												</p>
+												@if($rejectedRegionData)	
+												<p class="text-muted mb-0">
+												<i class="fa fa-clock">
+												{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												</p>
+												@endif
+												<p class="text-muted mb-0">
+												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												</p>
+											</a>
+										</div>
 									</div>
-								</div>
+									@endforeach
+									
+									@else 
+										<div class="d-flex mb-3 task">
+										<div class="date-box">
+											<img src="{{ $images }}" width="50" height="50">
+										</div>
+										<div class="flex-grow-1">
+											<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<h6>{{ $checklistName ?? '' }} 
+											</h6>
+												<p class="text-muted mb-0">
+												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+												</p>
+												@if($rejectedRegionData)
+												<p class="text-muted mb-0">
+												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												</p>
+												@endif
+												<p class="text-muted mb-0">
+												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												</p>
+											</a>
+										</div>
+									</div>
+									@endif
+								@endif
+								@endforeach
+							</div>
+							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
+								@foreach($correctiveAction as $result)
+								@if($result['inspector_action'] ==2 && $result['second_checked'] != '')
+									@php 
+										$arrSubchecklist = [];
+										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
+										
+										/*$subchecklistData = App\Models\Subchecklist::where('id', $result['checklist_id'])->first();*/
+										
+										/*$checklistName = $checklistData ? $checklistData->name : ($subchecklistData ?  $subchecklistData->name : '');*/
+										
+										$checklistName = $checklistData ? $checklistData->name : '';
+										
+										$rejectedRegionData = $result['type'] == 'checklist'
+										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
+										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+
+										
+										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+										
+										if($result['type'] == 'subchecklist')
+										{
+											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
+											if($subchecklistData)
+											{
+												//foreach($subchecklistData as $subcheck)
+												//{
+													//$arrSubchecklist = [];
+													$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
+													
+													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+													
+													$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
+													
+													$arrSubchecklist[] = [
+														'id' => $subchecklistData->id,
+														'name' => $subchecklistName ? $subchecklistName->name : '',
+														'image' => $images,
+														'subchecklist_id' => $subchecklistData->subchecklist_id,
+													];
+												//}
+											}
+										}
+										
+									@endphp
+									@if(!empty($arrSubchecklist))
+										@foreach($arrSubchecklist as $val)
+									<div class="d-flex mb-3 task">
+										<div class="date-box">
+											<img src="{{ $val['image'] }}" width="50" height="50">
+										</div>
+										<div class="flex-grow-1">
+											<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<h6>{{ $checklistName ?? '' }} 
+											@if($val!='')
+												-> {{$val['name'] ?? ''}}
+											@endif
+											</h6>
+												<p class="text-muted mb-0">
+												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+												</p>
+												@if($rejectedRegionData)	
+												<p class="text-muted mb-0">
+												<i class="fa fa-clock">
+												{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												</p>
+												@endif
+												<p class="text-muted mb-0">
+												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												</p>
+											</a>
+										</div>
+									</div>
+									@endforeach
+									
+									@else 
+										<div class="d-flex mb-3 task">
+										<div class="date-box">
+											<img src="{{ $images }}" width="50" height="50">
+										</div>
+										<div class="flex-grow-1">
+											<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<h6>{{ $checklistName ?? '' }} 
+											</h6>
+												<p class="text-muted mb-0">
+												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+												</p>
+												@if($rejectedRegionData)
+												<p class="text-muted mb-0">
+												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												</p>
+												@endif
+												<p class="text-muted mb-0">
+												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												</p>
+											</a>
+										</div>
+									</div>
+									@endif
 								@endif
 								@endforeach
 							</div>
