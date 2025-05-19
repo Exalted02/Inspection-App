@@ -36,6 +36,9 @@ use App\Models\States;
 use App\Models\Source;
 use App\Models\Followup_remarks;
 
+use App\Models\Task_lists;
+
+
 // use File;
 	
 //Get referral model Data
@@ -542,5 +545,14 @@ use App\Models\Followup_remarks;
 
 	   return preg_replace('/[^A-Za-z0-9\-.]/', '', $string); // Removes special chars.
 	}
+	/*function get_task_status($user_id='', $task_id='', $location_id='')
+	{
+		$taskData = Task_lists::where('id', $task_id)->where('location_id',$location_id)->first();
+		$status = $taskData ? $taskData->sttaus : '';
+		
+		$text = $status ==0 ?  'No inspection perform': ($status ==1 ?  ($auth()->user()->user_type == 1 || $auth()->user()->user_type == 3 ? 'Check area based on Inspection checklist' : 'set corrective action') :  ($status ==2 ? ($auth()->user()->user_type == 1 || $auth()->user()->user_type == 3 ? ' Approve checks' : 'Corrective checks') ) : ($status ==3 ? ($auth()->user()->user_type == 1 || $auth()->user()->user_type == 3 ? ' approved checks' : 'check on final corrective outcome') ) );
+		
+		
+	}*/
 
 ?>
