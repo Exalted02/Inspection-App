@@ -32,7 +32,9 @@
 	 
 	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
 	 
-	 $corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $task_id)->get();
+	 $corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
+	 
+	 $corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->get();
 	 
 	 $corrective_action_files = [];
 	 if($corrective_action_file_data->isNotEmpty())
@@ -80,7 +82,9 @@
 	 
 	$lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
 	
-	$corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $task_id)->get();
+	$corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
+	
+	$corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->get();
 	 
 	 $corrective_action_files = [];
 	 if($corrective_action_file_data->isNotEmpty())
