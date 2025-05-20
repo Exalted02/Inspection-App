@@ -545,6 +545,9 @@ class DashboardInspectorController extends Controller
 				//echo "<pre>"; print_r($checklistdata);die;
 									
 			$subcategoryname = Subcategory::where('id', $subcategory_id)->first()->name;
+			
+			// update the status of Task_list table
+			Task_lists::where('id', $task_id)->update(['status'=> 1]);
 		}
 		//--------------------------------------------
 			// for progress bar 
@@ -1242,7 +1245,7 @@ class DashboardInspectorController extends Controller
 			]);
 		}
 		
-		$los_id = User::where('company_id', auth()->user()->company_name)->where('user_type', 3)->first()->id;
+		$los_id = User::where('company_name', auth()->user()->company_name)->where('user_type', 3)->first()->id;
 		
 		$model=new Task_lists();
 		$model->inspector_id	=	auth()->user()->id;
@@ -1251,7 +1254,7 @@ class DashboardInspectorController extends Controller
 		//$model->lo_id			=	;
 		$model->los_id			=	$los_id ?? null;
 		$model->task_title		=	$request->post('task_title');
-		$model->status		=	1;
+		$model->status		=	0;
 		$model->created_at	=	date('Y-m-d');
 		$model->save();
 		$id = $model->id;
