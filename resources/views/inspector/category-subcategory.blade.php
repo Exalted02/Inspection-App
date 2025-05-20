@@ -395,7 +395,7 @@ use Carbon\Carbon;
     </div>
 	
 	<!----------- delete modal -------------->
-	<div class="modal fade" id="error-msg-modal" tabindex="-1" role="dialog" aria-hidden="true">
+	{{--<div class="modal fade" id="error-msg-modal" tabindex="-1" role="dialog" aria-hidden="true">
 	  <div class="modal-dialog">
 		<div class="modal-content" style="height: 180px;">
 		  <div class="modal-header">
@@ -405,29 +405,33 @@ use Carbon\Carbon;
 			<h3 class="modal-title" id="lineModalLabel"></h3>
 		  </div>
 		  <div class="modal-body d-flex justify-content-center align-items-center text-center">
-			<span id="successMessage" class="text-success d-none">Details saved successfully!</span>
+		 <span id="successMessage" class="text-success d-none">Details saved successfully!</span>
 			<span id="errorMessage" class="text-danger font-weight-bold"></span>
+		  </div>
+		</div>
+	  </div>
+	</div>--}}
+	
+	<!-- Error Message Modal -->
+	<div class="modal fade" id="error-msg-modal" tabindex="-1" aria-labelledby="errorMsgLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content border-danger shadow-lg" style="border-left: 5px solid #dc3545;border-radius: 8px;">
+		  <div class="modal-header bg-danger text-white">
+			<button type="button" class="close" data-dismiss="modal">
+			  <span aria-hidden="true">×</span><span class="sr-only">Close</span>
+			</button>
+		  </div>
+		  <div class="modal-body text-center">
+			<p id="errorMessage" class="mb-0 fw-semibold text-danger fs-6">
+			  
+			</p>
 		  </div>
 		</div>
 	  </div>
 	</div>
 
-	{{--<div class="modal fade" id="error-msg-modal" tabindex="-1" role="dialog" aria-hidden="true">
-         <div class="modal-dialog">
-            <div class="modal-content"  style="height:180px;">
-               <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                  <h3 class="modal-title" id="lineModalLabel"></h3>
-               </div>
-                <div class="modal-body">
-					<span id="successMessage" style="display: none; color: green;">
-						Details saved successfully!
-					</span>
-					<span id="errorMessage" style="color: red;text:center"></span>
-				</div>
-            </div>
-         </div>
-      </div>--}}
+
+	
 @endsection 
 @section('scripts')
 <script>
