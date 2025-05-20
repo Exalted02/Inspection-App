@@ -77,7 +77,7 @@ $week= '';
 										<img src="{{url('uploads/task/' . $tasks->image  )}}" alt="Task"/>
 										
 											<h6>{{ $tasks->task_title ?? '' }}</h6>
-											<p class="text-muted mb-0">Set corrective actions</p>
+											<p class="text-muted mb-0">{{ get_task_status(auth()->user()->id, $tasks->id, $tasks->location_id) }}</p>
 										</a>
 									</div>
 								</div>

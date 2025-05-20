@@ -545,14 +545,21 @@ use App\Models\Task_lists;
 
 	   return preg_replace('/[^A-Za-z0-9\-.]/', '', $string); // Removes special chars.
 	}
-	/*function get_task_status($user_id='', $task_id='', $location_id='')
+	function get_task_status($user_id='', $task_id='', $location_id='')
 	{
 		$taskData = Task_lists::where('id', $task_id)->where('location_id',$location_id)->first();
-		$status = $taskData ? $taskData->sttaus : '';
-		
-		$text = $status ==0 ?  'No inspection perform': ($status ==1 ?  ($auth()->user()->user_type == 1 || $auth()->user()->user_type == 3 ? 'Check area based on Inspection checklist' : 'set corrective action') :  ($status ==2 ? ($auth()->user()->user_type == 1 || $auth()->user()->user_type == 3 ? ' Approve checks' : 'Corrective checks') ) : ($status ==3 ? ($auth()->user()->user_type == 1 || $auth()->user()->user_type == 3 ? ' approved checks' : 'check on final corrective outcome') ) );
-		
-		
-	}*/
+		$status = $taskData ? $taskData->status : '';
+		$userType = auth()->user()->user_type;
+		$text = match ($status) {
+			0 => 'No inspection perform',
+			1 => in_array($userType, [1, 3]) ? 'Check area based on Inspection checklist' : 'Set corrective action',
+			2 => in_array($userType, [1, 3]) ? 'Approve checks' : 'Corrective checks',
+			3 => in_array($userType, [1, 3]) ? 'Approved checks' : 'Check on final corrective outcome',
+			4 => 'Check on final corrective outcome',
+			5 => 'Approved action plan',
+			default => '',
+		};
+		return $text;
+	}
 
 ?>
