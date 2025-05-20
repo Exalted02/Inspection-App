@@ -422,9 +422,7 @@ use Carbon\Carbon;
 			</button>
 		  </div>
 		  <div class="modal-body text-center">
-			<p id="errorMessage" class="mb-0 fw-semibold text-danger fs-6">
-			  
-			</p>
+			<p id="errorMessage" class="mb-0 fw-semibold text-danger fs-6"></p>
 		  </div>
 		</div>
 	  </div>
