@@ -1314,7 +1314,7 @@ class DashboardInspectorController extends Controller
 		
 		//$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;
 		
-		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->first()->id;
+		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first()->id;
 		
 		$model = Task_list_corrective_action::find($id);
 		$model->inspector_action_date = date('Y-m-d h:i:s');
