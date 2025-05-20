@@ -1230,6 +1230,9 @@ class DashboardInspectorController extends Controller
 		$model->los_id = $los_id;
 		$model->save();
 		
+		// update the status Task lists table
+		$taskData  = Task_lists::where('id', $task_list_id)->update(['status'=>2]);
+		
 		return response()->json(['location_id'=>$location_id, 'category_id'=>$category_id]);
 	}
 	public function save_task_data(Request $request)
@@ -1302,6 +1305,7 @@ class DashboardInspectorController extends Controller
 	}
 	public function submit_inspector_status(Request $request)
 	{
+		// when lo send first check and here inspector or los agree or reject
 		$task_list_id = $request->task_id;
 		$checklist_id = $request->checklist_id;
 		$subchecklist_id = $request->subchecklist_id ?? null;
@@ -1316,6 +1320,12 @@ class DashboardInspectorController extends Controller
 		$model->los_action = $inspector_action;
 		$model->inspector_id = $inspector_id;
 		$model->save();
+		
+		// update the status of Task lists 
+		if($inspector_action==1)
+		{
+			Task_lists ::where('id',$task_list_id)->update(['status'=>3]);
+		}
 		
 		return response()->json(['message'=>'success']);
 	}
@@ -1377,6 +1387,11 @@ class DashboardInspectorController extends Controller
 				$fileModel->save();
 			}
 		}
+		
+		// update the status of Task lists after approve by lo 
+		
+		Task_lists ::where('id',$task_id)->update(['status'=>4]);
+		
 
 		return response()->json(['message'=>'success']);
 	}
@@ -1420,6 +1435,9 @@ class DashboardInspectorController extends Controller
 		$model->los_action = $inspector_action;
 		$model->inspector_id = $inspector_id;
 		$model->save();
+		
+		// update the status of Task lists after approve by lo 
+		Task_lists ::where('id',$task_list_id)->update(['status'=>5]);
 		
 		return response()->json(['message'=>'success']);
 	}

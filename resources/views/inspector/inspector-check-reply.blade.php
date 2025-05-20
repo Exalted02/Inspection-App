@@ -59,6 +59,12 @@
 			 ];
 		}
 	}
+	
+	$corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id',  $taskSubChecklist->subchecklist_id)->where('inspector_id', auth()->user()->id)->first();
+	 
+	 $lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
+	 
+	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
  }
  
  
@@ -111,7 +117,7 @@
 							</div>
 						</div>
 						
-						<div class="row">
+						<div class="row" style="margin-top:10px;">
 							<div class="owner-checklist">
 							<label>Completed By</label>
 								<div class="mt-1">

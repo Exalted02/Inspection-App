@@ -73,6 +73,25 @@
 			 ];
 		}
 	}
+	
+	$corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('inspector_id', auth()->user()->id)->first();
+	 
+	$lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
+	 
+	$lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
+	
+	$corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $task_id)->get();
+	 
+	 $corrective_action_files = [];
+	 if($corrective_action_file_data->isNotEmpty())
+	 {
+		 foreach($corrective_action_file_data as $corrective_files)
+		 {
+			$corrective_action_files[] = [
+				'url' => url('uploads/corrective_action/' .$corrective_files->file),
+			];
+		 }
+	 }
  }
  
  

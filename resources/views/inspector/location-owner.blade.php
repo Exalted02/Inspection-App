@@ -378,7 +378,7 @@ use Carbon\Carbon;
 												<img src="{{ $val['image'] }}" width="50" height="50">
 											</div>
 											<div class="flex-grow-1">
-												<a href="{{ route('location-owner-subchecklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'] ]) }}">
+												<a href="{{ route('location-owner-subchecklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$result['subchecklist_id'],'type' => $result['type'] ]) }}">
 												<h6>{{ $checklistName ?? '' }} 
 												@if($val!='')
 													-> {{$val['name'] ?? ''}}

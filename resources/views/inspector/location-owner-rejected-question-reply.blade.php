@@ -22,7 +22,7 @@
 	 
 	 $rejected_region = $taskChecklist->rejected_region;
 	 
-	$corrective_action = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+	$corrective_action = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
 	$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 	
 	$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
@@ -52,6 +52,11 @@
 					'url'=> url('uploads/reject-files/subchecklist/' .$image->file ),
 			 ];
 		}
+		
+		$corrective_action = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
+		
+		$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
 	}
  }
  
