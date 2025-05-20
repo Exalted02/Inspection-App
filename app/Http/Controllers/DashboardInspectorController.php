@@ -1436,7 +1436,7 @@ class DashboardInspectorController extends Controller
 		$model->inspector_id = $inspector_id;
 		$model->save();
 		
-		// update the status of Task lists after approve by lo 
+		// update the status of Task lists after final approve by inspector or los 
 		Task_lists ::where('id',$task_list_id)->update(['status'=>5]);
 		
 		return response()->json(['message'=>'success']);
