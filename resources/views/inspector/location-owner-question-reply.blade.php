@@ -16,8 +16,8 @@
 	 foreach($images as $image)
 	 {
 		 $image_arr[] = [
-					'url'=> url('uploads/reject-files/' .$image->file ),
-			 ];
+				'url'=> url('uploads/reject-files/' .$image->file ),
+			];
 	 }
 	 
 	 $rejected_region = $taskChecklist->rejected_region;
@@ -44,9 +44,9 @@
 		
 		foreach($subImages as $image)
 		{
-		 $image_arr[] = [
-					'url'=> url('uploads/reject-files/subchecklist/' .$image->file ),
-			 ];
+		    $image_arr[] = [
+				'url' => url('uploads/reject-files/subchecklist/' .$image->file),
+			];
 		}
 	}
  }

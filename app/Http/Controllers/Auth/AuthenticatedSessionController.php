@@ -30,9 +30,14 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-		if(Auth::user()->user_type == 1 || Auth::user()->user_type == 2 || Auth::user()->user_type == 3 || Auth::user()->user_type == 4){
+		if(Auth::user()->user_type == 1 || Auth::user()->user_type == 2 || Auth::user()->user_type == 3){
 			return redirect()->intended(RouteServiceProvider::INSPECTOR_HOME);
-		}else{
+		}
+		elseif(Auth::user()->user_type == 4)
+		{
+			return redirect()->intended(RouteServiceProvider::MANAGEMENT_HOME);
+		}
+		else{
 			Auth::guard('web')->logout();
 
 			$request->session()->invalidate();

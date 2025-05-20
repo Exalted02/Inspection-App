@@ -30,7 +30,7 @@
 	 
 	 $lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
-	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
+	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
 	 
  }
  
@@ -55,7 +55,7 @@
 		foreach($subImages as $image)
 		{
 		 $image_arr[] = [
-					'url'=> url('uploads/reject-files/subchecklist/' .$image->file ),
+				'url'=> url('uploads/reject-files/subchecklist/' .$image->file),
 			 ];
 		}
 	}
@@ -64,7 +64,7 @@
 	 
 	 $lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
-	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
+	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
  }
  
  
