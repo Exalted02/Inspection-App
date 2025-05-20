@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+@php 
+//echo "<pre>";print_r($locations);die;
+@endphp
     <div class="container">
 		<h2 class="page-title">Welcome to your overview</h2>
 		<div class="page-subtitle">Check out how your factory is performing</div>
@@ -29,12 +32,14 @@
 			</div>
 		</div>
     </div>
+	@foreach($locations as $location)
 	<div class="management-location-card pt-2 pb-2">
 		<div class="container">
 			<div class="d-flex align-items-center location-header mb-3">
-				<img src="{{url('front-assets/static-image/5.jpg')}}" alt="Location">
+			{{--<img src="{{url('front-assets/static-image/5.jpg')}}" alt="Location">--}}
+				<img src="{{url('uploads/location/' . $location->image ?? '')}}" alt="Location">
 				<div>
-					<div class="title">Mandai Hill</div>
+					<div class="title">{{ $location->location_name ?? '' }}</div>
 					<small class="text-muted">Mandai Road 23, 532012</small>
 				</div>
 			</div>
@@ -63,7 +68,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="management-location-card pt-2 pb-2">
+	@endforeach
+	{{--<div class="management-location-card pt-2 pb-2">
 		<div class="container">
 			<div class="d-flex align-items-center location-header mb-3">
 				<img src="{{url('front-assets/static-image/4.jpg')}}" alt="Location">
@@ -96,7 +102,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>--}}
 @endsection 
 @section('scripts')
 
