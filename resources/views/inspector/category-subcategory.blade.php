@@ -42,7 +42,7 @@ use Carbon\Carbon;
 							<li role="presentation"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
 						@endif
 						@if(auth()->user()->user_type == 3)
-							<li role="presentation"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
+							<li role="presentation" class="active"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
 						@endif
 							<li role="presentation"><a href="#process_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Final checks</a></li> 
 							<li role="presentation"><a href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Approved final checked</a></li>
