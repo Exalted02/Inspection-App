@@ -87,16 +87,35 @@ class ChecklistController extends Controller
 	{
 		
 		//echo "<pre>";print_r($request->all());die;
-		$existingStage = Checklist::where('name', $request->post('name'))->where('category_id',$request->post('category'))->where('subcategory_id',$request->post('subcategory'))->where('status', '!=', 2)
+		$existingChecklist = Checklist::where('name', $request->post('name'))->where('category_id',$request->post('category'))->where('subcategory_id',$request->post('subcategory'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
         ->first();
 		
-		if ($existingStage) {
+		if ($existingChecklist) {
 			return response()->json([
 				'success' => false,
+				'name' => false,
+				'orderno' => true,
 				'message' => 'checklist name already exists.'
+			]);
+		}
+		
+		// check the order number 
+		
+		$existingOrderNo = Checklist::where('order_no', $request->post('order_no'))->where('category_id',$request->post('category'))->where('subcategory_id',$request->post('subcategory'))->where('status', '!=', 2)
+        ->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+        ->first();
+		
+		if ($existingOrderNo) {
+			return response()->json([
+				'success' => false,
+				'orderno' => false,
+				'name' => true,
+				'message' => 'Order no. already exists.'
 			]);
 		}
 		
@@ -106,6 +125,7 @@ class ChecklistController extends Controller
 			$model->category_id		=	$request->post('category');
 			$model->subcategory_id	=	$request->post('subcategory');
 			$model->name		=	$request->post('name');
+			$model->order_no		=	$request->post('order_no');
 			$model->updated_at	=	date('Y-m-d');
 			$model->save();
 			$id = $request->post('id');
@@ -115,7 +135,8 @@ class ChecklistController extends Controller
 			$model=new Checklist();
 			$model->category_id	=	$request->post('category');
 			$model->subcategory_id	=	$request->post('subcategory');
-			$model->name		=	$request->post('name');
+			$model->name			=	$request->post('name');
+			$model->order_no		=	$request->post('order_no');
 			$model->status		=	1;
 			$model->created_at	=	date('Y-m-d');
 			$model->save();
@@ -134,6 +155,7 @@ class ChecklistController extends Controller
 		$data['category']  = $Checklist->category_id ;
 		$data['subcategory']  = $Checklist->subcategory_id ;
 		$data['name']  = $Checklist->name ;
+		$data['order_no']  = $Checklist->order_no ;
 		$data['edit']  =  Lang::get('edit_sub_category');
 		return $data;
 	}

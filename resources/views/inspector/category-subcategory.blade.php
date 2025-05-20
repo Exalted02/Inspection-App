@@ -27,6 +27,7 @@ use Carbon\Carbon;
 			</div>
 			<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 			<input type="hidden" id="category_id" value="{{ $categoryData[0]->id ?? '' }}">
+			<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
 			<input type="hidden" id="taskid">
 		</div>
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
@@ -467,6 +468,7 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var category_id = $('#category_id').val();
 		var details  = $('#addressInput').val();
+		var task_id  = $('#task_id').val();
 		if(details=='')
 		{
 			$('#errorMessage').fadeIn().delay(2000).fadeOut();
@@ -478,7 +480,7 @@ $(document ).ready(function() {
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id,category_id:category_id,details:details, _token: csrfToken},
+			data: {location_id:location_id,category_id:category_id,task_id:task_id,details:details, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response);
@@ -505,7 +507,14 @@ $(document ).ready(function() {
 				if(!response.hasData)
 				{
 					$('#error-msg-modal').modal('show');
-					$('#errorMessage').text(response.message).fadeIn().delay(8000).fadeOut();
+					//$('#errorMessage').text(response.message).fadeIn().delay(8000).fadeOut();
+					$('#errorMessage')
+					  .text(response.message)
+					  .fadeIn()
+					  .delay(6000)
+					  .fadeOut(400, function () {
+						$('#error-msg-modal').modal('hide');
+					  });
 				}
 				else {
 					var taskid = $('#taskid').val();

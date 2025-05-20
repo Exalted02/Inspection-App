@@ -167,6 +167,7 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 									{{--<th>{{ __('category_name') }}</th>
 								<th>{{ __('sub_category_name') }}</th>--}}
 								<th>{{ __('checklist_name') }}</th>
+								<th>{{ __('Order no.') }}</th>
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
 								<th class="text-end">Action</th>
@@ -185,6 +186,7 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 								{{--<td class="contact-details">{{ $val->get_category->name ?? ''}}</td>
 								<td class="contact-details">{{ $val->get_subcategory->name ?? ''}}</td>--}}
 								<td>{{ $val->name ?? ''}}</td>
+								<td class="update-order-no" data-id="{{$val->id }}" ><span id="order-name{{ $val->id}}">{{ $val->order_no ?? ''}}</span><span id="order-text{{ $val->id }}" style="display:none"><input type="text" class="form-control" value="{{ $val->order_no }}"></span></td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)

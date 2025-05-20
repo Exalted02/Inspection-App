@@ -10,6 +10,7 @@ $(document).ready(function() {
 		//let category = $('#category').val().trim();
 		//let subcategory = $('#subcategory').val().trim();
 		let checklist = $('#name').val().trim();
+		let order_no = $('#order_no').val().trim();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
@@ -33,6 +34,13 @@ $(document).ready(function() {
 			isValid = false;
 		}
 		
+		if (order_no === '')
+		{
+			$('#order_no').addClass('is-invalid');
+			$('#order_no').next('.invalid-feedback').show();
+			isValid = false;
+		}
+		
 		
 		if (isValid) {
 			//var form = $("#frmlocation");
@@ -51,8 +59,18 @@ $(document).ready(function() {
 				//dataType: 'json',
 				success: function(response) {
 					if (!response.success) {
-						$('#name').addClass('is-invalid');
-						$('#name').next('.invalid-feedback').text(response.message).show();
+						if(!response.name)
+						{
+							$('#name').addClass('is-invalid');
+							$('#name').next('.invalid-feedback').text(response.message).show();
+						}
+						
+						if(!response.orderno)
+						{
+							$('#order_no').addClass('is-invalid');
+							$('#order_no').next('.invalid-feedback').text(response.message).show();
+						}
+						
 					} else {
 						if(id=='')
 						{
@@ -86,6 +104,7 @@ $(document).on('click','.edit-checklist', function(){
 			$('#id').val(response.id);
 			$('#category').val(response.category);
 			$('#subcategory').val(response.subcategory);
+			$('#order_no').val(response.order_no);
 			
 			/*function waitForDropdownToLoad(selector, value, callback) {
 				const interval = setInterval(() => {
@@ -262,5 +281,15 @@ $('#category_image').on('change', function (event) {
         }
         reader.readAsDataURL(file);
     }
+});
+$(document).on('input', '#order_no', function() {
+  this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+$(document).on('click','.update-order-no',function(){
+	var id = $(this).data('id');
+	//var order = $(this).data('order');
+	$('#order-name' + id).hide();
+	$('#order-text' + id).show();
 });
 });

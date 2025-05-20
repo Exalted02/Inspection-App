@@ -140,12 +140,14 @@ class DashboardInspectorController extends Controller
 	{
 		$location_id = $request->post('location_id');
 		$category_id = $request->post('category_id');
+		$task_id = $request->post('task_id');
 		$details = $request->post('details');
 		$inspectorId = auth()->user()->id;
 		
 		$taskList = Task_lists::where('inspector_id', $inspectorId)
                       ->where('location_id', $location_id)
 					  ->where('category_id', $category_id)
+					  ->where('id', $task_id)
                       ->first();
 
 		$existingCategory = $taskList 

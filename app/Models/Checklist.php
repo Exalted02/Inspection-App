@@ -13,6 +13,7 @@ class Checklist extends Model
         'category_id', 
         'subcategory_id', 
         'name', 
+        'order_no', 
         'status', 
     ];
 	

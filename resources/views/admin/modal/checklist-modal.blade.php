@@ -35,37 +35,22 @@
 								<input type="hidden" value="{{ $category_id }}" name="category" id="category">
 								<input type="hidden" value="{{ $subcategory_id }}" name="subcategory" id="subcategory">
 								<input type="hidden" id="id" name="id">
-								{{--<div class="row">
-										<div class="col-sm-12">
-											<div class="input-block mb-3">
-												<label class="col-form-label">{{ __('category_name') }}<span class="text-danger">*</span></label>
-												<select class="select select_category" name="category" id="category" data-url="{{ route('admin.get-subcategory')}}">
-													<option value="">{{ __('category') }}</option>
-													@foreach($categories as $category)
-													<option value="{{  $category->id ?? ''}}">{{  $category->name ?? ''}}</option>
-													@endforeach
-												</select>
-												<div class="invalid-feedback">{{ __('please_select') }} {{ __('category')}}.</div>
-											</div>
-										</div>
-									</div>--}}
-									{{--<div class="row">
-										<div class="col-sm-12">
-											<div class="input-block mb-3">
-												<label class="col-form-label">{{ __('sub_category_name') }}<span class="text-danger">*</span></label>
-												<select class="select subcategory" name="subcategory" id="subcategory">
-													<option value="">{{ __('sub_category') }}</option>
-												</select>
-												<div class="invalid-feedback">{{ __('please_select') }} {{ __('subcategory')}}.</div>
-											</div>
-										</div>
-									</div>--}}
+								
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('checklist_name') }}<span class="text-danger">*</span></label>
 												<input type="text" name="name" id="name" class="form-control">
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('checklist_name')}}.</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="input-block mb-3">
+												<label class="col-form-label">{{ __('Order No.') }}<span class="text-danger">*</span></label>
+												<input type="text" name="order_no" id="order_no" class="form-control">
+												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('order no.')}}.</div>
 											</div>
 										</div>
 									</div>
