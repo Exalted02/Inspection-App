@@ -188,7 +188,8 @@ $location_name = $locationData ? $locationData->location_name : '';
 										<div class="dropdown-menu dropdown-menu-right">
 											<a class="dropdown-item edit-category" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('admin.edit-category') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
 											<a class="dropdown-item delete-category-name text-danger" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.getDeleteCategory') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
-											<a class="dropdown-item" href="{{ route('admin.manage-location-wise-subcategory', ['id'=>$val->id]) }}"><i class="fa-solid fa-list m-r-5"></i> {{ __('sub_category') }}</a>
+											<a class="dropdown-item" href="{{ route('admin.manage-location-wise-category-checklist', ['catid'=>$val->id]) }}"><i class="fa-solid fa-list m-r-5"></i> {{ __('checklist') }}</a>
+												{{--<a class="dropdown-item" href="{{ route('admin.manage-location-wise-subcategory', ['id'=>$val->id]) }}"><i class="fa-solid fa-list m-r-5"></i> {{ __('sub_category') }}</a>--}}
 										</div>
 									</div>
 								</td>

@@ -16,7 +16,7 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, $id='')
 	{
 		$has_search  = 0;
 		//print_r($request->all());
@@ -29,7 +29,7 @@ class CategoryController extends Controller
 		$data['location_id'] = $request->src_location_id;
 		
 		$dataArr = Category::whereHas('locationCategories', function ($q) use ($id) {
-			$q->where('location_id', $request->src_location_id);
+			$q->where('location_id', $id);
 		});
 		//$dataArr = Category::query();
 		

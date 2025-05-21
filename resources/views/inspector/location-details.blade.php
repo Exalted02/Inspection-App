@@ -134,7 +134,7 @@ $week= '';
 								<div class="subcategory-item">
 									<div class="subcategory-name"><strong>{{ $subcategory->name }}</strong></div>
 									<div class="subcategory-checkbox">
-										<input type="checkbox" name="category_ids[]" value="{{ $subcategory->id }}">
+										<input type="checkbox" name="location[]" value="{{ $subcategory->id }}">
 									</div>
 								</div>
 							@endforeach
@@ -211,13 +211,13 @@ $(document ).ready(function() {
     });
 	
 	$(document).on('click','.save-task', function(){
-		let category_id = $('#category_id').val().trim();
+		//let category_id = $('#category_id').val().trim();
 		let task_title = $('#task_title').val().trim();
 		let task_image = $('#task_image')[0].files.length;
-		if (category_id === '') {
+		/*if (category_id === '') {
 			$('#category_id_error').text('Please enter category').fadeIn().delay(2000).fadeOut();
 			return false;
-		}
+		}*/
 		
 		if (task_title === '') {
 			$('#tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut();
@@ -227,6 +227,17 @@ $(document ).ready(function() {
 		if (task_image === 0) {
 			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
 			return false;
+		}
+		
+		let selectedLocations = [];
+		$('input[name="location[]"]:checked').each(function() {
+			selectedLocations.push($(this).val());
+		});
+		//alert(selectedLocations);
+		if (selectedLocations.length === 0) {
+			$('input[name="location[]"]').first().addClass('is-invalid');
+			$('input[name="location[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();
+			isValid = false;
 		}
 		
 		

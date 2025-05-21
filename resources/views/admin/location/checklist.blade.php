@@ -7,8 +7,8 @@ $subcategory_name = '';
 $categoryData = App\Models\Category::where('id',$category_id)->first();
 $category_name = $categoryData ? $categoryData->name : '';
 
-$subcategoryData = App\Models\Subcategory::where('id',$subcategory_id)->where('category_id', $category_id)->first();
-$subcategory_name = $subcategoryData ? $subcategoryData->name : '';
+/*$subcategoryData = App\Models\Subcategory::where('id',$subcategory_id)->where('category_id', $category_id)->first();
+$subcategory_name = $subcategoryData ? $subcategoryData->name : '';*/
 @endphp
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -47,9 +47,9 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 		
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('admin.manage-location-wise-subcategory-checklist', ['catid'=>$category_id, 'subcatid'=> $subcategory_id])}}" id="search-checklist-frm">
-		<input type="text" value="{{ $category_id }}" name="src_category">
-		<input type="text" value="{{ $subcategory_id }}" name="src_subcategory">
+		<form name="search-frm" method="post" action="{{ route('admin.manage-location-wise-category-checklist', ['catid'=>$category_id])}}" id="search-checklist-frm">
+		<input type="hidden" value="{{ $category_id }}" name="src_category">
+			{{--<input type="text" value="{{ $subcategory_id }}" name="src_subcategory">--}}
 		@csrf
 			<div class="row filter-row">
 			{{--<div class="col-xl-3">  
@@ -244,7 +244,7 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 	</div>
 </div>
 <input type="hidden" value="{{ $category_id }}" id="categoryid">
-<input type="hidden" value="{{ $subcategory_id }}" id="subcategoryid">
+	{{--<input type="hidden" value="{{ $subcategory_id }}" id="subcategoryid">--}}
 	<!-- /Page Content -->
 
 @include('modal.common')
@@ -263,7 +263,7 @@ $(document).ready(function() {
 		var categoryid = $('#categoryid').val();
 		var subcategoryid = $('#subcategoryid').val();
 
-		var url = "{{ route('admin.manage-location-wise-subcategory-checklist', ['catid' => '__CATEGORY_ID__', 'subcatid' => '__SUBCATEGORY_ID__']) }}";
+		var url = "{{ route('admin.manage-location-wise-category-checklist', ['catid' => '__CATEGORY_ID__', 'subcatid' => '__SUBCATEGORY_ID__']) }}";
 		url = url.replace('__CATEGORY_ID__', categoryid);
 		url = url.replace('__SUBCATEGORY_ID__', subcategoryid);
 		

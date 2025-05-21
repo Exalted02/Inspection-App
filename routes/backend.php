@@ -52,8 +52,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::get('/manage-location-wise-subcategory/{id}', [SubCategoryController::class, 'manage_location_wise_subcategory'])->name('manage-location-wise-subcategory');
 	Route::post('/manage-location-wise-subcategory/{id}', [SubCategoryController::class, 'index'])->name('manage-location-wise-subcategory');
 	
-	Route::get('/manage-location-wise-subcategory-checklist/{catid}/{subcatid}', [ChecklistController::class, 'manage_location_wise_subcategory_checklist'])->name('manage-location-wise-subcategory-checklist');
-	Route::post('/manage-location-wise-subcategory-checklist/{catid}/{subcatid}', [ChecklistController::class, 'index'])->name('manage-location-wise-subcategory-checklist');
+	Route::get('/manage-location-wise-category-checklist/{catid}', [ChecklistController::class, 'manage_location_wise_category_checklist'])->name('manage-location-wise-category-checklist');
+	Route::post('/manage-location-wise-category-checklist/{catid}', [ChecklistController::class, 'index'])->name('manage-location-wise-category-checklist');
 	
 	Route::get('/manage-location-wise-subcategory-subchecklist/{id}', [SubChecklistController::class, 'manage_location_wise_subcategory_subchecklist'])->name('manage-location-wise-subcategory-subchecklist');
 	Route::post('/manage-location-wise-subcategory-subchecklist/{id}', [SubChecklistController::class, 'index'])->name('manage-location-wise-subcategory-subchecklist');
