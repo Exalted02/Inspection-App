@@ -73,9 +73,9 @@ $(document).ready(function() {
 						else{
 							$('#updt_success_msg').modal('show');
 						}
-						/*setTimeout(() => {
+						setTimeout(() => {
 							window.location.reload();
-						}, "2000");*/
+						}, "2000");
 					}
 				},
 			});
@@ -101,6 +101,7 @@ $(document).on('click','.edit-subchecklist', function(){
 			$('#name').val(response.name);
 			$('#head-label').html(response.edit);
 			$('#add_subchecklist').modal('show');
+			$('#order_no').val(response.order_no);
 			
 		},
 	});

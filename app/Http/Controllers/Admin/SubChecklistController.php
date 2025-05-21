@@ -152,6 +152,7 @@ class SubChecklistController extends Controller
 		$data['id']  = $subchecklist->id ;
 		$data['checklist']  = $subchecklist->checklist_id ;
 		$data['name']  = $subchecklist->name ;
+		$data['order_no']  = $subchecklist->order_no ;
 		$data['edit']  =  Lang::get('edit_sub_category');
 		return $data;
 	}
