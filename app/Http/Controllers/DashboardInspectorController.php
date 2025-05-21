@@ -79,11 +79,10 @@ class DashboardInspectorController extends Controller
     {
 		$data = [];
 		// -- if inspector login 
-		
 		//$data['categoryData'] = Category::with('get_subcategory')->where('id', $catid)->where('location_id', $lid)->get();
 
 		$data['categoryData'] = Category::whereIn('id', function($query) use ($task_id) {
-			$query->select('category_id')
+				$query->select('category_id')
 				  ->from('task_location_categories')
 				  ->where('task_list_id', $task_id);
 		})->get();
@@ -155,14 +154,13 @@ class DashboardInspectorController extends Controller
 	public function send_location_details(Request $request)
 	{
 		$location_id = $request->post('location_id');
-		$category_id = $request->post('category_id');
+		//$category_id = $request->post('category_id');
 		$task_id = $request->post('task_id');
 		$details = $request->post('details');
 		$inspectorId = auth()->user()->id;
 		
 		$taskList = Task_lists::where('inspector_id', $inspectorId)
                       ->where('location_id', $location_id)
-					  ->where('category_id', $category_id)
 					  ->where('id', $task_id)
                       ->first();
 
@@ -176,7 +174,7 @@ class DashboardInspectorController extends Controller
 				$taskList = new Task_lists();
 				$taskList->inspector_id = $inspectorId;
 				$taskList->location_id = $location_id;
-				$taskList->category_id = $category_id;
+				//$taskList->category_id = $category_id;
 				$taskList->location_details = $details;
 				$taskList->save();
 		}
@@ -192,16 +190,16 @@ class DashboardInspectorController extends Controller
 		$location_id = $request->post('location_id');
 		$inspector_id = auth()->user()->id;
 		$task_id = $request->post('task_id');
-		$exists = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->where('id', $task_id)->exists();
+		$exists = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('id', $task_id)->exists();
 		if($exists)
 		{
 			//$taskid = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->first()->id;
 			
-			$taskLocationDtls = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->where('id', $task_id)->first()->location_details ;
+			$taskLocationDtls = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('id', $task_id)->first()->location_details ;
 			
 			//$hasChecklists = Checklist::where('category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
 			
-			$hasChecklists = Checklist::where('category_id', $category_id)->exists();
+			$hasChecklists = Checklist::where('category_id', $category_id)->get();
 			
 			if(!$taskLocationDtls)
 			{
@@ -210,7 +208,7 @@ class DashboardInspectorController extends Controller
 			
 			if(!$hasChecklists)
 			{
-				return response()->json(['hasData'=> false,'message'=>'This subcategory has no checklist. Create checklist and subchecklist', 'id'=>NULL]);
+				return response()->json(['hasData'=> false,'message'=>'This category has no checklist. Create checklist and subchecklist', 'id'=>NULL]);
 			}
 			
 			return response()->json(['hasData'=> true, 'taskid'=>$task_id]);
@@ -220,11 +218,14 @@ class DashboardInspectorController extends Controller
 		}
 	}
 	
-	public function checklist_question($taskid='', $cat_id='',$subcat_id='')
+	public function checklist_question($taskid='', $cat_id='')
     {
 		$data = [];
 		//echo $cat_id.' '.$subcat_id; die;
-		$data['checklistdata'] = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id',$cat_id)->where('subcategory_id', $subcat_id)->where('status','!=', 2)->first();
+		/*$data['checklistdata'] = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id',$cat_id)->where('status','!=', 2)->first();*/
+		
+		$data['checklistdata'] = Checklist::with('get_subchecklist','get_category')->where('category_id',$cat_id)->where('status','!=', 2)->first();
+		
 		//echo "<pre>";print_r($checklistdata);die;
 		/*$nextQuestion = Checklist::where('category_id', $cat_id)
 		->where('subcategory_id', $subcat_id)
@@ -253,9 +254,9 @@ class DashboardInspectorController extends Controller
 		$task_id = $request->post('task_id');
 		$current_question_id = $request->post('current_question_id');
 		$category_id = $request->post('category_id');
-		$subcategory_id = $request->post('subcategory_id');
+		//$subcategory_id = $request->post('subcategory_id');
 		$nextQuestionExists = Checklist::where('category_id', $category_id)
-		->where('subcategory_id', $subcategory_id)
+		//->where('subcategory_id', $subcategory_id)
 		->where('status', '!=', 2)
 		->where('id', '>', $current_question_id)
 		->orderBy('id', 'asc')
@@ -272,8 +273,13 @@ class DashboardInspectorController extends Controller
 		{
 			if($approveStatus !='')
 			{
-				$checkTastChecklistExists  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $current_question_id)->first();
+				// 21-05-2025--
+				/*$checkTastChecklistExists  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $current_question_id)->first();
+				$hasid = $checkTastChecklistExists ? $checkTastChecklistExists->id : null;*/
+				
+				$checkTastChecklistExists  = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $current_question_id)->first();
 				$hasid = $checkTastChecklistExists ? $checkTastChecklistExists->id : null;
+				
 				if($hasid)
 				{
 					$model = Task_list_checklists::find($hasid);
@@ -307,7 +313,7 @@ class DashboardInspectorController extends Controller
 					
 					$model = new Task_list_checklists();	
 					$model->task_list_id = $task_id ?? null;
-					$model->task_list_subcategory_id = $subcategory_id ?? null;
+					//$model->task_list_subcategory_id = $subcategory_id ?? null; // 21-05-2025
 					$model->checklist_id = $current_question_id ?? null;
 					$model->rejected_region = $approveStatus == 0 ? $rejectTextsSingle :'';
 					$model->approve 	= $approveStatus;
@@ -320,7 +326,7 @@ class DashboardInspectorController extends Controller
 					'inspector_id'=> auth()->user()->id,
 					'task_id'=> $task_id,
 					'task_list_checklist_id'=>$current_question_id,
-					'subcategory_id'=>$subcategory_id
+					//'subcategory_id'=>$subcategory_id // 21-05-2025
 				])->get();
 				
 				if ($checkTemps->isNotEmpty()) {
@@ -366,7 +372,7 @@ class DashboardInspectorController extends Controller
 					if($text['approve_status'] !='')
 					{
 						$checkTastSubChecklistExists  = Task_list_subchecklists::where('task_list_id', $task_id)
-						->where('task_list_subcategory_id', $subcategory_id)
+						//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 						->where('task_list_checklist_id', $current_question_id)
 						->where('subchecklist_id', $subChecklistId)
 						->first();
@@ -384,7 +390,7 @@ class DashboardInspectorController extends Controller
 						{
 							$model = new Task_list_subchecklists();
 							$model->task_list_id = $task_id ?? null;
-							$model->task_list_subcategory_id = $subcategory_id ?? null;
+							//$model->task_list_subcategory_id = $subcategory_id ?? null; //21-05-2025
 							$model->task_list_checklist_id = $current_question_id ?? null;
 							$model->subchecklist_id = $subChecklistId ?? null;
 							$model->rejected_region = $text['text'] ?? '';
@@ -443,7 +449,7 @@ class DashboardInspectorController extends Controller
 		{
 			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
 			->where('category_id', $category_id)
-			->where('subcategory_id', $subcategory_id)
+			//->where('subcategory_id', $subcategory_id) // 21-05-2025
 			->where('status', '!=', 2)
 			->where('id', '>', $current_question_id)
 			->orderBy('id', 'asc')
@@ -463,11 +469,17 @@ class DashboardInspectorController extends Controller
 					];
 				}
 				
-				$subcategoryname = $nextQuestion->get_subcategory->name;
+				$subcategoryname = '';
+				//$subcategoryname = $nextQuestion->get_subcategory->name;
 			}
 			
 			// fetch data from task_list_checklist
-			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();
+			//-- 21-05-2025-----
+			/*$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();*/
+			//------
+			
+			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $nextId)->first();
+			
 			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
 			$next_approve = $iffetch ? $iffetch->approve : '';
 			
@@ -489,7 +501,7 @@ class DashboardInspectorController extends Controller
 			// fetch data from task_list_subchecklist
 			$fetchsubChklistArr = [];
 			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('task_list_checklist_id', $nextId)
 							->get();
 			if($ifsubfetch->isNotEmpty())
@@ -528,29 +540,29 @@ class DashboardInspectorController extends Controller
 		if(empty($nextId) && $nextId=='')
 		{
 			$checklists = Checklist::where('category_id',$category_id)
-									->where('subcategory_id', $subcategory_id)
+									//->where('subcategory_id', $subcategory_id) // 21-05-2025
 									->where('status','!=', 2)->get();
 									
 			foreach ($checklists as $chklist) {
 				$status = '';
 				$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
+							//->where('task_list_subcategory_id', $subcategory_id)//21-05-2025
 							->where('checklist_id', $chklist->id)->exists();
 				if($hasTaskChecklist)
 				{
 					$status = Task_list_checklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('checklist_id', $chklist->id)->first()->approve;
 				}
 				else
 				{
 					$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('task_list_checklist_id', $chklist->id)->exists();
 					if($hasTaskSubChecklist)
 					{
 						$status = Task_list_subchecklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('task_list_checklist_id', $chklist->id)->first()->approve;
 					}
 				}
@@ -564,7 +576,7 @@ class DashboardInspectorController extends Controller
 			
 				//echo "<pre>"; print_r($checklistdata);die;
 									
-			$subcategoryname = Subcategory::where('id', $subcategory_id)->first()->name;
+			//$subcategoryname = Subcategory::where('id', $subcategory_id)->first()->name;
 			
 			// update the status of Task_list table
 			Task_lists::where('id', $task_id)->update(['status'=> 1]);
@@ -574,7 +586,7 @@ class DashboardInspectorController extends Controller
 			//$previous_checklist_id = $current_question_id;
 			$progressStatus = '';
 			$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('checklist_id', $current_question_id)->exists();
 			if($hasTaskChecklist)
 			{
@@ -583,7 +595,7 @@ class DashboardInspectorController extends Controller
 			else 
 			{
 				$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('task_list_checklist_id', $current_question_id)->exists();
 				if($hasTaskSubChecklist)
 				{
@@ -1290,7 +1302,7 @@ class DashboardInspectorController extends Controller
 			foreach($location_category as $category)
 			{
 				$locModel = new Task_location_categories();
-				$locModel->task_list_id 	= 1;
+				$locModel->task_list_id 	= $id;
 				$locModel->category_id 		= $category;
 				$locModel->save();
 			}

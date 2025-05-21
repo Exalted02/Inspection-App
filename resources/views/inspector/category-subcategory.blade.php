@@ -26,7 +26,7 @@ use Carbon\Carbon;
 				<button id="doneBtn" class="donesubmit">Done</button>
 			</div>
 			<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
-			<input type="hidden" id="category_id" value="{{ $categoryData[0]->id ?? '' }}">
+				{{--<input type="hidden" id="category_id" value="{{ $categoryData[0]->id ?? '' }}">--}}
 			<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
 			<input type="hidden" id="taskid">
 		</div>
@@ -68,7 +68,7 @@ use Carbon\Carbon;
 										<div class="subtitle">Completed {{ $tot_completed_task ?? ''}} of {{ $tot_checklist ?? ''}}</div>
 									</div>
 									{{--<a href="{{route('checklist-question' ,['cat_id'=>$categoryData[0]->id, 'subcat_id'=>$subcategories->id])}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
-									<a href="jacascript:void(0);" class="chk-task-id" data-cat="{{ $categories->id ?? ''}}" data-location="{{ $location_id ?? ''}}" data-taskid="{{ $task_id }}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
+									<a href="#" class="chk-task-id" data-cat="{{ $categories->id ?? ''}}" data-location="{{ $location_id ?? ''}}" data-taskid="{{ $task_id }}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
 								</div>
 								@endforeach
 							@else	
@@ -463,7 +463,7 @@ use Carbon\Carbon;
 $(document ).ready(function() {
    $(document).on('click','.donesubmit', function(){
 		var location_id = $('#location_id').val();
-		var category_id = $('#category_id').val();
+		//var category_id = $('#category_id').val();
 		var details  = $('#addressInput').val();
 		var task_id  = $('#task_id').val();
 		if(details=='')
@@ -477,7 +477,7 @@ $(document ).ready(function() {
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id,category_id:category_id,task_id:task_id,details:details, _token: csrfToken},
+			data: {location_id:location_id,task_id:task_id,details:details, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response);
@@ -487,12 +487,16 @@ $(document ).ready(function() {
 		});
    });
    
+   
+   
    $(document).on('click','.chk-task-id', function(){
 	   var cat_id = $(this).data('cat');
 	   //var subcat_id = $(this).data('subcat');
 	   var location_id = $(this).data('location');
 	   var task_id = $(this).data('taskid');
 	   var URL = "{{ route('check-task-id') }}";
+	   //alert(cat_id);alert(task_id);
+	   
 	   $.ajax({
 			url: URL,
 			type: "POST",
@@ -516,7 +520,7 @@ $(document ).ready(function() {
 				else {
 					var taskid = $('#taskid').val();
 					var baseUrl = "{{ url('/checklist-question') }}";
-					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + subcat_id;
+					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id;
 					window.location.href = redirectUrl;
 				}
 			},

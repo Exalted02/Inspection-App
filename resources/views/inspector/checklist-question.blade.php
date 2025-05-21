@@ -73,7 +73,8 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 				
 		@endphp
 		<div class="single-checklist d-none1">
-			<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>
+		{{--<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>--}}
+			<div class="question-header">{{ $checklistdata->get_category->name ?? '' }}</div>
 			<div class="question-text">
 				<span id="single-question">{{ $checklistdata->name ?? '' }}</span>
 			</div>
@@ -99,7 +100,8 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 		</div>
 	@else
 		<div class="sub-checklist">
-			<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>
+		{{--<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>--}}
+			<div class="question-header">{{ $checklistdata->get_category->name ?? '' }}</div>
 			<div class="question-text">
 				<span id="multiple-question">{{ $checklistdata->name ?? '' }}:</span>
 				<a href="#" class="get_checklist" id="getchecklist" data-cat="{{ $checklistdata->category_id ?? '' }}" data-subcat="{{ $checklistdata->subcategory_id ?? '' }}" data-task="{{ $task_id }}" data-checklist="{{ $checklistdata->id ?? '' }}"></a>
