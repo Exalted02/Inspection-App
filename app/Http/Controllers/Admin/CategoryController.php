@@ -105,7 +105,7 @@ class CategoryController extends Controller
 		
 		// check the order number 
 		
-		$existingOrderNo = Category::where('order_no', $request->post('order_no'))->where('name', $request->post('name'))->where('location_id', $request->post('location_id'))->where('status', '!=', 2)
+		$existingOrderNo = Category::where('order_no', $request->post('order_no'))->where('location_id', $request->post('location_id'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
