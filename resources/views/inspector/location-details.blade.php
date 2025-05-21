@@ -132,7 +132,7 @@ $week= '';
 						<div class="subcategory-box mt-2">
 							@foreach($locationWisesubcategory as $subcategory)
 								<div class="subcategory-item">
-									<div class="subcategory-name">{{ $subcategory->name }}</div>
+									<div class="subcategory-name"><strong>{{ $subcategory->name }}</strong></div>
 									<div class="subcategory-checkbox">
 										<input type="checkbox" name="category_ids[]" value="{{ $subcategory->id }}">
 									</div>
