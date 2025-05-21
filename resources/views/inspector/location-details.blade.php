@@ -111,7 +111,7 @@ $week= '';
 					<input type="hidden" id="id" name="id">
 					<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
 					@csrf
-                     <div class="form-group  col-md-12  col-sm-12">
+                    {{--<div class="form-group  col-md-12  col-sm-12">
                         <label>Category</label>
 						<span class="text-danger">*</span></label>
                         <select class="select form-control" name="category_id" id="category_id">
@@ -121,12 +121,52 @@ $week= '';
 							@endforeach
 						</select>
 						<span id="category_id_error" style="display:none;  color: red;"></span>
-                     </div>
+                    </div>--}}
                      <div class="form-group  col-md-12  col-sm-12">
                         <label>{{ __('Task Title') }}</label>
                         <input class="form-control" type="text" name="task_title" id="task_title">
 						<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
                      </div>
+					<div class="form-group col-md-12 col-sm-12">
+						<label><strong>Select SubCategory</strong></label>
+						<div class="subcategory-box mt-2">
+							@foreach($locationWisesubcategory as $subcategory)
+								<div class="subcategory-item">
+									<div class="subcategory-name">{{ $subcategory->name }}</div>
+									<div class="subcategory-checkbox">
+										<input type="checkbox" name="category_ids[]" value="{{ $subcategory->id }}">
+									</div>
+								</div>
+							@endforeach
+						</div>
+					</div>
+
+
+					 {{--<div class="row">
+						<div class="tab-content" id="pills-tabContent">
+							<div class="tab-pane fade" id="pills-public" role="tabpanel" aria-labelledby="pills-public-tab">
+							</div>
+							<div class="tab-pane fade" id="pills-private" role="tabpanel" aria-labelledby="pills-private-tab">
+							</div>
+							<div class="tab-pane fade show active" id="pills-select-people" role="tabpanel" aria-labelledby="pills-select-people-tab">
+								<div class="people-select-tab" style="max-height: 200px; overflow-y: auto;">
+									<div class="invalid-feedback">{{ __('please_select') }} {{ __('location')}}.</div>
+									<h3>Select Location</h3>
+									@foreach($locationcategory as $location)
+										<div class="select-people-checkbox-s">
+											<label class="custom_check">
+												<input type="checkbox" name="location[]" value="{{ $location->id }}">													
+												<span class="checkmark"></span>
+												<span class="people-profile">
+													<a href="#">{{ $location->name ?? '' }}</a>
+												</span>
+											</label>
+										</div>
+									@endforeach
+								</div>
+							</div>
+						</div>
+					</div>--}}
 					 <div class="row margin-bottom-20">
 						<div class="form-group">
 							<div class="col-md-9">
@@ -140,9 +180,6 @@ $week= '';
 								</div>
 								<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
 							</div>
-							{{--<div class="col-md-3">
-								<img id="img-upload" class="img-responsive" src="images/users/2.jpg" alt="" />
-							</div>--}}
 						</div>
 					</div>
 					 <div class="form-group  col-md-12  col-sm-12">

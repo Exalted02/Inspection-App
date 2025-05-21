@@ -24,4 +24,8 @@ class Category extends Model
 	{
 		return $this->hasMany(Manage_location_category::class, 'category_id');
 	}
+	/*public function subcategories()
+	{
+		return $this->hasMany(Subcategory::class, 'category_id', 'id');
+	}*/
 }

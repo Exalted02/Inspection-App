@@ -1076,6 +1076,31 @@
 	font-weight: 600;
 }
 
+/*------- 21-05-2025----*/
+
+.subcategory-box {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    .subcategory-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .subcategory-item:last-child {
+        border-bottom: none;
+    }
+    .subcategory-name {
+        padding-left: 5px;
+        font-weight: 500;
+    }
+    .subcategory-checkbox {
+        margin-left: 10px;
+    }
 
 
 

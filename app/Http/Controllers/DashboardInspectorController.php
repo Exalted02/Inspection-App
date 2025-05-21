@@ -66,6 +66,14 @@ class DashboardInspectorController extends Controller
 		
 		$data['locationcategory'] = Category::where('location_id', $id)->where('status' ,'!=', 2)->get(); // use in dropdown for add task
 		$data['location_id'] = $id;
+		
+		// fetch subcategory by location
+		$data['locationWisesubcategory'] = Subcategory::whereHas('category', function ($query) use ($id) {
+			$query->where('location_id', $id);
+		})->get();			
+											
+		//echo "<pre>";print_r($locationWisesubcategory);die;
+		
         return view('inspector.location-details', $data);
     }
 	public function category($lid='',$catid='',$task_id='')
