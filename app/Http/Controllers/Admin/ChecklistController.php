@@ -210,6 +210,29 @@ class ChecklistController extends Controller
 		
 		return view('admin.location.checklist',$data);
 	}
+	public function checklist_orderno_update(Request $request)
+	{
+		$existingOrderNo = Checklist::where('order_no', $request->post('order_no'))->where('category_id',$request->post('category_id'))->where('subcategory_id',$request->post('subcategoryid'))->where('status', '!=', 2)
+        ->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+        ->first();
+		
+		if ($existingOrderNo) {
+			return response()->json([
+				'success' => false,
+				'orderno' => false,
+				'message' => 'Order no. already exists.'
+			]);
+		}
+		
+		Checklist::where('id', $request->post('id'))->where('category_id', $request->post('category_id'))->where('subcategory_id', $request->post('subcategoryid'))->update(['order_no' => $request->post('order_no')]);
+		
+		return response()->json([
+				'success' => true,
+				'message' => 'Order no. update successfully.'
+			]);
+	}
 	 
 }
 

@@ -285,11 +285,39 @@ $('#category_image').on('change', function (event) {
 $(document).on('input', '#order_no', function() {
   this.value = this.value.replace(/[^0-9]/g, '');
 });
+$(document).on('input', '.order-no-input', function() {
+  this.value = this.value.replace(/[^0-9]/g, '');
+});
 
 $(document).on('click','.update-order-no',function(){
 	var id = $(this).data('id');
 	//var order = $(this).data('order');
 	$('#order-name' + id).hide();
 	$('#order-text' + id).show();
+	$('#order-text' + id).find('.order-no-input').focus();
 });
+$(document).on('click','.edit-order-no', function(){
+	var id = $(this).data('id');
+	var order_no = $('#order-text' + id + ' .order-no-input').val();
+	var category_id = $('#categoryid').val();
+	var subcategory_id = $('#subcategoryid').val();
+	var URL = $(this).data('url');
+	$.ajax({
+		url: URL,
+		type: "POST",
+		data: {id:id,order_no:order_no,category_id:category_id,subcategoryid:subcategory_id, _token: csrfToken},
+		dataType: 'json',
+		success: function(response) {
+			//alert(response.success);
+			if (!response.success && response.orderno === false) {
+                $('#order-error-' + id).text(response.message);
+            } else {
+                $('#order-name' + id).text(order_no).show();
+                $('#order-text' + id).hide();
+            }
+		},
+	});
+});
+
+
 });

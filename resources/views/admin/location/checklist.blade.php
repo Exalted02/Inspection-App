@@ -48,8 +48,8 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 		<!-- Search Filter -->
 		<div class="filter-filelds" id="filter_inputs">
 		<form name="search-frm" method="post" action="{{ route('admin.manage-location-wise-subcategory-checklist', ['catid'=>$category_id, 'subcatid'=> $subcategory_id])}}" id="search-checklist-frm">
-		<input type="hidden" value="{{ $category_id }}" name="src_category">
-		<input type="hidden" value="{{ $subcategory_id }}" name="src_subcategory">
+		<input type="text" value="{{ $category_id }}" name="src_category">
+		<input type="text" value="{{ $subcategory_id }}" name="src_subcategory">
 		@csrf
 			<div class="row filter-row">
 			{{--<div class="col-xl-3">  
@@ -186,7 +186,17 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';
 								{{--<td class="contact-details">{{ $val->get_category->name ?? ''}}</td>
 								<td class="contact-details">{{ $val->get_subcategory->name ?? ''}}</td>--}}
 								<td>{{ $val->name ?? ''}}</td>
-								<td class="update-order-no" data-id="{{$val->id }}" ><span id="order-name{{ $val->id}}">{{ $val->order_no ?? ''}}</span><span id="order-text{{ $val->id }}" style="display:none"><input type="text" class="form-control" value="{{ $val->order_no }}"></span></td>
+								<td class="update-order-no" data-id="{{$val->id }}" ><span id="order-name{{ $val->id}}">{{ $val->order_no ?? ''}}</span>
+									<span id="order-text{{ $val->id }}" style="display:none;">
+										<div class="d-flex align-items-center gap-2">
+											<input type="text" class="form-control order-no-input" value="{{ $val->order_no }}" style="width: auto; max-width: 150px;">
+											<a class="edit-order-no update-order-no" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.checklist-orderno-update') }}">
+												<i class="fa-solid fa-pencil text-primary"></i>
+											</a>
+										</div>
+										<span class="text-danger small error-message" id="order-error-{{ $val->id }}"></span>
+									</span>
+								</td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
