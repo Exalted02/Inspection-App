@@ -43,6 +43,15 @@
 											</div>
 										</div>
 									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="input-block mb-3">
+												<label class="col-form-label">{{ __('Order No.') }}<span class="text-danger">*</span></label>
+												<input type="text" name="order_no" id="order_no" class="form-control">
+												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('order no.')}}.</div>
+											</div>
+										</div>
+									</div>
 									{{--<div class="row">
 										<div class="col-sm-12">
 											<div class="input-block mb-3">

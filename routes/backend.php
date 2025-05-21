@@ -75,6 +75,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/getDeleteCategory', [CategoryController::class, 'delete_category'])->name('getDeleteCategory');
 	Route::post('/deleteCategoryList',[CategoryController::class,'delete_list'])->name('deleteCategoryList');
 	Route::post('/edit-category', [CategoryController::class, 'edit_category'])->name('edit-category');
+	Route::post('/category-orderno-update', [CategoryController::class, 'category_orderno_update'])->name('category-orderno-update');
+	
 	
 	// sub category
 	Route::get('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');

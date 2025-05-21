@@ -97,7 +97,26 @@ class CategoryController extends Controller
 		if ($existingStage) {
 			return response()->json([
 				'success' => false,
+				'name' => false,
+				'orderno' => true,
 				'message' => 'category name already exists.'
+			]);
+		}
+		
+		// check the order number 
+		
+		$existingOrderNo = Category::where('order_no', $request->post('order_no'))->where('name', $request->post('name'))->where('location_id', $request->post('location_id'))->where('status', '!=', 2)
+        ->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+        ->first();
+		
+		if ($existingOrderNo) {
+			return response()->json([
+				'success' => false,
+				'orderno' => false,
+				'name' => true,
+				'message' => 'Order no. already exists.'
 			]);
 		}
 		
@@ -107,6 +126,7 @@ class CategoryController extends Controller
 			$model= Category::find($request->post('id'));
 			
 			$model->name =	$request->post('name');
+			$model->order_no =	$request->post('order_no');
 			$model->created_at	=	date('Y-m-d');
 			$model->save();
 			$id = $request->post('id');
@@ -115,6 +135,7 @@ class CategoryController extends Controller
 			$model=new Category();
 			$model->location_id		=	$request->post('location_id');
 			$model->name		=	$request->post('name');
+			$model->order_no		=	$request->post('order_no');
 			$model->status		=	1;
 			$model->created_at	=	date('Y-m-d');
 			$model->save();
@@ -153,6 +174,7 @@ class CategoryController extends Controller
 		$data['id']  = $category->id ;
 		$data['location_id']  = $category->location_id ;
 		$data['name']  = $category->name ;
+		$data['order_no']  = $category->order_no ;
 		$data['category_image']  = $category->image ;
 		$data['app_url']  = url('uploads/category') ;
 		$data['edit']  =  Lang::get('edit_category');
@@ -205,6 +227,29 @@ class CategoryController extends Controller
 		$dataArr->orderBy('name', 'ASC'); 
 		$data['category'] = $dataArr->get();
 		return view('admin.location.category',$data);
+	}
+	public function category_orderno_update(Request $request)
+	{
+		$existingOrderNo = Category::where('order_no', $request->post('order_no'))->where('location_id', $request->post('location_id'))->where('status', '!=', 2)
+        ->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+        ->first();
+		
+		if ($existingOrderNo) {
+			return response()->json([
+				'success' => false,
+				'orderno' => false,
+				'message' => 'Order no. already exists.'
+			]);
+		}
+		
+		Category::where('id', $request->post('id'))->update(['order_no' => $request->post('order_no')]);
+		
+		return response()->json([
+				'success' => true,
+				'message' => 'Order no. update successfully.'
+			]);
 	}
 	 
 }

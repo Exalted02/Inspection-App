@@ -8,6 +8,7 @@ $(document).ready(function() {
 	
 	$(document).on('click','.save-category', function(){
 		let name = $('#name').val().trim();
+		let order_no = $('#order_no').val().trim();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
@@ -19,6 +20,12 @@ $(document).ready(function() {
 			isValid = false;
 		}
 		
+		if (order_no === '')
+		{
+			$('#order_no').addClass('is-invalid');
+			$('#order_no').next('.invalid-feedback').show();
+			isValid = false;
+		}
 		
 		
 		if (isValid) {
@@ -38,8 +45,19 @@ $(document).ready(function() {
 				//dataType: 'json',
 				success: function(response) {
 					if (!response.success) {
-						$('#name').addClass('is-invalid');
-						$('#name').next('.invalid-feedback').text(response.message).show();
+						if(!response.name)
+						{
+							$('#name').addClass('is-invalid');
+							$('#name').next('.invalid-feedback').text(response.message).show();
+						}
+						
+						if(!response.orderno)
+						{
+							$('#order_no').addClass('is-invalid');
+							$('#order_no').next('.invalid-feedback').text(response.message).show();
+						}
+						
+						
 					} else {
 						if(id=='')
 						{
@@ -73,8 +91,7 @@ $(document).on('click','.edit-category', function(){
 			$('#id').val(response.id);
 			$('#location_id').val(response.location_id);
 			$('#name').val(response.name);
-			
-			
+			$('#order_no').val(response.order_no);
 			
 			var app_url = response.app_url; 
 			$('#preview').attr('src', app_url + '/' + response.category_image).show();
@@ -241,6 +258,44 @@ $('#category_image').on('change', function (event) {
         }
         reader.readAsDataURL(file);
     }
+});
+
+$(document).on('input', '#order_no', function() {
+  this.value = this.value.replace(/[^0-9]/g, '');
+});
+$(document).on('input', '.order-no-input', function() {
+  this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+$(document).on('click','.update-order-no',function(){
+	var id = $(this).data('id');
+	//var order = $(this).data('order');
+	$('#order-name' + id).hide();
+	$('#order-text' + id).show();
+	$('#order-text' + id).find('.order-no-input').focus();
+});
+$(document).on('click','.edit-order-no', function(){
+	var id = $(this).data('id');
+	var order_no = $('#order-text' + id + ' .order-no-input').val();
+	//var category_id = $('#categoryid').val();
+	//var subcategory_id = $('#subcategoryid').val();
+	var location_id = $('#location_id').val();
+	var URL = $(this).data('url');
+	$.ajax({
+		url: URL,
+		type: "POST",
+		data: {id:id,order_no:order_no,location_id:location_id, _token: csrfToken},
+		dataType: 'json',
+		success: function(response) {
+			//alert(response.success);
+			if (!response.success && response.orderno === false) {
+                $('#order-error-' + id).text(response.message);
+            } else {
+                $('#order-name' + id).text(order_no).show();
+                $('#order-text' + id).hide();
+            }
+		},
+	});
 });
 
 });

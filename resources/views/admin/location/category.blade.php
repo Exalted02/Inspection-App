@@ -159,7 +159,7 @@ $location_name = $locationData ? $locationData->location_name : '';
 									<span id="order-text{{ $val->id }}" style="display:none;">
 										<div class="d-flex align-items-center gap-2">
 											<input type="text" class="form-control order-no-input" value="{{ $val->order_no }}" style="width: auto; max-width: 150px;">
-											<a class="edit-order-no update-order-no" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.checklist-orderno-update') }}">
+											<a class="edit-order-no update-order-no" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.category-orderno-update') }}">
 												<i class="fa-solid fa-pencil text-primary"></i>
 											</a>
 										</div>
