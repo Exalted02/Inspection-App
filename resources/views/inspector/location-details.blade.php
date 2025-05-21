@@ -111,33 +111,24 @@ $week= '';
 					<input type="hidden" id="id" name="id">
 					<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
 					@csrf
-                    {{--<div class="form-group  col-md-12  col-sm-12">
-                        <label>Category</label>
-						<span class="text-danger">*</span></label>
-                        <select class="select form-control" name="category_id" id="category_id">
-							<option value="">Select category</option>
-							@foreach($locationcategory as $category)
-								<option value="{{ $category->id ?? '' }}">{{ $category->name ?? ''}}</option>
-							@endforeach
-						</select>
-						<span id="category_id_error" style="display:none;  color: red;"></span>
-                    </div>--}}
+                    
                      <div class="form-group  col-md-12  col-sm-12">
                         <label>{{ __('Task Title') }}</label>
                         <input class="form-control" type="text" name="task_title" id="task_title">
 						<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
                      </div>
 					<div class="form-group col-md-12 col-sm-12">
-						<label><strong>Select SubCategory</strong></label>
+						<label><strong>Select Category</strong></label>
 						<div class="subcategory-box mt-2">
-							@foreach($locationWisesubcategory as $subcategory)
+							@foreach($locationWisecategory as $category)
 								<div class="subcategory-item">
-									<div class="subcategory-name"><strong>{{ $subcategory->name }}</strong></div>
+									<div class="subcategory-name"><strong>{{ $category->name }}</strong></div>
 									<div class="subcategory-checkbox">
-										<input type="checkbox" name="location[]" value="{{ $subcategory->id }}">
+										<input type="checkbox" name="location_category[]" value="{{ $category->id }}">
 									</div>
 								</div>
 							@endforeach
+							<span id="tasktcategory_id_error" style="display:none;  color: red;">Please select category</span>
 						</div>
 					</div>
 
@@ -224,22 +215,24 @@ $(document ).ready(function() {
 			return false;
 		}
 		
-		if (task_image === 0) {
-			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
-			return false;
-		}
+		
 		
 		let selectedLocations = [];
-		$('input[name="location[]"]:checked').each(function() {
+		$('input[name="location_category[]"]:checked').each(function() {
 			selectedLocations.push($(this).val());
 		});
 		//alert(selectedLocations);
 		if (selectedLocations.length === 0) {
-			$('input[name="location[]"]').first().addClass('is-invalid');
-			$('input[name="location[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();
+			$('#tasktcategory_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
+			/*$('input[name="location[]"]').first().addClass('is-invalid');
+			$('input[name="location[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();*/
 			isValid = false;
 		}
 		
+		if (task_image === 0) {
+			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
+			return false;
+		}
 		
 		//var form = $("#frmlocation");
 		var URL = $('#frmcategory').attr('action');

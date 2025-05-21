@@ -21,6 +21,7 @@ use App\Models\Task_list_subcategories;
 use App\Models\Subcategory;
 use App\Models\Task_list_corrective_action;
 use App\Models\Task_list_corrective_action_file;
+use App\Models\Task_location_categories;
 
 class DashboardInspectorController extends Controller
 {
@@ -68,9 +69,7 @@ class DashboardInspectorController extends Controller
 		$data['location_id'] = $id;
 		
 		// fetch subcategory by location
-		$data['locationWisesubcategory'] = Subcategory::whereHas('category', function ($query) use ($id) {
-			$query->where('location_id', $id);
-		})->get();			
+		$data['locationWisecategory'] = Category::where('location_id', $id)->get();
 											
 		//echo "<pre>";print_r($locationWisesubcategory);die;
 		
@@ -1263,7 +1262,7 @@ class DashboardInspectorController extends Controller
 		$model=new Task_lists();
 		$model->inspector_id	=	auth()->user()->id;
 		$model->location_id		=	$request->post('location_id');
-		$model->category_id		=	$request->post('category_id');
+		//$model->category_id		=	$request->post('category_id');
 		//$model->lo_id			=	;
 		$model->los_id			=	$los_id ?? null;
 		$model->task_title		=	$request->post('task_title');
@@ -1272,6 +1271,20 @@ class DashboardInspectorController extends Controller
 		$model->save();
 		$id = $model->id;
 		
+		// add task_location_category
+		$location_category = $request->location_category ?? '';
+		if($location_category->isNotEmpty())
+		{
+			foreach($location_category as $category)
+			{
+				$locModel = new Task_location_categories();
+				$locModel->task_list_id 	= $id;
+				$locModel->category_id 		= $category;
+				$locModel->save;
+			}
+		}
+		
+		// add file
 		$fileName = '';
 		if($request->hasFile('task_image')) {
 			$destinationPath = public_path('uploads/task/');
