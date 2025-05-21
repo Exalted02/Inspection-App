@@ -9,7 +9,7 @@ use Carbon\Carbon;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
-		<h2 class="checklist-title">{{ $categoryData[0]->name ?? '' }}</h2>
+		<h2 class="checklist-title">{{ $task_name ?? '' }}</h2>
 		<div class="location-section">
 			<div class="location-label">Location details</div>
 			<div class="location-input" id="displayBox">
@@ -53,25 +53,22 @@ use Carbon\Carbon;
 						<div class="tab-content">
 						@if(auth()->user()->user_type == 1)
 							<div role="tabpanel" class="tab-pane active" id="uncomplete_tab">
-							@if($categoryData[0]->get_subcategory->isNotEmpty())
-								@foreach($categoryData[0]->get_subcategory as $subcategories)
+							@if($categoryData->isNotEmpty())
+								@foreach($categoryData as $categories)
 								@php 
-									$tot_checklist = App\Models\Checklist::where('category_id', $categoryData[0]->id)->where('subcategory_id', $subcategories->id)->count();
-									$tot_checklist_completed = App\Models\Task_list_checklists::where('task_list_id',$task_id)->where('task_list_subcategory_id', $subcategories->id)->count();
-									$tot_subchecklist_completed = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)
-																	->where('task_list_subcategory_id', $subcategories->id)
-																	->distinct('task_list_checklist_id')
-																	->count();
+									$tot_checklist = App\Models\Checklist::where('category_id', $categories)->count();
+									$tot_checklist_completed = App\Models\Task_list_checklists::where('task_list_id',$task_id)->count();
+									$tot_subchecklist_completed = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->distinct('task_list_checklist_id')->count();
 									$tot_completed_task = $tot_checklist_completed+$tot_subchecklist_completed;
 
 								@endphp
 								<div class="checklist-item">
 									<div class="text">
-										<div class="title">{{ $subcategories->name ?? ''}}</div>
+										<div class="title">{{ $categories->name ?? ''}}</div>
 										<div class="subtitle">Completed {{ $tot_completed_task ?? ''}} of {{ $tot_checklist ?? ''}}</div>
 									</div>
 									{{--<a href="{{route('checklist-question' ,['cat_id'=>$categoryData[0]->id, 'subcat_id'=>$subcategories->id])}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
-									<a href="jacascript:void(0);" class="chk-task-id" data-cat="{{ $categoryData[0]->id ?? ''}}" data-subcat="{{ $subcategories->id ?? '' }}" data-location="{{ $location_id ?? ''}}" data-taskid="{{ $task_id }}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
+									<a href="jacascript:void(0);" class="chk-task-id" data-cat="{{ $categories->id ?? ''}}" data-location="{{ $location_id ?? ''}}" data-taskid="{{ $task_id }}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
 								</div>
 								@endforeach
 							@else	
@@ -492,14 +489,14 @@ $(document ).ready(function() {
    
    $(document).on('click','.chk-task-id', function(){
 	   var cat_id = $(this).data('cat');
-	   var subcat_id = $(this).data('subcat');
+	   //var subcat_id = $(this).data('subcat');
 	   var location_id = $(this).data('location');
 	   var task_id = $(this).data('taskid');
 	   var URL = "{{ route('check-task-id') }}";
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {cat_id:cat_id,subcat_id:subcat_id,location_id:location_id,task_id:task_id, _token: csrfToken},
+			data: {cat_id:cat_id,location_id:location_id,task_id:task_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.hasData);

@@ -75,20 +75,29 @@ class DashboardInspectorController extends Controller
 		
         return view('inspector.location-details', $data);
     }
-	public function category($lid='',$catid='',$task_id='')
+	public function category($lid='',$task_id='')
     {
 		$data = [];
 		// -- if inspector login 
 		
-		$data['categoryData'] = Category::with('get_subcategory')->where('id', $catid)->where('location_id', $lid)->get();
+		//$data['categoryData'] = Category::with('get_subcategory')->where('id', $catid)->where('location_id', $lid)->get();
+
+		$data['categoryData'] = Category::whereIn('id', function($query) use ($task_id) {
+			$query->select('category_id')
+				  ->from('task_location_categories')
+				  ->where('task_list_id', $task_id);
+		})->get();
+        //echo "<pre>";print_r($categoryData);die;
+		
 		$data['location_id'] = $lid;
-		$details = Task_lists::where('id',$task_id)->where('inspector_id', auth()->user()->id)->where('location_id', $lid)->where('category_id', $catid)->first();
+		$details = Task_lists::where('id',$task_id)->where('inspector_id', auth()->user()->id)->where('location_id', $lid)->first();
 		$data['location_details'] = $details ? $details->location_details : null;
 		$data['task_id'] = $details ? $details->id : null;
+		$data['task_name'] = $details ? $details->task_title : null;
 		
 		// for corrective checked work 
 		$correctiveActionChecklistArray = [];
-		$taskData = Task_lists::where('location_id', $lid)->where('category_id', $catid)->get();
+		$taskData = Task_lists::where('location_id', $lid)->get();
 		if($taskData->isNotEmpty())
 		{
 			foreach($taskData as $val)
@@ -179,7 +188,7 @@ class DashboardInspectorController extends Controller
 	public function check_task_id(Request $request)
 	{
 		$category_id = $request->post('cat_id');
-		$subcategory_id = $request->post('subcat_id');
+		//$subcategory_id = $request->post('subcat_id');
 		$location_id = $request->post('location_id');
 		$inspector_id = auth()->user()->id;
 		$task_id = $request->post('task_id');
@@ -190,7 +199,9 @@ class DashboardInspectorController extends Controller
 			
 			$taskLocationDtls = Task_lists::where('inspector_id', $inspector_id)->where('location_id', $location_id)->where('category_id', $category_id)->where('id', $task_id)->first()->location_details ;
 			
-			$hasChecklists = Checklist::where('category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
+			//$hasChecklists = Checklist::where('category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
+			
+			$hasChecklists = Checklist::where('category_id', $category_id)->exists();
 			
 			if(!$taskLocationDtls)
 			{
@@ -1272,15 +1283,16 @@ class DashboardInspectorController extends Controller
 		$id = $model->id;
 		
 		// add task_location_category
-		$location_category = $request->location_category ?? '';
-		if($location_category->isNotEmpty())
+		$location_category = $request->location_category;
+		
+		if(!empty($location_category))
 		{
 			foreach($location_category as $category)
 			{
 				$locModel = new Task_location_categories();
-				$locModel->task_list_id 	= $id;
+				$locModel->task_list_id 	= 1;
 				$locModel->category_id 		= $category;
-				$locModel->save;
+				$locModel->save();
 			}
 		}
 		

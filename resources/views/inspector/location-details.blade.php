@@ -69,9 +69,9 @@ $week= '';
 									</div>
 									<div class="flex-grow-1">
 									@if(auth()->user()->user_type == 1 || auth()->user()->user_type == 3)
-										<a href="{{ route('category', ['location_id'=>$tasks->location_id, 'cat_id' => $tasks->category_id ?? '','task_id'=>$tasks->id]) }}">
+										<a href="{{ route('category', ['location_id'=>$tasks->location_id,'task_id'=>$tasks->id]) }}">
 									@elseif(auth()->user()->user_type == 2)
-										<a href="{{ route('location-owner', ['location_id'=>$tasks->location_id, 'cat_id' => $tasks->category_id ?? '']) }}">
+										<a href="{{ route('location-owner', ['location_id'=>$tasks->location_id]) }}">
 									@endif
 										
 										<img src="{{url('uploads/task/' . $tasks->image  )}}" alt="Task"/>
