@@ -909,14 +909,17 @@ class DashboardInspectorController extends Controller
 	{
 		$task_id = $request->task_id;
 		$category_id = $request->category_id;
-		$subcategory_id = $request->subcategory_id;
-		$exists = Task_list_subcategories::where('task_list_id', $task_id)->where('task_list_category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
+		//$subcategory_id = $request->subcategory_id; // 21-05-2025
+		$exists = Task_list_subcategories::where('task_list_id', $task_id)
+				->where('task_list_category_id', $category_id)
+				//->where('subcategory_id', $subcategory_id) // 21-05-2025
+				->exists();
 		if(!$exists)
 		{
 			$model = new Task_list_subcategories();
 			$model->task_list_id = $task_id ?? null;
 			$model->task_list_category_id = $category_id ?? null;
-			$model->subcategory_id = $subcategory_id ?? null;
+			//$model->subcategory_id = $subcategory_id ?? null; // 21-05-2025
 			$model->total_task = 0;
 			$model->completed_task = 0;
 			$model->is_submit = 1;
@@ -929,7 +932,7 @@ class DashboardInspectorController extends Controller
 		$current_question_id = $request->checklist_id;
 		$task_id = $request->task_id;
 		$category_id = $request->cat_id;
-		$subcategory_id = $request->subcat_id;
+		//$subcategory_id = $request->subcat_id; // 21-05-2025
 		$subChklistArr = [];
 		$existingFiles = [];
 		$existingSubChecklistFiles = [];
@@ -941,7 +944,7 @@ class DashboardInspectorController extends Controller
 		// fetch record with respect ti checklist
 		$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
 			->where('category_id', $category_id)
-			->where('subcategory_id', $subcategory_id)
+			//->where('subcategory_id', $subcategory_id) // 21-05-2025
 			->where('status', '!=', 2)
 			->where('id', $current_question_id)
 			->orderBy('id', 'asc')
@@ -961,11 +964,17 @@ class DashboardInspectorController extends Controller
 					];
 				}
 				
-				$subcategoryname = $nextQuestion->get_subcategory->name;
+				$subcategoryname = '';
+				//$subcategoryname = $nextQuestion->get_subcategory->name; //21-05-2025
 			}
 			
 			// fetch data from task_list_checklist
-			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();
+			// -- 21-05-2025 ---
+			/*$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();*/
+			//--------
+			
+			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $nextId)->first();
+			
 			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
 			$next_approve = $iffetch ? $iffetch->approve : '';
 			
@@ -987,7 +996,7 @@ class DashboardInspectorController extends Controller
 			// fetch data from task_list_subchecklist
 			$fetchsubChklistArr = [];
 			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('task_list_checklist_id', $nextId)
 							->get();
 			if($ifsubfetch->isNotEmpty())
@@ -1020,7 +1029,8 @@ class DashboardInspectorController extends Controller
 			
 			//------- progress bar work ---------------
 			$total_checklist = Checklist::where('category_id', $category_id)
-								->where('subcategory_id', $subcategory_id)->get();
+								//->where('subcategory_id', $subcategory_id) // 21-05-2025
+								->get();
 			$countCheklist  = $total_checklist->count();
 			$percentage = ceil(100/$countCheklist);
 			
@@ -1031,7 +1041,7 @@ class DashboardInspectorController extends Controller
 				{
 						$progressStatus = '';
 						$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
-										->where('task_list_subcategory_id', $subcategory_id)
+										//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 										->where('checklist_id', $val->id)->exists();
 						if($hasTaskChecklist)
 						{
@@ -1040,7 +1050,7 @@ class DashboardInspectorController extends Controller
 						else 
 						{
 							$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
-										->where('task_list_subcategory_id', $subcategory_id)
+										//->where('task_list_subcategory_id', $subcategory_id)  // 21-05-2025
 										->where('task_list_checklist_id', $val->id)->exists();
 							if($hasTaskSubChecklist)
 							{
@@ -1071,7 +1081,8 @@ class DashboardInspectorController extends Controller
 					'fetchsubChklistArr'=>$fetchsubChklistArr,
 					'existingSubChecklistFiles'=>$existingSubChecklistFiles,
 					'category_id'=>$category_id,
-					'subcategory_id'=>$subcategory_id,
+					'subcategory_id'=>'',
+					//'subcategory_id'=>$subcategory_id,// 21-05-2025
 					'barHtml'=>$barHtml
 				]
 			);
