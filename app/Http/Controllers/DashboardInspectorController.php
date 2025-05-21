@@ -199,7 +199,7 @@ class DashboardInspectorController extends Controller
 			
 			//$hasChecklists = Checklist::where('category_id', $category_id)->where('subcategory_id', $subcategory_id)->exists();
 			
-			$hasChecklists = Checklist::where('category_id', $category_id)->get();
+			$hasChecklists = Checklist::where('category_id', $category_id)->first();
 			
 			if(!$taskLocationDtls)
 			{
