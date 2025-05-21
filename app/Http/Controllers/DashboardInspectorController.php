@@ -626,9 +626,9 @@ class DashboardInspectorController extends Controller
 		$task_id = $request->post('task_id');
 		$current_question_id = $request->post('current_question_id');
 		$category_id = $request->post('category_id');
-		$subcategory_id = $request->post('subcategory_id');
+		//$subcategory_id = $request->post('subcategory_id'); // 21-05-2025
 		$nextQuestionExists = Checklist::where('category_id', $category_id)
-		->where('subcategory_id', $subcategory_id)
+		//->where('subcategory_id', $subcategory_id) // 21-05-2025
 		->where('status', '!=', 2)
 		->where('id', '<', $current_question_id)
 		->orderBy('id', 'desc')
@@ -646,7 +646,7 @@ class DashboardInspectorController extends Controller
 		{
 			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
 			->where('category_id', $category_id)
-			->where('subcategory_id', $subcategory_id)
+			//->where('subcategory_id', $subcategory_id) // 21-05-2025
 			->where('status', '!=', 2)
 			->where('id', '<', $current_question_id)
 			->orderBy('id', 'desc')
@@ -666,11 +666,17 @@ class DashboardInspectorController extends Controller
 					];
 				}
 				
-				$subcategoryname = $nextQuestion->get_subcategory->name;
+				$subcategoryname ='';
+				//$subcategoryname = $nextQuestion->get_subcategory->name;
 			}
 			
 			// fetch data from task_list_checklist
-			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();
+			// -- 21-05-2025---
+			/*$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();*/
+			//--------------
+			
+			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $nextId)->first();
+			
 			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
 			$next_approve = $iffetch ? $iffetch->approve : '';
 			
@@ -692,7 +698,7 @@ class DashboardInspectorController extends Controller
 			// fetch data from task_list_subchecklist
 			$fetchsubChklistArr = [];
 			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
-							->where('task_list_subcategory_id', $subcategory_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('task_list_checklist_id', $nextId)
 							->get();
 			if($ifsubfetch->isNotEmpty())
@@ -740,7 +746,8 @@ class DashboardInspectorController extends Controller
 	public function single_reject_files(Request $request)
 	{
 		$current_checklist_id = $request->post('current_checklist_id');
-		$subcategory_id = $request->post('subcategory_id');
+		$subcategory_id = '';
+		//$subcategory_id = $request->post('subcategory_id'); // 21-05-2025
 		$task_id = $request->post('task_id');
 		
 		if($request->hasFile('file')) {
@@ -761,7 +768,7 @@ class DashboardInspectorController extends Controller
 			$tempmodel->inspector_id = auth()->user()->id;
 			$tempmodel->task_id = $task_id ?? null;
 			$tempmodel->task_list_checklist_id = $current_checklist_id ?? null;
-			$tempmodel->subcategory_id = $subcategory_id ?? null;
+			//$tempmodel->subcategory_id = $subcategory_id ?? null; // 21-05-2025
 			$tempmodel->file = $filename;
 			$tempmodel->save();
 			//-------

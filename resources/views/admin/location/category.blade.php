@@ -137,6 +137,7 @@ $location_name = $locationData ? $locationData->location_name : '';
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
 								<th>{{ __('category_name') }}</th>
+								<th>{{ __('Order no.') }}</th>
 									{{--<th>{{ __('image') }}</th>--}}
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
@@ -154,6 +155,17 @@ $location_name = $locationData ? $locationData->location_name : '';
 								</td>
 								@endif
 								<td class="contact-details">{{ $val->name ?? ''}}</td>
+								<td class="update-order-no" data-id="{{$val->id }}" ><span id="order-name{{ $val->id}}">{{ $val->order_no ?? ''}}</span>
+									<span id="order-text{{ $val->id }}" style="display:none;">
+										<div class="d-flex align-items-center gap-2">
+											<input type="text" class="form-control order-no-input" value="{{ $val->order_no }}" style="width: auto; max-width: 150px;">
+											<a class="edit-order-no update-order-no" data-id="{{ $val->id ?? '' }}" data-url="{{ route('admin.checklist-orderno-update') }}">
+												<i class="fa-solid fa-pencil text-primary"></i>
+											</a>
+										</div>
+										<span class="text-danger small error-message" id="order-error-{{ $val->id }}"></span>
+									</span>
+								</td>
 									{{--<td><img src="{{ url('uploads/category/' . $val->image) }}" width="50" height="50"></td>--}}
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
