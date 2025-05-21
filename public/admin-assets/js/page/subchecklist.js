@@ -9,6 +9,7 @@ $(document).ready(function() {
 	$(document).on('click','.save-subchecklist', function(){
 		//let checklist = $('#checklist').val().trim();
 		let name = $('#name').val().trim();
+		let order_no = $('#order_no').val().trim();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
@@ -26,6 +27,12 @@ $(document).ready(function() {
 			isValid = false;
 		}
 		
+		if (order_no === '')
+		{
+			$('#order_no').addClass('is-invalid');
+			$('#order_no').next('.invalid-feedback').show();
+			isValid = false;
+		}
 		
 		if (isValid) {
 			//var form = $("#frmlocation");
@@ -43,9 +50,21 @@ $(document).ready(function() {
 				contentType: false,
 				//dataType: 'json',
 				success: function(response) {
+					//alert(response.success);
 					if (!response.success) {
-						$('#name').addClass('is-invalid');
-						$('#name').next('.invalid-feedback').text(response.message).show();
+						
+						if(!response.name)
+						{
+							$('#name').addClass('is-invalid');
+							$('#name').next('.invalid-feedback').text(response.message).show();
+						}
+						
+						if(!response.orderno)
+						{
+							$('#order_no').addClass('is-invalid');
+							$('#order_no').next('.invalid-feedback').text(response.message).show();
+						}
+						
 					} else {
 						if(id=='')
 						{
@@ -54,9 +73,9 @@ $(document).ready(function() {
 						else{
 							$('#updt_success_msg').modal('show');
 						}
-						setTimeout(() => {
+						/*setTimeout(() => {
 							window.location.reload();
-						}, "2000");
+						}, "2000");*/
 					}
 				},
 			});
@@ -242,4 +261,41 @@ $('#category_image').on('change', function (event) {
         reader.readAsDataURL(file);
     }
 });
+
+$(document).on('input', '#order_no', function() {
+  this.value = this.value.replace(/[^0-9]/g, '');
+});
+$(document).on('input', '.order-no-input', function() {
+  this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+$(document).on('click','.update-order-no',function(){
+	var id = $(this).data('id');
+	//var order = $(this).data('order');
+	$('#order-name' + id).hide();
+	$('#order-text' + id).show();
+	$('#order-text' + id).find('.order-no-input').focus();
+});
+$(document).on('click','.edit-order-no', function(){
+	var id = $(this).data('id');
+	var order_no = $('#order-text' + id + ' .order-no-input').val();
+	var checklist_id = $('#checklistid').val();
+	var URL = $(this).data('url');
+	$.ajax({
+		url: URL,
+		type: "POST",
+		data: {id:id,order_no:order_no,checklist_id:checklist_id, _token: csrfToken},
+		dataType: 'json',
+		success: function(response) {
+			//alert(response.success);
+			if (!response.success && response.orderno === false) {
+                $('#order-error-' + id).text(response.message);
+            } else {
+                $('#order-name' + id).text(order_no).show();
+                $('#order-text' + id).hide();
+            }
+		},
+	});
+});
+
 });

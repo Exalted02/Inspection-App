@@ -96,7 +96,26 @@ class SubChecklistController extends Controller
 		if ($existingStage) {
 			return response()->json([
 				'success' => false,
+				'name' => false,
+				'orderno' => true,
 				'message' => 'Subchecklist name already exists.'
+			]);
+		}
+		
+		// check the order number 
+		
+		$existingOrderNo = Subchecklist::where('checklist_id', $request->post('checklist'))->where('order_no', $request->post('order_no'))->where('status', '!=', 2)
+        ->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+        ->first();
+		
+		if ($existingOrderNo) {
+			return response()->json([
+				'success' => false,
+				'orderno' => false,
+				'name' => true,
+				'message' => 'Order no. already exists.'
 			]);
 		}
 		
@@ -105,6 +124,7 @@ class SubChecklistController extends Controller
 			$model= Subchecklist::find($request->post('id'));
 			$model->checklist_id		=	$request->post('checklist');
 			$model->name		=	$request->post('name');
+			$model->order_no		=	$request->post('order_no');
 			$model->updated_at	=	date('Y-m-d');
 			$model->save();
 			$id = $request->post('id');
@@ -114,6 +134,7 @@ class SubChecklistController extends Controller
 			$model=new Subchecklist();
 			$model->checklist_id =	$request->post('checklist');
 			$model->name		=	$request->post('name');
+			$model->order_no		=	$request->post('order_no');
 			$model->status		=	1;
 			$model->created_at	=	date('Y-m-d');
 			$model->save();
@@ -181,6 +202,30 @@ class SubChecklistController extends Controller
 		
 		
 		return view('admin.location.subchecklist',$data);
+	}
+	
+	public function subchecklist_orderno_update(Request $request)
+	{
+		$existingOrderNo = Subchecklist::where('checklist_id', $request->post('checklist_id'))->where('order_no', $request->post('order_no'))->where('status', '!=', 2)
+        ->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+        ->first();
+		
+		if ($existingOrderNo) {
+			return response()->json([
+				'success' => false,
+				'orderno' => false,
+				'message' => 'Order no. already exists.'
+			]);
+		}
+		
+		Subchecklist::where('id', $request->post('id'))->where('checklist_id', $request->post('checklist_id'))->update(['order_no' => $request->post('order_no')]);
+		
+		return response()->json([
+				'success' => true,
+				'message' => 'Order no. update successfully.'
+			]);
 	}
 	 
 }

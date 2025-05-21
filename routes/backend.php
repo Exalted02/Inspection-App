@@ -103,6 +103,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/getDeletesubchecklist', [SubChecklistController::class, 'delete_subchecklist'])->name('getDeletesubchecklist');
 	Route::post('/deletesubchecklist',[SubChecklistController::class,'delete_list'])->name('deletesubchecklist');
 	Route::post('/edit-subchecklist', [SubChecklistController::class, 'edit_subchecklist'])->name('edit-subchecklist');
+	Route::post('/subchecklist-orderno-update', [SubChecklistController::class, 'subchecklist_orderno_update'])->name('subchecklist-orderno-update');
 	
 	// inspector
 	Route::get('/inspector', [InspectorController::class, 'index'])->name('inspector');
