@@ -132,33 +132,7 @@ $week= '';
 						</div>
 					</div>
 
-
-					 {{--<div class="row">
-						<div class="tab-content" id="pills-tabContent">
-							<div class="tab-pane fade" id="pills-public" role="tabpanel" aria-labelledby="pills-public-tab">
-							</div>
-							<div class="tab-pane fade" id="pills-private" role="tabpanel" aria-labelledby="pills-private-tab">
-							</div>
-							<div class="tab-pane fade show active" id="pills-select-people" role="tabpanel" aria-labelledby="pills-select-people-tab">
-								<div class="people-select-tab" style="max-height: 200px; overflow-y: auto;">
-									<div class="invalid-feedback">{{ __('please_select') }} {{ __('location')}}.</div>
-									<h3>Select Location</h3>
-									@foreach($locationcategory as $location)
-										<div class="select-people-checkbox-s">
-											<label class="custom_check">
-												<input type="checkbox" name="location[]" value="{{ $location->id }}">													
-												<span class="checkmark"></span>
-												<span class="people-profile">
-													<a href="#">{{ $location->name ?? '' }}</a>
-												</span>
-											</label>
-										</div>
-									@endforeach
-								</div>
-							</div>
-						</div>
-					</div>--}}
-					 <div class="row margin-bottom-20">
+					<div class="row margin-bottom-20">
 						<div class="form-group">
 							<div class="col-md-9">
 								<div class="input-group" style="margin-left: 16px;">
@@ -173,11 +147,12 @@ $week= '';
 							</div>
 						</div>
 					</div>
-					 <div class="form-group  col-md-12  col-sm-12">
-					 <div class="col-md-3">
-								<img id="img-upload" class="img-responsive" src="images/users/2.jpg" alt="" />
-							</div>
-					 </div>
+					<div class="form-group  col-md-12  col-sm-12">
+						<div class="col-md-3">
+							<img id="img-upload" class="img-responsive" src="images/users/2.jpg" alt="" style="width: 100%; border: 0px solid #ccc; border-radius: 5px;"/>
+							<button type="button" id="delete-image" style="position: absolute; top: -10px; right: 4px; background: red; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 20px; cursor: pointer; display:none;">×</button>
+						</div>
+					</div>
 					<div class="clearfix"></div>
                     <div class="col-md-12  col-sm-12 margin-bottom-20 margin-top-20">
                         <button type="button" class="btn btn-theme btn-block save-task button-color">Submit</button>
@@ -194,10 +169,19 @@ $week= '';
 <script>
 $(document ).ready(function() {
 	$(document).on('click', '.add-new-category', function(){
+		$('#task_title').val('');
+		$('input[name="location_category[]"]:checked').each(function() {
+			$('input[name="location_category[]"]').prop('checked', false);
+		});
+		
+		$('#delete-image').hide();
+		$('#img-upload').attr('src', '');
+		$('#task_image').val('');
 		$('#add_category').modal('show');
 	});
 	
 	$("#task_image").change(function() {
+		$('#delete-image').show();
         readURL(this);
     });
 	
@@ -266,7 +250,7 @@ $(document ).ready(function() {
 		
 	});
 	
-	$('#task_image').on('change', function (event) {
+	/*$('#task_image').on('change', function (event) {
 		const [file] = event.target.files;
 		if (file) {
 			const reader = new FileReader();
@@ -275,6 +259,12 @@ $(document ).ready(function() {
 			}
 			reader.readAsDataURL(file);
 		}
+	});*/
+	
+	$('#delete-image').on('click', function() {
+		$('#img-upload').attr('src', '');
+		$('#task_image').val('');
+		$('#delete-image').hide();
 	});
 });
 function readURL(input) {

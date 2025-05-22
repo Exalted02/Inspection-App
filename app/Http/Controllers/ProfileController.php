@@ -14,7 +14,13 @@ class ProfileController extends Controller
 	public function welcome()
     {
 		if(Auth::user()){
-			return view('dashboard');
+			if(auth()->user()->user_type==1 || auth()->user()->user_type==2 ||auth()->user()->user_type==3)
+			{
+				return redirect('/inspector-dashboard');
+			}
+			else{
+				return redirect('/management-dashboard');
+			}
 		}else{
 			return redirect('/login');
 			return view('auth.login');
