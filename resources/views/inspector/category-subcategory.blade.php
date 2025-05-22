@@ -42,7 +42,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
 						@if(auth()->user()->user_type == 1)
-							<li role="presentation" class="active"><a href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab" data-toggle="tab">12 Uncompleted</a></li>
+							<li role="presentation" class="active"><a href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab" data-toggle="tab">Uncompleted</a></li>
 							<li role="presentation"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
 						@endif
 						@if(auth()->user()->user_type == 3)
