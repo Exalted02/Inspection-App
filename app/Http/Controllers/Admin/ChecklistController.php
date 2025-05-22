@@ -23,13 +23,13 @@ class ChecklistController extends Controller
 		}
 		$data['has_search'] = $has_search;
 		$data['category_id'] = $request->src_category;
-		$data['subcategory_id'] = $request->src_subcategory;
+		//$data['subcategory_id'] = $request->src_subcategory;
 		
 		$dataArr = Checklist::with('get_category','get_subcategory');
 		
 		$dataArr->where('category_id', $request->src_category);
 		
-		$dataArr->where('subcategory_id', $request->src_subcategory);
+		//$dataArr->where('subcategory_id', $request->src_subcategory);
 		
 		
 		if($request->search_name)
@@ -87,7 +87,7 @@ class ChecklistController extends Controller
 	{
 		
 		//echo "<pre>";print_r($request->all());die;
-		$existingChecklist = Checklist::where('name', $request->post('name'))->where('category_id',$request->post('category'))->where('subcategory_id',$request->post('subcategory'))->where('status', '!=', 2)
+		$existingChecklist = Checklist::where('name', $request->post('name'))->where('category_id',$request->post('category'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
@@ -104,7 +104,7 @@ class ChecklistController extends Controller
 		
 		// check the order number 
 		
-		$existingOrderNo = Checklist::where('order_no', $request->post('order_no'))->where('category_id',$request->post('category'))->where('subcategory_id',$request->post('subcategory'))->where('status', '!=', 2)
+		$existingOrderNo = Checklist::where('order_no', $request->post('order_no'))->where('category_id',$request->post('category'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
@@ -123,7 +123,7 @@ class ChecklistController extends Controller
 		{
 			$model= Checklist::find($request->post('id'));
 			$model->category_id		=	$request->post('category');
-			$model->subcategory_id	=	$request->post('subcategory');
+			//$model->subcategory_id	=	$request->post('subcategory');
 			$model->name		=	$request->post('name');
 			$model->order_no		=	$request->post('order_no');
 			$model->updated_at	=	date('Y-m-d');
@@ -134,7 +134,7 @@ class ChecklistController extends Controller
 		{
 			$model=new Checklist();
 			$model->category_id	=	$request->post('category');
-			$model->subcategory_id	=	$request->post('subcategory');
+			//$model->subcategory_id	=	$request->post('subcategory');
 			$model->name			=	$request->post('name');
 			$model->order_no		=	$request->post('order_no');
 			$model->status		=	1;
@@ -153,7 +153,7 @@ class ChecklistController extends Controller
 		$data = array();
 		$data['id']  = $Checklist->id ;
 		$data['category']  = $Checklist->category_id ;
-		$data['subcategory']  = $Checklist->subcategory_id ;
+		//$data['subcategory']  = $Checklist->subcategory_id ;
 		$data['name']  = $Checklist->name ;
 		$data['order_no']  = $Checklist->order_no ;
 		$data['edit']  =  Lang::get('edit_sub_category');
@@ -214,7 +214,7 @@ class ChecklistController extends Controller
 	}
 	public function checklist_orderno_update(Request $request)
 	{
-		$existingOrderNo = Checklist::where('order_no', $request->post('order_no'))->where('category_id',$request->post('category_id'))->where('subcategory_id',$request->post('subcategoryid'))->where('status', '!=', 2)
+		$existingOrderNo = Checklist::where('order_no', $request->post('order_no'))->where('category_id',$request->post('category_id'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
@@ -228,7 +228,7 @@ class ChecklistController extends Controller
 			]);
 		}
 		
-		Checklist::where('id', $request->post('id'))->where('category_id', $request->post('category_id'))->where('subcategory_id', $request->post('subcategoryid'))->update(['order_no' => $request->post('order_no')]);
+		Checklist::where('id', $request->post('id'))->where('category_id', $request->post('category_id'))->update(['order_no' => $request->post('order_no')]);
 		
 		return response()->json([
 				'success' => true,

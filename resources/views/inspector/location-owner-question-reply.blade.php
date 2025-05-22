@@ -168,10 +168,9 @@ $(document).ready(function() {
 				dataType: 'json',
 				success: function(response) {
 					let location_id = response.location_id;
-					let category_id = response.category_id;
-					
+					let task_id = response.task_id;
 					var baseUrl = "{{ url('/location-owner') }}";
-					var redirectUrl = baseUrl + '/'+ location_id + '/' + category_id;
+					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id;
 					window.location.href = redirectUrl;
 					
 				},

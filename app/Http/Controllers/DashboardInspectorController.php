@@ -1133,7 +1133,7 @@ class DashboardInspectorController extends Controller
 		$data['task_id'] = $id;
 		return view('inspector.thankyou', $data);
 	}
-	public function location_owner($lid='',$catid='')
+	public function location_owner($lid='',$taskid='')
 	{
 		//--- if location owner login ---
 		$correctiveActionChecklistArray = [];
@@ -1144,7 +1144,8 @@ class DashboardInspectorController extends Controller
 		if(auth()->user()->user_type == 2)
 		{
 			$user_type = auth()->user()->user_type;
-			$taskData = Task_lists::where('location_id', $lid)->where('category_id', $catid)->get();
+			//$taskData = Task_lists::where('location_id', $lid)->where('category_id', $catid)->get();
+			$taskData = Task_lists::where('location_id', $lid)->where('id', $taskid)->get();
 			if($taskData->isNotEmpty())
 			{
 				foreach($taskData as $val)
@@ -1250,17 +1251,24 @@ class DashboardInspectorController extends Controller
 				}
 				
 				//echo count($correctiveActionSubcheckListArray); die;
-				$data['correctiveAction'] = array_merge($correctiveActionChecklistArray, $correctiveActionSubcheckListArray);
+				/*$data['correctiveAction'] = array_merge($correctiveActionChecklistArray, $correctiveActionSubcheckListArray);
 				
 				$data['correctiveCheck'] = array_merge($correctiveCheckChecklistArray, $correctiveCheckSubcheckListArray);
 				
-				$data['total_corrective_action'] = count($correctiveActionChecklistArray) + count($correctiveActionSubcheckListArray);
-				//echo "<pre>";print_r($checklistAndSubchecklist); die;
+				$data['total_corrective_action'] = count($correctiveActionChecklistArray) + count($correctiveActionSubcheckListArray);*/
+				
 			}
+			
+			$data['correctiveAction'] = array_merge($correctiveActionChecklistArray, $correctiveActionSubcheckListArray);
+				
+			$data['correctiveCheck'] = array_merge($correctiveCheckChecklistArray, $correctiveCheckSubcheckListArray);
+			
+			$data['total_corrective_action'] = count($correctiveActionChecklistArray) + count($correctiveActionSubcheckListArray);
 			
 			$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 			$data['location_id'] = $lid;
-			$data['category_id'] = $catid;
+			//$data['category_id'] = $catid;
+			$data['task_id'] = $taskid;
 			
 			return view('inspector.location-owner', $data);
 		}
@@ -1297,7 +1305,7 @@ class DashboardInspectorController extends Controller
 		$taskData  = Task_lists::where('id', $task_list_id)->first();
 		$inspector_id = $taskData ? $taskData->inspector_id : null;
 		$location_id = $taskData ? $taskData->location_id : null;
-		$category_id = $taskData ? $taskData->category_id : null;
+		//$category_id = $taskData ? $taskData->category_id : null; 22-05-2025
 		$los_id = $taskData ? $taskData->los_id : null;
 		
 		$model = new Task_list_corrective_action();
@@ -1315,7 +1323,7 @@ class DashboardInspectorController extends Controller
 		// update the status Task lists table
 		$taskData  = Task_lists::where('id', $task_list_id)->update(['status'=>2]);
 		
-		return response()->json(['location_id'=>$location_id, 'category_id'=>$category_id]);
+		return response()->json(['location_id'=>$location_id, 'task_id'=>$task_list_id]);
 	}
 	public function save_task_data(Request $request)
 	{

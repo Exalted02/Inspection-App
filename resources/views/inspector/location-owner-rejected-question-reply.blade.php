@@ -148,7 +148,7 @@
 							<input type="hidden" id="type" value="{{ $type ?? ''}}">
 							<input type="hidden" id="tab" value="{{ $tab ?? ''}}">
 							<input type="hidden" id="location_id" value="{{ $task_location_id ?? ''}}">
-							<input type="hidden" id="category_id" value="{{ $task_category_id ?? ''}}">
+								{{--<input type="hidden" id="category_id" value="{{ $task_category_id ?? ''}}">--}}
 							
 					</div>
 					
@@ -218,7 +218,7 @@ let previewContainer = $('#preview-container');
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var type = $('#type').val();
-	   var category_id = $('#category_id').val();
+	   //var category_id = $('#category_id').val();
 	   var location_id = $('#location_id').val();
 	   
 	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
@@ -266,7 +266,7 @@ let previewContainer = $('#preview-container');
 				{
 					//history.back();
 					var baseUrl = "{{ url('/location-owner') }}";
-					var redirectUrl = baseUrl + '/'+ location_id + '/' + category_id;
+					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id;
 					window.location.href = redirectUrl;
 				}
 				
