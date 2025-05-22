@@ -74,7 +74,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 			<div class="question-text">
 				<span id="single-question">{{ $checklistdata->name ?? '' }}</span>
 			</div>
-			<span id="errormsg" style="display: none; color: red;">
+			<span id="errormsg" class="question-error-message">
 				Please enter text or file.
 			</span>
 			<div class="reject-form mb-3" id="rejectForm-1">
@@ -118,7 +118,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 							<button class="approved" id="question-approve-{{ $subchecklists->id }}" onclick="handleApprove({{ $subchecklists->id }})"><i class="fa-solid fa-check"></i></button>
 						</div>
 					</div>
-					<span id="errorMulmsg{{ $subchecklists->id }}"  style="display: none; color: red;">
+					<span id="errorMulmsg{{ $subchecklists->id }}"  class="question-error-message">
 					Please enter text or file.
 					</span>
 					<div class="reject-form mb-3" id="rejectForm-{{ $subchecklists->id }}">
@@ -697,7 +697,7 @@ $(document ).ready(function() {
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
 						html += '</div>'; 
 						html += '</div>';
-						html += '<span id="errorMulmsg'+ item.id +'" style="display: none; color: red;">Please enter text or file.</span>';
+						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
 						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
 						html += '<textarea placeholder="State why you rejected this...">' + rejectedText +'</textarea>';
 						html += '<input type="hidden" id="mode" value="multiple">';
@@ -863,7 +863,7 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="category_id" value="' + category_id + '">';
 						html += '<input type="hidden" id="subcategory_id" value="' + subcategory_id + '">';
 						html += '</div>'; 
-						html += '<span id="errormsg" style="display: none; color: red;">Please enter text or file.</span>';
+						html += '<span id="errormsg" class="question-error-message">Please enter text or file.</span>';
 						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
 						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this...">' + response.next_rejected_region + '</textarea>';
 						html += '<input type="hidden" id="mode" value="single">';
@@ -1068,7 +1068,7 @@ $(document ).ready(function() {
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
 						html += '</div>'; 
 						html += '</div>'; 
-						html += '<span id="errorMulmsg'+ item.id +'" style="display: none; color: red;">Please enter text or file.</span>';
+						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
 						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
 						html += '<textarea placeholder="State why you rejected this...">' + rejectedText + '</textarea>';
 						html += '<input type="hidden" id="mode" value="multiple">';
@@ -1230,7 +1230,7 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="category_id" value="' + category_id + '">';
 						html += '<input type="hidden" id="subcategory_id" value="' + subcategory_id + '">';
 						html += '</div>'; 
-						html += '<span id="errormsg" style="display: none; color: red;">Please enter text or file.</span>';
+						html += '<span id="errormsg" class="question-error-message">Please enter text or file.</span>';
 						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
 						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this...">' + response.next_rejected_region + '</textarea>';
 						html += '<input type="hidden" id="mode" value="single">';
@@ -1437,7 +1437,7 @@ $(document ).ready(function() {
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
 						html += '</div>'; 
 						html += '</div>';
-						html += '<span id="errorMulmsg'+ item.id +'" style="display: none; color: red;">Please enter text or file.</span>';
+						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
 						html += '<div class="reject-form mb-3" id="' + rejectId + '">';
 						html += '<textarea placeholder="State why you rejected this...">' + rejectedText +'</textarea>';
 						html += '<input type="hidden" id="mode" value="multiple">';
@@ -1603,7 +1603,7 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="category_id" value="' + response.category_id + '">';
 						html += '<input type="hidden" id="subcategory_id" value="' + response.subcategory_id + '">';
 						html += '</div>'; 
-						html += '<span id="errormsg" style="display: none; color: red;">Please enter text or file.</span>';
+						html += '<span id="errormsg" class="question-error-message">Please enter text or file.</span>';
 						html += '<div class="reject-form mb-3" id="rejectForm-' + response.currentid + '">';
 						html += '<textarea id="single_rejecttext" placeholder="State why you rejected this...">' + response.next_rejected_region + '</textarea>';
 						html += '<input type="hidden" id="mode" value="single">';

@@ -1104,8 +1104,11 @@
 .subcategory-checkbox {
 	margin-left: 10px;
 }
-
-
+.question-error-message {
+	font-size: 16px !important;
+	color: crimson;
+	display: none;
+}
 
 
 
