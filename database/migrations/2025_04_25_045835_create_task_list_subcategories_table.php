@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 			$table->integer('task_list_id');
 			$table->integer('task_list_category_id');
-			$table->integer('subcategory_id');
+			//$table->integer('subcategory_id');
 			$table->integer('total_task');
 			$table->integer('completed_task');
             $table->timestamps();
