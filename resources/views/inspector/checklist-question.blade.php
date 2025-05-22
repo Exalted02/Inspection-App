@@ -13,14 +13,15 @@
 $total_checklist = [];
 $countCheklist = 0;
 $percentage = '';
-if(!empty($checklistdata->category_id) && !empty($checklistdata->subcategory_id))
+//if(!empty($checklistdata->category_id) && !empty($checklistdata->subcategory_id))
+if(!empty($checklistdata->category_id))
 {
 	$total_checklist = App\Models\Checklist::where('category_id', $checklistdata->category_id)
 	->where('subcategory_id', $checklistdata->subcategory_id)->get();
 	$countCheklist  = $total_checklist->count();
 	$percentage = ceil(100/$countCheklist);
 }
-
+//echo "<pre>";print_r($total_checklist); die;
 $existingFiles = [];
 
 $existingSubChecklistFiles = [];

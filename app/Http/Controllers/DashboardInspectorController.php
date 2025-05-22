@@ -85,7 +85,7 @@ class DashboardInspectorController extends Controller
 				$query->select('category_id')
 				  ->from('task_location_categories')
 				  ->where('task_list_id', $task_id);
-		})->get();
+		})->orderBy('order_no')->get();
         //echo "<pre>";print_r($categoryData);die;
 		
 		$data['location_id'] = $lid;
@@ -918,15 +918,15 @@ class DashboardInspectorController extends Controller
 		$category_id = $request->category_id;
 		//$subcategory_id = $request->subcategory_id; // 21-05-2025
 		$exists = Task_list_subcategories::where('task_list_id', $task_id)
-				->where('task_list_category_id', $category_id)
+				->where('task_list_category_id', $category_id)->exists();;
 				//->where('subcategory_id', $subcategory_id) // 21-05-2025
-				->exists();
+				//->exists();
 		if(!$exists)
 		{
 			$model = new Task_list_subcategories();
 			$model->task_list_id = $task_id ?? null;
 			$model->task_list_category_id = $category_id ?? null;
-			//$model->subcategory_id = $subcategory_id ?? null; // 21-05-2025
+			$model->subcategory_id = null; // 21-05-2025
 			$model->total_task = 0;
 			$model->completed_task = 0;
 			$model->is_submit = 1;

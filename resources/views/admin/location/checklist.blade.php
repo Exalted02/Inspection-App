@@ -22,7 +22,7 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';*/
 					<h3 class="page-title">{{ __('checklist') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ $category_name .'/'.$subcategory_name }}</li>
+						<li class="breadcrumb-item active">{{ $category_name .''.$subcategory_name }}</li>
 					</ul>
 				</div>
 				<div class="col-md-8 float-end ms-auto">
