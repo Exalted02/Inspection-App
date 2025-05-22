@@ -967,6 +967,8 @@ class DashboardInspectorController extends Controller
 		$category_id = $request->cat_id;
 		$categoryDtls = Category::where('id',$category_id)->first();
 		$categoryName = $categoryDtls ? $categoryDtls->name : '';
+		$checklistDtls = Checklist::where('id', $current_question_id)->where('category_id', $category_id)->first();
+		$order_no = $checklistDtls ? $checklistDtls->order_no : '';
 		//$subcategory_id = $request->subcat_id; // 21-05-2025
 		$subChklistArr = [];
 		$existingFiles = [];
@@ -1110,6 +1112,7 @@ class DashboardInspectorController extends Controller
 					'name' => $name ?? null,
 					'subchecklist' => $subChklistArr,
 					'subcategoryname' => $subcategoryname,
+					'order_no' => $order_no,
 					'categoryName' => $categoryName,
 					'next_rejected_region'=> $next_rejected_region ?? '',
 					'next_approve'=>$next_approve,

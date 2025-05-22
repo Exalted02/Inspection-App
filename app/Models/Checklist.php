@@ -28,6 +28,6 @@ class Checklist extends Model
 	}
 	public function get_subchecklist()
 	{
-		return $this->hasMany(Subchecklist::class, 'checklist_id' ,'id');
+		return $this->hasMany(Subchecklist::class, 'checklist_id' ,'id')->orderBy('order_no', 'ASC');
 	}
 }
