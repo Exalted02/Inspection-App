@@ -269,6 +269,8 @@ class DashboardInspectorController extends Controller
 		$name  = '';
 		$subchecklist = '';
 		$subcategoryname = '';
+		$categoryDtls = Category::where('id',$category_id)->first();
+		$categoryName = $categoryDtls ? $categoryDtls->name : '';
 		//$subChklistArr = [];
 		
 		//---add record to table
@@ -623,6 +625,7 @@ class DashboardInspectorController extends Controller
 				'name' => $name ?? null,
 				'subchecklist' => $subChklistArr,
 				'subcategoryname' => $subcategoryname,
+				'categoryName' => $categoryName,
 				'next_rejected_region'=> $next_rejected_region ?? '',
 				'next_approve'=>$next_approve,
 				'existingNextFiles'=>$existingFiles,
@@ -640,6 +643,9 @@ class DashboardInspectorController extends Controller
 		$order_no = $request->post('order_no');
 		$category_id = $request->post('category_id');
 		//$subcategory_id = $request->post('subcategory_id'); // 21-05-2025
+		$categoryDtls = Category::where('id',$category_id)->first();
+		$categoryName = $categoryDtls ? $categoryDtls->name : '';
+		
 		$nextQuestionExists = Checklist::where('category_id', $category_id)
 		//->where('subcategory_id', $subcategory_id) // 21-05-2025
 		->where('status', '!=', 2)
@@ -754,6 +760,7 @@ class DashboardInspectorController extends Controller
 				'name' => $name ?? null,
 				'subchecklist' => $subChklistArr,
 				'subcategoryname' => $subcategoryname,
+				'categoryName' => $categoryName,
 				'next_rejected_region'=> $next_rejected_region ?? '',
 				'next_approve'=>$next_approve,
 				'existingPreviousFiles'=>$existingFiles,
@@ -958,6 +965,8 @@ class DashboardInspectorController extends Controller
 		$current_question_id = $request->checklist_id;
 		$task_id = $request->task_id;
 		$category_id = $request->cat_id;
+		$categoryDtls = Category::where('id',$category_id)->first();
+		$categoryName = $categoryDtls ? $categoryDtls->name : '';
 		//$subcategory_id = $request->subcat_id; // 21-05-2025
 		$subChklistArr = [];
 		$existingFiles = [];
@@ -1101,6 +1110,7 @@ class DashboardInspectorController extends Controller
 					'name' => $name ?? null,
 					'subchecklist' => $subChklistArr,
 					'subcategoryname' => $subcategoryname,
+					'categoryName' => $categoryName,
 					'next_rejected_region'=> $next_rejected_region ?? '',
 					'next_approve'=>$next_approve,
 					'existingNextFiles'=>$existingFiles,

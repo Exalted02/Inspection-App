@@ -861,7 +861,7 @@ $(document ).ready(function() {
 					$('.checklist-question').html(htmlCompleted);
 					return;
 				}
-				
+				//alert(response.categoryName);
 				$('#current_checklist_id').val(response.currentid);
 				$('#order_no').val(response.order_no);
 				 //$('#single-question').html(response.name);
@@ -874,7 +874,7 @@ $(document ).ready(function() {
 				// Has subchecklists
 				let autoClicks = [];
 				let html = '<div class="sub-checklist">';
-				html += '<div class="question-header">' + response.subcategoryname + '</div>';
+				html += '<div class="question-header">' + response.categoryName + '</div>';
 				html += '<div class="question-text">';
 				html += '<span id="multiple-question">' + response.name + '</span>';
 				html += '</div>';
@@ -1055,7 +1055,7 @@ $(document ).ready(function() {
 						$('.sticky-footer-completed').addClass('d-none');
 						//alert(response.next_approve);
 						let html = '<div class="single-checklist">';
-						html += '<div class="question-header">' + response.subcategoryname + '</div>';
+						html += '<div class="question-header">' + response.categoryName + '</div>';
 						html += '<div class="question-text">';
 						html += '<span id="single-question">' + response.name + '</span>';
 						html += '<input type="hidden" id="current_id" value="' + response.currentid + '">';
@@ -1243,7 +1243,7 @@ $(document ).ready(function() {
 				// Has subchecklists
 				let autoClicks = [];
 				let html = '<div class="sub-checklist">';
-				html += '<div class="question-header">' + response.subcategoryname + '</div>';
+				html += '<div class="question-header">' + response.categoryName + '</div>';
 				html += '<div class="question-text">';
 				html += '<span id="multiple-question">' + response.name + '</span>';
 				html += '</div>';
@@ -1418,7 +1418,7 @@ $(document ).ready(function() {
 				} else {
 						
 						let html = '<div class="single-checklist">';
-						html += '<div class="question-header">' + response.subcategoryname + '</div>';
+						html += '<div class="question-header">' + response.categoryName + '</div>';
 						html += '<div class="question-text">';
 						html += '<span id="single-question">' + response.name + '</span>';
 						html += '<input type="hidden" id="current_id" value="' + response.currentid + '">';
@@ -1610,7 +1610,7 @@ $(document ).ready(function() {
 				// Has subchecklists
 				let autoClicks = [];
 				let html = '<div class="sub-checklist">';
-				html += '<div class="question-header">' + response.subcategoryname + '</div>';
+				html += '<div class="question-header">' + response.categoryName + '</div>';
 				html += '<div class="question-text">';
 				html += '<span id="multiple-question">' + response.name + '</span>';
 				html += '</div>';
@@ -1790,7 +1790,7 @@ $(document ).ready(function() {
 						$('.sticky-footer').addClass('d-none');
 						//alert(response.next_approve);
 						let html = '<div class="single-checklist">';
-						html += '<div class="question-header">' + response.subcategoryname + '</div>';
+						html += '<div class="question-header">' + response.categoryName + '</div>';
 						html += '<div class="question-text">';
 						html += '<span id="single-question">' + response.name + '</span>';
 						html += '<input type="hidden" id="current_id" value="' + response.currentid + '">';
