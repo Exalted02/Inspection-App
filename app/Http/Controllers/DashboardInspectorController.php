@@ -637,13 +637,16 @@ class DashboardInspectorController extends Controller
 	{
 		$task_id = $request->post('task_id');
 		$current_question_id = $request->post('current_question_id');
+		$order_no = $request->post('order_no');
 		$category_id = $request->post('category_id');
 		//$subcategory_id = $request->post('subcategory_id'); // 21-05-2025
 		$nextQuestionExists = Checklist::where('category_id', $category_id)
 		//->where('subcategory_id', $subcategory_id) // 21-05-2025
 		->where('status', '!=', 2)
-		->where('id', '<', $current_question_id)
-		->orderBy('id', 'desc')
+		//->where('id', '<', $current_question_id)
+		->where('order_no', '<', $order_no)
+		->orderByRaw('CAST(order_no as UNSIGNED) desc')
+		//->orderBy('id', 'desc')
 		->exists();
 		
 		$nextId = '';
@@ -660,12 +663,15 @@ class DashboardInspectorController extends Controller
 			->where('category_id', $category_id)
 			//->where('subcategory_id', $subcategory_id) // 21-05-2025
 			->where('status', '!=', 2)
-			->where('id', '<', $current_question_id)
-			->orderBy('id', 'desc')
+			->where('order_no', '<', $order_no)
+			//->where('id', '<', $current_question_id)
+			->orderByRaw('CAST(order_no as UNSIGNED) desc')
+			//->orderBy('id', 'desc')
 			->first();
 			//echo "<pre>";print_r($nextQuestion);die;
 			$nextId = $nextQuestion->id;
 			$name = $nextQuestion->name;
+			$order_no = $nextQuestion->order_no;
 			//$subChklistArr = [];
 			if(!empty($nextQuestion->get_subchecklist))
 			{
@@ -744,6 +750,7 @@ class DashboardInspectorController extends Controller
 			[
 				'task_id'=>$task_id,
 				'currentid'=> $nextId ?? null,
+				'order_no'=> $order_no ?? null,
 				'name' => $name ?? null,
 				'subchecklist' => $subChklistArr,
 				'subcategoryname' => $subcategoryname,
