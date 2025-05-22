@@ -459,7 +459,7 @@ class DashboardInspectorController extends Controller
 			->orderBy('id', 'asc')
 			->first();*/
 			
-			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+			$nextQuestion = Checklist::with('get_subchecklist','get_category')->where('category_id', $category_id)
 			->where('status', '!=', 2)
 			->where('order_no', '>', $order_no)
 			->orderByRaw('CAST(order_no as UNSIGNED) ASC')
@@ -665,7 +665,7 @@ class DashboardInspectorController extends Controller
 		
 		if($nextQuestionExists)
 		{
-			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+			$nextQuestion = Checklist::with('get_subchecklist','get_category')->where('category_id', $category_id)
 			->where('category_id', $category_id)
 			//->where('subcategory_id', $subcategory_id) // 21-05-2025
 			->where('status', '!=', 2)
@@ -979,7 +979,7 @@ class DashboardInspectorController extends Controller
 		->where('status','!=', 2)->first();*/
 		
 		// fetch record with respect ti checklist
-		$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+		$nextQuestion = Checklist::with('get_subchecklist','get_category')->where('category_id', $category_id)
 			->where('category_id', $category_id)
 			//->where('subcategory_id', $subcategory_id) // 21-05-2025
 			->where('status', '!=', 2)

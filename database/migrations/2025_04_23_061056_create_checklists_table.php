@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('checklists', function (Blueprint $table) {
             $table->id();
 			$table->integer('category_id')->nullable();
-			$table->integer('subcategory_id')->nullable();
+			//$table->integer('subcategory_id')->nullable();
 			$table->string('name')->nullable();
 			$table->tinyInteger('status') ->nullable()->comment('0=inactive 1=active');
             $table->timestamps();

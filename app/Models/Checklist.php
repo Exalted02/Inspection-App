@@ -10,8 +10,7 @@ class Checklist extends Model
     use HasFactory;
 	protected $table = 'checklists';
 	protected $fillable = [
-        'category_id', 
-        'subcategory_id', 
+        'category_id',
         'name', 
         'order_no', 
         'status', 
@@ -22,10 +21,10 @@ class Checklist extends Model
 		return $this->belongsTo(Category::class, 'category_id');
 	}
 	
-	public function get_subcategory()
+	/*public function get_subcategory()
 	{
 		return $this->belongsTo(Subcategory::class, 'subcategory_id');
-	}
+	}*/
 	public function get_subchecklist()
 	{
 		return $this->hasMany(Subchecklist::class, 'checklist_id' ,'id')->orderBy('order_no', 'ASC');

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('task_list_checklists', function (Blueprint $table) {
             $table->id();
 			$table->integer('task_list_id')->nullable();
-			$table->integer('task_list_subcategory_id')->nullable();
+			//$table->integer('task_list_subcategory_id')->nullable();
 			$table->integer('checklist_id')->nullable();
 			$table->text('rejected_region')->nullable();
 			$table->tinyInteger('approve')->default(1)->comment('0=No, 1=Yes');

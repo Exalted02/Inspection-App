@@ -16,8 +16,7 @@ $percentage = '';
 //if(!empty($checklistdata->category_id) && !empty($checklistdata->subcategory_id))
 if(!empty($checklistdata->category_id))
 {
-	$total_checklist = App\Models\Checklist::where('category_id', $checklistdata->category_id)
-	->where('subcategory_id', $checklistdata->subcategory_id)->orderBy('order_no')->get();
+	$total_checklist = App\Models\Checklist::where('category_id', $checklistdata->category_id)->orderBy('order_no')->get();
 	$countCheklist  = $total_checklist->count();
 	$percentage = ceil(100/$countCheklist);
 }
@@ -28,10 +27,7 @@ $existingSubChecklistFiles = [];
 
 if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_subchecklist->isNotEmpty()) {
 	foreach ($checklistdata->get_subchecklist as $subchecklists) {
-		$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_subcategory_id',$checklistdata->subcategory_id)
-			->where('task_list_checklist_id', $subchecklists->checklist_id)
-			->where('subchecklist_id', $subchecklists->id)
-			->first();
+		$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_checklist_id',$subchecklists->checklist_id)->where('subchecklist_id', $subchecklists->id)->first();
 
 		if ($subchecklistData) {
 			$task_list_subchecklist_id = $subchecklistData->id;
@@ -54,7 +50,6 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	@if(isset($checklistdata) && $checklistdata->get_subchecklist->isEmpty())
 		@php 
 			$checkImageFile = App\Models\Task_list_checklists::where('task_list_id',$task_id)
-						->where('task_list_subcategory_id',$checklistdata->subcategory_id)
 						->where('checklist_id',$checklistdata->id)->first();
 			$task_list_checklist_id = $checkImageFile ? $checkImageFile->id : null;
 			$rejected_region = $checkImageFile ? $checkImageFile->rejected_region : '';
@@ -110,9 +105,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 			@if($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_subchecklist->isNotEmpty())
 				@foreach($checklistdata->get_subchecklist as $subchecklists)
 				@php 
-					$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_subcategory_id',$checklistdata->subcategory_id)
-										->where('task_list_checklist_id', $subchecklists->checklist_id)
-										->where('subchecklist_id', $subchecklists->id)->first();
+					$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_checklist_id', $subchecklists->checklist_id)->where('subchecklist_id', $subchecklists->id)->first();
 					$subChkId			=  $subchecklistData ? $subchecklistData->id : '';
 					$rejected_region	=  $subchecklistData ? $subchecklistData->rejected_region : '';
 					$approve			=  $subchecklistData ? $subchecklistData->approve : '';
@@ -164,7 +157,6 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 				@php 
 					$progressStatus = '';
 					$hasTaskChecklist = App\Models\Task_list_checklists::where('task_list_id', $task_id)
-									->where('task_list_subcategory_id', $checklistdata->subcategory_id)
 									->where('checklist_id', $val->id)->exists();
 					if($hasTaskChecklist)
 					{
@@ -172,9 +164,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 					}
 					else 
 					{
-						$hasTaskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)
-									->where('task_list_subcategory_id', $checklistdata->subcategory_id)
-									->where('task_list_checklist_id', $val->id)->exists();
+						$hasTaskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $val->id)->exists();
 						if($hasTaskSubChecklist)
 						{
 							$progressStatus = 'completed';
@@ -213,9 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		@foreach($checklistdata->get_subchecklist as $subchecklists)
 			@php
 				$approve == '';				
-				$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_subcategory_id',$checklistdata->subcategory_id)
-									->where('task_list_checklist_id', $subchecklists->checklist_id)
-									->where('subchecklist_id', $subchecklists->id)->first();
+				$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_checklist_id', $subchecklists->checklist_id)->where('subchecklist_id', $subchecklists->id)->first();
 				$approve = $subchecklistData ? $subchecklistData->approve : '';
 				$task_list_subchecklist_id = $subchecklistData ? $subchecklistData->id : '';
 				
