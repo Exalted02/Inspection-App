@@ -17,7 +17,7 @@ $percentage = '';
 if(!empty($checklistdata->category_id))
 {
 	$total_checklist = App\Models\Checklist::where('category_id', $checklistdata->category_id)
-	->where('subcategory_id', $checklistdata->subcategory_id)->get();
+	->where('subcategory_id', $checklistdata->subcategory_id)->orderBy('order_no')->get();
 	$countCheklist  = $total_checklist->count();
 	$percentage = ceil(100/$countCheklist);
 }
