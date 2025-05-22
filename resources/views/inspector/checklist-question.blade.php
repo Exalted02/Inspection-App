@@ -178,7 +178,8 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	
 		<div class="clearfix"></div>
 		<div class="footer-content question-navigation d-flex justify-content-between">
-			<button class="previous_question">Back</button>
+			<button class="previous_question" style="display:none">Back</button>
+			<span class="flex-spacer"></span>
 			<button class="next_question ms-auto">Next</button>
 		</div>
 	</div>
@@ -189,6 +190,8 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 $(document).ready(function() {
 	var footerHeight = $('.checklist-question-sticky-footer').outerHeight();
 	$('.checklist-question').css('padding-bottom', footerHeight + 'px');
+	
+	//$('.previous_question').css('visibility', 'hidden');
 });
 //Dropzone.autoDiscover = false;
 document.addEventListener('DOMContentLoaded', function () {
@@ -571,6 +574,8 @@ $(document ).ready(function() {
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.subcategoryname);
+				//$('.previous_question').css('visibility', 'visible');
+				$('.previous_question').show();
 				// -- progress bar work -----------------
 				if(response.progressStatus!='')
 				{
@@ -1032,6 +1037,10 @@ $(document ).ready(function() {
 				//alert(response.currentid);
 				 $('#current_checklist_id').val(response.currentid);
 				 $('#order_no').val(response.order_no);
+				 if(response.order_no == '1')
+				 {
+					 $('.previous_question').hide();
+				 }
 				 //$('#single-question').html(response.name);
 				 const rejectFilesRoute = "{{ route('reject-files') }}";
 				 const rejectSubcheckFilesRoute = "{{ route('reject-subchecklist-files') }}";

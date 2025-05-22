@@ -659,9 +659,12 @@ class DashboardInspectorController extends Controller
 		$name  = '';
 		$subchecklist = '';
 		$subcategoryname = '';
+		$next_approve  = '';
 		
 		$subChklistArr = [];
 		$existingSubChecklistFiles = [];
+		$existingFiles = [];
+		$fetchsubChklistArr = [];
 		
 		if($nextQuestionExists)
 		{
@@ -706,7 +709,7 @@ class DashboardInspectorController extends Controller
 			
 			// fetch files 
 			$task_list_checklist_id = $iffetch ? $iffetch->id : null;
-			$existingFiles = [];
+			//$existingFiles = []; // 22-05-2025
 			if (isset($task_list_checklist_id)) {
 				$imageData = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
 				foreach ($imageData as $file) {
@@ -720,7 +723,7 @@ class DashboardInspectorController extends Controller
 			}
 			
 			// fetch data from task_list_subchecklist
-			$fetchsubChklistArr = [];
+			//$fetchsubChklistArr = []; // 22-05-2025
 			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
 							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('task_list_checklist_id', $nextId)
@@ -952,7 +955,7 @@ class DashboardInspectorController extends Controller
 			$model = new Task_list_subcategories();
 			$model->task_list_id = $task_id ?? null;
 			$model->task_list_category_id = $category_id ?? null;
-			$model->subcategory_id = null; // 21-05-2025
+			//$model->subcategory_id = null; // 21-05-2025
 			$model->total_task = 0;
 			$model->completed_task = 0;
 			$model->is_submit = 1;

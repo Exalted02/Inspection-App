@@ -214,6 +214,7 @@ let previewContainer = $('#preview-container');
   });
    
    $(document).on('click','.location-owner-approve', function(){
+	   //e.preventDefault();
 	   var task_id = $('#task_id').val();
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
@@ -233,7 +234,8 @@ let previewContainer = $('#preview-container');
 			alert('Please select at least one image.');
 			return;
 		}
-
+		
+		
 		let formData = new FormData();
 
 		// Append all selected files to formData

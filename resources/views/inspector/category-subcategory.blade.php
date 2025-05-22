@@ -5,6 +5,9 @@
  //echo "<pre>";print_r($correctiveAction);die;
  $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
+
+$taskData  = App\Models\Task_lists::where('id', $task_id)->first();
+$location_details = $taskData ? $taskData->location_details : '';
 //echo $task_id; die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
@@ -13,7 +16,7 @@ use Carbon\Carbon;
 		<div class="location-section">
 			<div class="location-label">Location details</div>
 			<div class="location-input" id="displayBox">
-				Tap to add address
+			{{ $location_details ?? 'Tap to add address' }}
 				<span><i class="fa-solid fa-pen"></i></span>
 			</div>
 			<span id="successMessage" style="display: none; color: green;">

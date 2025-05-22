@@ -57,7 +57,7 @@ if(!empty($userdata->profile_image))
 			<img class="profile-avatar" src="{{ $profile_img ?? '' }}" alt="Profile Picture">
 			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
 			<p class="profile-description">
-			{{$user_type_name ?? ''}} at {{ $userdata->get_company->company_name ?? '' }},<br>
+			{{$user_type_name ?? ''}} at {{ $userdata->get_company->company_name ?? '' }}<br>
 			</p>
 		</div>
 	</div>
