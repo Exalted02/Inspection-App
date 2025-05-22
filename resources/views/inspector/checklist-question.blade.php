@@ -152,6 +152,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->		
     </div>
 	<input type="hidden" id="current_checklist_id" value="{{ $checklistdata->id ?? '' }}">
+	<input type="hidden" name="order_no" id="order_no" value="{{$checklistdata->order_no ?? '' }}">
 	<input type="hidden" id="category_id" value="{{ $checklistdata->category_id ?? '' }}">
 	<input type="hidden" id="subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
 	<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
@@ -723,6 +724,7 @@ $(document ).ready(function() {
 		var category_id = $('#category_id').val();
 		var subcategory_id = $('#subcategory_id').val();
 		var task_id = $('#task_id').val();
+		var order_no = $('#order_no').val();
 		//var mode = $('#mode').val();
 		//alert(mode);
 		var rejectTextsSingle = '';
@@ -761,6 +763,7 @@ $(document ).ready(function() {
 				approveStatus: approveStatus,
 				mode: mode,
 				task_id: task_id,
+				order_no: order_no,
 				current_question_id: current_id,
 				category_id: category_id,
 				subcategory_id: subcategory_id,
@@ -860,6 +863,7 @@ $(document ).ready(function() {
 				}
 				
 				$('#current_checklist_id').val(response.currentid);
+				$('#order_no').val(response.order_no);
 				 //$('#single-question').html(response.name);
 				const rejectFilesRoute = "{{ route('reject-files') }}";
 				const rejectSubcheckFilesRoute = "{{ route('reject-subchecklist-files') }}";

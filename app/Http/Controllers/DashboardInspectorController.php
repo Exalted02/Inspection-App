@@ -224,7 +224,7 @@ class DashboardInspectorController extends Controller
 		//echo $cat_id.' '.$subcat_id; die;
 		/*$data['checklistdata'] = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id',$cat_id)->where('status','!=', 2)->first();*/
 		
-		$data['checklistdata'] = Checklist::with('get_subchecklist','get_category')->where('category_id',$cat_id)->where('status','!=', 2)->first();
+		$data['checklistdata'] = Checklist::with('get_subchecklist','get_category')->where('category_id',$cat_id)->where('status','!=', 2)->orderBy('order_no')->first();
 		
 		//echo "<pre>";print_r($checklistdata);die;
 		/*$nextQuestion = Checklist::where('category_id', $cat_id)
@@ -241,6 +241,7 @@ class DashboardInspectorController extends Controller
 	{
 		$approveStatus = $request->post('approveStatus');
 		$mode = $request->post('mode');
+		$order_no = $request->post('order_no');
 		$rejectTextsSingle = $request->post('rejectTextsSingle');
 		$rejectTextsMultiple = json_decode($request->input('rejectTextsMultiple'), true);
 		//echo "<pre>";print_r($rejectTextsMultiple);die;
@@ -258,8 +259,10 @@ class DashboardInspectorController extends Controller
 		$nextQuestionExists = Checklist::where('category_id', $category_id)
 		//->where('subcategory_id', $subcategory_id)
 		->where('status', '!=', 2)
-		->where('id', '>', $current_question_id)
-		->orderBy('id', 'asc')
+		->where('order_no', '>', $order_no)
+		//->where('id', '>', $current_question_id)
+		->orderByRaw('CAST(order_no as UNSIGNED) ASC')
+		//->orderBy('id', 'asc')
 		->exists();
 		
 		$nextId = '';
@@ -447,16 +450,24 @@ class DashboardInspectorController extends Controller
 		
 		if($nextQuestionExists)
 		{
-			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
-			->where('category_id', $category_id)
+			/*$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
 			//->where('subcategory_id', $subcategory_id) // 21-05-2025
 			->where('status', '!=', 2)
 			->where('id', '>', $current_question_id)
 			->orderBy('id', 'asc')
+			->first();*/
+			
+			$nextQuestion = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id', $category_id)
+			->where('status', '!=', 2)
+			->where('order_no', '>', $order_no)
+			->orderByRaw('CAST(order_no as UNSIGNED) ASC')
 			->first();
+			
 			//echo "<pre>";print_r($nextQuestion);die;
 			$nextId = $nextQuestion->id;
 			$name = $nextQuestion->name;
+			$next_order_no = $nextQuestion->order_no;
+			//echo $next_order_no; die;
 			//$subChklistArr = [];
 			if(!empty($nextQuestion->get_subchecklist))
 			{
@@ -608,6 +619,7 @@ class DashboardInspectorController extends Controller
 			[
 				'task_id'=>$task_id,
 				'currentid'=> $nextId ?? null,
+				'order_no'=> $next_order_no ?? null,
 				'name' => $name ?? null,
 				'subchecklist' => $subChklistArr,
 				'subcategoryname' => $subcategoryname,
