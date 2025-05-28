@@ -1109,6 +1109,14 @@
 	color: crimson;
 	display: none;
 }
+.rounded-profile-img {
+    height: 36px !important;
+    width: 36px !important;
+    border-radius: 50% !important;
+    object-fit: cover  !important;
+    margin-left: 22px  !important;
+	margin-right: 10px  !important;
+}
 
 
 

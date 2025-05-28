@@ -118,6 +118,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
 	Route::get('/management-location/{id}', [ManagementController::class, 'management_location'])->name('management-location');
+	Route::get('/management-location-task-details/{task_id}', [ManagementController::class, 'management_location_task_details'])->name('management-location-task-details');
 	
 	//User-Accounts  
 	Route::get('/users', [UserController::class, 'index'])->name('users');

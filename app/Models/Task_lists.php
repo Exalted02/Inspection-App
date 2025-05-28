@@ -21,4 +21,9 @@ class Task_lists extends Model
         'location_details', 
         'status', 
     ];
+	
+	public function get_user()
+	{
+		return $this->belongsTo(User::class, 'inspector_id');
+	}
 }
