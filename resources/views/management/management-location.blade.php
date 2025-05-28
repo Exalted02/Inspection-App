@@ -1,11 +1,15 @@
 @extends('layouts.app')
 @section('content')
+@php 
+//echo "<pre>";print_r($task_details); die;
+use Carbon\Carbon;
+@endphp
     <div class="container location-details">
 		<div class="d-flex align-items-center location-header mb-3">
-			<img src="{{url('front-assets/static-image/5.jpg')}}" alt="Location" />
+			<img src="{{url('uploads/location/' . $location_details->image ?? '')}}" alt="Location" />
 			<div>
-				<div class="title">Mandai Hill</div>
-				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>Mandai Road 23, 532012</small>
+				<div class="title">{{ $location_details->location_name ?? ''}}</div>
+				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>{{ $location_details->address ?? ''}}, {{ $location_details->zipcode ?? ''}}</small>
 			</div>
 		</div>
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
@@ -46,23 +50,34 @@
 					</div>
 				<div class="container">
 					<div class="row">
-						<div class="d-flex mb-3 task">
-							<div class="date-box">
-								<div class="date">
-									<div class="day">FEB</div>
-									<div class="dow">15</div>
-									<div class="dod">FRI</div>
+					@if($task_details->isNotEmpty())
+						@foreach($task_details as $tasks)
+						@php 
+							$month = Carbon::parse($tasks->created_at)->format('M');
+							$day =   Carbon::parse($tasks->created_at)->format('d');
+							$week= strtoupper(Carbon::parse($tasks->created_at)->format('D'));
+						@endphp
+							<div class="d-flex mb-3 task">
+								<div class="date-box">
+									<div class="date">
+										<div class="day">{{ $month ?? ''}}</div>
+										<div class="dow">{{ $day ?? ''}}</div>
+										<div class="dod">{{ $week ?? ''}}</div>
+									</div>
+								</div>
+								<div class="flex-grow-1">
+									<a href="javascript:void(0);">
+										<img src="{{url('uploads/task/' . $tasks->image  )}}" alt="Task" />
+										<h6 class="location-observation-title">{{ $tasks->task_title ?? '' }}</h6>
+										<p class="text-muted location-observation-title mb-0">Pending LOS to approve</p>
+									</a>
 								</div>
 							</div>
-							<div class="flex-grow-1">
-								<a href="">
-									<img src="{{url('front-assets/static-image/1.jpg')}}" alt="Task" />
-									<h6 class="location-observation-title">Respirator user has a training sticker on employee badge</h6>
-									<p class="text-muted location-observation-title mb-0">Pending LOS to approve</p>
-								</a>
-							</div>
-						</div>
-						<div class="d-flex mb-3 task">
+							@endforeach
+						@else
+							<div class="text-center"><strong><h3>No record found</h3></strong></div>
+						@endif
+						{{--<div class="d-flex mb-3 task">
 							<div class="date-box">
 								<div class="date">
 									<div class="day">FEB</div>
@@ -71,13 +86,13 @@
 								</div>
 							</div>
 							<div class="flex-grow-1">
-								<a href="">
+								<a href="javascript:void(0);">
 									<img src="{{url('front-assets/static-image/2.jpg')}}" alt="Task" />
 									<h6 class="location-observation-title">Respirator user has a training sticker on employee badge</h6>
 									<p class="text-muted location-observation-title mb-0">Pending LOS to approve</p>
 								</a>
 							</div>
-						</div>
+						</div>--}}
 					</div>
 				</div>
 			</section>

@@ -35,14 +35,14 @@
 	@foreach($locations as $location)
 	<div class="management-location-card pt-2 pb-2">
 		<div class="container">
-			<div class="d-flex align-items-center location-header mb-3">
+			<a href="{{ route('management-location', ['id' => $location->id]) }}"><div class="d-flex align-items-center location-header mb-3">
 			{{--<img src="{{url('front-assets/static-image/5.jpg')}}" alt="Location">--}}
 				<img src="{{url('uploads/location/' . $location->image ?? '')}}" alt="Location">
 				<div>
 					<div class="title">{{ $location->location_name ?? '' }}</div>
-					<small class="text-muted">Mandai Road 23, 532012</small>
+					<small class="text-muted">{{ $location->address ?? ''}}, {{ $location->zipcode ?? ''}}</small>
 				</div>
-			</div>
+			</div></a>
 			<div class="row ">
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-first">
 					<div class="small-card">
