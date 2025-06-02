@@ -2,6 +2,7 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($userdata);die;
+$path = '';
 if(auth()->user()->user_type == 1)
 {
 	$path = 'inspector';

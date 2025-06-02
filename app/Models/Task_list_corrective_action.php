@@ -24,4 +24,18 @@ class Task_list_corrective_action extends Model
         'los_action', 
         'los_action_date', 
     ];
+	
+	public function get_inspector()
+	{
+		return $this->belongsTo(User::class, 'inspector_id');
+	}
+	
+	public function get_lo()
+	{
+		return $this->belongsTo(User::class, 'lo_id');
+	}
+	public function get_los()
+	{
+		return $this->belongsTo(User::class, 'los_id');
+	}
 }

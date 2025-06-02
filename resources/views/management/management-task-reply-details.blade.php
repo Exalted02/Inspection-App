@@ -10,6 +10,23 @@
  $lo_corrective_action_plan = '';
  $lo_corrective_completed_by = '';
  
+ $profile_data = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')
+				->where('task_list_id', $task_id)
+				->where('checklist_id', $checklist_id)
+				->when($subchecklist_id, function ($query, $subchecklist_id) {
+					return $query->where('subchecklist_id', $subchecklist_id);
+				})->first();
+				
+ $inspector_id =  $profile_data ?  $profile_data->inspector_id : '';
+ $inspector_profile_image =  $profile_data ?  $profile_data->get_inspector->profile_image : '';
+ 
+ $lo_id =  $profile_data ?  $profile_data->lo_id : '';
+ $lo_profile_image =  $profile_data ?  $profile_data->get_lo->profile_image : '';
+ 
+ $los_id =  $profile_data ?  $profile_data->los_id : '';
+ $los_profile_image =  $profile_data ?  $profile_data->get_los->profile_image : '';
+ 
+ 
  $checklist = App\Models\Checklist::where('id', $checklist_id)->first();
  if($type == 'checklist')
  {
@@ -83,6 +100,8 @@
 	$corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
 	 
 	$lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
+	
+	$lo_corrective_action_plan_second_check = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan_second_check : '';
 	 
 	$lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
 	
@@ -125,12 +144,12 @@
 						@endif
 					
 						<div class="d-flex align-items-center mb-2">
-							<img src="{{ url('uploads/profile/4/inspector/1745473617_avatar-04.jpg') }}" class="rounded-profile-img me-2" alt="Profile image">
+							<img src="{{ url('uploads/profile/' . $inspector_id .'/inspector/' . $inspector_profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
 							<span class="owner-checklist-title">Inspection</span>
 						</div>
 						
 						<div class="d-flex mb-1" style="margin-left: 68px;">
-							<div class="owner-checklist">{{ $rejected_region ?? '' }}</div>
+							<div class="owner-checklist">{{ $lo_corrective_action_plan ?? '' }}</div>
 						</div>
 						
 						@if(!empty($image_arr))
@@ -144,11 +163,11 @@
 						@endif
 
 						<div class="d-flex align-items-start mb-3">
-							<img src="{{ url('uploads/profile/5/locationowner/1745476885_avatar-01.jpg') }}" class="rounded-profile-img me-2" alt="Profile image">
+							<img src="{{ url('uploads/profile/'. $lo_id .'/locationowner/' . $lo_profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
 							<div class="owner-checklist">
 								<label>Corrective action</label>
 								<div class="mt-1">
-									{{ $lo_corrective_action_plan ?? '' }}
+									{{ $lo_corrective_action_plan_second_check ?? '' }}
 								</div>
 								<div class="mt-4">
 									Timeline: 22 jan 2025
@@ -161,14 +180,13 @@
 						
 						<div class="d-flex align-items-start mb-3 flex-wrap" style="margin-left: 2rem;">
 						  <div class="position-relative me-2 mb-2" style="width: 40px; height: 40px;">
-							<img src="{{ url('uploads/profile/4/inspector/1745473617_avatar-04.jpg') }}" 
+							<img src="{{ url('uploads/profile/'. $inspector_id .'/inspector/'. $inspector_profile_image) }}" 
 								 alt="Profile image"
-								 style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+								 class="management-back-image">
 							
-							<img src="{{ url('uploads/profile/8/locationownersupervisor/1745479615_avatar-06.jpg') }}" 
-								 class="position-absolute"
-								 alt="Overlay image"
-								 style="width: 38px; height: 38px; object-fit: cover; border-radius: 50%; bottom: 0; left: 0; border: 2px solid #fff;margin-top: -30px;margin-left: -16px;">
+							<img src="{{ url('uploads/profile/' . $los_id . '/locationownersupervisor/' .$los_profile_image) }}" 
+								 class="position-absolute management-overlap-image"
+								 alt="Overlay image">
 						  </div>
 
 						  <div class="owner-checklist">
@@ -177,7 +195,7 @@
 						</div>
 
 						<div class="d-flex align-items-start mb-3 flex-wrap" style="margin-top: 3rem;">
-							<img src="{{ url('uploads/profile/4/inspector/1745473617_avatar-04.jpg') }}" 
+							<img src="{{ url('uploads/profile/'. $inspector_id .'/inspector/'. $inspector_profile_image) }}" 
 								 class="rounded-profile-img me-2 mb-2" 
 								 alt="Profile image"
 								 style="width: 30px; height: 30px; object-fit: cover;">
@@ -199,7 +217,7 @@
 						</div>
 						
 						<div class="d-flex align-items-start mb-3">
-							<img src="{{ url('uploads/profile/8/locationownersupervisor/1745479615_avatar-06.jpg') }}" class="rounded-profile-img me-2" alt="Profile image">
+							<img src="{{ url('uploads/profile/' . $los_id . '/locationownersupervisor/' . $los_profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
 							<div class="owner-checklist">
 								<label><strong>Pending LOS to approve</strong></label>
 								
