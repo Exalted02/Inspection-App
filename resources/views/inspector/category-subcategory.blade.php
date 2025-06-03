@@ -59,7 +59,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 							@if($categoryData->isNotEmpty())
 								@foreach($categoryData as $categories)
 								@php 
-									$tot_checklist = App\Models\Checklist::where('category_id', $categories)->count();
+									$tot_checklist = App\Models\Checklist::where('category_id', $categories->id)->count();
 									$tot_checklist_completed = App\Models\Task_list_checklists::where('task_list_id',$task_id)->count();
 									$tot_subchecklist_completed = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->distinct('task_list_checklist_id')->count();
 									$tot_completed_task = $tot_checklist_completed+$tot_subchecklist_completed;

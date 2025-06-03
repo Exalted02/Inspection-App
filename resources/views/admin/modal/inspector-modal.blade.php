@@ -97,7 +97,8 @@
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('avatar') }}</label>
 												<input class="form-control" type="file" name="avatar" id="avatar" accept="image/*">
-												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('image')}}.</div>
+												{{--<div class="invalid-feedback">{{ __('please_enter') }} {{ __('image')}}.</div>--}}
+												<span id="avatar_id_error" style="display:none;  color: red;">please </span>
 											</div>
 										</div>
 										<div class="col-sm-6">
@@ -112,7 +113,8 @@
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('backgroung_image') }}</label>
 												<input class="form-control" type="file" name="backgroung_image" id="backgroung_image" accept="image/*">
-												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('backgroung_image')}}.</div>
+												{{--<div class="invalid-feedback">{{ __('please_enter') }} {{ __('backgroung_image')}}.</div>--}}
+												<span id="backgroung_image_id_error" style="display:none;  color: red;">please </span>
 											</div>
 										</div>
 										<div class="col-sm-6">

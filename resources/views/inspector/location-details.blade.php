@@ -207,7 +207,7 @@ $(document ).ready(function() {
 		});
 		//alert(selectedLocations);
 		if (selectedLocations.length === 0) {
-			$('#tasktcategory_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
+			$('#tasktcategory_id_error').text('Please select category').fadeIn().delay(2000).fadeOut();
 			/*$('input[name="location[]"]').first().addClass('is-invalid');
 			$('input[name="location[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();*/
 			isValid = false;

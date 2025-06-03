@@ -114,7 +114,7 @@ class InspectorController extends Controller
 			return response()->json([
 				'success' => false,
 				'label' => 'name',
-				'message' => 'Inspector name already exists.'
+				'message' => 'Name already exists.'
 			]);
 		}
 		
@@ -187,7 +187,7 @@ class InspectorController extends Controller
 			}
 		}
 		
-		$userFolderName = $request->post('user_type') ==1 ? 'inspector' : ($request->post('user_type') == 2 ? 'locationowner' : 'locationownersupervisor');
+		$userFolderName = $request->post('user_type') ==1 ? 'inspector' : ($request->post('user_type') == 2 ? 'locationowner' : ($request->post('user_type') == 3 ? 'locationownersupervisor' : 'management'));
 		$fileName = '';
 		if($request->hasFile('avatar')) {
 			$destinationPath = public_path('uploads/profile/' . $id .'/'. $userFolderName .'/');
@@ -252,7 +252,30 @@ class InspectorController extends Controller
 		
 		$data['avatar']  = $inspector->profile_image;
 		$data['background_image']  = $inspector->background_image;
-		$data['app_url']  = url('uploads/profile/' . $request->id .'/inspector/');
+		
+		$userfolder = '';
+		if($inspector->user_type == 1)
+		{
+			$userfolder = 'inspector';
+		}
+		
+		if($inspector->user_type == 2)
+		{
+			$userfolder = 'locationowner';
+		}
+		
+		if($inspector->user_type == 3)
+		{
+			$userfolder = 'locationownersupervisor';
+		}
+		
+		if($inspector->user_type == 4)
+		{
+			$userfolder = 'management';
+		}
+		
+		
+		$data['app_url']  = url('uploads/profile/' . $request->id .'/' . $userfolder .'/');
 		$data['edit']  =  Lang::get('edit_user');
 		
 		$inspLocArry = array();

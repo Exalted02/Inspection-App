@@ -71,7 +71,7 @@ use Carbon\Carbon;
 												
 												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 												
-												$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
+												$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimage.png') ;
 												
 												$arrSubchecklist[] = [
 													'id' => $subchecklistData->id,

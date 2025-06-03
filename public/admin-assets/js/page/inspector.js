@@ -14,6 +14,9 @@ $(document).ready(function() {
 		//let company_name = $('#company_name').val().trim();
 		let user_type = $('#user_type').val().trim();
 		var edit_id = $('#id').val(); 
+		//alert(edit_id);
+		let avatar = $('#avatar')[0].files.length;
+		let backgroung_image = $('#backgroung_image')[0].files.length;
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
@@ -63,6 +66,19 @@ $(document).ready(function() {
 			$('input[name="location[]"]').first().addClass('is-invalid');
 			$('input[name="location[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();
 			isValid = false;
+		}
+		
+		if(edit_id == '')
+		{
+			if (avatar === 0) {
+				$('#avatar_id_error').text('Please select avatar').fadeIn().delay(5000).fadeOut();
+				isValid = false;
+			}
+			
+			if (backgroung_image === 0) {
+				$('#backgroung_image_id_error').text('Please select background image').fadeIn().delay(5000).fadeOut();
+				isValid = false;
+			}
 		}
 		
 		if (isValid) {
@@ -140,7 +156,8 @@ $(document).on('click','.edit-inspector', function(){
 			$('#hid_avatar').val(response.avatar);
 			$('#hid_back_grd_image').val(response.background_image);
 			
-			var app_url = response.app_url; 
+			var app_url = response.app_url;
+			//alert(app_url);alert(response.avatar);			
 			$('#preview').attr('src', app_url + '/' + response.avatar).show();
 			$('#preview_backgrnd').attr('src', app_url + '/' + response.background_image).show();
 			
