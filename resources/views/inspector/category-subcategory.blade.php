@@ -46,14 +46,14 @@ $m = 0;
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
 						@if(auth()->user()->user_type == 1)
-							<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab" data-toggle="tab">Uncompleted</a></li>
-							<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
+							<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab">Uncompleted</a></li>
+							<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>
 						@endif
 						@if(auth()->user()->user_type == 3)
-							<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
+							<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>
 						@endif
-							<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Final checks</a></li> 
-							<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Approved final checked</a></li>
+							<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Final checks</a></li> 
+							<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Approved final checked</a></li>
 							{{--<li role="presentation"><a href="#reject_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Rejected</a></li>--}}
 						</ul>
 						<!-- Tab panes -->
@@ -547,7 +547,7 @@ $(document ).ready(function() {
 					$('#no_record').show();
 				}
 				
-				$('#uncomplete_tab').hide();
+				//$('#uncomplete_tab').hide();
 			}
 			
 			if(selectedTab == '#process_final_checked_tab')
@@ -558,7 +558,7 @@ $(document ).ready(function() {
 				{
 					$('#no_record').show();
 				}
-				$('#uncomplete_tab').hide();
+				//$('#uncomplete_tab').hide();
 			}
 			
 			if(selectedTab == '#approved_final_checked_tab')
@@ -568,7 +568,7 @@ $(document ).ready(function() {
 				{
 					$('#no_record').show();
 				}
-				$('#uncomplete_tab').hide();
+				//$('#uncomplete_tab').hide();
 			}
 			
 			if(selectedTab == '#uncomplete_tab')
@@ -668,7 +668,7 @@ $(document ).ready(function() {
 	   $('#no_record').hide();
 		var location_id = $('#location_id').val();
 		var task_id = $('#task_id').val();
-		$('#isactive').val('');
+		$('#isactive').val(0);
 		const tabId = $(this).attr('href');
 		//alert(tabId);
 		if(tabId == '#corrective_checked_tab')
@@ -677,11 +677,7 @@ $(document ).ready(function() {
 			$('#corrective_checked_tab').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
 			$('.nav-tabs .nav-link[href="#corrective_checked_tab"]').addClass('active');
-			/*$('#corrective_checked_tab').addClass('tab-pane active');
-			$('#corrective_checked_tab').show();
-			$('#uncomplete_tab').hide();
-			$('#process_final_checked_tab').hide();
-			$('#approved_final_checked_tab').hide();*/
+			
 		}
 		
 		if(tabId == '#process_final_checked_tab')
@@ -690,12 +686,7 @@ $(document ).ready(function() {
 			$('#process_final_checked_tab').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
 			$('.nav-tabs .nav-link[href="#process_final_checked_tab"]').addClass('active');
-			 
-			/*$('#process_final_checked_tab').addClass('tab-pane active');
-			$('#corrective_checked_tab').hide();
-			$('#process_final_checked_tab').show();
-			$('#approved_final_checked_tab').hide();
-			$('#uncomplete_tab').hide();*/
+			
 		}
 		
 		if(tabId == '#approved_final_checked_tab')
@@ -704,12 +695,6 @@ $(document ).ready(function() {
 			$('#approved_final_checked_tab').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
 			$('.nav-tabs .nav-link[href="#approved_final_checked_tab"]').addClass('active');
-			
-			/*$('#approved_final_checked_tab').addClass('tab-pane active');
-			$('#corrective_checked_tab').hide();
-			$('#process_final_checked_tab').hide();
-			$('#approved_final_checked_tab').show();
-			$('#uncomplete_tab').hide();*/
 		}
 		
 		if(tabId == '#uncomplete_tab')
@@ -718,12 +703,6 @@ $(document ).ready(function() {
 			$('#uncomplete_tab').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
 			$('.nav-tabs .nav-link[href="#uncomplete_tab"]').addClass('active');
-			
-			/*$('#uncomplete_tab').addClass('tab-pane active');
-			$('#uncomplete_tab').show();
-			$('#corrective_checked_tab').hide();
-			$('#process_final_checked_tab').hide();
-			$('#approved_final_checked_tab').hide();*/
 		}
 		
 		localStorage.setItem('selectedTab', tabId);

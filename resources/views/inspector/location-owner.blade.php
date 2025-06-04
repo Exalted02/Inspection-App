@@ -30,11 +30,11 @@ use Carbon\Carbon;
 					<div class="row custom-tab">
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
-							<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab" data-toggle="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
-							<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">{{ count($correctiveCheck)}} Corrective checks</a></li>
-							<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>
-							{{--<li role="presentation"><a href="#final_checked_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Final checked</a></li>--}}
-							<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Approved</a></li>
+							<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
+							<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab">{{ count($correctiveCheck)}} Corrective checks</a></li>
+							<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">Rejected</a></li>
+							{{--<li role="presentation"><a href="#final_checked_by_inspector_tab" aria-controls="completed_tab" role="tab">Final checked</a></li>--}}
+							<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Approved</a></li>
 							{{--<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>--}}
 							
 						</ul>
@@ -140,7 +140,7 @@ use Carbon\Carbon;
 								@endif
 								@endforeach
 							</div>
-							<div role="tabpanel" class="tab-pane" id="completed_tab">
+							<div class="tab-pane" id="completed_tab">
 							@foreach($correctiveCheck as $result)
 							@if($result['inspector_action'] ==0)
 								@php 
@@ -241,7 +241,7 @@ use Carbon\Carbon;
 							@endif
 							@endforeach
 							</div>
-							<div role="tabpanel" class="tab-pane" id="approved_by_inspector_tab">
+							<div class="tab-pane" id="approved_by_inspector_tab">
 							@foreach($correctiveCheck as $result)
 								@if($result['inspector_action'] ==1)
 									@php 
@@ -342,7 +342,7 @@ use Carbon\Carbon;
 								@endif
 							@endforeach
 							</div>
-							<div role="tabpanel" class="tab-pane" id="rejected_by_inspector_tab">
+							<div class="tab-pane" id="rejected_by_inspector_tab">
 							@foreach($correctiveCheck as $result)
 								@if($result['inspector_action'] ==2 && $result['second_checked'] == '')
 									@php 
@@ -443,7 +443,7 @@ use Carbon\Carbon;
 								@endif
 							@endforeach
 							</div>
-							<div role="tabpanel" class="tab-pane" id="final_checked_by_inspector_tab">
+							<div class="tab-pane" id="final_checked_by_inspector_tab">
 							@foreach($correctiveCheck as $result)
 								@if($result['inspector_action'] ==2 && $result['second_checked'] != 'null')
 									@php 
@@ -559,26 +559,112 @@ use Carbon\Carbon;
 <script>
 $(document).ready(function() {
 	var isactive = $('#isactive').val();
+	
+	if(isactive == 0)
+	{
+		const selectedTab = localStorage.getItem('selectedTab');
+		//alert(selectedTab);
+		if (selectedTab) {
+			$('a[href="' + selectedTab + '"]').tab('show');
+			
+			if(selectedTab == '#correctiveAction')
+			{
+				var norecord_k = $('#norecord_k').val();
+				if(norecord_k==0)
+				{
+					$('#no_record').show();
+				}
+			}
+			
+			if(selectedTab == '#completedtab')
+			{
+				//$('#correctiveAction').show();
+				var norecord_l = $('#norecord_l').val();
+				
+				if(norecord_l==0)
+				{
+					$('#no_record').show();
+				}
+			}
+			
+			if(selectedTab == '#rejectInspector')
+			{
+				//$('#correctiveAction').show();
+				var norecord_m = $('#norecord_m').val();
+				if(norecord_m==0)
+				{
+					$('#no_record').show();
+				}
+				
+			}
+			
+			if(selectedTab == '#approvedByInspector')
+			{
+				//$('#correctiveAction').show();
+			}
+		}
+	}
+	
+	
 	if(isactive == 1)
 	{
-		$('a[href="#inprogress_tab"]').tab('show');
-		$('#isactive').val('');
+		$('a[href="#correctiveAction"]').tab('show');
+		$('#uncomplete_tab').show();
+		$('#isactive').val(0);
 	}
 	
   
-	const selectedTab = localStorage.getItem('selectedTab');
+	/*const selectedTab = localStorage.getItem('selectedTab');
 	if (selectedTab) {
         $('a[href="' + selectedTab + '"]').tab('show');
-    }
+    }*/
 	
 	$(document).on('click','.correctiveAction, .completedtab, .rejectInspector, .approvedByInspector', function(){
 		var location_id = $('#location_id').val();
 		var task_id = $('#task_id').val();
-		
+		$('#isactive').val(0);
 		const tabId = $(this).attr('href');
+		
+		if(tabId == '#correctiveAction')
+		{
+			$('.tab-pane').removeClass('active show');
+			$('#correctiveAction').addClass('active show');
+			$('.nav-tabs .nav-link').removeClass('active');
+			$('.nav-tabs .nav-link[href="#correctiveAction"]').addClass('active');
+			
+		}
+		
+		if(tabId == '#completedtab')
+		{
+			$('.tab-pane').removeClass('active show');
+			$('#completedtab').addClass('active show');
+			$('.nav-tabs .nav-link').removeClass('active');
+			$('.nav-tabs .nav-link[href="#completedtab"]').addClass('active');
+			
+		}
+		
+		if(tabId == '#rejectInspector')
+		{
+			$('.tab-pane').removeClass('active show');
+			$('#rejectInspector').addClass('active show');
+			$('.nav-tabs .nav-link').removeClass('active');
+			$('.nav-tabs .nav-link[href="#rejectInspector"]').addClass('active');
+			
+		}
+		
+		if(tabId == '#approvedByInspector')
+		{
+			$('.tab-pane').removeClass('active show');
+			$('#approvedByInspector').addClass('active show');
+			$('.nav-tabs .nav-link').removeClass('active');
+			$('.nav-tabs .nav-link[href="#approvedByInspector"]').addClass('active');
+			
+		}
+		
+		
 		localStorage.setItem('selectedTab', tabId);
 		const refreshUrl = "{{ url('location-owner/LOCATION_ID/TASK_ID/ISACTIVE') }}";
-		const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ISACTIVE', 1);
+		const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ISACTIVE', 0);
 		window.location.href = redirectUrl;
 	});
 	
