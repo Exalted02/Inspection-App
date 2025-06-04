@@ -155,8 +155,23 @@ $location_details = $taskData ? $taskData->location_details : '';
 												{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 												</p>
 												@endif
-												<p class="text-muted mb-0">
+												<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												@if(auth()->user()->user_type == 1)
+													@if($result['inspector_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['inspector_action'] == 0)
+														<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												
+												@if(auth()->user()->user_type == 3)
+													@if($result['los_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['los_action'] == 0)
+														<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
 												</p>
 											</a>
 										</div>
@@ -180,8 +195,23 @@ $location_details = $taskData ? $taskData->location_details : '';
 												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 												</p>
 												@endif
-												<p class="text-muted mb-0">
+												<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												@if(auth()->user()->user_type == 1)
+													@if($result['inspector_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['inspector_action'] == 0)
+														<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												
+												@if(auth()->user()->user_type == 3)
+													@if($result['los_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['los_action'] == 0)
+														<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
 												</p>
 											</a>
 										</div>
