@@ -1417,7 +1417,7 @@ class DashboardInspectorController extends Controller
 		$task_list_id = $request->task_id;
 		$checklist_id = $request->checklist_id;
 		$subchecklist_id = $request->subchecklist_id ?? null;
-		$inspector_id = auth()->user()->id;
+		$user_id = auth()->user()->id;
 		$inspector_action = $request->inspector_action;
 		
 		//$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;
@@ -1425,10 +1425,20 @@ class DashboardInspectorController extends Controller
 		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first()->id;
 		
 		$model = Task_list_corrective_action::find($id);
-		$model->inspector_action_date = date('Y-m-d h:i:s');
-		$model->inspector_action = $inspector_action;
-		$model->los_action = $inspector_action;
-		$model->inspector_id = $inspector_id;
+		if(auth()->user()->user_type == 1)
+		{
+			$model->inspector_action_date = date('Y-m-d h:i:s');
+			$model->inspector_action = $inspector_action;
+			$model->inspector_id = $user_id;
+		}
+		
+		if(auth()->user()->user_type == 3)
+		{
+			$model->los_action_date = date('Y-m-d h:i:s');
+			$model->los_action = $inspector_action;
+			$model->los_id = $user_id;
+		}
+		
 		$model->save();
 		
 		// update the status of Task lists 

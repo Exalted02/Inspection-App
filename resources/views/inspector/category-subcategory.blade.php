@@ -46,7 +46,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 							<li role="presentation"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
 						@endif
 						@if(auth()->user()->user_type == 3)
-							<li role="presentation" class="active"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
+							<li role="presentation" class=""><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
 						@endif
 							<li role="presentation"><a href="#process_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Final checks</a></li> 
 							<li role="presentation"><a href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Approved final checked</a></li>
@@ -84,7 +84,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 							</div>
 							<div role="tabpanel" class="tab-pane" id="corrective_checked_tab">
 								@foreach($correctiveAction as $result)
-								@if($result['inspector_action'] ==0 && $result['second_checked'] == '')
+								@if(($result['inspector_action'] != 2 || $result['los_action'] != 2) && $result['second_checked'] == '')
 									@php 
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
@@ -482,6 +482,11 @@ $location_details = $taskData ? $taskData->location_details : '';
 </script>
 <script>
 $(document ).ready(function() {
+  
+  @if(auth()->user()->user_type == 3)
+	$('a[href="#corrective_checked_tab"]').tab('show');
+  @endif
+  
    $(document).on('click','.donesubmit', function(){
 		var location_id = $('#location_id').val();
 		//var category_id = $('#category_id').val();
