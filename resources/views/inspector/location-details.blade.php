@@ -69,9 +69,9 @@ $week= '';
 									</div>
 									<div class="flex-grow-1">
 									@if(auth()->user()->user_type == 1 || auth()->user()->user_type == 3)
-										<a href="{{ route('category', ['location_id'=>$tasks->location_id,'task_id'=>$tasks->id]) }}">
+										<a href="{{ route('category', ['location_id'=>$tasks->location_id,'task_id'=>$tasks->id, 'active'=>1]) }}">
 									@elseif(auth()->user()->user_type == 2)
-										<a href="{{ route('location-owner', ['location_id'=>$tasks->location_id,'task_id'=>$tasks->id]) }}">
+										<a href="{{ route('location-owner', ['location_id'=>$tasks->location_id,'task_id'=>$tasks->id, 'active'=>1]) }}">
 									@endif
 										
 										<img src="{{$img }}" alt="Task"/>
@@ -168,6 +168,7 @@ $week= '';
 {{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>--}}
 <script>
 $(document ).ready(function() {
+	localStorage.removeItem('selectedTab');
 	$(document).on('click', '.add-new-category', function(){
 		$('#task_title').val('');
 		$('input[name="location_category[]"]:checked').each(function() {

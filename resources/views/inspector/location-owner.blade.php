@@ -30,11 +30,11 @@ use Carbon\Carbon;
 					<div class="row custom-tab">
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
-							<li role="presentation" class="active"><a href="#inprogress_tab" aria-controls="inprogress_tab" role="tab" data-toggle="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
-							<li role="presentation"><a href="#completed_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">{{ count($correctiveCheck)}} Corrective checks</a></li>
-							<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>
+							<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab" data-toggle="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
+							<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">{{ count($correctiveCheck)}} Corrective checks</a></li>
+							<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>
 							{{--<li role="presentation"><a href="#final_checked_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Final checked</a></li>--}}
-							<li role="presentation"><a href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Approved</a></li>
+							<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Approved</a></li>
 							{{--<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>--}}
 							
 						</ul>
@@ -551,8 +551,41 @@ use Carbon\Carbon;
 			</section>
 		</div>
 	</div>
+	<input type="hidden" value="{{ $location_id ?? ''}}" id="location_id">
+	<input type="hidden" value="{{ $task_id ?? ''}}" id="task_id">
+	<input type="hidden" value="{{ $isactive ?? ''}}" id="isactive">
 @endsection 
 @section('scripts')
+<script>
+$(document).ready(function() {
+	var isactive = $('#isactive').val();
+	if(isactive == 1)
+	{
+		$('a[href="#inprogress_tab"]').tab('show');
+		$('#isactive').val('');
+	}
+	
+  
+	const selectedTab = localStorage.getItem('selectedTab');
+	if (selectedTab) {
+        $('a[href="' + selectedTab + '"]').tab('show');
+    }
+	
+	$(document).on('click','.correctiveAction, .completedtab, .rejectInspector, .approvedByInspector', function(){
+		var location_id = $('#location_id').val();
+		var task_id = $('#task_id').val();
+		
+		const tabId = $(this).attr('href');
+		localStorage.setItem('selectedTab', tabId);
+		const refreshUrl = "{{ url('location-owner/LOCATION_ID/TASK_ID/ISACTIVE') }}";
+		const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ISACTIVE', 1);
+		window.location.href = redirectUrl;
+	});
+	
+});
+
+
+</script>
 
 @endsection
 

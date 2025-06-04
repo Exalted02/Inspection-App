@@ -169,8 +169,9 @@ $(document).ready(function() {
 				success: function(response) {
 					let location_id = response.location_id;
 					let task_id = response.task_id;
+					var active = 1;
 					var baseUrl = "{{ url('/location-owner') }}";
-					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id;
+					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id + '/' + active;
 					window.location.href = redirectUrl;
 					
 				},

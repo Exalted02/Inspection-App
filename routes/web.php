@@ -63,7 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('/checklist-question/{taskid}/{cat_id}', [DashboardInspectorController::class, 'checklist_question'])->name('checklist-question');
 	Route::post('checklist-next-question', [DashboardInspectorController::class, 'checklist_next_question'])->name('checklist-next-question');
 	Route::post('checklist-previous-question', [DashboardInspectorController::class, 'checklist_previous_question'])->name('checklist-previous-question');
-	Route::get('/category/{location_id}/{task_id}', [DashboardInspectorController::class, 'category'])->name('category');
+	Route::get('/category/{location_id}/{task_id}/{active}', [DashboardInspectorController::class, 'category'])->name('category');
 	
 	Route::get('/location-details/{id}', [DashboardInspectorController::class, 'location_details'])->name('location-details');
 	Route::get('/inspector-dashboard', [DashboardInspectorController::class, 'inspector_dashboard'])->name('inspector-dashboard');
@@ -86,7 +86,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('get-checklist-page', [DashboardInspectorController::class, 'get_checklist_page'])->name('get-checklist-page');
 	Route::get('thank-you/{id}', [DashboardInspectorController::class, 'thank_you'])->name('thank-you');
 	
-	Route::get('location-owner/{location_id}/{task_id}', [DashboardInspectorController::class, 'location_owner'])->name('location-owner');
+	Route::get('location-owner/{location_id}/{task_id}/{active}', [DashboardInspectorController::class, 'location_owner'])->name('location-owner');
 	//Route::get('location-owner/{location_id}/{cat_id}', [DashboardInspectorController::class, 'location_owner'])->name('location-owner');
 	Route::get('location-owner-checklist-question-reply/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'location_owner_question_reply'])->name('location-owner-checklist-question-reply');
 	Route::get('location-owner-subchecklist-question-reply/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'location_owner_subchecklist_question_reply'])->name('location-owner-subchecklist-question-reply');

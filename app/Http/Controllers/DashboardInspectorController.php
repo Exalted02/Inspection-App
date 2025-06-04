@@ -75,7 +75,7 @@ class DashboardInspectorController extends Controller
 		
         return view('inspector.location-details', $data);
     }
-	public function category($lid='',$task_id='')
+	public function category($lid='',$task_id='', $active='')
     {
 		$data = [];
 		// -- if inspector login 
@@ -89,10 +89,12 @@ class DashboardInspectorController extends Controller
         //echo "<pre>";print_r($categoryData);die;
 		
 		$data['location_id'] = $lid;
-		$details = Task_lists::where('id',$task_id)->where('inspector_id', auth()->user()->id)->where('location_id', $lid)->first();
+		//$details = Task_lists::where('id',$task_id)->where('inspector_id', auth()->user()->id)->where('location_id', $lid)->first();
+		$details = Task_lists::where('id',$task_id)->where('location_id', $lid)->first();
 		$data['location_details'] = $details ? $details->location_details : null;
 		$data['task_id'] = $details ? $details->id : null;
 		$data['task_name'] = $details ? $details->task_title : null;
+		$data['isactive'] = $active;
 		
 		// for corrective checked work 
 		$correctiveActionChecklistArray = [];
@@ -1137,7 +1139,7 @@ class DashboardInspectorController extends Controller
 		$data['task_id'] = $id;
 		return view('inspector.thankyou', $data);
 	}
-	public function location_owner($lid='',$taskid='')
+	public function location_owner($lid='',$taskid='', $active='')
 	{
 		//--- if location owner login ---
 		$correctiveActionChecklistArray = [];
@@ -1273,6 +1275,7 @@ class DashboardInspectorController extends Controller
 			$data['location_id'] = $lid;
 			//$data['category_id'] = $catid;
 			$data['task_id'] = $taskid;
+			$data['isactive'] = $active;
 			
 			return view('inspector.location-owner', $data);
 		}
@@ -1399,6 +1402,9 @@ class DashboardInspectorController extends Controller
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
 		
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->first();
+		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
+		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
 		return view('inspector.inspector-check-reply', $data);
 	}
 	public function inspector_subchecklist_question_reply($location_id='',$task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
@@ -1426,18 +1432,30 @@ class DashboardInspectorController extends Controller
 		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first()->id;
 		
 		$model = Task_list_corrective_action::find($id);
-		if(auth()->user()->user_type == 1)
+		if($inspector_action == 1)
+		{
+			if(auth()->user()->user_type == 1)
+			{
+				$model->inspector_action_date = date('Y-m-d h:i:s');
+				$model->inspector_action = $inspector_action;
+				$model->inspector_id = $user_id;
+			}
+			
+			if(auth()->user()->user_type == 3)
+			{
+				$model->los_action_date = date('Y-m-d h:i:s');
+				$model->los_action = $inspector_action;
+				$model->los_id = $user_id;
+			}
+		}
+		else if($inspector_action == 2)
 		{
 			$model->inspector_action_date = date('Y-m-d h:i:s');
 			$model->inspector_action = $inspector_action;
-			$model->inspector_id = $user_id;
-		}
-		
-		if(auth()->user()->user_type == 3)
-		{
+			//$model->inspector_id = $user_id;
 			$model->los_action_date = date('Y-m-d h:i:s');
 			$model->los_action = $inspector_action;
-			$model->los_id = $user_id;
+			//$model->los_id = $user_id;
 		}
 		
 		$model->save();

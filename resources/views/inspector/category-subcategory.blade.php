@@ -5,14 +5,17 @@
  //echo "<pre>";print_r($correctiveAction);die;
  $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
-
 $taskData  = App\Models\Task_lists::where('id', $task_id)->first();
 $location_details = $taskData ? $taskData->location_details : '';
 //echo $task_id; die;
+$k = 0;
+$l = 0;
+$m = 0;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
 		<h2 class="checklist-title">{{ $task_name ?? '' }}</h2>
+		@if(auth()->user()->user_type == 1)
 		<div class="location-section">
 			<div class="location-label">Location details</div>
 			<div class="location-input" id="displayBox">
@@ -33,6 +36,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 			<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
 			<input type="hidden" id="taskid">
 		</div>
+		@endif
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
 		<div class="main-content-area clearfix corrective-checked">
@@ -42,20 +46,20 @@ $location_details = $taskData ? $taskData->location_details : '';
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
 						@if(auth()->user()->user_type == 1)
-							<li role="presentation" class="active"><a href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab" data-toggle="tab">Uncompleted</a></li>
-							<li role="presentation"><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
+							<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab" data-toggle="tab">Uncompleted</a></li>
+							<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
 						@endif
 						@if(auth()->user()->user_type == 3)
-							<li role="presentation" class=""><a href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
+							<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab"> Corrective checked</a></li>
 						@endif
-							<li role="presentation"><a href="#process_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Final checks</a></li> 
-							<li role="presentation"><a href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Approved final checked</a></li>
+							<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Final checks</a></li> 
+							<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">Approved final checked</a></li>
 							{{--<li role="presentation"><a href="#reject_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Rejected</a></li>--}}
 						</ul>
 						<!-- Tab panes -->
 						<div class="tab-content">
 						@if(auth()->user()->user_type == 1)
-							<div role="tabpanel" class="tab-pane active" id="uncomplete_tab">
+							<div role="tabpanel" class="tab-pane" id="uncomplete_tab">
 							@if($categoryData->isNotEmpty())
 								@foreach($categoryData as $categories)
 								@php 
@@ -75,17 +79,19 @@ $location_details = $taskData ? $taskData->location_details : '';
 								</div>
 								@endforeach
 							@else	
-								<div class="text-center"><strong><h3>No record found</h3></strong></div>
+								<div class="text-center"><strong><h3>No record founds</h3></strong></div>
 							@endif
 							</div>
 						@endif
 							<div role="tabpanel" class="tab-pane" id="reject_tab">
 								Not have any data
 							</div>
-							<div role="tabpanel" class="tab-pane" id="corrective_checked_tab">
+							<div class="tab-pane" id="corrective_checked_tab">
+							
 								@foreach($correctiveAction as $result)
 								@if(($result['inspector_action'] != 2 || $result['los_action'] != 2) && $result['second_checked'] == '')
 									@php 
+										$k++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -120,7 +126,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
@@ -161,7 +167,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													@if($result['inspector_action'] == 1)
 														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
 													@elseif($result['inspector_action'] == 0)
-														<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 													@endif
 												@endif
 												
@@ -169,7 +175,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													@if($result['los_action'] == 1)
 														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
 													@elseif($result['los_action'] == 0)
-														<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 													@endif
 												@endif
 												</p>
@@ -201,7 +207,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													@if($result['inspector_action'] == 1)
 														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
 													@elseif($result['inspector_action'] == 0)
-														<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 													@endif
 												@endif
 												
@@ -209,7 +215,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													@if($result['los_action'] == 1)
 														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
 													@elseif($result['los_action'] == 0)
-														<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 													@endif
 												@endif
 												</p>
@@ -221,9 +227,11 @@ $location_details = $taskData ? $taskData->location_details : '';
 								@endforeach
 							</div>
 							<div role="tabpanel" class="tab-pane" id="process_final_checked_tab">
+							
 								@foreach($correctiveAction as $result)
 								@if($result['inspector_action'] ==2 && $result['second_checked'] != '')
 									@php 
+								        $l++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -258,7 +266,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
@@ -326,12 +334,14 @@ $location_details = $taskData ? $taskData->location_details : '';
 									</div>
 									@endif
 								@endif
+								
 								@endforeach
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
 							 @foreach($correctiveAction as $result)
 								@if($result['inspector_action'] ==1 && $result['second_checked'] != '')
 									@php 
+										$m++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -366,7 +376,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													$images = $filedata && $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
@@ -437,6 +447,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 								@endforeach
 							</div>
 						</div>
+						<div style="margin-left: 226px;display:none" id="no_record"><strong><h3>No record found</h3></strong></div>
 					</div>
 				</div>
 			</section>
@@ -476,7 +487,13 @@ $location_details = $taskData ? $taskData->location_details : '';
 		</div>
 	  </div>
 	</div>
-
+	<input type="hidden" value="{{ $isactive ?? ''}}" id="isactive">
+	<input type="hidden" value="{{ auth()->user()->user_type ?? ''}}" id="user_id">
+	<input type="hidden" value="{{ $location_id ?? ''}}" id="location_id">
+	<input type="hidden" value="{{ $task_id ?? ''}}" id="task_id">
+	<input type="hidden" value="{{ $k ?? ''}}" id="norecord_k">
+	<input type="hidden" value="{{ $l ?? ''}}" id="norecord_l">
+	<input type="hidden" value="{{ $m ?? ''}}" id="norecord_m">
 
 	
 @endsection 
@@ -512,10 +529,73 @@ $location_details = $taskData ? $taskData->location_details : '';
 </script>
 <script>
 $(document ).ready(function() {
+	var isactive = $('#isactive').val();
+	var user_id = $('#user_id').val();
+	
+	if(isactive == 0)
+	{
+		const selectedTab = localStorage.getItem('selectedTab');
+		//alert(selectedTab);
+		if (selectedTab) {
+			$('a[href="' + selectedTab + '"]').tab('show');
+			
+			if(selectedTab == '#corrective_checked_tab')
+			{
+				var norecord_k = $('#norecord_k').val();
+				if(norecord_k==0)
+				{
+					$('#no_record').show();
+				}
+				
+				$('#uncomplete_tab').hide();
+			}
+			
+			if(selectedTab == '#process_final_checked_tab')
+			{
+				var norecord_l = $('#norecord_l').val();
+				
+				if(norecord_l==0)
+				{
+					$('#no_record').show();
+				}
+				$('#uncomplete_tab').hide();
+			}
+			
+			if(selectedTab == '#approved_final_checked_tab')
+			{
+				var norecord_m = $('#norecord_m').val();
+				if(norecord_m==0)
+				{
+					$('#no_record').show();
+				}
+				$('#uncomplete_tab').hide();
+			}
+			
+			if(selectedTab == '#uncomplete_tab')
+			{
+				
+				$('#uncomplete_tab').show();
+			}
+		}
+	}
+	
+	if(isactive == 1 && user_id == 1)
+	{
+		$('a[href="#uncomplete_tab"]').tab('show');
+		$('#uncomplete_tab').show();
+		$('#isactive').val(0);
+	}
+	
+	
+	if(isactive == 1 && user_id == 3)
+	{
+		$('a[href="#corrective_checked_tab"]').tab('show');
+		$('#isactive').val(0);
+	}
+	
+	//alert(isactive);
+	
   
-  @if(auth()->user()->user_type == 3)
-	$('a[href="#corrective_checked_tab"]').tab('show');
-  @endif
   
    $(document).on('click','.donesubmit', function(){
 		var location_id = $('#location_id').val();
@@ -583,6 +663,74 @@ $(document ).ready(function() {
 		});
 	   
    });
+   
+   $(document).on('click','.unCompletetab, .correctiveChecked, .finalChecked, .approvedFinalChecked', function(){
+	   $('#no_record').hide();
+		var location_id = $('#location_id').val();
+		var task_id = $('#task_id').val();
+		$('#isactive').val('');
+		const tabId = $(this).attr('href');
+		//alert(tabId);
+		if(tabId == '#corrective_checked_tab')
+		{
+			$('.tab-pane').removeClass('active show');
+			$('#corrective_checked_tab').addClass('active show');
+			$('.nav-tabs .nav-link').removeClass('active');
+			$('.nav-tabs .nav-link[href="#corrective_checked_tab"]').addClass('active');
+			/*$('#corrective_checked_tab').addClass('tab-pane active');
+			$('#corrective_checked_tab').show();
+			$('#uncomplete_tab').hide();
+			$('#process_final_checked_tab').hide();
+			$('#approved_final_checked_tab').hide();*/
+		}
+		
+		if(tabId == '#process_final_checked_tab')
+		{
+			$('.tab-pane').removeClass('active show');
+			$('#process_final_checked_tab').addClass('active show');
+			$('.nav-tabs .nav-link').removeClass('active');
+			$('.nav-tabs .nav-link[href="#process_final_checked_tab"]').addClass('active');
+			 
+			/*$('#process_final_checked_tab').addClass('tab-pane active');
+			$('#corrective_checked_tab').hide();
+			$('#process_final_checked_tab').show();
+			$('#approved_final_checked_tab').hide();
+			$('#uncomplete_tab').hide();*/
+		}
+		
+		if(tabId == '#approved_final_checked_tab')
+		{
+			$('.tab-pane').removeClass('active show');
+			$('#approved_final_checked_tab').addClass('active show');
+			$('.nav-tabs .nav-link').removeClass('active');
+			$('.nav-tabs .nav-link[href="#approved_final_checked_tab"]').addClass('active');
+			
+			/*$('#approved_final_checked_tab').addClass('tab-pane active');
+			$('#corrective_checked_tab').hide();
+			$('#process_final_checked_tab').hide();
+			$('#approved_final_checked_tab').show();
+			$('#uncomplete_tab').hide();*/
+		}
+		
+		if(tabId == '#uncomplete_tab')
+		{
+			$('.tab-pane').removeClass('active show');
+			$('#uncomplete_tab').addClass('active show');
+			$('.nav-tabs .nav-link').removeClass('active');
+			$('.nav-tabs .nav-link[href="#uncomplete_tab"]').addClass('active');
+			
+			/*$('#uncomplete_tab').addClass('tab-pane active');
+			$('#uncomplete_tab').show();
+			$('#corrective_checked_tab').hide();
+			$('#process_final_checked_tab').hide();
+			$('#approved_final_checked_tab').hide();*/
+		}
+		
+		localStorage.setItem('selectedTab', tabId);
+		const refreshUrl = "{{ url('category/LOCATION_ID/TASK_ID/ISACTIVE') }}";
+		const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ISACTIVE', 0);
+		window.location.href = redirectUrl;
+	});
 });
 </script>
 @endsection
