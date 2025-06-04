@@ -57,7 +57,7 @@ $week= '';
 								   $day =   Carbon::parse($tasks->created_at)->format('d');
 								   $week= strtoupper(Carbon::parse($tasks->created_at)->format('D'));
 								   
-								   //$img = $categoryData ? $categoryData->image : '';
+								   $img = $tasks->image !='' ? url('uploads/task/' . $tasks->image) : url('images/noimages/noimage_task.png');
 								@endphp
 								<div class="d-flex mb-3 task">
 									<div class="date-box">
@@ -74,7 +74,7 @@ $week= '';
 										<a href="{{ route('location-owner', ['location_id'=>$tasks->location_id,'task_id'=>$tasks->id]) }}">
 									@endif
 										
-										<img src="{{url('uploads/task/' . $tasks->image  )}}" alt="Task"/>
+										<img src="{{$img }}" alt="Task"/>
 										
 											<h6>{{ $tasks->task_title ?? '' }}</h6>
 											<p class="text-muted mb-0">{{ get_task_status(auth()->user()->id, $tasks->id, $tasks->location_id) }}</p>
