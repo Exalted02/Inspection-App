@@ -31,7 +31,7 @@ use Carbon\Carbon;
 						<!-- Tabs -->
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#inprogress_tab" aria-controls="inprogress_tab" role="tab" data-toggle="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
-							<li role="presentation"><a href="#completed_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">5 Corrective checks</a></li>
+							<li role="presentation"><a href="#completed_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">{{ count($correctiveCheck)}} Corrective checks</a></li>
 							<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>
 							{{--<li role="presentation"><a href="#final_checked_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Final checked</a></li>--}}
 							<li role="presentation"><a href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Approved</a></li>
@@ -76,7 +76,7 @@ use Carbon\Carbon;
 												
 												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 												
-												$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png') ;
+												$images = $filedata->file != ''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png') ;
 												
 												$arrSubchecklist[] = [
 													'id' => $subchecklistData->id,
@@ -157,8 +157,13 @@ use Carbon\Carbon;
 									? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
 									: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
-									
-									$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+									if($result['image'] != '')
+									{
+										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+									}
+									else{
+										$images = url('images/noimages/noimage_region.png');
+									}
 									
 									if($result['type'] == 'subchecklist')
 									{
@@ -171,7 +176,7 @@ use Carbon\Carbon;
 												
 												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 												
-												$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
+												$images = $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
 												
 												$arrSubchecklist[] = [
 													'id' => $subchecklistData->id,

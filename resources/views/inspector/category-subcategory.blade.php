@@ -99,8 +99,14 @@ $location_details = $taskData ? $taskData->location_details : '';
 										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
 										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
+										if($result['image'] != '')
+										{
+											$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+										}
+										else{
+											$images = url('images/noimages/noimage_region.png');
+										}
 										
-										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
 										
 										if($result['type'] == 'subchecklist')
 										{
@@ -114,7 +120,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
+													$images = $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
@@ -201,8 +207,14 @@ $location_details = $taskData ? $taskData->location_details : '';
 										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
 										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
+										if($result['image'] != '')
+										{
+											$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+										}
+										else{
+											$images = url('images/noimages/noimage_region.png');
+										}
 										
-										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
 										
 										if($result['type'] == 'subchecklist')
 										{
@@ -216,7 +228,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
+													$images = $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
@@ -303,8 +315,14 @@ $location_details = $taskData ? $taskData->location_details : '';
 										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
 										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
+										if($result['image'] != '')
+										{
+											$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+										}
+										else{
+											$images = url('images/noimages/noimage_region.png');
+										}
 										
-										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
 										
 										if($result['type'] == 'subchecklist')
 										{
@@ -318,7 +336,7 @@ $location_details = $taskData ? $taskData->location_details : '';
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata ? url('uploads/reject-files/subchecklist/' . $filedata->file) : '' ;
+													$images = $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
