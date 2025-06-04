@@ -6,6 +6,10 @@
 //echo "<pre>";print_r($correctiveAction);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
+$k = 0;
+$l = 0;
+$m = 0;
+$n = 0;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	
@@ -40,9 +44,10 @@ use Carbon\Carbon;
 						</ul>
 						<!-- Tab panes -->
 						<div class="tab-content">
-							<div role="tabpanel" class="tab-pane active" id="inprogress_tab">
+							<div role="tabpanel" class="tab-pane" id="inprogress_tab">
 								@foreach($correctiveAction as $result)
 								@php 
+								    $k++;
 								    $arrSubchecklist = [];
 									$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 									
@@ -144,6 +149,7 @@ use Carbon\Carbon;
 							@foreach($correctiveCheck as $result)
 							@if($result['inspector_action'] ==0)
 								@php 
+							        $l++;
 								    $arrSubchecklist = [];
 									$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 									
@@ -245,6 +251,7 @@ use Carbon\Carbon;
 							@foreach($correctiveCheck as $result)
 								@if($result['inspector_action'] ==1)
 									@php 
+								        $n++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -346,6 +353,7 @@ use Carbon\Carbon;
 							@foreach($correctiveCheck as $result)
 								@if($result['inspector_action'] ==2 && $result['second_checked'] == '')
 									@php 
+								        $m++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -447,6 +455,7 @@ use Carbon\Carbon;
 							@foreach($correctiveCheck as $result)
 								@if($result['inspector_action'] ==2 && $result['second_checked'] != 'null')
 									@php 
+										
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -546,6 +555,7 @@ use Carbon\Carbon;
 							@endforeach
 							</div>
 						</div>
+						<div style="margin-left: 226px;display:none" id="no_record"><strong><h3>No record found</h3></strong></div>
 					</div>
 				</div>
 			</section>
@@ -554,6 +564,11 @@ use Carbon\Carbon;
 	<input type="hidden" value="{{ $location_id ?? ''}}" id="location_id">
 	<input type="hidden" value="{{ $task_id ?? ''}}" id="task_id">
 	<input type="hidden" value="{{ $isactive ?? ''}}" id="isactive">
+	
+	<input type="hidden" value="{{ $k ?? ''}}" id="norecord_k">
+	<input type="hidden" value="{{ $l ?? ''}}" id="norecord_l">
+	<input type="hidden" value="{{ $m ?? ''}}" id="norecord_m">
+	<input type="hidden" value="{{ $n ?? ''}}" id="norecord_n">
 @endsection 
 @section('scripts')
 <script>
@@ -563,11 +578,11 @@ $(document).ready(function() {
 	if(isactive == 0)
 	{
 		const selectedTab = localStorage.getItem('selectedTab');
-		//alert(selectedTab);
+		
 		if (selectedTab) {
 			$('a[href="' + selectedTab + '"]').tab('show');
 			
-			if(selectedTab == '#correctiveAction')
+			if(selectedTab == '#inprogress_tab')
 			{
 				var norecord_k = $('#norecord_k').val();
 				if(norecord_k==0)
@@ -576,20 +591,17 @@ $(document).ready(function() {
 				}
 			}
 			
-			if(selectedTab == '#completedtab')
+			if(selectedTab == '#completed_tab')
 			{
-				//$('#correctiveAction').show();
 				var norecord_l = $('#norecord_l').val();
-				
 				if(norecord_l==0)
 				{
 					$('#no_record').show();
 				}
 			}
 			
-			if(selectedTab == '#rejectInspector')
+			if(selectedTab == '#rejected_by_inspector_tab')
 			{
-				//$('#correctiveAction').show();
 				var norecord_m = $('#norecord_m').val();
 				if(norecord_m==0)
 				{
@@ -598,9 +610,13 @@ $(document).ready(function() {
 				
 			}
 			
-			if(selectedTab == '#approvedByInspector')
+			if(selectedTab == '#approved_by_inspector_tab')
 			{
-				//$('#correctiveAction').show();
+				var norecord_n = $('#norecord_n').val();
+				if(norecord_n==0)
+				{
+					$('#no_record').show();
+				}
 			}
 		}
 	}
@@ -608,8 +624,8 @@ $(document).ready(function() {
 	
 	if(isactive == 1)
 	{
-		$('a[href="#correctiveAction"]').tab('show');
-		$('#uncomplete_tab').show();
+		$('a[href="#inprogress_tab"]').tab('show');
+		$('#inprogress_tab').show();
 		$('#isactive').val(0);
 	}
 	
