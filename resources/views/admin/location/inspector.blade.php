@@ -192,8 +192,8 @@ $userFolderName = ''
 								<td>{{ $val->name ?? ''}}</td>
 								<td>{{ $val->email ?? ''}}</td>
 								<td>{{ $val->get_company->company_name ?? ''}}</td>
-								<td><img src="{{  !empty($val->profile_image) ? url('uploads/profile/' . $val->id. '/' . $userFolderName . '/'.$val->profile_image) : url('images/noimage.png') }}" width="50" height="50"></td>
-								<td><img src="{{ !empty($val->background_image) ? url('uploads/profile/' . $val->id. '/'. $userFolderName .'/'. $val->background_image) : url('images/noimage.png') }}" width="50" height="50"></td>
+								<td><img src="{{  $val->profile_image != '' ? url('uploads/profile/' . $val->id. '/' . $userFolderName . '/'.$val->profile_image) : url('images/noimages/noimage_avatar.png') }}" width="50" height="50"></td>
+								<td><img src="{{ $val->background_image != '' ? url('uploads/profile/' . $val->id. '/'. $userFolderName .'/'. $val->background_image) : url('images/noimages/noimage_background_avatar.png') }}" width="50" height="50"></td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)

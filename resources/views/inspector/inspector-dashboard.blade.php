@@ -21,8 +21,8 @@ if(auth()->user()->user_type == 3)
 	$user_type_name = 'Location owner supervisor';
 }
 
-$backgroung_img = '';
-$profile_img = '';
+$backgroung_img = url('images/noimages/noimage_background_avatar.png');
+$profile_img = url('images/noimages/noimage_avatar.png');
 
 if(!empty($userdata->background_image))
 {
