@@ -86,7 +86,7 @@ $m = 0;
 							<div role="tabpanel" class="tab-pane" id="reject_tab">
 								Not have any data
 							</div>
-							<div class="tab-pane" id="corrective_checked_tab">
+							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
 							
 								@foreach($correctiveAction as $result)
 								@if(($result['inspector_action'] != 2 || $result['los_action'] != 2) && $result['second_checked'] == '')
@@ -674,35 +674,35 @@ $(document ).ready(function() {
 		if(tabId == '#corrective_checked_tab')
 		{
 			$('.tab-pane').removeClass('active show');
-			$('#corrective_checked_tab').addClass('active show');
+			//$('#corrective_checked_tab').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
-			$('.nav-tabs .nav-link[href="#corrective_checked_tab"]').addClass('active');
+			//$('.nav-tabs .nav-link[href="#corrective_checked_tab"]').addClass('active');
 			
 		}
 		
 		if(tabId == '#process_final_checked_tab')
 		{
 			$('.tab-pane').removeClass('active show');
-			$('#process_final_checked_tab').addClass('active show');
+			//$('#process_final_checked_tab').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
-			$('.nav-tabs .nav-link[href="#process_final_checked_tab"]').addClass('active');
+			//$('.nav-tabs .nav-link[href="#process_final_checked_tab"]').addClass('active');
 			
 		}
 		
 		if(tabId == '#approved_final_checked_tab')
 		{
 			$('.tab-pane').removeClass('active show');
-			$('#approved_final_checked_tab').addClass('active show');
+			//$('#approved_final_checked_tab').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
-			$('.nav-tabs .nav-link[href="#approved_final_checked_tab"]').addClass('active');
+			//$('.nav-tabs .nav-link[href="#approved_final_checked_tab"]').addClass('active');
 		}
 		
 		if(tabId == '#uncomplete_tab')
 		{
 			$('.tab-pane').removeClass('active show');
-			$('#uncomplete_tab').addClass('active show');
+			//$('#uncomplete_tab').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
-			$('.nav-tabs .nav-link[href="#uncomplete_tab"]').addClass('active');
+			//$('.nav-tabs .nav-link[href="#uncomplete_tab"]').addClass('active');
 		}
 		
 		localStorage.setItem('selectedTab', tabId);

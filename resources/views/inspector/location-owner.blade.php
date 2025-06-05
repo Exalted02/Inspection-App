@@ -644,36 +644,36 @@ $(document).ready(function() {
 		if(tabId == '#correctiveAction')
 		{
 			$('.tab-pane').removeClass('active show');
-			$('#correctiveAction').addClass('active show');
+			//$('#correctiveAction').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
-			$('.nav-tabs .nav-link[href="#correctiveAction"]').addClass('active');
+			//$('.nav-tabs .nav-link[href="#correctiveAction"]').addClass('active');
 			
 		}
 		
 		if(tabId == '#completedtab')
 		{
 			$('.tab-pane').removeClass('active show');
-			$('#completedtab').addClass('active show');
+			//$('#completedtab').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
-			$('.nav-tabs .nav-link[href="#completedtab"]').addClass('active');
+			//$('.nav-tabs .nav-link[href="#completedtab"]').addClass('active');
 			
 		}
 		
 		if(tabId == '#rejectInspector')
 		{
 			$('.tab-pane').removeClass('active show');
-			$('#rejectInspector').addClass('active show');
+			//$('#rejectInspector').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
-			$('.nav-tabs .nav-link[href="#rejectInspector"]').addClass('active');
+			//$('.nav-tabs .nav-link[href="#rejectInspector"]').addClass('active');
 			
 		}
 		
 		if(tabId == '#approvedByInspector')
 		{
 			$('.tab-pane').removeClass('active show');
-			$('#approvedByInspector').addClass('active show');
+			//$('#approvedByInspector').addClass('active show');
 			$('.nav-tabs .nav-link').removeClass('active');
-			$('.nav-tabs .nav-link[href="#approvedByInspector"]').addClass('active');
+			//$('.nav-tabs .nav-link[href="#approvedByInspector"]').addClass('active');
 			
 		}
 		

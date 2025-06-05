@@ -22,19 +22,21 @@ $week= '';
 				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>{{ $location_categories[0]->address ?? ''}}, {{ $location_categories[0]->zipcode ?? ''}}</small>
 			</div>
 		</div>
+		<button class="grey-button width-full add-new-category">+ Add Task</button>
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
 		<div class="main-content-area clearfix">
 			<section class="custom-padding1">
 				<div class="container">
 				@if(auth()->user()->user_type == 1)
-				    <div class="col-md-12 col-sm-12">
-						<div class="form-group text-center add-new-category">
+				    <div class="col-md-12 col-sm-12 d-grid">
+					{{--<div class="form-group text-center add-new-category">
 							<div class="add-task-box">
 								<span class="plus-sign">+</span>
 								<div class="add-task-text">Add Tasks</div>
 							</div>
 						</div>
+						<button class="grey-button">+ Add Task</button>--}}
 					</div>
 				@endif
 				
@@ -122,10 +124,11 @@ $week= '';
 						<div class="subcategory-box mt-2">
 							@foreach($locationWisecategory as $category)
 								<div class="subcategory-item">
-									<div class="subcategory-name"><strong>{{ $category->name }}</strong></div>
 									<div class="subcategory-checkbox">
 										<input type="checkbox" name="location_category[]" value="{{ $category->id }}">
 									</div>
+									<div class="subcategory-name"><strong>{{ $category->name }}</strong></div>
+									
 								</div>
 							@endforeach
 							<span id="tasktcategory_id_error" style="display:none;  color: red;">Please select category</span>
@@ -169,6 +172,14 @@ $week= '';
 <script>
 $(document ).ready(function() {
 	localStorage.removeItem('selectedTab');
+	
+	var taskcreated = localStorage.getItem('taskcreated');
+	if(taskcreated == 1)
+	{
+		$('.task-created-button').fadeIn().delay(2000).fadeOut();
+		localStorage.removeItem('taskcreated');
+	}
+	
 	$(document).on('click', '.add-new-category', function(){
 		$('#task_title').val('');
 		$('input[name="location_category[]"]:checked').each(function() {
@@ -242,6 +253,8 @@ $(document ).ready(function() {
 				} else {
 					$('#category_id').val('').trigger('change');
 					$('#task_title').val('');
+					localStorage.setItem('taskcreated', 1);
+					
 					setTimeout(() => {
 						window.location.reload();
 					}, "2000");

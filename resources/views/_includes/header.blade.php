@@ -21,6 +21,9 @@
 									<span><i class="fa fa-angle-left"></i></span>
 								</a>
 							</div>
+							<div class="task-created-button" style="display:none;">
+							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;&nbsp;Task created
+							</div>
 							<div class="header-icon">
 								<a href="{{ route('inspector-dashboard')}}"><i class="fa-solid fa-house"></i></a>
 								<a href="{{ route('logout')}}"><i class="fa-solid fa-right-from-bracket"></i></a>
