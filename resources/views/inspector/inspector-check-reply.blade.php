@@ -66,7 +66,7 @@
 	 
 	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
  }
- 
+ //echo auth()->user()->user_type;die;
  
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
@@ -144,7 +144,7 @@
 			</section>
 		</div>
     </div>
-	@if(auth()->user()->user_type = 1 && $inspector_action == 0)
+	@if(auth()->user()->user_type == 1 && $inspector_action == 0)
 	<div class="checklist-question-sticky-footer">
 		<div class="clearfix"></div>
 		<div class="footer-content question-navigation d-flex justify-content-between">
@@ -153,7 +153,8 @@
 		</div>
 	</div>
 	@endif
-	@if(auth()->user()->user_type = 3 && $los_action == 0)
+	
+	@if(auth()->user()->user_type == 3 && $los_action == 0)
 	<div class="checklist-question-sticky-footer">
 		<div class="clearfix"></div>
 		<div class="footer-content question-navigation d-flex justify-content-between">
