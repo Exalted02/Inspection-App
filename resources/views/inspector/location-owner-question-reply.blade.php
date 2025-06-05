@@ -204,7 +204,7 @@ $(document).ready(function() {
 					var active = 1;
 					var baseUrl = "{{ url('/location-owner') }}";
 					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id + '/' + active;
-					//window.location.href = redirectUrl;
+					window.location.href = redirectUrl;
 					
 				},
 			});

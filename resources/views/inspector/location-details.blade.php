@@ -120,7 +120,7 @@ $week= '';
 						<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
                     </div>
 					<div class="form-group  col-md-12  col-sm-12">
-                        <label>{{ __('Set Timeline') }}</label>
+                        <label>{{ __('Timeline') }}</label>
 						<div class="split-placeholder-wrapper">
 							<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time">
 							<span class="custom-left-placeholder" id="selected_time">Settime</span>
