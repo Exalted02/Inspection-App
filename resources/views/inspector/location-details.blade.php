@@ -145,8 +145,23 @@ $week= '';
 							<span id="tasktcategory_id_error" style="display:none;  color: red;">Please select category</span>
 						</div>
 					</div>
+					<div class="task-cover-image">Upload Cover</div>
+					<div class="row align-items-center">
+						<div class="col-md-4">
+							<label for="task_image"></label>
+							<div class="upload-wrapper">
+								<input type="file" name="task_image" id="task_image" style="display: none;">
+								<label for="task_image" class="task-upload-label">
+								<i class="fa fa-upload task-upload-icon"></i>
+								<span class="task-upload-text">Upload image</span>
+								</label>
+							</div>
+						</div>
+						<div class="col-md-8 d-flex flex-wrap gap-2" id="preview-container">
+						</div>
+					</div>
 
-					<div class="row margin-bottom-20">
+					{{--<div class="row margin-bottom-20">
 						<div class="form-group">
 							<div class="col-md-9">
 								<div class="input-group" style="margin-left: 16px;">
@@ -160,7 +175,7 @@ $week= '';
 								<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
 							</div>
 						</div>
-					</div>
+					</div>--}}
 					<div class="form-group  col-md-12  col-sm-12">
 						<div class="col-md-3">
 							<img id="img-upload" class="img-responsive" src="images/users/2.jpg" alt="" style="width: 100%; border: 0px solid #ccc; border-radius: 5px;"/>

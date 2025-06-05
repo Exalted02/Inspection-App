@@ -1280,3 +1280,31 @@
 .custom-right-placeholder {
     right: 15px;
 }
+
+.task-upload-label {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 20px;
+	border: 1px solid #ccc;
+	border-radius: 50px;
+	background-color: #f0f0f0;
+	cursor: pointer;
+	font-size: 14px;
+	color: #333;
+	max-width: 150px;
+	margin-left: 15px;
+}
+.task-upload-icon {
+	font-size: 16px;
+    color: #6c757d;
+}
+.task-upload-text {
+	font-size: 14px;
+}
+.task-cover-image {
+	margin-left: 15px;
+	font-size: 15px;
+	font-weight : bold;
+	color: #000000;
+}
