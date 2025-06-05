@@ -1334,7 +1334,8 @@ class DashboardInspectorController extends Controller
 	}
 	public function save_task_data(Request $request)
 	{
-		//echo "<pre>";print_r($request->all());die;
+		//echo "<pre>";print_r($request->all());
+		
 		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('category_id', $request->post('category_id'))->where('task_title', $request->post('task_title'))->where('status', '!=', 2)
         ->first();
 		
@@ -1347,6 +1348,11 @@ class DashboardInspectorController extends Controller
 		
 		$los_id = User::where('company_name', auth()->user()->company_name)->where('user_type', 3)->first()->id;
 		
+		$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
+		$time = $request->post('hidden_set_time');
+		$datetime  = $date.' '.$time;
+		$created_at = date('Y-m-d', strtotime($datetime));
+		
 		$model=new Task_lists();
 		$model->inspector_id	=	auth()->user()->id;
 		$model->location_id		=	$request->post('location_id');
@@ -1355,7 +1361,7 @@ class DashboardInspectorController extends Controller
 		$model->los_id			=	$los_id ?? null;
 		$model->task_title		=	$request->post('task_title');
 		$model->status		=	0;
-		$model->created_at	=	date('Y-m-d');
+		$model->created_at	=	$created_at ?? '';
 		$model->save();
 		$id = $model->id;
 		

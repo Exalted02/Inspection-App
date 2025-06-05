@@ -1222,7 +1222,7 @@
 }*/
 
 
-.split-placeholder-wrapper {
+/*.split-placeholder-wrapper {
     position: relative;
 }
 
@@ -1239,6 +1239,34 @@
     color: #6c757d;
     font-size: 14px;
     pointer-events: none;
+}
+
+.custom-left-placeholder {
+    left: 15px;
+}
+
+.custom-right-placeholder {
+    right: 15px;
+}*/
+
+.split-placeholder-wrapper {
+    position: relative;
+}
+
+.set-timeline-input {
+    padding-left: 75px;
+    padding-right: 90px;
+}
+
+.custom-left-placeholder,
+.custom-right-placeholder {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #6c757d;
+    pointer-events: none;
+    white-space: nowrap;
 }
 
 .custom-left-placeholder {

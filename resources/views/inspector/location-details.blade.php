@@ -127,6 +127,8 @@ $week= '';
 							<span class="custom-right-placeholder" id="selected_date">Setdate</span>
 						</div>
 						<span id="settimeline_id_error" style="display:none;  color: red;"></span>
+						<input type="hidden" id="hidden_set_date" name="hidden_set_date">
+						<input type="hidden" id="hidden_set_time" name="hidden_set_time">
                     </div>
 					<div class="form-group col-md-12 col-sm-12">
 						<label><strong>Select Category</strong></label>
@@ -185,30 +187,27 @@ $(document ).ready(function() {
 	localStorage.removeItem('selectedTab');
 	
 	flatpickr("#set_time", {
-        enableTime: true,
-        dateFormat: "d M Y H:i",
-        onChange: function(selectedDates, dateStr) {
-            if (selectedDates.length > 0) {
-                const date = selectedDates[0];
-                const formattedDate = flatpickr.formatDate(date, "d M Y");
-                const formattedTime = flatpickr.formatDate(date, "H:i");
+    enableTime: true,
+    dateFormat: "d M Y H:i",
+    onChange: function(selectedDates, dateStr, instance) {
+			if (selectedDates.length > 0) {
+				const date = selectedDates[0];
+				const dateOnly = flatpickr.formatDate(date, "d M Y");
+				const timeOnly = flatpickr.formatDate(date, "H:i");
 
-                document.getElementById('selected_date').innerText = formattedDate;
-                document.getElementById('selected_time').innerText = formattedTime;
-            } else {
-                document.getElementById('selected_date').innerText = 'Setdate';
-                document.getElementById('selected_time').innerText = 'Settime';
-            }
-        }
-    });
+				document.getElementById('selected_date').innerText = dateOnly;
+				$('#hidden_set_date').val(dateOnly);
+				$('#hidden_set_time').val(timeOnly);
+				// Delay clearing input to prevent recursion
+				setTimeout(() => {
+					instance.input.value = '';
+				}, 0);
+			} else {
+				document.getElementById('selected_date').innerText = "Setdate";
+			}
+		}
+	});
 
-
-	/*flatpickr("#set_time", {
-        dateFormat: "d M Y",
-        onChange: function(selectedDates, dateStr) {
-            document.getElementById('selected_date').innerText = dateStr || 'Setdate';
-        }
-    });*/
 	
 	var taskcreated = localStorage.getItem('taskcreated');
 	if(taskcreated == 1)
@@ -239,6 +238,8 @@ $(document ).ready(function() {
 		let task_title = $('#task_title').val().trim();
 		let set_time = $('#set_time').val().trim();
 		let task_image = $('#task_image')[0].files.length;
+		let hidden_set_date = $('#hidden_set_date').val();
+		let hidden_set_time = $('#hidden_set_time').val();
 		
 		
 		if (task_title === '') {
@@ -246,7 +247,9 @@ $(document ).ready(function() {
 			return false;
 		}
 		
-		if (set_time === '') {
+		//alert(hidden_set_date);
+		
+		if (hidden_set_date === '') {
 			$('#settimeline_id_error').text('Please enter date').fadeIn().delay(2000).fadeOut();
 			return false;
 		}
