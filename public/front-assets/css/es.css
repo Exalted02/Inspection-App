@@ -1161,11 +1161,11 @@
 	margin-left: -16px;
 }
 
-.split-placeholder-wrapper {
+/*.split-placeholder-wrapper {
     position: relative;
 }
 
-.split-placeholder-wrapper input {
+.set-timeline-input {
     padding-left: 70px;
     padding-right: 70px;
 }
@@ -1188,5 +1188,63 @@
 
 .split-placeholder-wrapper::after {
     content: 'Setdate';
+    right: 15px;
+}*/
+
+/*.split-placeholder-wrapper {
+    position: relative;
+}
+
+.set-timeline-input {
+    padding-left: 70px;
+    padding-right: 100px;
+}
+
+.split-placeholder-wrapper::before {
+    content: 'Settime';
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.custom-right-placeholder {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 14px;
+    pointer-events: none;
+}*/
+
+
+.split-placeholder-wrapper {
+    position: relative;
+}
+
+.set-timeline-input {
+    padding-left: 80px;
+    padding-right: 100px;
+}
+
+.custom-left-placeholder,
+.custom-right-placeholder {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.custom-left-placeholder {
+    left: 15px;
+}
+
+.custom-right-placeholder {
     right: 15px;
 }

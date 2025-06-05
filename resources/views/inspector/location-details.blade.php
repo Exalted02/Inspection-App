@@ -116,14 +116,15 @@ $week= '';
                     
                     <div class="form-group  col-md-12  col-sm-12">
                         <label>{{ __('Task Title') }}</label>
-						<div class="split-placeholder-wrapper">
                         <input class="form-control" placeholder="Add task title" type="text" name="task_title" id="task_title">
 						<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
                     </div>
 					<div class="form-group  col-md-12  col-sm-12">
                         <label>{{ __('Set Timeline') }}</label>
 						<div class="split-placeholder-wrapper">
-							<input class="form-control" placeholder="" type="text" name="set_time" id="set_time">
+							<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time">
+							<span class="custom-left-placeholder" id="selected_time">Settime</span>
+							<span class="custom-right-placeholder" id="selected_date">Setdate</span>
 						</div>
 						<span id="settimeline_id_error" style="display:none;  color: red;"></span>
                     </div>
@@ -177,9 +178,37 @@ $week= '';
 @endsection 
 @section('scripts')
 {{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>--}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
 $(document ).ready(function() {
 	localStorage.removeItem('selectedTab');
+	
+	flatpickr("#set_time", {
+        enableTime: true,
+        dateFormat: "d M Y H:i",
+        onChange: function(selectedDates, dateStr) {
+            if (selectedDates.length > 0) {
+                const date = selectedDates[0];
+                const formattedDate = flatpickr.formatDate(date, "d M Y");
+                const formattedTime = flatpickr.formatDate(date, "H:i");
+
+                document.getElementById('selected_date').innerText = formattedDate;
+                document.getElementById('selected_time').innerText = formattedTime;
+            } else {
+                document.getElementById('selected_date').innerText = 'Setdate';
+                document.getElementById('selected_time').innerText = 'Settime';
+            }
+        }
+    });
+
+
+	/*flatpickr("#set_time", {
+        dateFormat: "d M Y",
+        onChange: function(selectedDates, dateStr) {
+            document.getElementById('selected_date').innerText = dateStr || 'Setdate';
+        }
+    });*/
 	
 	var taskcreated = localStorage.getItem('taskcreated');
 	if(taskcreated == 1)
@@ -208,14 +237,17 @@ $(document ).ready(function() {
 	$(document).on('click','.save-task', function(){
 		//let category_id = $('#category_id').val().trim();
 		let task_title = $('#task_title').val().trim();
+		let set_time = $('#set_time').val().trim();
 		let task_image = $('#task_image')[0].files.length;
-		/*if (category_id === '') {
-			$('#category_id_error').text('Please enter category').fadeIn().delay(2000).fadeOut();
-			return false;
-		}*/
+		
 		
 		if (task_title === '') {
 			$('#tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut();
+			return false;
+		}
+		
+		if (set_time === '') {
+			$('#settimeline_id_error').text('Please enter date').fadeIn().delay(2000).fadeOut();
 			return false;
 		}
 		
