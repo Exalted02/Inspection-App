@@ -108,14 +108,21 @@
 								</div>
 							</div>
 						</div>
-						<div class="row">
+						
+						<div class="row" style="margin-top:17px;">
 							<div class="owner-checklist">
-							<label></label>
-							<div class="cal-icon">
-							<input type="date" class="form-control datetimepicker" name="lo_completed_by" id="lo_completed_by" placeholder="set timeline">
+								<label>{{ __('Set Timeline') }}</label>
+								<div class="split-placeholder-wrapper">
+								<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time">
+								<span class="custom-left-placeholder" id="selected_time">Settime</span>
+								<span class="custom-right-placeholder" id="selected_date">Setdate</span>
 							</div>
+							<span id="settimeline_id_error" style="display:none;  color: red;"></span>
+							<input type="hidden" id="hidden_set_date" name="hidden_set_date">
+							<input type="hidden" id="hidden_set_time" name="hidden_set_time">
 							</div>
 						</div>
+						
 					
 					<input type="hidden" id="task_id" value="{{ $task_id ?? ''}}">
 					<input type="hidden" id="checklist_id" value="{{ $checklist_id  ?? ''}}">
@@ -134,14 +141,31 @@
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
-	{{--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
-		{{--<script src="{{url('front-assets/js/moment.min.js') }}"></script>
-<script src="{{url('front-assets/js/bootstrap-datetimepicker.min.js') }}"></script>--}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
 $(document).ready(function() {
-	/*$('.datetimepicker').datetimepicker({
-		format: 'YYYY-MM-DD HH:mm' // Adjust format as needed
-	});*/
+	flatpickr("#set_time", {
+    enableTime: true,
+    dateFormat: "d M Y H:i",
+    onChange: function(selectedDates, dateStr, instance) {
+			if (selectedDates.length > 0) {
+				const date = selectedDates[0];
+				const dateOnly = flatpickr.formatDate(date, "d M Y");
+				const timeOnly = flatpickr.formatDate(date, "H:i");
+
+				document.getElementById('selected_date').innerText = dateOnly;
+				$('#hidden_set_date').val(dateOnly);
+				$('#hidden_set_time').val(timeOnly);
+				// Delay clearing input to prevent recursion
+				setTimeout(() => {
+					instance.input.value = '';
+				}, 0);
+			} else {
+				document.getElementById('selected_date').innerText = "Setdate";
+			}
+		}
+	});
    
    $(document).on('click','.submitChecklist', function(){
 	   var task_id = $('#task_id').val();
@@ -150,7 +174,9 @@ $(document).ready(function() {
 	   var type = $('#type').val();
 	   var tab = $('#tab').val();
 	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
-	   let lo_completed_by = $('#lo_completed_by').val();
+	   //let lo_completed_by = $('#lo_completed_by').val();
+	   let hidden_set_date = $('#hidden_set_date').val();
+	   let hidden_set_time = $('#hidden_set_time').val();
 	   let lo_direct_approve = $('#lo_direct_approve').is(':checked');
 	   //alert(lo_direct_approve);
 	   
@@ -159,12 +185,17 @@ $(document).ready(function() {
 		   $('#action_plan').fadeIn().delay(2000).fadeOut();
 		   return false;
 	   }
+	   
+	   if (hidden_set_date === '') {
+			$('#settimeline_id_error').text('Please enter date').fadeIn().delay(2000).fadeOut();
+			return false;
+		}
 	  
 		   var URL = "{{ route('submit-lo-corrective-action') }}";
 		   $.ajax({
 				url: URL,
 				type: "POST",
-				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,lo_completed_by:lo_completed_by, _token: csrfToken},
+				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,hidden_set_date:hidden_set_date,hidden_set_time:hidden_set_time, _token: csrfToken},
 				dataType: 'json',
 				success: function(response) {
 					let location_id = response.location_id;
@@ -172,7 +203,7 @@ $(document).ready(function() {
 					var active = 1;
 					var baseUrl = "{{ url('/location-owner') }}";
 					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id + '/' + active;
-					window.location.href = redirectUrl;
+					//window.location.href = redirectUrl;
 					
 				},
 			});

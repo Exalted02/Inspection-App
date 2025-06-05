@@ -1307,6 +1307,11 @@ class DashboardInspectorController extends Controller
 		$checklist_id 		= $request->checklist_id;
 		$subchecklist_id 	= $request->subchecklist_id ?? null;
 		$tab 				= $request->tab;
+		
+		$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
+		$time = $request->post('hidden_set_time');
+		$datetime  = $date.' '.$time;
+		$lo_completed_by = date('Y-m-d', strtotime($datetime));
 		//echo $request->lo_direct_approve; die;
 		
 		$taskData  = Task_lists::where('id', $task_list_id)->first();
@@ -1321,7 +1326,7 @@ class DashboardInspectorController extends Controller
 		$model->subchecklist_id = $subchecklist_id;
 		$model->lo_id = auth()->user()->id;
 		$model->lo_corrective_action_plan = $request->lo_corrective_action_plan ?? '';
-		$model->lo_completed_by = date('Y-m-d h:i:s', strtotime($request->lo_completed_by));
+		$model->lo_completed_by = $lo_completed_by;
 		$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0;
 		$model->inspector_id = $inspector_id;
 		$model->los_id = $los_id;
