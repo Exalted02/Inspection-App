@@ -146,8 +146,8 @@ $week= '';
 						</div>
 					</div>
 					<div class="task-cover-image">Upload Cover</div>
-					<div class="row align-items-center">
-						<div class="col-md-4">
+					<div class="row d-flex align-items-center">
+						<div class="col-md-4 mb-3">
 							<label for="task_image"></label>
 							<div class="upload-wrapper">
 								<input type="file" name="task_image" id="task_image" style="display: none;">
@@ -155,32 +155,27 @@ $week= '';
 								<i class="fa fa-upload task-upload-icon"></i>
 								<span class="task-upload-text">Upload image</span>
 								</label>
-							</div>
-						</div>
-						<div class="col-md-8 d-flex flex-wrap gap-2" id="preview-container">
-						</div>
-					</div>
-
-					{{--<div class="row margin-bottom-20">
-						<div class="form-group">
-							<div class="col-md-9">
-								<div class="input-group" style="margin-left: 16px;">
-									<span class="input-group-btn">
-									<span class="btn btn-default btn-file">
-									Browse… <input type="file" id="task_image" name="task_image">
-									</span>
-									</span>
-									<input type="text" class="form-control" readonly name="task_image" id="task_image" accept="image/*">
-								</div>
 								<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
 							</div>
 						</div>
-					</div>--}}
+						
+						{{--<div class="col-md-8">
+							<div class="task-preview-wrapper position-relative d-inline-block">
+								<img id="" class="img-responsive task-img-upload" src="images/users/2.jpg" alt=""/>
+								<button type="button" class="task-img-delete" id="delete-image">×</button>
+							</div>
+						</div>--}}
+					</div>
+
 					<div class="form-group  col-md-12  col-sm-12">
-						<div class="col-md-3">
+							<div class="task-preview-wrapper position-relative d-inline-block">
+								<img id="" class="img-responsive task-img-upload" src="images/users/2.jpg" alt=""/>
+								<button type="button" class="task-img-delete" id="delete-image">×</button>
+							</div>
+						{{--<div class="col-md-3">
 							<img id="img-upload" class="img-responsive" src="images/users/2.jpg" alt="" style="width: 100%; border: 0px solid #ccc; border-radius: 5px;"/>
 							<button type="button" id="delete-image" style="position: absolute; top: -10px; right: 4px; background: red; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 20px; cursor: pointer; display:none;">×</button>
-						</div>
+						</div>--}}
 					</div>
 					<div class="clearfix"></div>
                     <div class="col-md-12  col-sm-12 margin-bottom-20 margin-top-20">
@@ -227,7 +222,7 @@ $(document ).ready(function() {
 	var taskcreated = localStorage.getItem('taskcreated');
 	if(taskcreated == 1)
 	{
-		$('.task-created-button').fadeIn().delay(2000).fadeOut();
+		$('.task-created-button').fadeIn().delay(3000).fadeOut();
 		localStorage.removeItem('taskcreated');
 	}
 	
@@ -238,7 +233,8 @@ $(document ).ready(function() {
 		});
 		
 		$('#delete-image').hide();
-		$('#img-upload').attr('src', '');
+		//$('#img-upload').attr('src', '');
+		$('.task-img-upload').attr('src', '');
 		$('#task_image').val('');
 		$('#add_category').modal('show');
 	});
@@ -282,7 +278,7 @@ $(document ).ready(function() {
 			$('input[name="location[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();*/
 			isValid = false;
 		}
-		
+		//alert(task_image);
 		if (task_image === 0) {
 			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
 			return false;
@@ -334,7 +330,8 @@ $(document ).ready(function() {
 	});*/
 	
 	$('#delete-image').on('click', function() {
-		$('#img-upload').attr('src', '');
+		//$('#img-upload').attr('src', '');
+		$('.task-img-upload').attr('src', '');
 		$('#task_image').val('');
 		$('#delete-image').hide();
 	});
@@ -343,7 +340,7 @@ function readURL(input) {
 	if (input.files && input.files[0]) {
 		var reader = new FileReader();
 		reader.onload = function(e) {
-			$('#img-upload').attr('src', e.target.result);
+			$('.task-img-upload').attr('src', e.target.result);
 		};
 		reader.readAsDataURL(input.files[0]);
 	}
