@@ -1161,3 +1161,32 @@
 	margin-left: -16px;
 }
 
+.split-placeholder-wrapper {
+    position: relative;
+}
+
+.split-placeholder-wrapper input {
+    padding-left: 70px;
+    padding-right: 70px;
+}
+
+.split-placeholder-wrapper::before,
+.split-placeholder-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.split-placeholder-wrapper::before {
+    content: 'Settime';
+    left: 15px;
+}
+
+.split-placeholder-wrapper::after {
+    content: 'Setdate';
+    right: 15px;
+}
