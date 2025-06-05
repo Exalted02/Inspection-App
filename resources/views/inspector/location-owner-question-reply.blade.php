@@ -149,6 +149,7 @@ $(document).ready(function() {
     enableTime: true,
     dateFormat: "d M Y H:i",
     onChange: function(selectedDates, dateStr, instance) {
+		
 			if (selectedDates.length > 0) {
 				const date = selectedDates[0];
 				const dateOnly = flatpickr.formatDate(date, "d M Y");

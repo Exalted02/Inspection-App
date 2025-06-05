@@ -1249,6 +1249,8 @@
     right: 15px;
 }*/
 
+
+
 .split-placeholder-wrapper {
     position: relative;
 }
@@ -1256,6 +1258,8 @@
 .set-timeline-input {
     padding-left: 75px;
     padding-right: 90px;
+	color: transparent;
+	text-shadow: 0 0 0 #000;
 }
 
 .custom-left-placeholder,
