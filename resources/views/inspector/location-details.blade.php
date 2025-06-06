@@ -22,7 +22,9 @@ $week= '';
 				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>{{ $location_categories[0]->address ?? ''}}, {{ $location_categories[0]->zipcode ?? ''}}</small>
 			</div>
 		</div>
+		@if(auth()->user()->user_type == 1)
 		<button class="grey-button width-full add-new-category">+ Add Task</button>
+		@endif
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
 		<div class="main-content-area clearfix">

@@ -208,6 +208,8 @@ let previewContainer = $('#preview-container');
   // Delegate remove button click
   previewContainer.on('click', '.remove-image', function () {
 	const indexToRemove = $(this).data('index');
+	//const indexToRemove = 0;
+	//alert(indexToRemove);
     $(this).parent().remove();
 	selectedFiles[indexToRemove] = null;
 	selectedFiles = selectedFiles.filter(file => file !== null);
@@ -230,6 +232,7 @@ let previewContainer = $('#preview-container');
 	   }
 	   
 	   let files = $('#lo_file')[0].files;
+	   //alert(files.length);
 	   if (files.length === 0) {
 			alert('Please select at least one image.');
 			return;

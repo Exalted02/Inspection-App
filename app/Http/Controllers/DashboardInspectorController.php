@@ -1427,6 +1427,9 @@ class DashboardInspectorController extends Controller
 		$data['subchecklist_id'] = $subchecklist_id ?? '';
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->first();
+		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
+		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
 		return view('inspector.inspector-check-reply', $data);
 	}
 	public function submit_inspector_status(Request $request)
