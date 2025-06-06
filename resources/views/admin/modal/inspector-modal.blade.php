@@ -44,7 +44,7 @@
 													<option value="3">LOS</option>
 													<option value="4">Management	</option>
 												</select>
-												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('company_name')}}.</div>
+												<div class="invalid-feedback">{{ __('Please select') }} {{ __('user type')}}.</div>
 											</div>
 										</div>
 										<div class="col-sm-6">
@@ -138,7 +138,7 @@
 													@foreach($locations as $location)
 														<div class="select-people-checkbox-s">
 															<label class="custom_check">
-																<input type="checkbox" name="location[]" value="{{ $location->id }}">													
+																<input type="checkbox" name="location[]" value="{{ $location->id }}" onclick="check_location({{ $location->id }})">													
 																<span class="checkmark"></span>
 																<span class="people-profile">
 																	<a href="#">{{ $location->location_name ?? '' }}</a>

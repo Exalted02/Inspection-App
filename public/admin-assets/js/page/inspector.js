@@ -346,3 +346,25 @@ $('#backgroung_image').on('change', function (event) {
 });
 
 });
+function check_location(id)
+{
+	var user_tpy = $('#user_type').val();
+	let isValid = true;
+	$('.invalid-feedback').hide();
+	$('.form-control').removeClass('is-invalid');
+	if(user_tpy == '')
+	{
+		$('input[name="location[]"]').each(function () {
+			$(this).prop('checked', false);
+		});
+		
+		$('#user_type').addClass('is-invalid');
+		$('#user_type').siblings('.invalid-feedback').show();
+		isValid = false;
+	}
+	
+	if(isValid)
+	{
+		
+	}
+}

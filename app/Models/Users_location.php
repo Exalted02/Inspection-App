@@ -10,7 +10,9 @@ class Users_location extends Model
     use HasFactory;
 	protected $table = 'users_locations';
 	protected $fillable = [
+		'company_id', 
         'user_id', 
+        'user_type', 
         'location_id', 
     ];
 }
