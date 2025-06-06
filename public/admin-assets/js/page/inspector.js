@@ -345,6 +345,8 @@ $('#backgroung_image').on('change', function (event) {
     }
 });
 
+
+
 });
 function check_location(id)
 {
@@ -363,8 +365,60 @@ function check_location(id)
 		isValid = false;
 	}
 	
+	/*if(user_tpy == 2 || user_tpy == 3 || user_tpy == 4)
+	{
+		$('input[name="location[]"]').each(function () {
+			if($(this).val() != id)
+			{
+				$(this).prop('checked', false);
+			}
+		});
+	}*/
+	
+	
+	
+	var company_id = $('#companyid').val();;
+	var URL = $('#check_location_by_user_type').val();;
+	//alert(URL);
 	if(isValid)
 	{
-		
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {user_type:user_tpy,company_id:company_id,location_id:id, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				if(response.status == 'error'){
+					//$('#add_inspector .modal-body').animate({ scrollTop: 0 }, 500);
+					/*$('#add_inspector').on('shown.bs.modal', function () {
+						setTimeout(() => {
+							$('#add_inspector .modal-body')[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+						}, 200);
+					});*/
+					//var position = $('.container-fluid').offset().top; 
+					//$('html, body').animate({ scrollTop: position }, 'slow');
+					$( ".container-fluid" ).scrollTop( 300 );
+
+					//document.querySelector('#add_inspector .modal-body .form-group').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+					/*setTimeout(() => {
+						$('#add_inspector .modal-body, #add_inspector .modal-content').animate({ scrollTop: 0 }, 300);
+					}, 100);*/
+					
+					$('#location_check_error').text(response.msg).fadeIn().delay(2000).fadeOut();
+					$('input[name="location[]"]').each(function () {
+						$(this).prop('checked', false);
+					});
+					
+					
+				}else{
+					
+				}
+				
+				/*setTimeout(() => {
+					window.location.reload();
+				}, "2000");*/
+			},
+		});
 	}
 }

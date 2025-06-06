@@ -241,6 +241,7 @@ $userFolderName = ''
 </div>
 <input type="text" id="companyid" value="{{ $company_id ?? '' }}">
 	<!-- /Page Content -->
+<input type="text" id="check_location_by_user_type" value="{{ route('admin.check-location-by-user-type') }}">
 
 @include('modal.common')
 @include('admin.modal.inspector-modal')
@@ -274,6 +275,8 @@ $(document).ready(function() {
 		$('#head-label').html(translations.addlocation);
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
+		
+		$('#user_type').val('').trigger('change'); 
 	});
 	
 	const has_search = @json($has_search);

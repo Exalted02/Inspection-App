@@ -131,6 +131,7 @@
 											</div>
 											<div class="tab-pane fade" id="pills-private" role="tabpanel" aria-labelledby="pills-private-tab">
 											</div>
+											<span id="location_check_error" style="display:none; color: red; margin-left:17px;"></span>
 											<div class="tab-pane fade show active" id="pills-select-people" role="tabpanel" aria-labelledby="pills-select-people-tab">
 												<div class="people-select-tab" style="max-height: 200px; overflow-y: auto;">
 													<div class="invalid-feedback">{{ __('please_select') }} {{ __('location')}}.</div>

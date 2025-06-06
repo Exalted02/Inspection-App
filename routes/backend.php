@@ -150,6 +150,9 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::post('/getcitybystate',[CommonController::class,'get_city_by_state'])->name('getcitybystate');
 	
 	Route::post('/get-subcategory', [CommonController::class, 'get_category_by_subcategory'])->name('get-subcategory');
+	
+	// check location by user type
+	Route::post('/check-location-by-user-type', [InspectorController::class, 'check_location_by_user_type'])->name('check-location-by-user-type');
 });
 
 Route::prefix('admin')->group(function () {

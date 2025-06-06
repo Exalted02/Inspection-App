@@ -126,7 +126,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	//Challenges
 	Route::get('/challenges', [ChallengesController::class, 'index'])->name('challenges');
 	
-	
 });
 
 

@@ -156,7 +156,9 @@ class InspectorController extends Controller
 				foreach($locationData as $location)
 				{
 					$mngCatmodel = new Users_location();
+					$mngCatmodel->company_id = $request->post('company_id');
 					$mngCatmodel->user_id = $id;
+					$mngCatmodel->user_type = $request->post('user_type');
 					$mngCatmodel->location_id = $location;
 					$mngCatmodel->save();
 				}
@@ -180,7 +182,9 @@ class InspectorController extends Controller
 				foreach($locationData as $location)
 				{
 					$mngCatmodel = new Users_location();
+					$mngCatmodel->company_id = $request->post('company_id');
 					$mngCatmodel->user_id = $id;
+					$mngCatmodel->user_type = $request->post('user_type');
 					$mngCatmodel->location_id = $location;
 					$mngCatmodel->save();
 				}
@@ -332,7 +336,23 @@ class InspectorController extends Controller
 		//$data['locations'] = Manage_location::where('status','!=',2)->get();
 		$data['locations'] = Manage_location::where('company_id', $id)->where('status','!=',2)->get();
 		return view('admin.location.inspector',$data);
+	}
+	public function check_location_by_user_type(Request $request)
+	{
+		if($request->user_type != 1)
+		{
+			$ifExists = Users_location::where('company_id', $request->company_id)
+							->where('user_type', $request->user_type)
+							->where('location_id', $request->location_id)
+							->exists();
+		}
 		
+		if($ifExists)
+		{
+			return response()->json(['status'=> 'error', 'msg'=> 'Location already exists.']);
+		}
+		
+		return response()->json(['status'=> 'success', 'msg'=> 'not exists location']);
 	}
 	 
 }

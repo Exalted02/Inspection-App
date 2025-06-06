@@ -1595,6 +1595,5 @@ class DashboardInspectorController extends Controller
 		
 		return response()->json(['message'=>'success']);
 	}
-	
-	
+
 }
