@@ -12,11 +12,12 @@ use Carbon\Carbon;
 $month = '';
 $day = '';
 $week= '';
+$location_img = $location_categories[0] && $location_categories[0]->image != null ? url('uploads/location/' . $location_categories[0]->image) : url('images/noimages/noimage_region.png');
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container location-details">
 		<div class="d-flex align-items-center location-header mb-3">
-			<img src="{{url('uploads/location/' . $location_categories[0]->image )}}" alt="Location" />
+			<img src="{{ $location_img }}" alt="Location" />
 			<div>
 				<div class="title">{{ ucfirst($location_categories[0]->location_name) ?? ''}}</div>
 				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>{{ $location_categories[0]->address ?? ''}}, {{ $location_categories[0]->zipcode ?? ''}}</small>
