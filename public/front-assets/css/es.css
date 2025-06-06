@@ -394,10 +394,10 @@
 .arrow {
 	font-size: 20px;
     color: #000000;
-    background: #EAEAEA;
+    background: #EAEAEA !important;
     border: 1px solid #EAEAEA;
-    border-radius: 50%;
-    padding: 5px 9px 3px 9px;
+    border-radius: 40%;
+    padding: 5px 9px 3px 15px !important;
     /* cursor: pointer; */
 }
 .checklist .sticky-footer {
