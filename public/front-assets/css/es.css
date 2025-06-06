@@ -393,12 +393,21 @@
 }
 .arrow {
 	font-size: 20px;
-    color: #000000;
-    background: #EAEAEA !important;
-    border: 1px solid #EAEAEA;
-    border-radius: 40%;
-    padding: 5px 9px 3px 15px !important;
-    /* cursor: pointer; */
+    color: #000;
+    background: #f2f2f2 !important;
+    border: 1px solid #f2f2f2;
+    /*border-radius: 43%;*/
+	border-radius: 18px / 50%;
+    /*padding: 5px 9px 3px 15px !important;*/
+	padding: 8px 16px;
+	text-align:center;
+	font-weight:normal;
+	line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px; 
+    width: 65px; 
 }
 .checklist .sticky-footer {
 	position: fixed;
