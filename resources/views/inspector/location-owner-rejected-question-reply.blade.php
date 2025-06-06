@@ -183,33 +183,36 @@ $(document).ready(function() {
 	
   
 let previewContainer = $('#preview-container');
+let selectedFiles = [];
 	
-	
-  $('#lo_file').on('change', function (e) {
+$('#lo_file').on('change', function (e) {
     //let files = e.target.files;
 	let files = Array.from(e.target.files); // new
 	selectedFiles = files; // new
+	//selectedFiles = [...selectedFiles, ...files];
     previewContainer.empty(); // Clear previous previews
 
     Array.from(files).forEach((file, index) => {
-      if (file.type.startsWith('image/')) {
+      if (file && file.type.startsWith('image/')) {
         let reader = new FileReader();
 		//$('#preview-container').show();
         reader.onload = function (e) {
-          let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image">&times;</div></div>';
+          let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image" data-index="' + index +'">&times;</div></div>';
           previewContainer.append(imgHtml);
         };
 
         reader.readAsDataURL(file);
       }
     });
+	
+	//updateFileInput();
   });
+
 
   // Delegate remove button click
   previewContainer.on('click', '.remove-image', function () {
 	const indexToRemove = $(this).data('index');
-	//const indexToRemove = 0;
-	//alert(indexToRemove);
+	//alert(indexToRemove);alert(selectedFiles);
     $(this).parent().remove();
 	selectedFiles[indexToRemove] = null;
 	selectedFiles = selectedFiles.filter(file => file !== null);
@@ -233,10 +236,10 @@ let previewContainer = $('#preview-container');
 	   
 	   let files = $('#lo_file')[0].files;
 	   //alert(files.length);
-	   if (files.length === 0) {
+	    /*if (files.length === 0) {
 			alert('Please select at least one image.');
 			return;
-		}
+		}*/
 		
 		
 		let formData = new FormData();
@@ -270,8 +273,9 @@ let previewContainer = $('#preview-container');
 				if(response.message=='success')
 				{
 					//history.back();
+					var activeTab = 0;
 					var baseUrl = "{{ url('/location-owner') }}";
-					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id;
+					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id + '/' + activeTab ;
 					window.location.href = redirectUrl;
 				}
 				
@@ -279,6 +283,14 @@ let previewContainer = $('#preview-container');
 		});
 	});
 });
+
+function updateFileInput() {
+  const dataTransfer = new DataTransfer();
+  selectedFiles.forEach(file => {
+    if (file) dataTransfer.items.add(file);
+  });
+  document.getElementById('lo_file').files = dataTransfer.files;
+}
 </script>
 @endsection
 
