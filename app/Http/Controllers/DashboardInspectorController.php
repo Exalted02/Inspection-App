@@ -557,7 +557,7 @@ class DashboardInspectorController extends Controller
 		{
 			$checklists = Checklist::where('category_id',$category_id)
 									//->where('subcategory_id', $subcategory_id) // 21-05-2025
-									->where('status','!=', 2)->get();
+									->where('status','!=', 2)->orderBy('order_no')->get();
 									
 			foreach ($checklists as $chklist) {
 				$status = '';
