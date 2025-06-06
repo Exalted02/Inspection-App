@@ -191,7 +191,7 @@ $company_name = $companyData ? $companyData->company_name : '';
 								</td>
 								@endif
 								<td class="contact-details">{{ $val->location_name ?? ''}}</td>
-								<td><img src="{{ $val->image != null ? url('uploads/location/' . $val->image) :  url('images/noimage.png')  }}" width="50" height="50"></td>
+								<td><img src="{{ $val->image != null ? url('uploads/location/' . $val->image) :  url('images/noimages/noimage_region.png')  }}" width="50" height="50"></td>
 								<td>{{ $val->get_country->name }}</td>
 								<td>{{ $val->get_state->name }}</td>
 								<td>{{ $val->get_city->name }}</td>
