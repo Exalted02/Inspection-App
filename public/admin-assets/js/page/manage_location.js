@@ -12,6 +12,7 @@ $(document).ready(function() {
 		let zipcode = $('#zipcode').val().trim();
 		let country = $('#country').val();
 		let company_id = $('#company_id').val();
+		let location_image = $('#location_image')[0].files.length;
 		//alert(country);
 		let state = $('#state').val();
 		let city = $('#city').val();
@@ -56,18 +57,10 @@ $(document).ready(function() {
 			isValid = false;
 		}
 		
-		
-		/*let selectedCategories = [];
-		console.log('Checkbox found?', $('input[name="category[]"]:checked').length);
-		$('input[name="category[]"]:checked').each(function() {
-			selectedCategories.push($(this).val());
-		});
-		//alert(selectedCategories);
-		if (selectedCategories.length === 0) {
-			$('input[name="category[]"]').first().addClass('is-invalid');
-			$('input[name="category[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();
+		if (location_image === 0) {
+			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
 			isValid = false;
-		}*/
+		}
 
 		
 		if (isValid) {

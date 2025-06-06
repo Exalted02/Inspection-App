@@ -128,7 +128,8 @@
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('image') }}</label>
 												<input class="form-control" type="file" name="location_image" id="location_image" accept="image/*">
-												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('image')}}.</div>
+												<span id="taskimage_id_error" style="display:none;color: red;">please </span>
+												{{--<div class="invalid-feedback">{{ __('please_enter') }} {{ __('image')}}.</div>--}}
 											</div>
 										</div>
 										<div class="col-sm-6">
