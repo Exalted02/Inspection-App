@@ -33,15 +33,20 @@ $n = 0;
 				<div class="container">
 					<div class="row custom-tab">
 						<!-- Tabs -->
-						<ul class="nav nav-tabs" role="tablist">
-							<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
-							<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab">{{ count($correctiveCheck)}} Corrective checks</a></li>
-							<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">Rejected</a></li>
-							{{--<li role="presentation"><a href="#final_checked_by_inspector_tab" aria-controls="completed_tab" role="tab">Final checked</a></li>--}}
-							<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Approved</a></li>
-							{{--<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>--}}
-							
-						</ul>
+						<div class="tab-scroll-container">
+							<div class="scroll-arrow left-arrow" id="scrollLeft"><i class="fa fa-chevron-left"></i></div>
+								<div class="tab-scroll-wrapper" id="tabScrollWrapper">
+									<ul class="nav nav-tabs" role="tablist">
+										<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
+										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab">{{ count($correctiveCheck)}} Corrective checks</a></li>
+										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">Rejected</a></li>
+										{{--<li role="presentation"><a href="#final_checked_by_inspector_tab" aria-controls="completed_tab" role="tab">Final checked</a></li>--}}
+										<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Approved</a></li>
+										{{--<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>--}}	
+									</ul>
+								</div>
+							<div class="scroll-arrow right-arrow" id="scrollRight"><i class="fa fa-chevron-right"></i></div>
+						</div>
 						<!-- Tab panes -->
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane" id="inprogress_tab">
@@ -555,7 +560,7 @@ $n = 0;
 							@endforeach
 							</div>
 						</div>
-						<div style="margin-left: 226px;display:none" id="no_record"><strong><h3>No record found</h3></strong></div>
+						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>
 					</div>
 				</div>
 			</section>
@@ -683,6 +688,15 @@ $(document).ready(function() {
 		const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ISACTIVE', 0);
 		window.location.href = redirectUrl;
 	});
+	
+	const scrollWrapper = $('#tabScrollWrapper');
+    $('#scrollLeft').click(function () {
+        scrollWrapper.animate({ scrollLeft: scrollWrapper.scrollLeft() - 150 }, 300);
+    });
+
+    $('#scrollRight').click(function () {
+        scrollWrapper.animate({ scrollLeft: scrollWrapper.scrollLeft() + 150 }, 300);
+    });
 	
 });
 
