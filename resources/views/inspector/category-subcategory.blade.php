@@ -453,12 +453,12 @@ $m = 0;
 								@endforeach
 							</div>
 						</div>
-						<div style="margin-left: 226px;display:none" id="no_record"><strong><h3>No record found</h3></strong></div>
+					<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>	
 					</div>
 				</div>
 			</section>
 		</div>
-    </div>
+	</div>
 	
 	<!----------- delete modal -------------->
 	{{--<div class="modal fade" id="error-msg-modal" tabindex="-1" role="dialog" aria-hidden="true">
