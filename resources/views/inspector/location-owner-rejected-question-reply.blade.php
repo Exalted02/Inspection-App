@@ -260,6 +260,74 @@ $('#lo_file').on('change', function (e) {
 		formData.append('subchecklist_id', subchecklist_id);
 		formData.append('type', type);
 		formData.append('content', lo_corrective_action_plan);
+		formData.append('inspector_action', 2);
+		formData.append('los_action', 2);
+		formData.append('_token', csrfToken);
+		var URL = "{{ route('save-lo-reply-rejected-question') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: formData,
+			contentType: false,
+			processData: false,  
+			success: function(response) {
+				//alert(response.message);
+				if(response.message=='success')
+				{
+					//history.back();
+					var activeTab = 0;
+					var baseUrl = "{{ url('/location-owner') }}";
+					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id + '/' + activeTab ;
+					window.location.href = redirectUrl;
+				}
+				
+			},
+		});
+	});
+	
+	$(document).on('click','.location-owner-rejected', function(){
+		var task_id = $('#task_id').val();
+	   var checklist_id = $('#checklist_id').val();
+	   var subchecklist_id = $('#subchecklist_id').val();
+	   var type = $('#type').val();
+	   //var category_id = $('#category_id').val();
+	   var location_id = $('#location_id').val();
+	   
+	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
+	   if(lo_corrective_action_plan=='')
+	   {
+		   $('#action_plan').fadeIn().delay(2000).fadeOut();
+		   return false;
+	   }
+	   
+	   let files = $('#lo_file')[0].files;
+	   //alert(files.length);
+	    /*if (files.length === 0) {
+			alert('Please select at least one image.');
+			return;
+		}*/
+		
+		
+		let formData = new FormData();
+
+		// Append all selected files to formData
+		/*$.each(files, function (index, file) {
+			formData.append('lo_file[]', file);
+		});*/
+		
+		selectedFiles.forEach(file => {
+			formData.append('lo_file[]', file);
+		});
+		
+		//alert(csrfToken) // show ok 
+		// Optional: Add other data
+		formData.append('task_id', task_id);
+		formData.append('checklist_id', checklist_id);
+		formData.append('subchecklist_id', subchecklist_id);
+		formData.append('type', type);
+		formData.append('content', lo_corrective_action_plan);
+		formData.append('inspector_action', 0);
+		formData.append('los_action', 0);
 		formData.append('_token', csrfToken);
 		var URL = "{{ route('save-lo-reply-rejected-question') }}";
 		$.ajax({

@@ -1518,12 +1518,17 @@ class DashboardInspectorController extends Controller
 		$id = $corrective_action_data ? $corrective_action_data->id : '';
 		
 		$model = Task_list_corrective_action::find($id);
-		$model->lo_corrective_action_plan_second_check = $content;
+		$model->lo_corrective_action_plan_second_check = $request->inspector_action == 2 ? $content : null;
+		$model->inspector_action = $request->inspector_action;
+		$model->los_action = $request->los_action;
 		$model->save();
 		
 		$lo_files = $request->file('lo_file');
 
 		if ($lo_files && is_array($lo_files)) {
+			
+			Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->delete();
+			
 			foreach ($lo_files as $file) {
 				
 				$destinationPath = public_path('uploads/corrective_action');
@@ -1585,6 +1590,10 @@ class DashboardInspectorController extends Controller
 		
 		$model = Task_list_corrective_action::find($id);
 		$model->inspector_action_date = date('Y-m-d h:i:s');
+		if($inspector_action == 2)
+		{
+			$model->lo_corrective_action_plan_second_check = null;
+		}
 		$model->inspector_action = $inspector_action;
 		$model->los_action = $inspector_action;
 		$model->inspector_id = $inspector_id;
