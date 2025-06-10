@@ -138,7 +138,7 @@ class InspectorController extends Controller
 		{
 			$model= User::find($request->post('id'));
 			$model->name =	$request->post('name');
-			$model->user_type =	$request->post('user_type');
+			//$model->user_type =	$request->post('user_type');
 			$model->email		=	$request->post('email');
 			if(!empty($request->input('password')))
 			{
