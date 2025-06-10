@@ -44,18 +44,24 @@ $m = 0;
 				<div class="container1">
 					<div class="custom-tab">
 						<!-- Tabs -->
-						<ul class="nav nav-tabs" role="tablist">
-						@if(auth()->user()->user_type == 1)
-							<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab">Uncompleted</a></li>
-							<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>
-						@endif
-						@if(auth()->user()->user_type == 3)
-							<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>
-						@endif
-							<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Final checks</a></li> 
-							<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Approved final checked</a></li>
-							{{--<li role="presentation"><a href="#reject_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Rejected</a></li>--}}
-						</ul>
+						<div class="tab-scroll-container">
+						<div class="scroll-arrow left-arrow" id="scrollLeft"><i class="fa fa-chevron-left"></i></div>
+							<div class="tab-scroll-wrapper" id="tabScrollWrapper">
+								<ul class="nav nav-tabs" role="tablist">
+								@if(auth()->user()->user_type == 1)
+									<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab">Uncompleted</a></li>
+									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>
+								@endif
+								@if(auth()->user()->user_type == 3)
+									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>
+								@endif
+									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Final checks</a></li> 
+									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Approved final checked</a></li>
+									{{--<li role="presentation"><a href="#reject_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Rejected</a></li>--}}
+								</ul>
+							</div>
+							<div class="scroll-arrow right-arrow" id="scrollRight"><i class="fa fa-chevron-right"></i></div>
+						</div>
 						<!-- Tab panes -->
 						<div class="tab-content">
 						@if(auth()->user()->user_type == 1)
@@ -710,6 +716,17 @@ $(document ).ready(function() {
 		const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ISACTIVE', 0);
 		window.location.href = redirectUrl;
 	});
+	
+	
+	const scrollWrapper = $('#tabScrollWrapper');
+	 const scrollAmount = 150;
+    $('#scrollLeft').click(function () {
+        scrollWrapper.animate({ scrollLeft: scrollWrapper.scrollLeft() - 150 }, 300);
+    });
+
+    $('#scrollRight').click(function () {
+        scrollWrapper.animate({ scrollLeft: scrollWrapper.scrollLeft() + 150 }, 300);
+    });
 });
 </script>
 @endsection

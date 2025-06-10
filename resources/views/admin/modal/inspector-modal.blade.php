@@ -42,7 +42,7 @@
 													<option value="1">Inspector</option>
 													<option value="2">LO</option>
 													<option value="3">LOS</option>
-													<option value="4">Management	</option>
+													<option value="4">Management</option>
 												</select>
 												<div class="invalid-feedback">{{ __('Please select') }} {{ __('user type')}}.</div>
 											</div>

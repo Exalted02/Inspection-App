@@ -1352,3 +1352,135 @@
         max-width: 30%;
     }
 }
+
+/*-----css for tabs scroll --- */
+/*.tab-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+}
+
+.tab-scroll-wrapper .nav-tabs {
+    flex-wrap: nowrap;
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+}
+
+.tab-scroll-wrapper .nav-tabs li {
+    white-space: nowrap;
+    float: none;
+}*/
+
+/*.tab-scroll-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.tab-scroll-wrapper {
+    overflow-x: auto;
+    white-space: nowrap;
+    flex: 1;
+    scroll-behavior: smooth;
+}
+
+.nav-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+}
+
+.nav-tabs li {
+    white-space: nowrap;
+    float: none;
+}
+
+.scroll-arrow {
+    position: absolute;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.left-arrow {
+    left: 0;
+}
+
+.right-arrow {
+    right: 0;
+}
+
+/* Optional: hide scrollbars */
+/*.tab-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+}*/
+
+.tab-scroll-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 0 30px; /* space for arrows */
+}
+
+.tab-scroll-wrapper {
+    overflow-x: auto;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;  /* IE & Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+
+.tab-scroll-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+
+.nav-tabs {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+    width: max-content;
+}
+
+.nav-tabs li {
+    float: none;
+    white-space: nowrap;
+}
+
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    background: #ffffff;
+    padding: 8px 12px;
+    font-size: 20px;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.left-arrow {
+    left: 0;
+}
+
+.right-arrow {
+    right: 0;
+}
+
+/* Only show arrows on small screens */
+@media (min-width: 768px) {
+    .scroll-arrow {
+        display: none;
+    }
+}
