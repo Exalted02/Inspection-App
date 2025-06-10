@@ -170,7 +170,7 @@ $location_img = $location_categories[0] && $location_categories[0]->image != nul
 						</div>--}}
 					</div>
 
-					<div class="form-group  col-md-12  col-sm-12">
+					<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:none;">
 							<div class="task-preview-wrapper position-relative d-inline-block">
 								<img id="" class="img-responsive task-img-upload" src="images/users/2.jpg" alt=""/>
 								<button type="button" class="task-img-delete" id="delete-image">×</button>
@@ -181,7 +181,7 @@ $location_img = $location_categories[0] && $location_categories[0]->image != nul
 						</div>--}}
 					</div>
 					<div class="clearfix"></div>
-                    <div class="col-md-12  col-sm-12 margin-bottom-20 margin-top-20">
+                    <div class="col-md-12  col-sm-12 form-group">
                         <button type="button" class="btn btn-theme btn-block save-task button-color">Submit</button>
                     </div>
                   </form>
@@ -244,6 +244,7 @@ $(document ).ready(function() {
 	
 	$("#task_image").change(function() {
 		$('#delete-image').show();
+		$('.taskImg').show();
         readURL(this);
     });
 	
@@ -337,6 +338,7 @@ $(document ).ready(function() {
 		$('.task-img-upload').attr('src', '');
 		$('#task_image').val('');
 		$('#delete-image').hide();
+		$('.taskImg').hide();
 	});
 });
 function readURL(input) {
