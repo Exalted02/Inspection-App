@@ -199,7 +199,7 @@ $location_img = $location_categories[0] && $location_categories[0]->image != nul
 $(document ).ready(function() {
 	localStorage.removeItem('selectedTab');
 	
-	flatpickr("#set_time", {
+	/*flatpickr("#set_time", {
     enableTime: true,
     dateFormat: "d M Y H:i",
     onChange: function(selectedDates, dateStr, instance) {
@@ -214,12 +214,36 @@ $(document ).ready(function() {
 				// Delay clearing input to prevent recursion
 				setTimeout(() => {
 					instance.input.value = '';
+				}, 100);
+			} else {
+				document.getElementById('selected_date').innerText = "Setdate";
+			}
+		}
+	});*/
+	
+	flatpickr("#set_time", {
+    enableTime: true,
+    dateFormat: "d M Y H:i",
+    onChange: function(selectedDates, dateStr, instance) {
+			if (selectedDates.length > 0) {
+				const date = selectedDates[0];
+				const dateOnly = flatpickr.formatDate(date, "d M Y");
+				const timeOnly = flatpickr.formatDate(date, "H:i");
+
+				document.getElementById('selected_date').innerText = dateOnly;
+
+				$('#hidden_set_date').val(dateOnly);
+				$('#hidden_set_time').val(timeOnly);
+
+				setTimeout(() => {
+					instance.input.value = '';
 				}, 0);
 			} else {
 				document.getElementById('selected_date').innerText = "Setdate";
 			}
 		}
 	});
+
 
 	
 	var taskcreated = localStorage.getItem('taskcreated');
