@@ -127,8 +127,6 @@ $(document).ready(function() {
 		}
 	});
 	
-
-
 $(document).on('click','.edit-inspector', function(){
 	$('.invalid-feedback').hide();
 	$('.form-control').removeClass('is-invalid');

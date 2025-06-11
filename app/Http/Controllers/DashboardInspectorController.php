@@ -253,7 +253,7 @@ class DashboardInspectorController extends Controller
 					echo "SubChecklist ID: " . $subChecklistId . " - Reason: " . $text['text'] ." status- ".$text['approve_status'] . "<br>";
 				}
 			}
-		echo 'hello '.$request->post('current_question_id') .'--'. $request->post('task_id');die;*/
+		*/
 		//-------------------------------------
 		$task_id = $request->post('task_id');
 		$current_question_id = $request->post('current_question_id');
@@ -569,6 +569,7 @@ class DashboardInspectorController extends Controller
 					$status = Task_list_checklists::where('task_list_id', $task_id)
 							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('checklist_id', $chklist->id)->first()->approve;
+					
 				}
 				else
 				{
@@ -577,9 +578,23 @@ class DashboardInspectorController extends Controller
 							->where('task_list_checklist_id', $chklist->id)->exists();
 					if($hasTaskSubChecklist)
 					{
-						$status = Task_list_subchecklists::where('task_list_id', $task_id)
+						/*$status = Task_list_subchecklists::where('task_list_id', $task_id)
 							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
-							->where('task_list_checklist_id', $chklist->id)->first()->approve;
+							->where('task_list_checklist_id', $chklist->id)->first()->approve;*/
+							
+						$getstatus = Task_list_subchecklists::where('task_list_id', $task_id)
+									->where('task_list_checklist_id', $chklist->id)->get();
+						if($getstatus->isNotEmpty())
+						{
+							$status = 1;
+							foreach($getstatus as $val)
+							{
+								if($val->approve == 0)
+								{
+									$status = 0;
+								}
+							}
+						}
 					}
 				}
 
