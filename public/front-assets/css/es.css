@@ -1428,12 +1428,14 @@
     /*background-color: #e0e0e0;*/ 
     /*background-color: #D3D3D3;*/ 
     background-color: #F2F2F2; 
-    border-radius: 8% !important; 
+    border-radius: 10% !important; 
     border: 1px solid #ccc;
     color: #333;
     padding: 10px 15px;
     margin-right: 2px;
 	transition: background-color 0.3s;
+	line-height: 1.2 !important;
+	font-size: 14px;
 }
 .custom-tab-style > li.active > a,
 .custom-tab-style > li > a.active,
@@ -1442,6 +1444,11 @@
     background-color: #D3D3D3 !important;
     color: #000;
     border-color: #aaa;
+}
+.counter {
+	background: #FFFFFF;
+	border-radius: 50% !important;
+    width:20% !important;	
 }
 
 /*.custom-tab-style > li.active > a,
