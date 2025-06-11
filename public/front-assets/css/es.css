@@ -1416,3 +1416,10 @@
         display: none;
     }
 }
+.custom-small-btn {
+    padding: 2px 6px;
+    font-size: 12px;
+	background-color: transparent; 
+	border-color: #198754; 
+	color: #198754;
+}

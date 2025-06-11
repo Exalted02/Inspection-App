@@ -199,6 +199,18 @@ $n = 0;
 										}
 									}
 									
+									$appr_by = '';
+									if($result['inspector_action']==1)
+									{
+										$appr_by = 'Approved Inspector';
+									}
+									
+									if($result['los_action']==1)
+									{
+										$appr_by = 'Approved LOS';
+									}
+										
+									
 								@endphp
 								@if(!empty($arrSubchecklist))
 									@foreach($arrSubchecklist as $val)
@@ -220,7 +232,9 @@ $n = 0;
 											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
+												{{--<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754;height:20px;width:30px">Approved by LOS</button>--}}
+											<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>
 											</p>
 										</a>
 									</div>
@@ -243,7 +257,9 @@ $n = 0;
 											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
+												{{--<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754">Approved by inspector</button>--}}
+												<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>
 											</p>
 										</a>
 									</div>
