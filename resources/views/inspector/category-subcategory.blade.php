@@ -47,7 +47,7 @@ $m = 0;
 						<div class="tab-scroll-container">
 						<div class="scroll-arrow left-arrow" id="scrollLeft"><i class="fa fa-chevron-left"></i></div>
 							<div class="tab-scroll-wrapper" id="tabScrollWrapper">
-								<ul class="nav nav-tabs" role="tablist">
+								<ul class="nav nav-tabs custom-tab-style" role="tablist">
 								@if(auth()->user()->user_type == 1)
 									<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab">Uncompleted</a></li>
 									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>

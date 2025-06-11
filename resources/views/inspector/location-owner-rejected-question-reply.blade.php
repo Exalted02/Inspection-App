@@ -104,7 +104,7 @@
 								@endif
 							</div>
 						</div>
-						<div class="row">
+						<div class="row mt" style="margin-top: 1rem !important;">
 							<div class="owner-checklist">
 								<label>Requirement to solve it</label>
 								<div class="mt-1">
@@ -112,7 +112,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="row">
+						<div class="row" style="margin-top: 1rem !important;">
 							<div class="owner-checklist">
 								<label>Completed By</label>
 								<div class="mt-1">
@@ -121,7 +121,7 @@
 							</div>
 						</div>
 						{{--<form id="frmreply" action="{{ route('save-lo-reply-rejected-question') }}" enctype="multipart/form-data" method="post">--}}
-							<div class="row">
+							<div class="row" style="margin-top: 1rem !important;">
 								<div class="owner-checklist">
 									<label>Second checks</label>
 									<textarea name="lo_corrective_action_plan" id="lo_corrective_action_plan" placeholder="Add some remarks (optional)" class="form-control"></textarea>

@@ -233,8 +233,8 @@ $n = 0;
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
-												{{--<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754;height:20px;width:30px">Approved by LOS</button>--}}
-											<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>
+											<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">{{ $appr_by }}</button>
+													{{--<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>--}}
 											</p>
 										</a>
 									</div>
@@ -258,8 +258,8 @@ $n = 0;
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
-												{{--<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754">Approved by inspector</button>--}}
-												<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>
+												<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">{{ $appr_by }}</button>
+											{{--<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>--}}
 											</p>
 										</a>
 									</div>
