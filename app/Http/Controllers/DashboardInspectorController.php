@@ -1210,6 +1210,7 @@ class DashboardInspectorController extends Controller
 											'rejected_region' => $task->rejected_region,
 											'image' => $images,
 											'inspector_action'=> $task_list_checklist_corrective_action->inspector_action,
+											'los_action'=> $task_list_checklist_corrective_action->los_action,
 											'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 										];
 							}
@@ -1260,6 +1261,7 @@ class DashboardInspectorController extends Controller
 											'rejected_region' => $subtask->rejected_region,
 											'image' => $subChecklistimages,
 											'inspector_action'=> $task_list_subchecklist_corrective_action->inspector_action,
+											'los_action'=> $task_list_subchecklist_corrective_action->los_action,
 											'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 										];
 								
@@ -1428,7 +1430,7 @@ class DashboardInspectorController extends Controller
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
 		
-		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->first();
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
 		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
 		return view('inspector.inspector-check-reply', $data);
@@ -1442,7 +1444,7 @@ class DashboardInspectorController extends Controller
 		$data['subchecklist_id'] = $subchecklist_id ?? '';
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
-		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->first();
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
 		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
 		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
 		return view('inspector.inspector-check-reply', $data);
