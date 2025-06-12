@@ -383,7 +383,7 @@ $m = 0;
 								@foreach($correctiveAction as $result)
 								@if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 									@php 
-										$k++;
+										$l++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -630,7 +630,7 @@ $m = 0;
 							@endforeach
 							</div>
 						</div>
-						<div class="text-left" style="display:none" id="no_record_s"><strong><h3>No record found</h3></strong></div>	
+						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>	
 					</div>
 				</div>
 			</section>

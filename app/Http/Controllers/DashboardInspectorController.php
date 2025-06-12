@@ -1447,11 +1447,13 @@ class DashboardInspectorController extends Controller
 												'checklist_id' => $task->checklist_id,
 												'rejected_region' => $task->rejected_region,
 												'image' => $images,
+												'inspector_action' => '',
+												'los_action' => '',
 											];
 								}
 								else
 								{
-									/*$isfiles = '';
+									$isfiles = '';
 									$images = '';
 									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
 									$images = $isfiles ? $isfiles->file  : '';
@@ -1461,10 +1463,10 @@ class DashboardInspectorController extends Controller
 												'checklist_id' => $task->checklist_id,
 												'rejected_region' => $task->rejected_region,
 												'image' => $images,
-												'inspector_action'=> $task_list_checklist_corrective_action->inspector_action,
-												'los_action'=> $task_list_checklist_corrective_action->los_action,
-												'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
-											];*/
+												'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+												'los_action'=> $task_list_checklist_corrective_needed->los_action,
+												//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
+											];
 								}
 								
 								
@@ -1476,6 +1478,8 @@ class DashboardInspectorController extends Controller
 												'task_id' => $val->id,
 												'checklist_id' => $task->checklist_id,
 												'rejected_region' => $task->rejected_region,
+												'inspector_action'=> 1,
+												'los_action'=> 1,
 											];
 							}
 						}
@@ -1508,26 +1512,28 @@ class DashboardInspectorController extends Controller
 												'subchecklist_id'=>$subtask->subchecklist_id,
 												'rejected_region' => $subtask->rejected_region,
 												'image' => $subChecklistimages,
+												'inspector_action' => '',
+												'los_action' => '',
 											];
 								}
 								else
 								{
-									/*$isSubChecklistfiles = '';
+									$isSubChecklistfiles = '';
 									$subChecklistimages = '';
 									$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
 									
 									$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
-									$correctiveCheckSubcheckListArray[] = [
+									$correctiveNeddedSubchecklistArray[] = [
 												'type' => 'subchecklist',
 												'task_id' => $val->id,
 												'checklist_id' => $subtask->task_list_checklist_id,
 												'subchecklist_id'=>$subtask->subchecklist_id,
 												'rejected_region' => $subtask->rejected_region,
 												'image' => $subChecklistimages,
-												'inspector_action'=> $task_list_subchecklist_corrective_action->inspector_action,
-												'los_action'=> $task_list_subchecklist_corrective_action->los_action,
-												'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
-											];*/
+												'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
+												'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+												//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
+											];
 									
 								}
 							}
@@ -1539,7 +1545,8 @@ class DashboardInspectorController extends Controller
 										'checklist_id' => $subtask->task_list_checklist_id,
 										'subchecklist_id'=>$subtask->subchecklist_id,
 										'rejected_region' => $subtask->rejected_region,
-										
+										'inspector_action' => 1,
+										'los_action' => 1,
 									];
 								
 							}

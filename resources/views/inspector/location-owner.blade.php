@@ -6,10 +6,10 @@
 //echo "<pre>";print_r($correctiveAction);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
+$j = 0;
 $k = 0;
 $l = 0;
 $m = 0;
-$n = 0;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	
@@ -56,7 +56,7 @@ $n = 0;
 							<div role="tabpanel" class="tab-pane" id="inprogress_tab">
 								@foreach($correctiveAction as $result)
 								@php 
-								    $k++;
+								    $j++;
 								    $arrSubchecklist = [];
 									$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 									
@@ -158,7 +158,7 @@ $n = 0;
 							@foreach($correctiveCheck as $result)
 							@if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 								@php 
-							        $l++;
+							        $k++;
 								    $arrSubchecklist = [];
 									$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 									
@@ -288,7 +288,7 @@ $n = 0;
 							@foreach($correctiveCheck as $result)
 								@if($result['lo_direct_approve'] == 0  && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 									@php 
-								        $m++;
+								        $l++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -406,9 +406,9 @@ $n = 0;
 							
 							<div class="tab-pane" id="approved_by_inspector_tab">
 							@foreach($approvedCompleted as $result)
-								
+								@if($result['inspector_action'] == 1 && $result['los_action'] == 1)
 									@php 
-								        $n++;
+								        $m++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -506,7 +506,7 @@ $n = 0;
 										</div>
 									</div>
 									@endif
-								
+								@endif
 							@endforeach
 							</div>
 							
