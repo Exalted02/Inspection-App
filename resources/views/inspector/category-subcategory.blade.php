@@ -242,7 +242,7 @@ $m = 0;
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
 							
 								@foreach($correctiveAction as $result)
-								@if($result['lo_direct_approve'] == 1)
+								@if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 									@php 
 										$k++;
 										$arrSubchecklist = [];
@@ -381,7 +381,7 @@ $m = 0;
 							</div>
 							<div role="tabpanel" class="tab-pane" id="process_final_checked_tab">
 								@foreach($correctiveAction as $result)
-								@if($result['lo_direct_approve'] == 0)
+								@if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 									@php 
 										$k++;
 										$arrSubchecklist = [];
@@ -520,8 +520,8 @@ $m = 0;
 								
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
-							 @foreach($approvedCompleted as $result)
-								
+							@foreach($approvedCompleted as $result)
+								@if($result['inspector_action'] == 1 && $result['los_action'] == 1)
 									@php 
 										$m++;
 										$arrSubchecklist = [];
@@ -626,8 +626,8 @@ $m = 0;
 										</div>
 									</div>
 									@endif
-								
-								@endforeach
+								@endif
+							@endforeach
 							</div>
 						</div>
 						<div class="text-left" style="display:none" id="no_record_s"><strong><h3>No record found</h3></strong></div>	

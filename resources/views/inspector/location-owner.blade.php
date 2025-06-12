@@ -156,7 +156,7 @@ $n = 0;
 							</div>
 							<div class="tab-pane" id="completed_tab">
 							@foreach($correctiveCheck as $result)
-							@if($result['lo_direct_approve'] == 1)
+							@if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 								@php 
 							        $l++;
 								    $arrSubchecklist = [];
@@ -286,7 +286,7 @@ $n = 0;
 							</div>
 							<div class="tab-pane" id="rejected_by_inspector_tab">
 							@foreach($correctiveCheck as $result)
-								@if($result['lo_direct_approve'] == 0)
+								@if($result['lo_direct_approve'] == 0  && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 									@php 
 								        $m++;
 										$arrSubchecklist = [];
