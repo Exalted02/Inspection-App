@@ -1888,8 +1888,10 @@ class DashboardInspectorController extends Controller
 		
 		$model = Task_list_corrective_action::find($id);
 		$model->lo_corrective_action_plan_second_check = $request->inspector_action == 2 ? $content : null;
-		$model->inspector_action = $request->inspector_action;
-		$model->los_action = $request->los_action;
+		//$model->inspector_action = $request->inspector_action;
+		$model->inspector_action = 0;
+		//$model->los_action = $request->los_action;
+		$model->los_action = 0;
 		$model->save();
 		
 		$lo_files = $request->file('lo_file');
@@ -1948,23 +1950,33 @@ class DashboardInspectorController extends Controller
 	
 	public function submit_inspector_approved(Request $request)
 	{
+		//echo $request->inspector_action.'---'.$request->los_action; die;
 		$task_list_id = $request->task_id;
 		$checklist_id = $request->checklist_id;
 		$subchecklist_id = $request->subchecklist_id ?? null;
 		$inspector_id = auth()->user()->id;
 		$inspector_action = $request->inspector_action;
+		$los_action = $request->los_action;
 		
 		/*$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;*/
 		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first()->id;
 		
 		$model = Task_list_corrective_action::find($id);
 		$model->inspector_action_date = date('Y-m-d h:i:s');
-		if($inspector_action == 2)
+		if($inspector_action == 2 || $los_action == 2)
 		{
 			$model->lo_corrective_action_plan_second_check = null;
 		}
-		$model->inspector_action = $inspector_action;
-		$model->los_action = $inspector_action;
+		
+		if($inspector_action != '')
+		{
+			$model->inspector_action = $inspector_action;
+		}
+		
+		if($los_action != '')
+		{
+			$model->los_action = $los_action;
+		}
 		$model->inspector_id = $inspector_id;
 		$model->save();
 		

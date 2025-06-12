@@ -251,14 +251,20 @@ $(document).ready(function() {
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var location_id = $('#location_id').val();
-	   var inspector_action = 1;
-	   
+	    @if(auth()->user()->user_type == 1)
+			var inspector_action = 1;
+		    var los_action = '';
+	    @elseif(auth()->user()->user_type == 3)
+			var los_action = 1;
+			var inspector_action = '';
+		@endif	
+		
 	   //alert(lo_direct_approve);
 	   var URL = "{{ route('submit-inspector-approved') }}";
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,inspector_action:inspector_action, _token: csrfToken},
+			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,inspector_action:inspector_action,los_action:los_action, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				if(response.message=='success')
@@ -276,14 +282,22 @@ $(document).ready(function() {
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var location_id = $('#location_id').val();
-	   var inspector_action = 2;
+	   //var inspector_action = 2;
+	   
+	    @if(auth()->user()->user_type == 1)
+			var inspector_action = 2;
+		    var los_action = 2;
+	    @elseif(auth()->user()->user_type == 3)
+			var los_action = 2;
+			var inspector_action = 2;
+		@endif	
 	   
 	   //alert(lo_direct_approve);
 	   var URL = "{{ route('submit-inspector-approved') }}";
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,inspector_action:inspector_action, _token: csrfToken},
+			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,inspector_action:inspector_action,los_action:los_action, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				if(response.message=='success')

@@ -112,7 +112,12 @@ $m = 0;
 										<img src="{{ $val['image'] }}" width="50" height="50">
 									</div>
 									<div class="flex-grow-1">
+									{{--<a href="{{ route('location-owner-subchecklist-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">--}}
+									    @if($result['inspector_action'] == 2)
+										<a href="{{ route('location-owner-subchecklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$result['subchecklist_id'],'type' => $result['type'] ]) }}">
+									    @else
 										<a href="{{ route('location-owner-subchecklist-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+										@endif
 										<h6>{{ $checklistName ?? '' }} 
 										@if($val!='')
 											-> {{$val['name'] ?? ''}}
@@ -138,7 +143,12 @@ $m = 0;
 										<img src="{{ $images }}" width="50" height="50">
 									</div>
 									<div class="flex-grow-1">
+									{{--<a href="{{ route('location-owner-checklist-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">--}}
+										@if($result['inspector_action'] == 2)
+										<a href="{{ route('location-owner-checklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'] ]) }}">
+										@else
 										<a href="{{ route('location-owner-checklist-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+										@endif
 										<h6>{{ $checklistName ?? '' }} 
 										</h6>
 											<p class="text-muted mb-0">

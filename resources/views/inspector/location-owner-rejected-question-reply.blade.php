@@ -151,18 +151,23 @@
 								{{--<input type="hidden" id="category_id" value="{{ $task_category_id ?? ''}}">--}}
 							
 					</div>
-					
+					<div class="sticky-footer">
+						<button class="submitChecklist location-owner-approve">Submit</button>
+					</div>
 				</div>
 			</section>
 		</div>
     </div>
-	<div class="checklist-question-sticky-footer">
+	{{--<div class="sticky-footer">
+		<button class="submitChecklist location-owner-approve">Submit checklist</button>
+	</div>--}}
+	{{--<div class="checklist-question-sticky-footer">
 		<div class="clearfix"></div>
 		<div class="footer-content question-navigation d-flex justify-content-between">
 			<button class="reject-class-button location-owner-rejected">Reject</button>
 			<button class="ms-auto location-owner-approve">Approve</button>
 		</div>
-	</div>
+	</div>--}}
 	{{--</form>--}}
 @endsection 
 @section('scripts')
