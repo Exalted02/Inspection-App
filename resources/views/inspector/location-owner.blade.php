@@ -510,7 +510,7 @@ $m = 0;
 							@endforeach
 							</div>
 							
-							<div class="tab-pane" id="final_checked_by_inspector_tab">
+							{{--<div class="tab-pane" id="final_checked_by_inspector_tab">
 							@foreach($correctiveCheck as $result)
 								@if($result['inspector_action'] ==2 && $result['second_checked'] != 'null')
 									@php 
@@ -612,9 +612,9 @@ $m = 0;
 									@endif
 								@endif
 							@endforeach
-							</div>
+							</div>--}}
 						</div>
-						{{--<div class="text-left" style="display:none" id="no_record_s"><strong><h3>No record found</h3></strong></div>--}}
+						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>
 					</div>
 				</div>
 			</section>
@@ -624,10 +624,11 @@ $m = 0;
 	<input type="hidden" value="{{ $task_id ?? ''}}" id="task_id">
 	<input type="hidden" value="{{ $isactive ?? ''}}" id="isactive">
 	
+	<input type="hidden" value="{{ $j ?? ''}}" id="norecord_j">
 	<input type="hidden" value="{{ $k ?? ''}}" id="norecord_k">
 	<input type="hidden" value="{{ $l ?? ''}}" id="norecord_l">
 	<input type="hidden" value="{{ $m ?? ''}}" id="norecord_m">
-	<input type="hidden" value="{{ $n ?? ''}}" id="norecord_n">
+	
 @endsection 
 @section('scripts')
 <script>
@@ -643,8 +644,8 @@ $(document).ready(function() {
 			
 			if(selectedTab == '#inprogress_tab')
 			{
-				var norecord_k = $('#norecord_k').val();
-				if(norecord_k==0)
+				var norecord_j = $('#norecord_j').val();
+				if(norecord_j==0)
 				{
 					$('#no_record').show();
 				}
@@ -652,8 +653,8 @@ $(document).ready(function() {
 			
 			if(selectedTab == '#completed_tab')
 			{
-				var norecord_l = $('#norecord_l').val();
-				if(norecord_l==0)
+				var norecord_k = $('#norecord_k').val();
+				if(norecord_k==0)
 				{
 					$('#no_record').show();
 				}
@@ -661,8 +662,8 @@ $(document).ready(function() {
 			
 			if(selectedTab == '#rejected_by_inspector_tab')
 			{
-				var norecord_m = $('#norecord_m').val();
-				if(norecord_m==0)
+				var norecord_l = $('#norecord_l').val();
+				if(norecord_l==0)
 				{
 					$('#no_record').show();
 				}
@@ -671,8 +672,8 @@ $(document).ready(function() {
 			
 			if(selectedTab == '#approved_by_inspector_tab')
 			{
-				var norecord_n = $('#norecord_n').val();
-				if(norecord_n==0)
+				var norecord_m = $('#norecord_m').val();
+				if(norecord_m==0)
 				{
 					$('#no_record').show();
 				}
