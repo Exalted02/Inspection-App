@@ -36,13 +36,17 @@ $n = 0;
 						<div class="tab-scroll-container">
 							<div class="scroll-arrow left-arrow" id="scrollLeft"><i class="fa fa-chevron-left"></i></div>
 								<div class="tab-scroll-wrapper" id="tabScrollWrapper">
-									<ul class="nav nav-tabs" role="tablist">
-										<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
+									<ul class="nav nav-tabs custom-tab-style" role="tablist">
+									{{--<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
 										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab">{{ count($correctiveCheck)}} Corrective checks</a></li>
 										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">Rejected</a></li>
-										{{--<li role="presentation"><a href="#final_checked_by_inspector_tab" aria-controls="completed_tab" role="tab">Final checked</a></li>--}}
-										<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Approved</a></li>
-										{{--<li role="presentation"><a href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Rejected</a></li>--}}	
+									<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Approved</a></li>--}}
+									
+									<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $total_corrective_action ?? ''}} Corrective Needed</a></li>
+										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab">{{ count($correctiveCheck)}} Corrective Action</a></li>
+										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">Corrective Plan</a></li>
+										<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Completed/Approved</a></li>
+										
 									</ul>
 								</div>
 							<div class="scroll-arrow right-arrow" id="scrollRight"><i class="fa fa-chevron-right"></i></div>
@@ -269,8 +273,8 @@ $n = 0;
 							@endforeach
 							</div>
 							<div class="tab-pane" id="approved_by_inspector_tab">
-							@foreach($correctiveCheck as $result)
-								@if($result['inspector_action'] ==1 && $result['los_action'] ==1)
+							@foreach($approvedCompleted as $result)
+								
 									@php 
 								        $n++;
 										$arrSubchecklist = [];
@@ -286,17 +290,17 @@ $n = 0;
 										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
 										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
-										if($result['image'] !='')
+										/*if($result['image'] !='')
 										{
 											$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
 										}
 										else{
 											$images = url('images/noimages/noimage_region.png');
-										}
+										}*/
 										
 										if($result['type'] == 'subchecklist')
 										{
-											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
+											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',1)->first();
 											if($subchecklistData)
 											{
 												//foreach($subchecklistData as $subcheck)
@@ -310,7 +314,7 @@ $n = 0;
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
 														'name' => $subchecklistName ? $subchecklistName->name : '',
-														'image' => $images,
+														'image' => url('images/noimages/noimage_region.png'),
 														'subchecklist_id' => $subchecklistData->subchecklist_id,
 													];
 												//}
@@ -367,7 +371,7 @@ $n = 0;
 										</div>
 									</div>
 									@endif
-								@endif
+								
 							@endforeach
 							</div>
 							<div class="tab-pane" id="rejected_by_inspector_tab">

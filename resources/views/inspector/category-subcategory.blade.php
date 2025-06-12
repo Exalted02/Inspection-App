@@ -1,13 +1,15 @@
 @extends('layouts.app')
 @section('content')
 @php 
- //echo "<pre>";print_r($categoryData);die;
- //echo "<pre>";print_r($correctiveAction);die;
- $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
+//echo "<pre>";print_r($categoryData);die;
+//echo "<pre>";print_r($correctiveAction);die;
+//echo "<pre>";print_r($approvedCompleted);die;
+$location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
 $taskData  = App\Models\Task_lists::where('id', $task_id)->first();
 $location_details = $taskData ? $taskData->location_details : '';
 //echo $task_id; die;
+$j = 0;
 $k = 0;
 $l = 0;
 $m = 0;
@@ -49,15 +51,20 @@ $m = 0;
 							<div class="tab-scroll-wrapper" id="tabScrollWrapper">
 								<ul class="nav nav-tabs custom-tab-style" role="tablist">
 								@if(auth()->user()->user_type == 1)
-									<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
-									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>
+								{{--<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
+									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>--}}
 								@endif
 								@if(auth()->user()->user_type == 3)
-									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>
+								{{--<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>--}}
 								@endif
-									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Final checks</a></li> 
-									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Approved final checked</a></li>
-									{{--<li role="presentation"><a href="#reject_tab" aria-controls="reject_tab" role="tab" data-toggle="tab">6 Rejected</a></li>--}}
+								{{--<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Final checks</a></li> 
+									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Approved final checked</a></li>--}}
+								
+									<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
+									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab"> Corrective Needed</a></li>
+									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective Action</a></li>
+									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Corrective Plan</a></li> 
+									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Completed/Approved</a></li>									
 								</ul>
 							</div>
 							<div class="scroll-arrow right-arrow" id="scrollRight"><i class="fa fa-chevron-right"></i></div>
@@ -91,6 +98,145 @@ $m = 0;
 						@endif
 							<div role="tabpanel" class="tab-pane" id="reject_tab">
 								Not have any data
+							</div>
+							<div class="tab-pane corrective_needed_tab" id="corrective_needed_tab">
+							
+								@foreach($correctiveNeeded as $result)
+								
+									@php 
+										$j++;
+										$arrSubchecklist = [];
+										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
+										
+										/*$subchecklistData = App\Models\Subchecklist::where('id', $result['checklist_id'])->first();*/
+										
+										/*$checklistName = $checklistData ? $checklistData->name : ($subchecklistData ?  $subchecklistData->name : '');*/
+										
+										$checklistName = $checklistData ? $checklistData->name : '';
+										
+										$rejectedRegionData = $result['type'] == 'checklist'
+										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
+										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+
+										if($result['image'] != '')
+										{
+											$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+										}
+										else{
+											$images = url('images/noimages/noimage_region.png');
+										}
+										
+										
+										if($result['type'] == 'subchecklist')
+										{
+											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
+											if($subchecklistData)
+											{
+												//foreach($subchecklistData as $subcheck)
+												//{
+													//$arrSubchecklist = [];
+													$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
+													
+													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+													
+													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													
+													$arrSubchecklist[] = [
+														'id' => $subchecklistData->id,
+														'name' => $subchecklistName ? $subchecklistName->name : '',
+														'image' => $images,
+														'subchecklist_id' => $subchecklistData->subchecklist_id,
+													];
+												//}
+											}
+										}
+										
+									@endphp
+									@if(!empty($arrSubchecklist))
+										@foreach($arrSubchecklist as $val)
+									<div class="d-flex mb-3 task">
+										<div class="date-box">
+											<img src="{{ $val['image'] }}" width="50" height="50">
+										</div>
+										<div class="flex-grow-1">
+											<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<h6>{{ $checklistName ?? '' }} 
+											@if($val!='')
+												-> {{$val['name'] ?? ''}}
+											@endif
+											</h6>
+												<p class="text-muted mb-0">
+												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+												</p>
+												@if($rejectedRegionData)	
+												<p class="text-muted mb-0">
+												<i class="fa fa-clock">
+												{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												</p>
+												@endif
+												<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
+												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												@if(auth()->user()->user_type == 1)
+													@if($result['inspector_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['inspector_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												
+												@if(auth()->user()->user_type == 3)
+													@if($result['los_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['los_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												</p>
+											</a>
+										</div>
+									</div>
+									@endforeach
+									
+									@else 
+										<div class="d-flex mb-3 task">
+										<div class="date-box">
+											<img src="{{ $images }}" width="50" height="50">
+										</div>
+										<div class="flex-grow-1">
+											<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<h6>{{ $checklistName ?? '' }} 
+											</h6>
+												<p class="text-muted mb-0">
+												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+												</p>
+												@if($rejectedRegionData)
+												<p class="text-muted mb-0">
+												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												</p>
+												@endif
+												<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
+												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												@if(auth()->user()->user_type == 1)
+													@if($result['inspector_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['inspector_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												
+												@if(auth()->user()->user_type == 3)
+													@if($result['los_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['los_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												</p>
+											</a>
+										</div>
+									</div>
+									@endif
+								@endforeach
 							</div>
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
 							
@@ -344,8 +490,8 @@ $m = 0;
 								@endforeach
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
-							 @foreach($correctiveAction as $result)
-								@if($result['inspector_action'] ==1 && $result['second_checked'] != '')
+							 @foreach($approvedCompleted as $result)
+								
 									@php 
 										$m++;
 										$arrSubchecklist = [];
@@ -361,18 +507,18 @@ $m = 0;
 										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
 										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
-										if($result['image'] != '')
+										/*if($result['image'] != '')
 										{
 											$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
 										}
 										else{
 											$images = url('images/noimages/noimage_region.png');
-										}
+										}*/
 										
 										
 										if($result['type'] == 'subchecklist')
 										{
-											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
+											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',1)->first();
 											if($subchecklistData)
 											{
 												//foreach($subchecklistData as $subcheck)
@@ -382,18 +528,18 @@ $m = 0;
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata && $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													//$images = $filedata && $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
 														'name' => $subchecklistName ? $subchecklistName->name : '',
-														'image' => $images,
+														'image' => url('images/noimages/noimage_region.png'),
 														'subchecklist_id' => $subchecklistData->subchecklist_id,
 													];
 												//}
 											}
 										}
-										
+										//echo "<pre>";print_r($arrSubchecklist);
 									@endphp
 									@if(!empty($arrSubchecklist))
 										@foreach($arrSubchecklist as $val)
@@ -404,7 +550,7 @@ $m = 0;
 										<div class="flex-grow-1">
 											<a href="javascript:void(0);">
 											<h6>{{ $checklistName ?? '' }} 
-											@if($val!='')
+											@if($val['name']!='')
 												-> {{$val['name'] ?? ''}}
 											@endif
 											</h6>
@@ -449,7 +595,7 @@ $m = 0;
 										</div>
 									</div>
 									@endif
-								@endif
+								
 								@endforeach
 							</div>
 						</div>
@@ -497,6 +643,7 @@ $m = 0;
 	<input type="hidden" value="{{ auth()->user()->user_type ?? ''}}" id="user_id">
 	<input type="hidden" value="{{ $location_id ?? ''}}" id="location_id">
 	<input type="hidden" value="{{ $task_id ?? ''}}" id="task_id">
+	<input type="hidden" value="{{ $j ?? ''}}" id="norecord_j">
 	<input type="hidden" value="{{ $k ?? ''}}" id="norecord_k">
 	<input type="hidden" value="{{ $l ?? ''}}" id="norecord_l">
 	<input type="hidden" value="{{ $m ?? ''}}" id="norecord_m">
@@ -544,6 +691,17 @@ $(document ).ready(function() {
 		//alert(selectedTab);
 		if (selectedTab) {
 			$('a[href="' + selectedTab + '"]').tab('show');
+			
+			if(selectedTab == '#corrective_needed_tab')
+			{
+				var norecord_j = $('#norecord_j').val();
+				if(norecord_j==0)
+				{
+					$('#no_record').show();
+				}
+				
+				//$('#uncomplete_tab').hide();
+			}
 			
 			if(selectedTab == '#corrective_checked_tab')
 			{
@@ -670,13 +828,23 @@ $(document ).ready(function() {
 	   
    });
    
-   $(document).on('click','.unCompletetab, .correctiveChecked, .finalChecked, .approvedFinalChecked', function(){
+   $(document).on('click','.unCompletetab, .correctiveNeeded, .correctiveChecked, .finalChecked, .approvedFinalChecked', function(){
 	   $('#no_record').hide();
 		var location_id = $('#location_id').val();
 		var task_id = $('#task_id').val();
 		$('#isactive').val(0);
 		const tabId = $(this).attr('href');
 		//alert(tabId);
+		
+		if(tabId == '#corrective_needed_tab')
+		{
+			$('.tab-pane').removeClass('active show');
+			//$('#corrective_needed_tab').addClass('active show');
+			$('.nav-tabs .nav-link').removeClass('active');
+			//$('.nav-tabs .nav-link[href="#corrective_needed_tab"]').addClass('active');
+			
+		}
+		
 		if(tabId == '#corrective_checked_tab')
 		{
 			$('.tab-pane').removeClass('active show');
