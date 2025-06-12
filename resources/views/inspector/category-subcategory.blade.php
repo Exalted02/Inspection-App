@@ -59,8 +59,9 @@ $m = 0;
 								@endif
 								{{--<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Final checks</a></li> 
 									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Approved final checked</a></li>--}}
-								
+									@if(auth()->user()->user_type == 1)
 									<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
+									@endif
 									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab"> Corrective Needed</a></li>
 									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective Action</a></li>
 									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Corrective Plan</a></li> 
@@ -379,11 +380,10 @@ $m = 0;
 								@endforeach
 							</div>
 							<div role="tabpanel" class="tab-pane" id="process_final_checked_tab">
-							
 								@foreach($correctiveAction as $result)
 								@if($result['lo_direct_approve'] == 0)
 									@php 
-								        $l++;
+										$k++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -438,7 +438,7 @@ $m = 0;
 											<img src="{{ $val['image'] }}" width="50" height="50">
 										</div>
 										<div class="flex-grow-1">
-											<a href="{{ route('inspector-subchecklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 											<h6>{{ $checklistName ?? '' }} 
 											@if($val!='')
 												-> {{$val['name'] ?? ''}}
@@ -453,8 +453,23 @@ $m = 0;
 												{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 												</p>
 												@endif
-												<p class="text-muted mb-0">
+												<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												@if(auth()->user()->user_type == 1)
+													@if($result['inspector_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['inspector_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												
+												@if(auth()->user()->user_type == 3)
+													@if($result['los_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['los_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
 												</p>
 											</a>
 										</div>
@@ -467,7 +482,7 @@ $m = 0;
 											<img src="{{ $images }}" width="50" height="50">
 										</div>
 										<div class="flex-grow-1">
-											<a href="{{ route('inspector-checklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 											<h6>{{ $checklistName ?? '' }} 
 											</h6>
 												<p class="text-muted mb-0">
@@ -478,16 +493,31 @@ $m = 0;
 												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 												</p>
 												@endif
-												<p class="text-muted mb-0">
+												<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												@if(auth()->user()->user_type == 1)
+													@if($result['inspector_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['inspector_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												
+												@if(auth()->user()->user_type == 3)
+													@if($result['los_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['los_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
 												</p>
 											</a>
 										</div>
 									</div>
 									@endif
 								@endif
-								
 								@endforeach
+								
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
 							 @foreach($approvedCompleted as $result)
@@ -514,7 +544,7 @@ $m = 0;
 										else{
 											$images = url('images/noimages/noimage_region.png');
 										}*/
-										
+										$images =url('images/noimages/noimage_region.png');
 										
 										if($result['type'] == 'subchecklist')
 										{
@@ -529,6 +559,7 @@ $m = 0;
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
 													//$images = $filedata && $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													$images =url('images/noimages/noimage_region.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
@@ -753,7 +784,7 @@ $(document ).ready(function() {
 	
 	if(isactive == 1 && user_id == 3)
 	{
-		$('a[href="#corrective_checked_tab"]').tab('show');
+		$('a[href="#corrective_needed_tab"]').tab('show');
 		$('#isactive').val(0);
 	}
 	
