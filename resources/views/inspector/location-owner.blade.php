@@ -237,7 +237,14 @@ $n = 0;
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
-											<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">{{ $appr_by }}</button>
+												@if($result['inspector_action']==1)
+												<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+												@elseif($result['los_action']==1)
+												<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+												@else
+													<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+												@endif
+												
 													{{--<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>--}}
 											</p>
 										</a>
@@ -262,8 +269,13 @@ $n = 0;
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
-												<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">{{ $appr_by }}</button>
-											{{--<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>--}}
+												@if($result['inspector_action']==1)
+												<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+												@elseif($result['los_action']==1)
+												<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+												@else
+													<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+												@endif
 											</p>
 										</a>
 									</div>
@@ -343,7 +355,14 @@ $n = 0;
 													</p>
 													<p class="text-muted mb-0">
 													<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-													</p>
+													@if($result['inspector_action']==1)
+													<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+													@elseif($result['los_action']==1)
+													<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+													@else
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+														</p>
 												</a>
 											</div>
 										</div>
@@ -366,6 +385,13 @@ $n = 0;
 												</p>
 												<p class="text-muted mb-0">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												@if($result['inspector_action']==1)
+												<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+												@elseif($result['los_action']==1)
+												<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+												@else
+													<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+												@endif
 												</p>
 											</a>
 										</div>
