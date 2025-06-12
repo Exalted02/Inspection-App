@@ -4,7 +4,7 @@
 //echo "<pre>";print_r($categoryData);die;
 //echo "<pre>";print_r($correctiveAction);die;
 //echo "<pre>";print_r($correctiveNeeded);die;
-echo "<pre>";print_r($approvedCompleted);die;
+//echo "<pre>";print_r($approvedCompleted);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
 $taskData  = App\Models\Task_lists::where('id', $task_id)->first();
