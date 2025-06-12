@@ -341,7 +341,8 @@ $n = 0;
 												<img src="{{ $val['image'] }}" width="50" height="50">
 											</div>
 											<div class="flex-grow-1">
-												<a href="{{ route('location-owner-subchecklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$result['subchecklist_id'],'type' => $result['type'] ]) }}">
+											{{--<a href="{{ route('location-owner-subchecklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$result['subchecklist_id'],'type' => $result['type'] ]) }}">--}}
+												<a href="javascript:void(0);">
 												<h6>{{ $checklistName ?? '' }} 
 												@if($val!='')
 													-> {{$val['name'] ?? ''}}
@@ -374,7 +375,8 @@ $n = 0;
 											<img src="{{ $images }}" width="50" height="50">
 										</div>
 										<div class="flex-grow-1">
-											<a href="{{ route('location-owner-checklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'] ]) }}">
+										{{--<a href="{{ route('location-owner-checklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'] ]) }}">--}}
+											<a href="javascript:void();">
 											<h6>{{ $checklistName ?? '' }} 
 											</h6>
 												<p class="text-muted mb-0">
@@ -612,7 +614,7 @@ $n = 0;
 							@endforeach
 							</div>
 						</div>
-						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>
+						{{--<div class="text-left" style="display:none" id="no_record_s"><strong><h3>No record found</h3></strong></div>--}}
 					</div>
 				</div>
 			</section>
