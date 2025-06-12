@@ -3,7 +3,8 @@
 @php 
 //echo "<pre>";print_r($categoryData);die;
 //echo "<pre>";print_r($correctiveAction);die;
-//echo "<pre>";print_r($approvedCompleted);die;
+//echo "<pre>";print_r($correctiveNeeded);die;
+echo "<pre>";print_r($approvedCompleted);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
 $taskData  = App\Models\Task_lists::where('id', $task_id)->first();
@@ -103,7 +104,7 @@ $m = 0;
 							<div class="tab-pane corrective_needed_tab" id="corrective_needed_tab">
 							
 								@foreach($correctiveNeeded as $result)
-								
+								@if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
 									@php 
 										$j++;
 										$arrSubchecklist = [];
@@ -237,6 +238,7 @@ $m = 0;
 										</div>
 									</div>
 									@endif
+								@endif
 								@endforeach
 							</div>
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
@@ -548,7 +550,7 @@ $m = 0;
 										
 										if($result['type'] == 'subchecklist')
 										{
-											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',1)->first();
+											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->first();
 											if($subchecklistData)
 											{
 												//foreach($subchecklistData as $subcheck)
@@ -558,13 +560,13 @@ $m = 0;
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													//$images = $filedata && $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
-													$images =url('images/noimages/noimage_region.png');
+													$images = $filedata && $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													//$images =url('images/noimages/noimage_region.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
 														'name' => $subchecklistName ? $subchecklistName->name : '',
-														'image' => url('images/noimages/noimage_region.png'),
+														'image' => $images,
 														'subchecklist_id' => $subchecklistData->subchecklist_id,
 													];
 												//}

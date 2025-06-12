@@ -186,6 +186,22 @@ class DashboardInspectorController extends Controller
 							}
 							else
 							{
+								// newimplement
+								$isfiles = '';
+								$images = '';
+								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+								$images = $isfiles ? $isfiles->file  : '';
+								$correctiveNeddedChecklistArray[] = [
+									'type' => 'checklist',
+									'task_id' => $val->id,
+									'checklist_id' => $task->checklist_id,
+									'rejected_region' => $task->rejected_region,
+									'image' => $images,
+									'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+									'los_action'=> $task_list_checklist_corrective_needed->los_action,
+								];
+								//--------
+								
 								$isfiles = '';
 								$images = '';
 								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
@@ -254,6 +270,21 @@ class DashboardInspectorController extends Controller
 								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
 								
 								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+								
+								//  new implement
+								$correctiveNeddedSubchecklistArray[] = [
+										'type' => 'subchecklist',
+										'task_id' => $val->id,
+										'checklist_id' => $subtask->task_list_checklist_id,
+										'subchecklist_id'=>$subtask->subchecklist_id,
+										'rejected_region' => $subtask->rejected_region,
+										'image' => $subChecklistimages,
+										'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
+										'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+									];
+								//----
+								
+								
 								$completedApprSubcheckListArray[] = [
 											'type' => 'subchecklist',
 											'task_id' => $val->id,
@@ -1441,15 +1472,15 @@ class DashboardInspectorController extends Controller
 									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
 									
 									$images = $isfiles ? $isfiles->file  : '';
-										$correctiveNeddedChecklistArray[] = [
-												'type' => 'checklist',
-												'task_id' => $val->id,
-												'checklist_id' => $task->checklist_id,
-												'rejected_region' => $task->rejected_region,
-												'image' => $images,
-												'inspector_action' => '',
-												'los_action' => '',
-											];
+									$correctiveNeddedChecklistArray[] = [
+											'type' => 'checklist',
+											'task_id' => $val->id,
+											'checklist_id' => $task->checklist_id,
+											'rejected_region' => $task->rejected_region,
+											'image' => $images,
+											'inspector_action' => '',
+											'los_action' => '',
+										];
 								}
 								else
 								{
@@ -1457,6 +1488,19 @@ class DashboardInspectorController extends Controller
 									$images = '';
 									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
 									$images = $isfiles ? $isfiles->file  : '';
+									
+									//---- new implement 
+									$correctiveNeddedChecklistArray[] = [
+											'type' => 'checklist',
+											'task_id' => $val->id,
+											'checklist_id' => $task->checklist_id,
+											'rejected_region' => $task->rejected_region,
+											'image' => $images,
+											'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+											'los_action'=> $task_list_checklist_corrective_needed->los_action,
+										];
+									//------
+									
 									$completedApprChecklistArray[] = [
 												'type' => 'checklist',
 												'task_id' => $val->id,
@@ -1469,8 +1513,6 @@ class DashboardInspectorController extends Controller
 											];
 								}
 								
-								
-							
 							}
 							else{
 								$completedApprChecklistArray[] = [
@@ -1523,7 +1565,21 @@ class DashboardInspectorController extends Controller
 									$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
 									
 									$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+									
+									// new implement 
 									$correctiveNeddedSubchecklistArray[] = [
+											'type' => 'subchecklist',
+											'task_id' => $val->id,
+											'checklist_id' => $subtask->task_list_checklist_id,
+											'subchecklist_id'=>$subtask->subchecklist_id,
+											'rejected_region' => $subtask->rejected_region,
+											'image' => $subChecklistimages,
+											'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
+											'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+										];
+									//-------
+									
+									$completedApprSubcheckListArray[] = [
 												'type' => 'subchecklist',
 												'task_id' => $val->id,
 												'checklist_id' => $subtask->task_list_checklist_id,
