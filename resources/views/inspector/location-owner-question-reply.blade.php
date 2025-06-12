@@ -104,12 +104,12 @@
 								<label class="d-block col-form-label"></label>
 								<div class="status-toggle">
 									<input type="checkbox" name="lo_direct_approve" id="lo_direct_approve" class="check">
-									<label for="lo_direct_approve" class="checktoggle">Approve</label>
+									<label for="lo_direct_approve" class="checktoggle">Corrective Done</label>
 								</div>
 							</div>
 						</div>
 						
-						<div class="row" style="margin-top:17px;">
+						<div class="row set_time_div" style="margin-top:17px;">
 							<div class="owner-checklist">
 								<label>{{ __('Set Timeline') }}</label>
 								<div class="split-placeholder-wrapper">
@@ -187,10 +187,10 @@ $(document).ready(function() {
 		   return false;
 	   }
 	   
-	   if (hidden_set_date === '') {
+	   /*if(hidden_set_date === '') {
 			$('#settimeline_id_error').text('Please enter date').fadeIn().delay(2000).fadeOut();
 			return false;
-		}
+		}*/
 	  
 		   var URL = "{{ route('submit-lo-corrective-action') }}";
 		   $.ajax({
@@ -208,9 +208,18 @@ $(document).ready(function() {
 					
 				},
 			});
-		
-	   
-   });
+	});
+	
+	$(document).on('click', '#lo_direct_approve', function(){
+		var lo_direct_approve  = $('#lo_direct_approve').is(':checked');
+		if(lo_direct_approve == true)
+		{
+			$('.set_time_div').hide();
+		}
+		else{
+			$('.set_time_div').show();
+		}
+	});
 });
 </script>
 @endsection

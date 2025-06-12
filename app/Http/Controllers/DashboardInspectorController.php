@@ -148,6 +148,7 @@ class DashboardInspectorController extends Controller
 							'inspector_action' => $correctiveAction->inspector_action,
 							'los_action' => $correctiveAction->los_action,
 							'second_checked' => $correctiveAction->lo_corrective_action_plan_second_check,
+							'lo_direct_approve' => $correctiveAction->lo_direct_approve,
 							'image' => $image,
 						];
 					}
@@ -1600,17 +1601,24 @@ class DashboardInspectorController extends Controller
 	}
 	public function submit_lo_corrective_action(Request $request)
 	{
+		//echo "<pre>"; print_r($request->all());die;
 		$type 				= $request->type;
 		$task_list_id 		= $request->task_id;
 		$checklist_id 		= $request->checklist_id;
 		$subchecklist_id 	= $request->subchecklist_id ?? null;
 		$tab 				= $request->tab;
 		
-		$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
-		$time = $request->post('hidden_set_time');
-		$datetime  = $date.' '.$time;
-		$lo_completed_by = date('Y-m-d', strtotime($datetime));
-		//echo $request->lo_direct_approve; die;
+		if($request->lo_direct_approve == 'false')
+		{
+			$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
+			$time = $request->post('hidden_set_time');
+			$datetime  = $date.' '.$time;
+			$lo_completed_by = date('Y-m-d', strtotime($datetime));
+		}
+		else{
+			$lo_completed_by = date('Y-m-d h:i:s');
+		}
+		//echo $lo_completed_by; die;
 		
 		$taskData  = Task_lists::where('id', $task_list_id)->first();
 		$inspector_id = $taskData ? $taskData->inspector_id : null;

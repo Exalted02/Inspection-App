@@ -241,7 +241,7 @@ $m = 0;
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
 							
 								@foreach($correctiveAction as $result)
-								@if(($result['inspector_action'] != 2 || $result['los_action'] != 2) && $result['second_checked'] == '')
+								@if($result['lo_direct_approve'] == 1)
 									@php 
 										$k++;
 										$arrSubchecklist = [];
@@ -381,7 +381,7 @@ $m = 0;
 							<div role="tabpanel" class="tab-pane" id="process_final_checked_tab">
 							
 								@foreach($correctiveAction as $result)
-								@if($result['inspector_action'] ==2 && $result['second_checked'] != '')
+								@if($result['lo_direct_approve'] == 0)
 									@php 
 								        $l++;
 										$arrSubchecklist = [];
