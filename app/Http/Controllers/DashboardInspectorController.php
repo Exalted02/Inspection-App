@@ -1364,6 +1364,7 @@ class DashboardInspectorController extends Controller
 											'inspector_action'=> $task_list_checklist_corrective_action->inspector_action,
 											'los_action'=> $task_list_checklist_corrective_action->los_action,
 											'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
+											'lo_direct_approve'=> $task_list_checklist_corrective_action->lo_direct_approve,
 										];
 							}
 							
@@ -1415,13 +1416,14 @@ class DashboardInspectorController extends Controller
 											'inspector_action'=> $task_list_subchecklist_corrective_action->inspector_action,
 											'los_action'=> $task_list_subchecklist_corrective_action->los_action,
 											'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
+											'lo_direct_approve'=> $task_list_subchecklist_corrective_action->lo_direct_approve,
 										];
 								
 							}
 						}
 						
 					}
-					//----------------------12-05-2025----------------------------
+					//----------------------12-06-2025----------------------------
 					// checklist and  respective files approve=1 
 					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
 					if($taskChklist->isNotEmpty())

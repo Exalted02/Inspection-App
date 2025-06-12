@@ -156,7 +156,7 @@ $n = 0;
 							</div>
 							<div class="tab-pane" id="completed_tab">
 							@foreach($correctiveCheck as $result)
-							@if(($result['inspector_action'] ==0 && $result['los_action'] ==1) || ($result['inspector_action'] ==1 && $result['los_action'] == 0))
+							@if($result['lo_direct_approve'] == 1)
 								@php 
 							        $l++;
 								    $arrSubchecklist = [];
@@ -273,6 +273,125 @@ $n = 0;
 							@endforeach
 							</div>
 							<div class="tab-pane" id="approved_by_inspector_tab">
+							@foreach($correctiveCheck as $result)
+							@if($result['lo_direct_approve'] == 0)
+								@php 
+							        $l++;
+								    $arrSubchecklist = [];
+									$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
+									
+									/*$subchecklistData = App\Models\Subchecklist::where('id', $result['checklist_id'])->first();*/
+									
+									/*$checklistName = $checklistData ? $checklistData->name : ($subchecklistData ?  $subchecklistData->name : '');*/
+									
+									$checklistName = $checklistData ? $checklistData->name : '';
+									
+									$rejectedRegionData = $result['type'] == 'checklist'
+									? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
+									: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+
+									if($result['image'] != '')
+									{
+										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
+									}
+									else{
+										$images = url('images/noimages/noimage_region.png');
+									}
+									
+									if($result['type'] == 'subchecklist')
+									{
+										$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
+										if($subchecklistData)
+										{
+											//foreach($subchecklistData as $subcheck)
+											//{
+												$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
+												
+												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+												
+												$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+												
+												$arrSubchecklist[] = [
+													'id' => $subchecklistData->id,
+													'name' => $subchecklistName ? $subchecklistName->name : '',
+													'image' => $images,
+													'subchecklist_id' => $subchecklistData->subchecklist_id,
+												];
+											//}
+										}
+									}
+									
+									$appr_by = '';
+									if($result['inspector_action']==1)
+									{
+										$appr_by = 'Approved Inspector';
+									}
+									
+									if($result['los_action']==1)
+									{
+										$appr_by = 'Approved LOS';
+									}
+										
+									
+								@endphp
+								@if(!empty($arrSubchecklist))
+									@foreach($arrSubchecklist as $val)
+								<div class="d-flex mb-3 task">
+									<div class="date-box">
+										<img src="{{ $val['image'] }}" width="50" height="50">
+									</div>
+									<div class="flex-grow-1">
+										<a href="javascript:void(0);">
+										<h6>{{ $checklistName ?? '' }} 
+										@if($val!='')
+											-> {{$val['name'] ?? ''}}
+										@endif
+										</h6>
+											<p class="text-muted mb-0">
+											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+											</p>
+											<p class="text-muted mb-0">
+											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+											</p>
+											<p class="text-muted mb-0">
+											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
+											<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">{{ $appr_by }}</button>
+													{{--<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>--}}
+											</p>
+										</a>
+									</div>
+								</div>
+								@endforeach
+								
+								@else 
+									<div class="d-flex mb-3 task">
+									<div class="date-box">
+										<img src="{{ $images }}" width="50" height="50">
+									</div>
+									<div class="flex-grow-1">
+										<a href="javascript:void(0);">
+										<h6>{{ $checklistName ?? '' }} 
+										</h6>
+											<p class="text-muted mb-0">
+											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+											</p>
+											<p class="text-muted mb-0">
+											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+											</p>
+											<p class="text-muted mb-0">
+											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
+												<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">{{ $appr_by }}</button>
+											{{--<button type="button" class="btn btn-outline-success btn-sm custom-small-btn" style="pointer-events: none;">{{ $appr_by }}</button>--}}
+											</p>
+										</a>
+									</div>
+								</div>
+								@endif
+							@endif
+							@endforeach
+							</div>
+							
+							{{--<div class="tab-pane" id="approved_by_inspector_tab">
 							@foreach($approvedCompleted as $result)
 								
 									@php 
@@ -373,7 +492,7 @@ $n = 0;
 									@endif
 								
 							@endforeach
-							</div>
+							</div>--}}
 							<div class="tab-pane" id="rejected_by_inspector_tab">
 							@foreach($correctiveCheck as $result)
 								@if($result['inspector_action'] ==2 && $result['second_checked'] == '')
