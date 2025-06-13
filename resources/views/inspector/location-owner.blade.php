@@ -11,6 +11,41 @@ $j = 0;
 $k = 0;
 $l = 0;
 $m = 0;
+
+$countNedded = 0;
+$countAction = 0;
+$countPlan = 0;
+$countCompleted = 0;
+foreach($correctiveNeeded as $result)
+{
+	if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
+	{
+		$countNedded++;
+	}
+}
+
+foreach($correctiveCheck as $result)
+{
+	if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+	{
+		$countAction++;
+	}
+	
+	if($result['lo_direct_approve'] == 0  && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+	{
+		$countPlan++;
+	}
+}
+
+foreach($approvedCompleted as $result)
+{
+	if($result['inspector_action'] == 1 && $result['los_action'] == 1)
+	{
+		$countCompleted++;
+	}
+}
+
+
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	
@@ -43,10 +78,10 @@ $m = 0;
 										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">Rejected</a></li>
 									<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Approved</a></li>--}}
 									
-									<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $total_corrective_action ?? ''}} Corrective Needed</a></li>
-										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab">{{ count($correctiveCheck)}} Corrective Action</a></li>
-										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">Corrective Plan</a></li>
-										<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Completed/Approved</a></li>
+									<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $countNedded }} Corrective Needed</a></li>
+										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab">{{ $countAction }} Corrective Action</a></li>
+										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">{{ $countPlan }} Corrective Plan</a></li>
+										<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">{{ $countCompleted }} Completed/Approved</a></li>
 										
 									</ul>
 								</div>

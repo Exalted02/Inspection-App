@@ -18,9 +18,8 @@
 							</a>--}}
 							<div>
 							<a href="javascript:void(0);" onclick="goBackAndReload();">
-								{{--<a href="javascript:history.back()">--}}
-									<span><i class="fa fa-angle-left"></i></span>
-								</a>
+								<span><i class="fa fa-angle-left"></i></span>
+							</a>
 							</div>
 							<div class="task-created-button" style="display:none;">
 							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;&nbsp;Task created

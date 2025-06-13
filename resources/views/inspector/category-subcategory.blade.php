@@ -14,6 +14,41 @@ $j = 0;
 $k = 0;
 $l = 0;
 $m = 0;
+
+
+$countNedded = 0;
+$countAction = 0;
+$countPlan = 0;
+$countCompleted = 0;
+foreach($correctiveNeeded as $result)
+{
+	if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
+	{
+		$countNedded++;
+	}
+}
+
+foreach($correctiveAction as $result)
+{
+	if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+	{
+		$countAction++;
+	}
+	
+	if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+	{
+		$countPlan++;
+	}
+}
+
+foreach($approvedCompleted as $result)
+{
+	if($result['inspector_action'] == 1 && $result['los_action'] == 1)
+	{
+		$countCompleted++;
+	}
+}
+
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -63,10 +98,10 @@ $m = 0;
 									@if(auth()->user()->user_type == 1)
 									<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
 									@endif
-									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab"> Corrective Needed</a></li>
-									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective Action</a></li>
-									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Corrective Plan</a></li> 
-									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Completed/Approved</a></li>									
+									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab">{{ $countNedded }} Corrective Needed</a></li>
+									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab">{{ $countAction }} Corrective Action</a></li>
+									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">{{ $countPlan}} Corrective Plan</a></li> 
+									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">{{ $countCompleted }}Completed/Approved</a></li>									
 								</ul>
 							</div>
 							<div class="scroll-arrow right-arrow" id="scrollRight"><i class="fa fa-chevron-right"></i></div>
