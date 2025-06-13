@@ -26,7 +26,7 @@
 	 
 	 $rejected_region = $taskChecklist->rejected_region;
 	 
-	 $corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('inspector_id', auth()->user()->id)->first();
+	 $corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 	 
 	 $lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
@@ -60,11 +60,11 @@
 		}
 	}
 	
-	$corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id',  $taskSubChecklist->subchecklist_id)->where('inspector_id', auth()->user()->id)->first();
+	$corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id',  $taskSubChecklist->subchecklist_id)->first();
 	 
-	 $lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
+	$lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
-	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
+	$lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
  }
  //echo auth()->user()->user_type;die;
  
