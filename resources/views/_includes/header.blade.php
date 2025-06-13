@@ -17,7 +17,8 @@
 								<span>Inspection</span>
 							</a>--}}
 							<div>
-								<a href="javascript:void(0);" onclick="goBackAndReload();">
+							<a href="javascript:void(0);" onclick="goBackAndReload();">
+								{{--<a href="javascript:history.back()">--}}
 									<span><i class="fa fa-angle-left"></i></span>
 								</a>
 							</div>
