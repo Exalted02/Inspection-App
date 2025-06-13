@@ -182,6 +182,26 @@
 				}
 				toastr[type](msg);
 			}
+			
+			function goBackAndReload() {
+				@if(auth()->check() && auth()->user()->user_type == 1)
+				{
+					var app_url =  "{{ env('APP_URL') }}";
+					var page_url = app_url+'/category';
+					var current_url = window.location.href;
+					//alert(page_url);alert(current_url);
+					if(current_url.includes(page_url))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/location-details') }}";
+							var redirectUrl = baseUrl + '/' + location_id;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+				}
+		        @endif
+			}
 		</script>
 		@yield('scripts')
 		@yield('component-scripts')

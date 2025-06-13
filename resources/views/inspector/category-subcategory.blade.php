@@ -724,11 +724,11 @@ $m = 0;
 		editBox.style.display = "none";
 	});
 </script>
+
 <script>
 $(document ).ready(function() {
 	var isactive = $('#isactive').val();
 	var user_id = $('#user_id').val();
-	
 	if(isactive == 0)
 	{
 		const selectedTab = localStorage.getItem('selectedTab');
