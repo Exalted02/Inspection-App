@@ -253,7 +253,7 @@ $(document ).ready(function() {
 		localStorage.removeItem('taskcreated');
 	}
 	
-	$(document).on('click', '.add-new-category', function(){
+	$(document).on('click', '.add-new-category-bck', function(){
 		$('#task_title').val('');
 		$('input[name="location_category[]"]:checked').each(function() {
 			$('input[name="location_category[]"]').prop('checked', false);
@@ -363,6 +363,14 @@ $(document ).ready(function() {
 		$('#task_image').val('');
 		$('#delete-image').hide();
 		$('.taskImg').hide();
+	});
+	
+	$(document).on('click', '.add-new-category', function(){
+		var baseUrl = "{{ url('/add-new-task') }}";
+		var location_id = $('#location_id').val();
+		//alert(location_id);
+		var redirectUrl = baseUrl + '/'+ location_id;
+		window.location.href = redirectUrl;
 	});
 });
 function readURL(input) {

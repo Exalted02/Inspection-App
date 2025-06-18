@@ -50,7 +50,7 @@ class DashboardInspectorController extends Controller
 
 			if ($hasData) {
 				$data['task_list_data'] = Task_lists::where('location_id', $id)
-											->where('inspector_id', auth()->user()->id)
+											->where('inspector_id', auth()->user()->id)->orderBy('id', 'DESC')
 											->get();
 			}
 
@@ -58,7 +58,7 @@ class DashboardInspectorController extends Controller
 			$hasData = Task_lists::where('location_id', $id)->exists();
 
 			if ($hasData) {
-				$data['task_list_data'] = Task_lists::where('location_id', $id)->get();
+				$data['task_list_data'] = Task_lists::where('location_id', $id)->orderBy('id', 'DESC')->get();
 			}
 		}
 
@@ -1706,6 +1706,14 @@ class DashboardInspectorController extends Controller
 		
 		return response()->json(['location_id'=>$location_id, 'task_id'=>$task_list_id]);
 	}
+	
+	public function add_new_task($lid)
+	{
+		$data['location_id']  = $lid;
+		$data['locationWisecategory'] = Category::where('location_id', $lid)->get();
+		return view('inspector.add-new-task', $data);
+	}
+	
 	public function save_task_data(Request $request)
 	{
 		//echo "<pre>";print_r($request->all());
