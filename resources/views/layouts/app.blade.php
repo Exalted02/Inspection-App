@@ -221,7 +221,6 @@
 					var page_url2 = app_url+'/location-details';
 					var page_url3 = '/corrective-action';
 					var current_url = window.location.href;
-					//alert(current_url)
 					//alert(page_url);alert(current_url);
 					
 					if(current_url.includes(page_url3))

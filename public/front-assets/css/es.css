@@ -1479,6 +1479,7 @@
 .nav-tabs > li.active .counter {
 	position: relative;
     color: red;
+	margin-right: 4px;
 }
 
 .tasks-list-title {
