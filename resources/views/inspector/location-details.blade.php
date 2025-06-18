@@ -49,9 +49,10 @@ $location_img = $location_categories[0] && $location_categories[0]->image != nul
 							<li role="presentation" class="active"><a href="#inprogress_tab" aria-controls="inprogress_tab" role="tab" data-toggle="tab">In progress</a></li>
 							<li role="presentation"><a href="#completed_tab" aria-controls="completed_tab" role="tab" data-toggle="tab">Completed</a></li>
 						</ul>--}}
-						<span class="tasks-list-title">On-going and Upcoming Tasks</span>
+						{{--<span class="tasks-list-title">On-going and Upcoming Tasks</span>--}}
 						<!-- Tab panes -->
 						<div class="tab-content">
+						<span class="tasks-list-title">On-going and Upcoming Tasks</span>
 							<div role="tabpanel" class="tab-pane active" id="inprogress_tab">
 							@if($task_list_data->isNotEmpty())
 								@foreach($task_list_data as $tasks)

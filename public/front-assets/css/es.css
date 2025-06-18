@@ -1482,7 +1482,7 @@
 }
 
 .tasks-list-title {
-  margin-top: 5%;
+  margin-top: 20px !important;
   font-size: 3rem; 
   font-weight: bold;
   color: black;
