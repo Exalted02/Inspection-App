@@ -30,6 +30,8 @@
 	 
 	 $lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
+	 $corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
+	 
 	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
 	 
 	 $corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->get();

@@ -98,10 +98,10 @@ foreach($approvedCompleted as $result)
 									@if(auth()->user()->user_type == 1)
 									<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
 									@endif
-									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab"><span class="counter">{{ $countNedded }}</span> Corrective Needed</a></li>
-									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter">{{ $countAction }}</span> Corrective Action</a></li>
-									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter">{{ $countPlan}}</span> Corrective Plan</a></li> 
-									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter">{{ $countCompleted }}</span> Completed/Approved</a></li>									
+									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab"><span class="counter-grey">{{ $countNedded }}</span> Corrective Needed</a></li>
+									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter-red">{{ $countAction }}</span> Corrective Action</a></li>
+									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter-red">{{ $countPlan}}</span> Corrective Plan</a></li> 
+									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter-grey">{{ $countCompleted }}</span> Completed/Approved</a></li>									
 								</ul>
 							{{--</div>
 							<div class="scroll-arrow right-arrow" id="scrollRight"><i class="fa fa-chevron-right"></i></div>

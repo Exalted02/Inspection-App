@@ -78,10 +78,10 @@ foreach($approvedCompleted as $result)
 										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">Rejected</a></li>
 									<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Approved</a></li>--}}
 									
-									<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab"><span class="counter">{{ $countNedded }}</span>Corrective Needed</a></li>
-										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab"><span class="counter">{{ $countAction }}</span>Corrective Action</a></li>
-										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab"><span class="counter">{{ $countPlan }}</span>Corrective Plan</a></li>
-										<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab"><span class="counter">{{ $countCompleted }}</span>Completed/Approved</a></li>
+									<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab"><span class="counter-red">{{ $countNedded }}</span>Corrective Needed</a></li>
+										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab"><span class="counter-grey">{{ $countAction }}</span>Corrective Action</a></li>
+										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab"><span class="counter-grey">{{ $countPlan }}</span>Corrective Plan</a></li>
+										<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab"><span class="counter-grey">{{ $countCompleted }}</span>Completed/Approved</a></li>
 										
 									</ul>
 								{{--</div>

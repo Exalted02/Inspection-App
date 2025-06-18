@@ -1464,7 +1464,20 @@
 }*/
 
 
-.counter {
+.counter-red {
+    /*display: inline-block;*/
+    background: #FFFFFF;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    /*vertical-align: middle;*/
+    /*color: #888;*/
+    color: red;
+	padding: 1px 4px;
+	margin-right: 4px;
+}
+
+.counter-grey {
     /*display: inline-block;*/
     background: #FFFFFF;
     border-radius: 50%;
