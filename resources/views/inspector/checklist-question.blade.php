@@ -144,6 +144,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->		
     </div>
+	<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 	<input type="hidden" id="current_checklist_id" value="{{ $checklistdata->id ?? '' }}">
 	<input type="hidden" name="order_no" id="order_no" value="{{$checklistdata->order_no ?? '' }}">
 	<input type="hidden" id="category_id" value="{{ $checklistdata->category_id ?? '' }}">

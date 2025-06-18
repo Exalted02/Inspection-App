@@ -413,6 +413,8 @@ class DashboardInspectorController extends Controller
 		->first();*/
 		$data['previous_checklist_id'] = '';
 		$data['task_id'] = $taskid;
+		$task_data = Task_lists::where('id', $taskid)->first();
+		$data['location_id'] = $task_data ? $task_data->location_id : '';
         return view('inspector.checklist-question', $data);
     }
 	public function checklist_next_question(Request $request)

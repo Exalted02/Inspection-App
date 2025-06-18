@@ -189,6 +189,7 @@
 					var app_url =  "{{ env('APP_URL') }}";
 					var page_url1 = app_url+'/category';
 					var page_url2 = app_url+'/location-details';
+					var page_url3 = app_url+'/checklist-question';
 					var current_url = window.location.href;
 					//alert(page_url1);alert(current_url);
 					if(current_url.includes(page_url1))
@@ -205,6 +206,19 @@
 						setTimeout(function() {
 							var baseUrl = "{{ url('/inspector-dashboard') }}";
 							var redirectUrl = baseUrl;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					else if(current_url.includes(page_url3))
+					{
+						var location_id = $('#location_id').val();
+						var task_id = $('#task_id').val();
+						var category_id = $('#category_id').val();
+						var active = 1;
+						//alert(location_id);alert(task_id);alert(category_id);
+						setTimeout(function() {
+							var baseUrl = "{{ url('/category') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' + task_id + '/' + active;
 							window.location.href = redirectUrl;
 						}, 100);
 					}
