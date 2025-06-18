@@ -201,7 +201,7 @@ $(document).ready(function() {
 					
 					var baseUrl = "{{ url('/location-details') }}";
 					var location_id = $('#location_id').val();
-					alert(location_id);
+					//alert(location_id);
 					var redirectUrl = baseUrl + '/'+ location_id;
 					window.location.href = redirectUrl;
 					/*setTimeout(() => {
