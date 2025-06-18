@@ -129,6 +129,7 @@
 					<input type="hidden" id="subchecklist_id" value="{{ $subchecklist_id ?? ''}}">
 					<input type="hidden" id="type" value="{{ $type ?? ''}}">
 					<input type="hidden" id="tab" value="{{ $tab ?? ''}}">
+					<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 						
 					</div>
 					<div class="sticky-footer">

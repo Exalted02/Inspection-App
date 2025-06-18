@@ -216,15 +216,32 @@
 				
 				@if(auth()->check() && auth()->user()->user_type == 2)
 				{
+					alert('ok1');
 					var app_url =  "{{ env('APP_URL') }}";
 					var page_url1 = app_url + '/location-owner';
 					var page_url2 = app_url+'/location-details';
+					var page_url3 = '/corrective-action';
 					var current_url = window.location.href;
+					alert(current_url)
 					//alert(page_url);alert(current_url);
-					if(current_url.includes(page_url1))
+					
+					if(current_url.includes(page_url3))
 					{
+						var location_id = $('#location_id').val();
+						var active = 1;
+						var task_id = $('#task_id').val();
+						setTimeout(function() {
+							var baseUrl = "{{ url('/location-owner') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' + task_id + '/' +  active; 
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					else if(current_url.includes(page_url1))
+					{
+						//alert('ok2');
 						setTimeout(function() {
 							var location_id = $('#location_id').val();
+							//alert(location_id);
 							var baseUrl = "{{ url('/location-details') }}";
 							var redirectUrl = baseUrl + '/' + location_id;
 							window.location.href = redirectUrl;
@@ -239,6 +256,7 @@
 						}, 100);
 					}
 					else{
+						//alert('ok5');
 						history.back();
 					}
 				}

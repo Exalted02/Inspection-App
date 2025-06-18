@@ -1482,6 +1482,7 @@
 }
 
 .tasks-list-title {
+  display: block;
   margin-top: 20px !important;
   font-size: 3rem; 
   font-weight: bold;
