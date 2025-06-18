@@ -215,7 +215,6 @@
 						var task_id = $('#task_id').val();
 						var category_id = $('#category_id').val();
 						var active = 1;
-						//alert(location_id);alert(task_id);alert(category_id);
 						setTimeout(function() {
 							var baseUrl = "{{ url('/category') }}";
 							var redirectUrl = baseUrl + '/' + location_id + '/' + task_id + '/' + active;
