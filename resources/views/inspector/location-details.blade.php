@@ -254,6 +254,7 @@ $(document ).ready(function() {
 		localStorage.removeItem('taskcreated');
 	}
 	
+	// no need the below code for add task in this page
 	$(document).on('click', '.add-new-category-bck', function(){
 		$('#task_title').val('');
 		$('input[name="location_category[]"]:checked').each(function() {
@@ -366,6 +367,7 @@ $(document ).ready(function() {
 		$('.taskImg').hide();
 	});
 	
+	// when click on add task link get the add page 
 	$(document).on('click', '.add-new-category', function(){
 		var baseUrl = "{{ url('/add-new-task') }}";
 		var location_id = $('#location_id').val();

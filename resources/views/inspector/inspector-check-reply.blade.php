@@ -32,6 +32,19 @@
 	 
 	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
 	 
+	 $corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->get();
+	 
+	 $corrective_action_files = [];
+	 if($corrective_action_file_data->isNotEmpty())
+	 {
+		 foreach($corrective_action_file_data as $corrective_files)
+		 {
+			$corrective_action_files[] = [
+				'url' => url('uploads/corrective_action/' .$corrective_files->file),
+			];
+		 }
+	 }
+	 
  }
  
  $taskSubChecklist = null;
@@ -65,9 +78,25 @@
 	$lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
 	$lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
+	
+	
+	$corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
+	
+	$corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->get();
+	 
+	 $corrective_action_files = [];
+	 if($corrective_action_file_data->isNotEmpty())
+	 {
+		 foreach($corrective_action_file_data as $corrective_files)
+		 {
+			$corrective_action_files[] = [
+				'url' => url('uploads/corrective_action/' .$corrective_files->file),
+			];
+		 }
+	 }
  }
  //echo auth()->user()->user_type;die;
- 
+ //echo "<pre>";print_r($corrective_action_files);die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -123,6 +152,22 @@
 								<div class="mt-1">
 									{{ Carbon::parse($lo_corrective_completed_by)->format('d M Y')}}
 								</div>
+							</div>
+						</div>
+						
+						<div class="row mt-4">
+							<div class="col-12 owner-checklist">
+								<label class="d-block mb-2 fw-bold">Final checks</label>
+
+								@if(!empty($corrective_action_files))
+									<div class="d-flex flex-wrap gap-3">
+										@foreach($corrective_action_files as $fileurl)
+											<div class="cheklist-reply-images">
+												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+											</div>
+										@endforeach
+									</div>
+								@endif
 							</div>
 						</div>
 					

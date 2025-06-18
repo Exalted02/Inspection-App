@@ -198,7 +198,6 @@ $(document).ready(function() {
 					$('#task_title').val('');
 					localStorage.setItem('taskcreated', 1);
 					
-					
 					var baseUrl = "{{ url('/location-details') }}";
 					var location_id = $('#location_id').val();
 					//alert(location_id);
