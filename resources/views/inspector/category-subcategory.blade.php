@@ -82,9 +82,9 @@ foreach($approvedCompleted as $result)
 				<div class="container1">
 					<div class="custom-tab">
 						<!-- Tabs -->
-						<div class="tab-scroll-container">
+						{{--<div class="tab-scroll-container">
 						<div class="scroll-arrow left-arrow" id="scrollLeft"><i class="fa fa-chevron-left"></i></div>
-							<div class="tab-scroll-wrapper" id="tabScrollWrapper">
+							<div class="tab-scroll-wrapper" id="tabScrollWrapper">--}}
 								<ul class="nav nav-tabs custom-tab-style" role="tablist">
 								@if(auth()->user()->user_type == 1)
 								{{--<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
@@ -98,14 +98,14 @@ foreach($approvedCompleted as $result)
 									@if(auth()->user()->user_type == 1)
 									<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
 									@endif
-									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab">{{ $countNedded }} Corrective Needed</a></li>
-									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab">{{ $countAction }} Corrective Action</a></li>
-									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">{{ $countPlan}} Corrective Plan</a></li> 
-									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">{{ $countCompleted }}Completed/Approved</a></li>									
+									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab"><span class="counter">{{ $countNedded }}</span> Corrective Needed</a></li>
+									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter">{{ $countAction }}</span> Corrective Action</a></li>
+									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter">{{ $countPlan}}</span> Corrective Plan</a></li> 
+									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter">{{ $countCompleted }}</span> Completed/Approved</a></li>									
 								</ul>
-							</div>
+							{{--</div>
 							<div class="scroll-arrow right-arrow" id="scrollRight"><i class="fa fa-chevron-right"></i></div>
-						</div>
+						</div>--}}
 						<!-- Tab panes -->
 						<div class="tab-content">
 						@if(auth()->user()->user_type == 1)

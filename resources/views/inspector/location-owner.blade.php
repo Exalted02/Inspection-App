@@ -69,24 +69,24 @@ foreach($approvedCompleted as $result)
 				<div class="container">
 					<div class="row custom-tab">
 						<!-- Tabs -->
-						<div class="tab-scroll-container">
-							<div class="scroll-arrow left-arrow" id="scrollLeft"><i class="fa fa-chevron-left"></i></div>
-								<div class="tab-scroll-wrapper" id="tabScrollWrapper">
+						{{--<div class="tab-scroll-container">
+						<div class="scroll-arrow left-arrow" id="scrollLeft"><i class="fa fa-chevron-left"></i></div>
+							<div class="tab-scroll-wrapper" id="tabScrollWrapper">--}}
 									<ul class="nav nav-tabs custom-tab-style" role="tablist">
 									{{--<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $total_corrective_action ?? ''}} Corrective actions</a></li>
 										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab">{{ count($correctiveCheck)}} Corrective checks</a></li>
 										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">Rejected</a></li>
 									<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">Approved</a></li>--}}
 									
-									<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab">{{ $countNedded }} Corrective Needed</a></li>
-										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab">{{ $countAction }} Corrective Action</a></li>
-										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab">{{ $countPlan }} Corrective Plan</a></li>
-										<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab">{{ $countCompleted }} Completed/Approved</a></li>
+									<li role="presentation" class=""><a class="correctiveAction" href="#inprogress_tab" aria-controls="inprogress_tab" role="tab"><span class="counter">{{ $countNedded }}</span>Corrective Needed</a></li>
+										<li role="presentation"><a class="completedtab"  href="#completed_tab" aria-controls="completed_tab" role="tab"><span class="counter">{{ $countAction }}</span>Corrective Action</a></li>
+										<li role="presentation"><a class="rejectInspector"  href="#rejected_by_inspector_tab" aria-controls="completed_tab" role="tab"><span class="counter">{{ $countPlan }}</span>Corrective Plan</a></li>
+										<li role="presentation"><a class="approvedByInspector" href="#approved_by_inspector_tab" aria-controls="completed_tab" role="tab"><span class="counter">{{ $countCompleted }}</span>Completed/Approved</a></li>
 										
 									</ul>
-								</div>
-							<div class="scroll-arrow right-arrow" id="scrollRight"><i class="fa fa-chevron-right"></i></div>
-						</div>
+								{{--</div>
+								<div class="scroll-arrow right-arrow" id="scrollRight"><i class="fa fa-chevron-right"></i></div>
+						</div>--}}
 						<!-- Tab panes -->
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane" id="inprogress_tab">

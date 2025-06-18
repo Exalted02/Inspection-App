@@ -139,6 +139,7 @@
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   background: white;
+  margin-bottom: 20px;
 }
 .profile-banner {
   height: 200px;
@@ -211,7 +212,8 @@
 	font-weight: 600;
 }
 .custom-tab .nav-tabs {
-	border-bottom: 2px solid #DDD;
+	/*border-bottom: 2px solid #DDD;*/
+	border-bottom: 0px;
 }
 .custom-tab .nav-tabs> li.active> a, .custom-tab .nav-tabs> li.active> a:focus, .custom-tab .nav-tabs> li.active> a:hover {
 	border-width: 0;
@@ -263,7 +265,7 @@
 }
 .custom-tab .nav-tabs > li > a::after {
 	/* background: #E52D27 none repeat scroll 0 0; */
-	background: #000000 none repeat scroll 0 0;
+	/*background: #000000 none repeat scroll 0 0;*/
 }
 .custom-tab .nav-tabs > li.active > a {
 	/* color: #E52D27; */
@@ -1358,7 +1360,7 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    padding: 0 30px; /* space for arrows */
+    /*padding: 0 30px;*/ /* space for arrows */
 }
 
 .tab-scroll-wrapper {
@@ -1374,7 +1376,7 @@
 }
 
 .nav-tabs {
-    display: inline-flex;
+    display: inline;
     flex-wrap: nowrap;
     margin-bottom: 0;
     width: max-content;
@@ -1383,6 +1385,7 @@
 .nav-tabs li {
     float: none;
     white-space: nowrap;
+	margin-bottom: 5px !important;
 }
 
 .scroll-arrow {
@@ -1428,11 +1431,11 @@
     /*background-color: #e0e0e0;*/ 
     /*background-color: #D3D3D3;*/ 
     background-color: #F2F2F2; 
-    border-radius: 10% !important; 
+    border-radius: 7px !important; 
     border: 1px solid #ccc;
     color: #333;
-    padding: 10px 15px;
-    margin-right: 2px;
+    padding: 8px 15px !important;
+    margin-right: 5px !important;
 	transition: background-color 0.3s;
 	line-height: 1.2 !important;
 	font-size: 14px;
@@ -1445,15 +1448,44 @@
     color: #000;
     border-color: #aaa;
 }
+
+/*.counter {
+    display: inline-block;
+    background: #FFFFFF;
+    color: red;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    font-weight: bold;
+    font-size: 14px;
+    vertical-align: middle;
+}*/
+
+
 .counter {
-	background: #FFFFFF;
-	border-radius: 50% !important;
-    width:20% !important;	
+    /*display: inline-block;*/
+    background: #FFFFFF;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    /*vertical-align: middle;*/
+    color: #888;
+	padding: 1px 4px;
 }
 
-/*.custom-tab-style > li.active > a,
-.custom-tab-style > li > a:hover {
-	background-color: #d0d0d0;
-    color: #000;
-    border-color: #aaa;
+
+.nav-tabs > li.active .counter {
+	position: relative;
+    color: red;
+}
+
+
+
+
+/*.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
 }*/
