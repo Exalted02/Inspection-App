@@ -102,21 +102,22 @@
 <script>
 $(document).ready(function() {
 	flatpickr("#set_time", {
-    enableTime: true,
+    enableTime: false,
     dateFormat: "d M Y H:i",
     onChange: function(selectedDates, dateStr, instance) {
-		
-			if (selectedDates.length > 0) {
+			if (selectedDates.length == 1) {
 				const date = selectedDates[0];
 				const dateOnly = flatpickr.formatDate(date, "d M Y");
 				const timeOnly = flatpickr.formatDate(date, "H:i");
 
+				document.getElementById('selected_time').innerText = 'Settime';
 				document.getElementById('selected_date').innerText = dateOnly;
 				$('#hidden_set_date').val(dateOnly);
 				$('#hidden_set_time').val(timeOnly);
 				// Delay clearing input to prevent recursion
 				setTimeout(() => {
 					instance.input.value = '';
+					instance.input.blur();
 				}, 0);
 			} else {
 				document.getElementById('selected_date').innerText = "Setdate";

@@ -1748,9 +1748,10 @@ class DashboardInspectorController extends Controller
 		$los_id = User::where('company_name', auth()->user()->company_name)->where('user_type', 3)->first()->id;
 		
 		$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
-		$time = $request->post('hidden_set_time');
+		//$time = $request->post('hidden_set_time');
+		$time = date('h:i:s');
 		$datetime  = $date.' '.$time;
-		$created_at = date('Y-m-d', strtotime($datetime));
+		$created_at = date('Y-m-d H:i:s', strtotime($datetime));
 		
 		$model=new Task_lists();
 		$model->inspector_id	=	auth()->user()->id;
