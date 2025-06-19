@@ -1661,6 +1661,10 @@ class DashboardInspectorController extends Controller
 	}
 	public function location_owner_question_reply($task_id='',$checklist_id='',$type='', $tab='', $lid='')
 	{
+		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 3) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
 		$data['checklist_id'] = $checklist_id ?? '';
@@ -1672,6 +1676,10 @@ class DashboardInspectorController extends Controller
 	}
 	public function location_owner_subchecklist_question_reply($task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='', $lid='')
 	{
+		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 3) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
 		$data['checklist_id'] = $checklist_id ?? '';
@@ -1825,6 +1833,10 @@ class DashboardInspectorController extends Controller
 	}
 	public function inspector_checklist_question_reply($location_id='',$task_id='',$checklist_id='',$type='', $tab='')
 	{
+		if (auth()->user()->user_type == 2) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
 		$data['location_id'] = $location_id ?? '';
@@ -1839,6 +1851,10 @@ class DashboardInspectorController extends Controller
 	}
 	public function inspector_subchecklist_question_reply($location_id='',$task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
 	{
+		if (auth()->user()->user_type == 2) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
 		$data['location_id'] = $location_id ?? '';
@@ -1904,6 +1920,10 @@ class DashboardInspectorController extends Controller
 	
 	public function location_owner_checklist_rejected_question_reply($task_id='',$checklist_id='',$type='')
 	{
+		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 3) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
 		$data['checklist_id'] = $checklist_id ?? '';
@@ -1914,6 +1934,10 @@ class DashboardInspectorController extends Controller
 	}
 	public function location_owner_subchecklist_rejected_question_reply($task_id='',$checklist_id='',$subchecklist_id='',$type='')
 	{
+		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 3) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
 		$data['checklist_id'] = $checklist_id ?? '';
@@ -1977,6 +2001,10 @@ class DashboardInspectorController extends Controller
 	
 	public function inspector_checklist_second_approve_by_lo($location_id='',$task_id='',$checklist_id='',$type='', $tab='')
 	{
+		if (auth()->user()->user_type == 2) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
 		$data['location_id'] = $location_id ?? '';
@@ -1988,6 +2016,10 @@ class DashboardInspectorController extends Controller
 	}
 	public function inspector_subchecklist_second_approve_by_lo($location_id='',$task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
 	{
+		if (auth()->user()->user_type == 2) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['task_id'] = $task_id ?? '';
 		$data['location_id'] = $location_id ?? '';
