@@ -25,9 +25,8 @@
 						  <form id="frmcategory" action="{{ route('save-task-data') }}" enctype="multipart/form-data">
 							<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
 							@csrf	
-								
 								<div class="row form-group">
-									<div class="owner-checklist">
+									<div class="col-md-12">
 										<label>{{ __('Task Title') }}</label>
 										<input class="form-control" placeholder="Add task title" type="text" name="task_title" id="task_title">
 										<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
@@ -35,7 +34,7 @@
 								</div>
 								
 								<div class="row form-group">
-									<div class="owner-checklist">
+									<div class="col-md-12">
 										<label>{{ __('Timeline') }}</label>
 										<div class="split-placeholder-wrapper">
 											<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time">
@@ -68,7 +67,7 @@
 									</div>
 								</div>
 								<div class="row form-group">
-									<div class="owner-checklist">
+									<div class="col-md-12">
 										<label><strong>Select Category</strong></label>
 										<div class="subcategory-box mt-2">
 											@foreach($locationWisecategory as $category)
