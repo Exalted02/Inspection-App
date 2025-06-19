@@ -248,10 +248,31 @@ $(document ).ready(function() {
 
 	
 	var taskcreated = localStorage.getItem('taskcreated');
+	var insApproved = localStorage.getItem('insapproved');
+	var insRejected = localStorage.getItem('insrejected');
+	var loSubmited = localStorage.getItem('loSubmited');
 	if(taskcreated == 1)
 	{
 		$('.task-created-button').fadeIn().delay(3000).fadeOut();
 		localStorage.removeItem('taskcreated');
+	}
+	
+	if(insApproved == 1)
+	{
+		$('.insp-approve-button').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insapproved');
+	}
+	
+	if(insRejected == 1)
+	{
+		$('.insp-reject-button').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insrejected');
+	}
+	
+	if(loSubmited == 1)
+	{
+		$('.lo-submitted-button').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('loSubmited');
 	}
 	
 	// no need the below code for add task in this page

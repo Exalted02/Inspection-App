@@ -292,6 +292,8 @@ $(document).ready(function() {
 			success: function(response) {
 				if(response.message=='success')
 				{
+					localStorage.setItem('insapproved', 1);
+					
 					var baseUrl = "{{ url('/location-details') }}";
 					var redirectUrl = baseUrl + '/'+ location_id ;
 					window.location.href = redirectUrl;
@@ -325,6 +327,8 @@ $(document).ready(function() {
 			success: function(response) {
 				if(response.message=='success')
 				{
+					localStorage.setItem('insrejected', 1);
+					
 					var baseUrl = "{{ url('/location-details') }}";
 					var redirectUrl = baseUrl + '/'+ location_id ;
 					window.location.href = redirectUrl;

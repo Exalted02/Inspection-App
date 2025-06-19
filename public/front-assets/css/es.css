@@ -1537,3 +1537,45 @@ body {
 .IA-IOS-get-reply {
    margin-top:10px;
 }
+.insp-approve-button {
+    background-color: #0f0c0ce5;       
+    color: #fff;                    
+    border-radius: 20px !important; 
+    height: 40px;   
+    padding: 0 15px; 
+    display: flex;   
+    align-items: center; 
+    width: 340px;
+    gap: 5px;     
+    font-size: 14px;
+	text-align:center !important;
+	margin-left: 56px;
+}
+.insp-reject-button {
+    background-color: #0f0c0ce5;       
+    color: #fff;                    
+    border-radius: 20px !important; 
+    height: 40px;   
+    padding: 0 15px; 
+    display: flex;   
+    align-items: center; 
+    width: 340px;
+    gap: 5px;     
+    font-size: 14px;
+	text-align:center !important;
+	margin-left: 56px;
+}
+.lo-submitted-button {
+    background-color: #0f0c0ce5;       
+    color: #fff;                    
+    border-radius: 20px !important; 
+    height: 40px;   
+    padding: 0 15px; 
+    display: flex;   
+    align-items: center; 
+    width: 340px;
+    gap: 5px;     
+    font-size: 14px;
+	text-align:center !important;
+	margin-left: 56px;
+}
