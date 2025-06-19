@@ -77,6 +77,10 @@ class DashboardInspectorController extends Controller
     }
 	public function category($lid='',$task_id='', $active='')
     {
+		if (auth()->user()->user_type == 2) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		
 		$correctiveNeddedChecklistArray = [];
@@ -398,6 +402,10 @@ class DashboardInspectorController extends Controller
 	
 	public function checklist_question($taskid='', $cat_id='')
     {
+		if (auth()->user()->user_type == 2 || auth()->user()->user_type == 3) {
+			return redirect('inspector-dashboard');
+		} 
+		
 		$data = [];
 		//echo $cat_id.' '.$subcat_id; die;
 		/*$data['checklistdata'] = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id',$cat_id)->where('status','!=', 2)->first();*/
@@ -1327,12 +1335,19 @@ class DashboardInspectorController extends Controller
 	
 	public function thank_you($id='')
 	{
+		if (auth()->user()->user_type != 1) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['task_id'] = $id;
 		return view('inspector.thankyou', $data);
 	}
 	public function location_owner($lid='',$taskid='', $active='')
 	{
+		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 3) {
+			return redirect('inspector-dashboard');
+		}
 		//--- if location owner login ---
 		$correctiveActionChecklistArray = [];
 		$correctiveActionSubcheckListArray = [];
@@ -1713,6 +1728,10 @@ class DashboardInspectorController extends Controller
 	
 	public function add_new_task($lid)
 	{
+		if (auth()->user()->user_type != 1) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data['location_id']  = $lid;
 		$locationWisecategory = [];
 		$categories = Category::where('location_id', $lid)->get();

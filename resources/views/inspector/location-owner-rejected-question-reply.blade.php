@@ -86,15 +86,15 @@
 					
 						
 						<div class="row">
-							<div class="owner-checklist-title">Reason</div>
+							<div class="col-md-12"><label>Reason</label></div>
 						</div>
 						<div class="row">
-						<div class="owner-checklist">{{ $rejected_region ?? '' }}</div>
+						<div class="col-md-12">{{ $rejected_region ?? '' }}</div>
 						</div>
 						
 						
 						<div class="row">
-							<div class="owner-checklist">
+							<div class="col-md-12">
 								@if(!empty($image_arr))
 									@foreach($image_arr as $url)
 									<div class="cheklist-reply-images">
@@ -105,7 +105,7 @@
 							</div>
 						</div>
 						<div class="row mt" style="margin-top: 1rem !important;">
-							<div class="owner-checklist">
+							<div class="col-md-12">
 								<label>Requirement to solve it</label>
 								<div class="mt-1">
 								{{ $corrective_plan ?? ''}}
@@ -113,7 +113,7 @@
 							</div>
 						</div>
 						<div class="row" style="margin-top: 1rem !important;">
-							<div class="owner-checklist">
+							<div class="col-md-12">
 								<label>Completed By</label>
 								<div class="mt-1">
 								{{ Carbon::parse($inspector_action_date)->format('d M Y') }}
@@ -122,7 +122,7 @@
 						</div>
 						{{--<form id="frmreply" action="{{ route('save-lo-reply-rejected-question') }}" enctype="multipart/form-data" method="post">--}}
 							<div class="row" style="margin-top: 1rem !important;">
-								<div class="owner-checklist">
+								<div class="col-md-12">
 									<label>Second checks</label>
 									<textarea name="lo_corrective_action_plan" id="lo_corrective_action_plan" placeholder="Add some remarks (optional)" class="form-control"></textarea>
 									<span id="action_plan" style="display: none; color: red;">This field is require.</span>

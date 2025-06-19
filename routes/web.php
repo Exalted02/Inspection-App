@@ -57,8 +57,6 @@ Route::get('lang/change', [LangController::class, 'change'])->name('changeLang')
 
 
 	
-
-
 Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('/checklist-question/{taskid}/{cat_id}', [DashboardInspectorController::class, 'checklist_question'])->name('checklist-question');
 	Route::post('checklist-next-question', [DashboardInspectorController::class, 'checklist_next_question'])->name('checklist-next-question');
