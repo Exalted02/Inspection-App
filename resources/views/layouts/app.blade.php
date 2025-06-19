@@ -12,6 +12,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="{{ url('front-assets/img/favicon.png') }}">		
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<!-- ==============> EXALTED SOLUTION CSS <====================== -->
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="{{ url('front-assets/css/es.css') }}">
 		<!-- =-=-=-=-=-=-= Bootstrap CSS Style =-=-=-=-=-=-= -->
 		<link rel="stylesheet" href="{{ url('front-assets/css/bootstrap.css') }}">
