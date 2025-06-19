@@ -1780,6 +1780,11 @@ class DashboardInspectorController extends Controller
 			$updtmodel->image = $fileName;
 			$updtmodel->save();
 		}
+		else{
+			$updtmodel= Task_lists::find($id);
+			$updtmodel->image = 'default_task_img.jpg';
+			$updtmodel->save();
+		}
 		
 		return response()->json([
 			'success' => true

@@ -55,15 +55,15 @@
 											<input type="file" name="task_image" id="task_image" style="display: none;">
 											<label for="task_image" class="task-upload-label">
 											<i class="fa fa-upload task-upload-icon"></i>
-											<span class="task-upload-text">Upload image</span>
+											<span class="task-upload-text">Update image</span>
 											</label>
 											<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
 										</div>
 									</div>
 								</div>
-								<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:none;">
+								<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;">
 									<div class="task-preview-wrapper position-relative d-inline-block">
-										<img id="" class="img-responsive task-img-upload" src="images/users/2.jpg" alt=""/>
+										<img id="" class="img-responsive task-img-upload" src="{{ url('images/noimages/default_task_img.jpg') }}" alt=""/>
 										<button type="button" class="task-img-delete" id="delete-image">×</button>
 									</div>
 								</div>
@@ -161,10 +161,10 @@ $(document).ready(function() {
 		//alert(selectedLocations);
 		
 		//alert(task_image);
-		if (task_image === 0) {
+		/*if (task_image === 0) {
 			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
 			return false;
-		}
+		}*/
 		
 		if (selectedLocations.length === 0) {
 			$('#tasktcategory_id_error').text('Please select category').fadeIn().delay(2000).fadeOut();
@@ -214,10 +214,11 @@ $(document).ready(function() {
 	
 	$('#delete-image').on('click', function() {
 		//$('#img-upload').attr('src', '');
-		$('.task-img-upload').attr('src', '');
+		var defaultImg = "{{ url('images/noimages/default_task_img.jpg') }}";
+		$('.task-img-upload').attr('src', defaultImg);
 		$('#task_image').val('');
 		$('#delete-image').hide();
-		$('.taskImg').hide();
+		$('.taskImg').show();
 	});
 });
 function readURL(input) {
