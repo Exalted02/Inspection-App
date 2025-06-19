@@ -2032,7 +2032,6 @@ class DashboardInspectorController extends Controller
 	
 	public function submit_inspector_approved(Request $request)
 	{
-		//echo $request->inspector_action.'---'.$request->los_action; die;
 		$task_list_id = $request->task_id;
 		$checklist_id = $request->checklist_id;
 		$subchecklist_id = $request->subchecklist_id ?? null;

@@ -125,15 +125,15 @@
 					
 						
 						<div class="row">
-							<div class="owner-checklist-title">Reason</div>
+							<div class="col-md-12">Reason</div>
 						</div>
 						<div class="row">
-						<div class="owner-checklist">{{ $rejected_region ?? '' }}</div>
+						<div class="col-md-12">{{ $rejected_region ?? '' }}</div>
 						</div>
 						
 						
 						<div class="row"  style="margin-top:17px;">
-							<div class="owner-checklist">
+							<div class="col-md-12">
 								@if(!empty($image_arr))
 									@foreach($image_arr as $url)
 									<div class="cheklist-reply-images">
@@ -144,7 +144,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="owner-checklist">
+							<div class="col-md-12">
 								<label>What you need to do</label>
 								<div class="mt-1">
 									{{ $lo_corrective_action_plan ?? '' }}
@@ -153,7 +153,7 @@
 						</div>
 						
 						<div class="row">
-							<div class="owner-checklist">
+							<div class="col-md-12">
 							<label>Completed By</label>
 								<div class="mt-1">
 									{{ Carbon::parse($lo_corrective_completed_by)->format('d M Y')}}
@@ -162,6 +162,7 @@
 						</div>
 						
 						<div class="row mt-4">
+						{{--<div class="col-12 owner-checklist">--}}
 							<div class="col-12 owner-checklist">
 								<label class="d-block mb-2 fw-bold">Final checks</label>
 
