@@ -1125,7 +1125,7 @@
 	display: flex;
 	align-items: center;
 	padding: 10px 12px;
-	border-bottom: 1px solid #e0e0e0;
+	border-bottom: 0px solid #e0e0e0;
 }
 .subcategory-item:last-of-type {
     border-bottom: none;
@@ -1318,26 +1318,34 @@
 	color: #000000;
 }
 
-.task-img-upload {
+/*.task-img-upload {
     width: 12%;
     max-width: 200px;
     border-radius: 5px;
     display: block;
+}*/
+.task-img-upload {
+    max-width: 200px;
+    width: 100%;
+    border-radius: 5px;
+    display: block;
 }
-
 /*-- new --*/
 .task-preview-wrapper {
     position: relative;
     display: inline-block;
+	width: 200px;
 }
 /*-- --*/
 
 .task-img-delete {
     position: absolute;
     top: -10px;
-    left: -5px;
-    background: red;
-    color: white;
+    /*left: -5px;
+    left: 116px;*/
+	right: -10px;
+    background: #dbdada;
+    color: black;
     border: none;
     border-radius: 50%;
     width: 24px;
