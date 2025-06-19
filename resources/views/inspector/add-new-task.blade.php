@@ -48,7 +48,7 @@
 									</div>
 								</div>
 								<div class="task-cover-image">Upload Cover</div>
-								<div class="row d-flex align-items-center" style="margin-left: -26px;">
+								<div class="row d-flex align-items-center update-image">
 									<div class="col-md-4 mb-3">
 										<label for="task_image"></label>
 										<div class="upload-wrapper">
@@ -74,9 +74,9 @@
 											@foreach($locationWisecategory as $category)
 												<div class="subcategory-item">
 													<div class="subcategory-checkbox">
-														<input type="checkbox" name="location_category[]" value="{{ $category->id }}">
+														<input type="checkbox" name="location_category[]" value="{{ $category['id'] }}">
 													</div>
-													<div class="subcategory-name"><strong>{{ $category->name }}</strong></div>
+													<div class="subcategory-name"><strong>{{ $category['name'] }}</strong></div>
 													
 												</div>
 											@endforeach

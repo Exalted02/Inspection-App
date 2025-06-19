@@ -1714,7 +1714,20 @@ class DashboardInspectorController extends Controller
 	public function add_new_task($lid)
 	{
 		$data['location_id']  = $lid;
-		$data['locationWisecategory'] = Category::where('location_id', $lid)->get();
+		$locationWisecategory = [];
+		$categories = Category::where('location_id', $lid)->get();
+		foreach($categories as $category)
+		{
+			$exists = Checklist::where('category_id', $category->id)->exists();
+			if($exists)
+			{
+				$locationWisecategory[] = [
+					'id'  => $category->id,
+					'name'  => $category->name,
+				];
+			}
+		}
+		$data['locationWisecategory']= $locationWisecategory;
 		return view('inspector.add-new-task', $data);
 	}
 	
