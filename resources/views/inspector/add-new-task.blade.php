@@ -48,7 +48,7 @@
 									</div>
 								</div>
 								<div class="task-cover-image">Upload Cover</div>
-								<div class="row d-flex align-items-center">
+								<div class="row d-flex align-items-center" style="margin-left: -26px;">
 									<div class="col-md-4 mb-3">
 										<label for="task_image"></label>
 										<div class="upload-wrapper">
@@ -61,7 +61,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;">
+								<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;margin-left: -10px;">
 									<div class="task-preview-wrapper position-relative d-inline-block">
 										<img id="" class="img-responsive task-img-upload" src="{{ url('images/noimages/default_task_img.jpg') }}" alt=""/>
 										<button type="button" class="task-img-delete" id="delete-image">×</button>
