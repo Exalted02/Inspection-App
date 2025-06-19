@@ -121,15 +121,16 @@
 					
 						
 						<div class="row">
-							<div class="owner-checklist-title">Reason</div>
+							<div class="col-md-12">
+								<label>Reason</label>
+								<div class="mt-1">
+									{{ $rejected_region ?? '' }}
+								</div>
+							</div>
 						</div>
+						
 						<div class="row">
-						<div class="owner-checklist">{{ $rejected_region ?? '' }}</div>
-						</div>
-						
-						
-						<div class="row"  style="margin-top:17px;">
-							<div class="owner-checklist">
+							<div class="col-md-12">
 								@if(!empty($image_arr))
 									@foreach($image_arr as $url)
 									<div class="cheklist-reply-images">
@@ -139,17 +140,19 @@
 								@endif
 							</div>
 						</div>
-						<div class="row">
-							<div class="owner-checklist">
+						@if(!empty($lo_corrective_action_plan))
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
 								<label>What you need to do</label>
 								<div class="mt-1">
 									{{ $lo_corrective_action_plan ?? '' }}
 								</div>
 							</div>
 						</div>
+						@endif
 						
-						<div class="row" style="margin-top:10px;">
-							<div class="owner-checklist">
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
 							<label>Completed By</label>
 								<div class="mt-1">
 									{{ Carbon::parse($lo_corrective_completed_by)->format('d M Y')}}
@@ -157,8 +160,8 @@
 							</div>
 						</div>
 						
-						<div class="row mt-4">
-							<div class="col-12 owner-checklist">
+						{{--<div class="row">
+							<div class="col-12 col-md-12">
 								<label class="d-block mb-2 fw-bold">Final checks</label>
 
 								@if(!empty($corrective_action_files))
@@ -171,7 +174,7 @@
 									</div>
 								@endif
 							</div>
-						</div>
+						</div>--}}
 					
 					<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 					<input type="hidden" id="task_id" value="{{ $task_id ?? ''}}">

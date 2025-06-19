@@ -88,6 +88,8 @@
 	
 	$corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
 	
+	$lo_corrective_action_plan_second_check = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan_second_check : '';
+	
 	$corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->get();
 	 
 	 $corrective_action_files = [];
@@ -125,14 +127,14 @@
 					
 						
 						<div class="row">
-							<div class="col-md-12">Reason</div>
+							<div class="col-md-12"><label>Reason</label></div>
 						</div>
 						<div class="row">
 						<div class="col-md-12">{{ $rejected_region ?? '' }}</div>
 						</div>
 						
 						
-						<div class="row"  style="margin-top:17px;">
+						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 								@if(!empty($image_arr))
 									@foreach($image_arr as $url)
@@ -143,16 +145,16 @@
 								@endif
 							</div>
 						</div>
-						<div class="row">
+						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 								<label>What you need to do</label>
-								<div class="mt-1">
+								<div>
 									{{ $lo_corrective_action_plan ?? '' }}
 								</div>
 							</div>
 						</div>
 						
-						<div class="row">
+						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 							<label>Completed By</label>
 								<div class="mt-1">
@@ -161,9 +163,29 @@
 							</div>
 						</div>
 						
-						<div class="row mt-4">
-						{{--<div class="col-12 owner-checklist">--}}
-							<div class="col-12 owner-checklist">
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12"><label>Final checks</label></div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">{{ $lo_corrective_action_plan_second_check ?? '' }}</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-12">
+								@if(!empty($corrective_action_files))
+									<div class="d-flex flex-wrap gap-3">
+										@foreach($corrective_action_files as $fileurl)
+											<div class="cheklist-reply-images">
+												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+											</div>
+										@endforeach
+									</div>
+								@endif
+							</div>
+						</div>
+						
+						{{--<div class="row">
+							<div class="col-md-12">
 								<label class="d-block mb-2 fw-bold">Final checks</label>
 
 								@if(!empty($corrective_action_files))
@@ -176,7 +198,7 @@
 									</div>
 								@endif
 							</div>
-						</div>
+						</div>--}}
 
 					
 					<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
