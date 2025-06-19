@@ -1782,7 +1782,7 @@ class DashboardInspectorController extends Controller
 		}
 		else{
 			$updtmodel= Task_lists::find($id);
-			$updtmodel->image = 'default_task_img.jpg';
+			$updtmodel->image = 'default-task-pic.jpg';
 			$updtmodel->save();
 		}
 		

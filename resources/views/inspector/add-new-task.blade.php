@@ -63,7 +63,7 @@
 								</div>
 								<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;margin-left: -10px;">
 									<div class="task-preview-wrapper position-relative d-inline-block">
-										<img id="" class="img-responsive task-img-upload" src="{{ url('images/noimages/default_task_img.jpg') }}" alt=""/>
+										<img id="" class="img-responsive task-img-upload" src="{{ url('images/noimages/default-task-pic.jpg') }}" alt=""/>
 										<button type="button" class="task-img-delete" id="delete-image">×</button>
 									</div>
 								</div>
@@ -214,7 +214,7 @@ $(document).ready(function() {
 	
 	$('#delete-image').on('click', function() {
 		//$('#img-upload').attr('src', '');
-		var defaultImg = "{{ url('images/noimages/default_task_img.jpg') }}";
+		var defaultImg = "{{ url('images/noimages/default-task-pic.jpg') }}";
 		$('.task-img-upload').attr('src', defaultImg);
 		$('#task_image').val('');
 		$('#delete-image').hide();
