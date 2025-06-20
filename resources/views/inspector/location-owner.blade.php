@@ -801,6 +801,13 @@ $(document).ready(function() {
         scrollWrapper.animate({ scrollLeft: scrollWrapper.scrollLeft() + 150 }, 300);
     });
 	
+	
+	var loSubmited = localStorage.getItem('loSubmited');
+	if(loSubmited == 1)
+	{
+		$('.lo-submitted-button').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('loSubmited');
+	}
 });
 
 

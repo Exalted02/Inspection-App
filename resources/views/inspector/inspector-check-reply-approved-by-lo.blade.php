@@ -328,7 +328,6 @@ $(document).ready(function() {
 				if(response.message=='success')
 				{
 					localStorage.setItem('insrejected', 1);
-					
 					var baseUrl = "{{ url('/location-details') }}";
 					var redirectUrl = baseUrl + '/'+ location_id ;
 					window.location.href = redirectUrl;

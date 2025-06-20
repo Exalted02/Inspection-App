@@ -250,7 +250,7 @@ $(document ).ready(function() {
 	var taskcreated = localStorage.getItem('taskcreated');
 	var insApproved = localStorage.getItem('insapproved');
 	var insRejected = localStorage.getItem('insrejected');
-	var loSubmited = localStorage.getItem('loSubmited');
+	
 	if(taskcreated == 1)
 	{
 		$('.task-created-button').fadeIn().delay(3000).fadeOut();
@@ -269,11 +269,6 @@ $(document ).ready(function() {
 		localStorage.removeItem('insrejected');
 	}
 	
-	if(loSubmited == 1)
-	{
-		$('.lo-submitted-button').fadeIn().delay(3000).fadeOut();
-		localStorage.removeItem('loSubmited');
-	}
 	
 	// no need the below code for add task in this page
 	$(document).on('click', '.add-new-category-bck', function(){
