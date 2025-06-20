@@ -232,6 +232,7 @@ $(document).ready(function() {
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var location_id = $('#location_id').val();
 	   var inspector_action = 1;
+	   var tab = $('#tab').val();
 	   //alert(lo_direct_approve);
 	   var URL = "{{ route('submit-inspector-status') }}";
 	   $.ajax({
@@ -242,7 +243,15 @@ $(document).ready(function() {
 			success: function(response) {
 				if(response.message=='success')
 				{
-					localStorage.setItem('insapproved', 1);
+					if(tab == 'corrective-action')
+					{
+						localStorage.setItem('insActionApproved', 1);
+					}
+					
+					if(tab == 'corrective-plan')
+					{
+						localStorage.setItem('insPlanApproved', 1);
+					}
 					
 					var baseUrl = "{{ url('/location-details') }}";
 					var redirectUrl = baseUrl + '/'+ location_id ;
@@ -265,6 +274,7 @@ $(document).ready(function() {
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var location_id = $('#location_id').val();
 	   var inspector_action = 2;
+	   var tab = $('#tab').val();
 	   
 	   //alert(lo_direct_approve);
 	   var URL = "{{ route('submit-inspector-status') }}";
@@ -276,7 +286,15 @@ $(document).ready(function() {
 			success: function(response) {
 				if(response.message=='success')
 				{
-					localStorage.setItem('insrejected', 1);
+					if(tab == 'corrective-action')
+					{
+						localStorage.setItem('insActionRejected', 1);
+					}
+					if(tab == 'corrective-plan')
+					{
+						localStorage.setItem('insPlanRejected', 1);
+					}
+					
 					var baseUrl = "{{ url('/location-details') }}";
 					var redirectUrl = baseUrl + '/'+ location_id ;
 					window.location.href = redirectUrl;

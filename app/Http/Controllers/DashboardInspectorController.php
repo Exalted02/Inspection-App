@@ -1972,8 +1972,23 @@ class DashboardInspectorController extends Controller
 
 		if ($lo_files && is_array($lo_files)) {
 			
-			Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->delete();
+			// unlink previous file 
+			$correctiveFiles = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->get();
+			if($correctiveFiles->isNotEmpty()){
+				
+				foreach($correctiveFiles as $filemn)
+				{
+					$f_name = $filemn->file;
+					$filePath = public_path('uploads/corrective_action/' . $f_name);
+					if (file_exists($filePath)) {
+						unlink($filePath);
+					}
+				}
+				
+				Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->delete();
+			}
 			
+			// save new files
 			foreach ($lo_files as $file) {
 				
 				$destinationPath = public_path('uploads/corrective_action');
@@ -2012,6 +2027,11 @@ class DashboardInspectorController extends Controller
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
 		
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
+		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
+		$data['lo_corrective_action_plan_second_check']  		= $corrective_actions_data ? $corrective_actions_data->lo_corrective_action_plan_second_check : '';
+		
 		return view('inspector.inspector-check-reply-approved-by-lo', $data);
 	}
 	public function inspector_subchecklist_second_approve_by_lo($location_id='',$task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
@@ -2027,6 +2047,11 @@ class DashboardInspectorController extends Controller
 		$data['subchecklist_id'] = $subchecklist_id ?? '';
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
+		
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
+		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
+		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
+		
 		return view('inspector.inspector-check-reply-approved-by-lo', $data);
 	}
 	

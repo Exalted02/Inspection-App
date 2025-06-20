@@ -219,13 +219,26 @@
 			</section>
 		</div>
     </div>
+	@if(auth()->user()->user_type == 1 && $inspector_action == 0)
 	<div class="checklist-question-sticky-footer">
-						<div class="clearfix"></div>
-						<div class="footer-content question-navigation d-flex justify-content-between">
-							<button class="reject-class-button inspector-rejected">Reject</button>
-							<button class="ms-auto inspector-approve">Approve</button>
-						</div>
-					</div>
+		<div class="clearfix"></div>
+		<div class="footer-content question-navigation d-flex justify-content-between">
+			<button class="reject-class-button inspector-rejected">Reject</button>
+			<button class="ms-auto inspector-approve">Approve</button>
+		</div>
+	</div>
+	@endif
+	
+	@if(auth()->user()->user_type == 3 && $los_action == 0)
+		<div class="checklist-question-sticky-footer">
+		<div class="clearfix"></div>
+		<div class="footer-content question-navigation d-flex justify-content-between">
+			<button class="reject-class-button inspector-rejected">Reject</button>
+			<button class="ms-auto inspector-approve">Approve</button>
+		</div>
+	</div>
+	@endif
+	
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
@@ -254,6 +267,8 @@ $(document).ready(function() {
 			success: function(response) {
 				if(response.message=='success')
 				{
+					localStorage.setItem('insFinalApproved', 1);
+					
 					var baseUrl = "{{ url('/location-details') }}";
 					var redirectUrl = baseUrl + '/'+ location_id ;
 					window.location.href = redirectUrl;
@@ -292,7 +307,7 @@ $(document).ready(function() {
 			success: function(response) {
 				if(response.message=='success')
 				{
-					localStorage.setItem('insapproved', 1);
+					localStorage.setItem('insFinalApproved', 1);
 					
 					var baseUrl = "{{ url('/location-details') }}";
 					var redirectUrl = baseUrl + '/'+ location_id ;
@@ -327,7 +342,7 @@ $(document).ready(function() {
 			success: function(response) {
 				if(response.message=='success')
 				{
-					localStorage.setItem('insrejected', 1);
+					localStorage.setItem('insFinalRejected', 1);
 					var baseUrl = "{{ url('/location-details') }}";
 					var redirectUrl = baseUrl + '/'+ location_id ;
 					window.location.href = redirectUrl;

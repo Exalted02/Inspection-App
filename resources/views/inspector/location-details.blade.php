@@ -245,11 +245,13 @@ $(document ).ready(function() {
 		}
 	});
 
-
-	
 	var taskcreated = localStorage.getItem('taskcreated');
-	var insApproved = localStorage.getItem('insapproved');
-	var insRejected = localStorage.getItem('insrejected');
+	var insActionApproved = localStorage.getItem('insActionApproved');
+	var insPlanApproved = localStorage.getItem('insPlanApproved');
+	var insActionRejected = localStorage.getItem('insActionRejected');
+	var insPlanRejected = localStorage.getItem('insPlanRejected');
+	var insFinalApproved = localStorage.getItem('insFinalApproved');
+	var insFinalRejected = localStorage.getItem('insFinalRejected');
 	
 	if(taskcreated == 1)
 	{
@@ -257,16 +259,40 @@ $(document ).ready(function() {
 		localStorage.removeItem('taskcreated');
 	}
 	
-	if(insApproved == 1)
+	if(insActionApproved == 1)
 	{
-		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action plan approved&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
-		localStorage.removeItem('insapproved');
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action approved&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insActionApproved');
 	}
 	
-	if(insRejected == 1)
+	if(insPlanApproved == 1)
 	{
-		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action plan rejected&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
-		localStorage.removeItem('insrejected');
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective plan approved&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insPlanApproved');
+	}
+	
+	if(insActionRejected == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action rejected&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insActionRejected');
+	}
+	
+	if(insPlanRejected == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective plan rejected&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insPlanRejected');
+	}
+	
+	if(insFinalApproved == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Approved final round check&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insFinalApproved');
+	}
+	
+	if(insFinalRejected == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Rejected final round check&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insFinalRejected');
 	}
 	
 	

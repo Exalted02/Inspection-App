@@ -123,7 +123,7 @@
 						{{--<form id="frmreply" action="{{ route('save-lo-reply-rejected-question') }}" enctype="multipart/form-data" method="post">--}}
 							<div class="row" style="margin-top: 1rem !important;">
 								<div class="col-md-12">
-									<label>Second checks</label>
+									<label>Final checks</label>
 									<textarea name="lo_corrective_action_plan" id="lo_corrective_action_plan" placeholder="Add some remarks (optional)" class="form-control"></textarea>
 									<span id="action_plan" style="display: none; color: red;">This field is require.</span>
 								</div>
@@ -151,8 +151,8 @@
 								{{--<input type="hidden" id="category_id" value="{{ $task_category_id ?? ''}}">--}}
 							
 					</div>
-					<div class="sticky-footer">
-						<button class="submitChecklist location-owner-approve">Submit</button>
+					<div class="sticky-footer location-owner-approve">
+						<button class="submitChecklist">Submit</button>
 					</div>
 				</div>
 			</section>
@@ -279,7 +279,7 @@ $('#lo_file').on('change', function (e) {
 				//alert(response.message);
 				if(response.message=='success')
 				{
-					localStorage.setItem('loFinalSubmited', 1);
+					localStorage.setItem('loFinalSubmited', 1); 
 					//history.back();
 					var activeTab = 0;
 					var baseUrl = "{{ url('/location-owner') }}";

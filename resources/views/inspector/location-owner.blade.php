@@ -821,7 +821,7 @@ $(document).ready(function() {
 	
 	if(loFinalSubmited == 1)
 	{
-		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective second round submitted&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective final round submitted&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 		localStorage.removeItem('loFinalSubmited');
 	}
 });
