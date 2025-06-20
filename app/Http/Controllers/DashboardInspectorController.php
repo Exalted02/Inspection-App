@@ -383,6 +383,10 @@ class DashboardInspectorController extends Controller
 			
 			$hasChecklists = Checklist::where('category_id', $category_id)->first();
 			
+			$totalChecklist = Checklist::where('category_id', $category_id)->count();
+			
+			
+			
 			if(!$taskLocationDtls)
 			{
 				return response()->json(['hasData'=> false,'message'=>'Please enter location details.', 'id'=>NULL]);
