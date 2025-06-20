@@ -60,7 +60,7 @@ foreach($approvedCompleted as $result)
 			{{ $location_details ?? 'Tap to add address' }}
 				<span><i class="fa-solid fa-pen"></i></span>
 			</div>
-			<span id="successMessage" style="display: none; color: green;">
+			<span id="successMessage" class="task-location-msg">
 				Details saved successfully!
 			</span>
 			{{--<span id="errorMessage" style="display: none; color: red;"></span>--}}

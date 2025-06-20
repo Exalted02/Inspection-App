@@ -1110,8 +1110,8 @@ body {
 }
 
 #successMessage {
-	color: #28a745;
-	font-weight: 600;
+	color: #18a939;
+	display:none;
 }
 
 /*------- 21-05-2025----*/
