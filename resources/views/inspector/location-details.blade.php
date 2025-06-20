@@ -89,7 +89,7 @@ $location_img = $location_categories[0] && $location_categories[0]->image != nul
 								</div>
 								@endforeach
 							@else
-								<div class="text-center"><strong><h3>No record found</h3></strong></div>
+								<div class="text-left"><strong><h3>No record found</h3></strong></div>
 							@endif
 							</div>
 							<div role="tabpanel" class="tab-pane" id="completed_tab">

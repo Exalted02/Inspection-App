@@ -85,8 +85,8 @@
 								</div>
 								
 								
-							<div class="sticky-footer">
-								<button type="button" class="save-task">Add Task</button>
+							<div class="sticky-footer save-task">
+								<button type="button">Add Task</button>
 							</div>
 						</form>
 					</div>
