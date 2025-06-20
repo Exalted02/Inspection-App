@@ -223,13 +223,13 @@ $(document ).ready(function() {
 		}
 	});
 
-	var taskcreated = localStorage.getItem('taskcreated');
-	var insActionApproved = localStorage.getItem('insActionApproved');
-	var insPlanApproved = localStorage.getItem('insPlanApproved');
-	var insActionRejected = localStorage.getItem('insActionRejected');
-	var insPlanRejected = localStorage.getItem('insPlanRejected');
-	var insFinalApproved = localStorage.getItem('insFinalApproved');
-	var insFinalRejected = localStorage.getItem('insFinalRejected');
+	var taskcreated 		= localStorage.getItem('taskcreated');
+	var insActionApproved 	= localStorage.getItem('insActionApproved');
+	var insPlanApproved 	= localStorage.getItem('insPlanApproved');
+	var insActionRejected 	= localStorage.getItem('insActionRejected');
+	var insPlanRejected 	= localStorage.getItem('insPlanRejected');
+	var insFinalApproved 	= localStorage.getItem('insFinalApproved');
+	var insFinalRejected 	= localStorage.getItem('insFinalRejected');
 	
 	if(taskcreated == 1)
 	{
