@@ -253,19 +253,19 @@ $(document ).ready(function() {
 	
 	if(taskcreated == 1)
 	{
-		$('.task-created-button').fadeIn().delay(3000).fadeOut();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Task created&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 		localStorage.removeItem('taskcreated');
 	}
 	
 	if(insApproved == 1)
 	{
-		$('.insp-approve-button').fadeIn().delay(3000).fadeOut();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action plan approved&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 		localStorage.removeItem('insapproved');
 	}
 	
 	if(insRejected == 1)
 	{
-		$('.insp-reject-button').fadeIn().delay(3000).fadeOut();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action plan rejected&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 		localStorage.removeItem('insrejected');
 	}
 	

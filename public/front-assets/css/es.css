@@ -1021,7 +1021,7 @@ body {
 	width:100%;
 }
 
-.task-created-button {
+/*.task-created-button {
     background-color: #0f0c0ce5;       
     color: #fff;                    
     border-radius: 20px !important; 
@@ -1034,7 +1034,7 @@ body {
     font-size: 14px;
 	text-align:center !important;
 	margin-left: 56px;
-}
+}*/
 
 .custom-upload-label {
   display: flex;
@@ -1537,7 +1537,7 @@ body {
 .IA-IOS-get-reply {
    margin-top:10px;
 }
-.insp-approve-button {
+.corrective-message {
     background-color: #0f0c0ce5;       
     color: #fff;                    
     border-radius: 20px !important; 
@@ -1545,49 +1545,8 @@ body {
     padding: 0 15px; 
     display: flex;   
     align-items: center; 
-    width: 315px;
-    gap: 5px;     
-    font-size: 14px;
-	text-align:center !important;
-	margin-left: 56px;
-}
-.insp-reject-button {
-    background-color: #0f0c0ce5;       
-    color: #fff;                    
-    border-radius: 20px !important; 
-    height: 40px;   
-    padding: 0 15px; 
-    display: flex;   
-    align-items: center; 
-    width: 315px;
-    gap: 5px;     
-    font-size: 14px;
-	text-align:center !important;
-	margin-left: 56px;
-}
-.lo-submitted-button {
-    background-color: #0f0c0ce5;       
-    color: #fff;                    
-    border-radius: 20px !important; 
-    height: 40px;   
-    padding: 0 15px; 
-    display: flex;   
-    align-items: center; 
-    width: 260px;
-    gap: 5px;     
-    font-size: 14px;
-	text-align:center !important;
-	margin-left: 56px;
-}
-.lo-finalsubmitted-button {
-    background-color: #0f0c0ce5;       
-    color: #fff;                    
-    border-radius: 20px !important; 
-    height: 40px;   
-    padding: 0 15px; 
-    display: flex;   
-    align-items: center; 
-    width: 310px;
+    /*width: 260px;*/
+    width: auto;
     gap: 5px;     
     font-size: 14px;
 	text-align:center !important;

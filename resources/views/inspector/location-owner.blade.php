@@ -806,13 +806,14 @@ $(document).ready(function() {
 	var loFinalSubmited = localStorage.getItem('loFinalSubmited');
 	if(loSubmited == 1)
 	{
-		$('.lo-submitted-button').fadeIn().delay(3000).fadeOut();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective plan submitted&nbsp;&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		
 		localStorage.removeItem('loSubmited');
 	}
 	
 	if(loFinalSubmited == 1)
 	{
-		$('.lo-finalsubmitted-button').fadeIn().delay(3000).fadeOut();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective second round submitted&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 		localStorage.removeItem('loFinalSubmited');
 	}
 });
