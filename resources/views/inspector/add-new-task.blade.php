@@ -139,7 +139,6 @@ $(document).ready(function() {
 		let hidden_set_date = $('#hidden_set_date').val();
 		let hidden_set_time = $('#hidden_set_time').val();
 		
-		
 		if (task_title === '') {
 			$('#tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut();
 			return false;
