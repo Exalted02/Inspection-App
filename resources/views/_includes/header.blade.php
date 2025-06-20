@@ -22,16 +22,19 @@
 							</a>
 							</div>
 							<div class="task-created-button" style="display:none;">
-							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;&nbsp;Task created
+							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Task created
 							</div>
 							<div class="insp-approve-button" style="display:none;">
-							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;&nbsp;Corrective action plan approved
+							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action plan approved
 							</div>
 							<div class="insp-reject-button" style="display:none;">
-							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;&nbsp;Corrective action plan rejected
+							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action plan rejected
 							</div>
 							<div class="lo-submitted-button" style="display:none;">
-							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;&nbsp;Corrective plan submitted
+							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective plan submitted
+							</div>
+							<div class="lo-finalsubmitted-button" style="display:none;">
+							    &nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective second round submitted
 							</div>
 							<div class="header-icon">
 								<a href="{{ route('inspector-dashboard')}}"><i class="fa-solid fa-house"></i></a>

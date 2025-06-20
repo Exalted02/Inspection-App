@@ -279,6 +279,7 @@ $('#lo_file').on('change', function (e) {
 				//alert(response.message);
 				if(response.message=='success')
 				{
+					localStorage.setItem('loFinalSubmited', 1);
 					//history.back();
 					var activeTab = 0;
 					var baseUrl = "{{ url('/location-owner') }}";

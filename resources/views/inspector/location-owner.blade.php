@@ -803,10 +803,17 @@ $(document).ready(function() {
 	
 	
 	var loSubmited = localStorage.getItem('loSubmited');
+	var loFinalSubmited = localStorage.getItem('loFinalSubmited');
 	if(loSubmited == 1)
 	{
 		$('.lo-submitted-button').fadeIn().delay(3000).fadeOut();
 		localStorage.removeItem('loSubmited');
+	}
+	
+	if(loFinalSubmited == 1)
+	{
+		$('.lo-finalsubmitted-button').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('loFinalSubmited');
 	}
 });
 
