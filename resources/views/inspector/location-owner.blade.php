@@ -802,13 +802,21 @@ $(document).ready(function() {
     });
 	
 	
-	var loSubmited = localStorage.getItem('loSubmited');
+	var loActionSubmited = localStorage.getItem('loActionSubmited');
+	var loPlanSubmited = localStorage.getItem('loPlanSubmited');
 	var loFinalSubmited = localStorage.getItem('loFinalSubmited');
-	if(loSubmited == 1)
+	if(loActionSubmited == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action submitted&nbsp;&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		
+		localStorage.removeItem('loActionSubmited');
+	}
+	
+	if(loPlanSubmited == 1)
 	{
 		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective plan submitted&nbsp;&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 		
-		localStorage.removeItem('loSubmited');
+		localStorage.removeItem('loPlanSubmited');
 	}
 	
 	if(loFinalSubmited == 1)

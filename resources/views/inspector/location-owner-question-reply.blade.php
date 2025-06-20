@@ -132,8 +132,8 @@
 					<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 						
 					</div>
-					<div class="sticky-footer">
-						<button class="submitChecklist">Submit checklist</button>
+					<div class="sticky-footer submitChecklist">
+						<button class="submitChecklist_s">Submit checklist</button>
 					</div>
 				</div>
 			</section>
@@ -202,7 +202,15 @@ $(document).ready(function() {
 				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,hidden_set_date:hidden_set_date,hidden_set_time:hidden_set_time, _token: csrfToken},
 				dataType: 'json',
 				success: function(response) {
-					localStorage.setItem('loSubmited', 1);
+					
+					if(lo_direct_approve)
+					{
+						localStorage.setItem('loActionSubmited', 1);
+					}
+					else{
+						localStorage.setItem('loPlanSubmited', 1);
+					}
+					
 					let location_id = response.location_id;
 					let task_id = response.task_id;
 					var active = 1;
