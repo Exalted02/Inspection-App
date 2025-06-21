@@ -13,6 +13,8 @@ $month = '';
 $day = '';
 $week= '';
 $location_img = $location_categories[0] && $location_categories[0]->image != null ? url('uploads/location/' . $location_categories[0]->image) : url('images/noimages/noimage_region.png');
+
+$getCategotyArr = [];
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container location-details">
@@ -64,7 +66,19 @@ $location_img = $location_categories[0] && $location_categories[0]->image != nul
 								   $week= strtoupper(Carbon::parse($tasks->created_at)->format('D'));
 								   
 								   $img = $tasks->image !='' ? url('uploads/task/' . $tasks->image) : url('images/noimages/noimage_task.png');
+								   
+								   $taskLocationCat = App\Models\Task_location_categories::where('task_list_id', $tasks->id)->get();
+								   foreach($taskLocationCat as $categories)
+								   {
+									   $getCategotyArr[] = $categories->category_id;
+								   }
+								   //echo "<pre>";print_r($getCategotyArr);die;
+								   $matchedCount = App\Models\Task_list_subcategories::where('task_list_id',$tasks->id)->whereIn('task_list_category_id',$getCategotyArr)->distinct('task_list_category_id')->count('task_list_category_id');
+								   
+								   $ifAllCategoryExists = $matchedCount === count($getCategotyArr);
 								@endphp
+								
+								@if(!$ifAllCategoryExists)
 								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
@@ -87,6 +101,7 @@ $location_img = $location_categories[0] && $location_categories[0]->image != nul
 										</a>
 									</div>
 								</div>
+								@endif
 								@endforeach
 							@else
 								<div class="text-left"><strong><h3>No record found</h3></strong></div>

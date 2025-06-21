@@ -817,10 +817,10 @@ class DashboardInspectorController extends Controller
 			// update the status of Task_list table
 			Task_lists::where('id', $task_id)->update(['status'=> 1]);
 		}
-		
-		// if click the edit button after save get the final edit page no next checklist
-		if(isset($request->directEdit) && $request->directEdit == 'directEdit')
+		else if(isset($request->directEdit) && $request->directEdit == 'directEdit')
 		{
+			// if click the edit button after save get the final edit page no next checklist
+			
 			$nextId = '';
 			$next_order_no = '';
 			$name = '';
