@@ -1528,7 +1528,6 @@ $(document ).ready(function() {
 				const rejectFilesRoute = "{{ route('reject-files') }}";
 				const rejectSubcheckFilesRoute = "{{ route('reject-subchecklist-files') }}";
 				if (response.subchecklist.length > 0) {
-				//alert("hello "+response.subchecklist.length);
 				$('.checklist-question-sticky-footer').removeClass('d-none');
 				$('.sticky-footer').addClass('d-none');
 				// Has subchecklists
