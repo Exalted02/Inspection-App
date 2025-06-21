@@ -383,8 +383,9 @@ class DashboardInspectorController extends Controller
 			
 			$hasChecklists = Checklist::where('category_id', $category_id)->first();
 			
+			//---21-06-2025----
 			$totalChecklist = Checklist::where('category_id', $category_id)->count();
-			
+			//-------------------
 			
 			
 			if(!$taskLocationDtls)
@@ -510,6 +511,7 @@ class DashboardInspectorController extends Controller
 					
 					$model = new Task_list_checklists();	
 					$model->task_list_id = $task_id ?? null;
+					$model->category_id = $category_id ?? null; //- 21-06-2025
 					//$model->task_list_subcategory_id = $subcategory_id ?? null; // 21-05-2025
 					$model->checklist_id = $current_question_id ?? null;
 					$model->rejected_region = $approveStatus == 0 ? $rejectTextsSingle :'';
@@ -587,6 +589,7 @@ class DashboardInspectorController extends Controller
 						{
 							$model = new Task_list_subchecklists();
 							$model->task_list_id = $task_id ?? null;
+							$model->category_id = $category_id ?? null; // 21-06-2025
 							//$model->task_list_subcategory_id = $subcategory_id ?? null; //21-05-2025
 							$model->task_list_checklist_id = $current_question_id ?? null;
 							$model->subchecklist_id = $subChecklistId ?? null;
