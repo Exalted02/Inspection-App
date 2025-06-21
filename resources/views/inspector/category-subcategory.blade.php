@@ -117,16 +117,21 @@ foreach($approvedCompleted as $result)
 									$tot_checklist_completed = App\Models\Task_list_checklists::where('task_list_id',$task_id)->where('category_id', $categories->id)->count();
 									$tot_subchecklist_completed = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('category_id', $categories->id)->distinct('task_list_checklist_id')->count();
 									$tot_completed_task = $tot_checklist_completed+$tot_subchecklist_completed;
+									
+									$ifSubmitted = App\Models\Task_list_subcategories::where('task_list_id', $task_id)->where('task_list_category_id', $categories->id)->exists();
 
 								@endphp
-								<div class="checklist-item">
-									<div class="text">
-										<div class="title">{{ $categories->name ?? ''}}</div>
-										<div class="subtitle">Completed {{ $tot_completed_task ?? ''}} of {{ $tot_checklist ?? ''}}</div>
+								
+									@if(!$ifSubmitted)
+									<div class="checklist-item">
+										<div class="text">
+											<div class="title">{{ $categories->name ?? ''}}</div>
+											<div class="subtitle">Completed {{ $tot_completed_task ?? ''}} of {{ $tot_checklist ?? ''}}</div>
+										</div>
+										{{--<a href="{{route('checklist-question' ,['cat_id'=>$categoryData[0]->id, 'subcat_id'=>$subcategories->id])}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
+										<a href="#" class="chk-task-id" data-cat="{{ $categories->id ?? ''}}" data-location="{{ $location_id ?? ''}}" data-taskid="{{ $task_id }}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
 									</div>
-									{{--<a href="{{route('checklist-question' ,['cat_id'=>$categoryData[0]->id, 'subcat_id'=>$subcategories->id])}}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>--}}
-									<a href="#" class="chk-task-id" data-cat="{{ $categories->id ?? ''}}" data-location="{{ $location_id ?? ''}}" data-taskid="{{ $task_id }}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
-								</div>
+									@endif
 								@endforeach
 							@else	
 								<div class="text-center"><strong><h3>No record founds</h3></strong></div>
