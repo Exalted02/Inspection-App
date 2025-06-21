@@ -575,8 +575,6 @@ $(document ).ready(function() {
 		var mode = $('#mode').val();
 		//alert(mode);
 		var approveStatus = $('#approveStatus').val();
-		//alert(approveStatus);
-		//return false;
 		//alert("approveStatus" + approveStatus);
 		if(mode=='single')
 		{
@@ -597,6 +595,17 @@ $(document ).ready(function() {
 					$('#errormsg').fadeIn().delay(2000).fadeOut();
 					return false;
 				}
+			}
+			
+			if(approveStatus == '')
+			{
+				Swal.fire({
+					  title: "Please select any one",
+					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #f8d7da; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #842029;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #d1e7dd; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #0f5132;"></i></span></div>'
+					  
+					});
+					
+				return false;
 			}
 		}
 		else
@@ -643,17 +652,16 @@ $(document ).ready(function() {
 			if(mulSelected == 0)
 			{
 				Swal.fire({
-				  //icon: "error",
-				  title: "Please select any one",
-				  html: "<i class='fa-solid fa-xmark'></i> Or <i class='fa-solid fa-check'></i>",
-				});
-				
-				//Swal.fire("Please select <i class='fa-solid fa-xmark'></i>");
+					  title: "Please select any one",
+					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #f8d7da; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #842029;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #d1e7dd; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #0f5132;"></i></span></div>'
+					  
+					});
+					
+				return false;
 			}
 			
 		}
 		
-		return false;
 		var current_id = $('#current_checklist_id').val();
 		//alert(current_id);
 		var category_id = $('#category_id').val();
