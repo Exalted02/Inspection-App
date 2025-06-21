@@ -190,6 +190,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	{{--<button type="button" class="get_checklist" data-cat="1" data-subcat="2" data-task="1" data-checklist="6"></button>--}}
 @endsection 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
 	var footerHeight = $('.checklist-question-sticky-footer').outerHeight();
@@ -554,12 +555,14 @@ $(document ).ready(function() {
 	var approveStatus = $('#approveStatus').val();
 	if(approveStatus == '0')
 	{
+		 alert(approveStatus);
 		const rejectButton = document.getElementById('question-reject-1');
 		rejectButton.click();
 	}
 	
 	if(approveStatus == '1')
 	{
+		alert(approveStatus);
 		const approveButton = document.getElementById('question-approve-1');
 		approveButton.click();
 	}
@@ -572,7 +575,8 @@ $(document ).ready(function() {
 		var mode = $('#mode').val();
 		//alert(mode);
 		var approveStatus = $('#approveStatus').val();
-		
+		//alert(approveStatus);
+		//return false;
 		//alert("approveStatus" + approveStatus);
 		if(mode=='single')
 		{
@@ -597,7 +601,8 @@ $(document ).ready(function() {
 		}
 		else
 		{
-			
+			let mulSelected = 0; // 21-06-2025
+			let mulCounter = 0 ;  // 21-06-2025
 			let hasError = false;
 			$('.reject-form').each(function () {
 				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
@@ -606,6 +611,7 @@ $(document ).ready(function() {
 				//var hasEditMultipleFile = parseInt($('#hasEditMultipleFile' + subchecklistId).val(), 10);
 				var hasEditMultipleFile = $('#hasEditMultipleFile' + subchecklistId).val();
 				//alert(hasEditMultipleFile); //if 1 get then has files if 0 no files
+				//alert(approveMulStatus);
 				if(approveMulStatus == '0')
 				{
 	
@@ -620,16 +626,34 @@ $(document ).ready(function() {
 						hasError = true;
 						return false;
 					}
-					
 				}
+				
+				// validation without select cross or tick cannot go next
+				if(approveMulStatus != '')
+				{
+					mulSelected++ ;
+				}
+				mulCounter++;
 			});
 			
 			if (hasError) {
 				return false;
 			}
 			
+			if(mulSelected == 0)
+			{
+				Swal.fire({
+				  //icon: "error",
+				  title: "Please select any one",
+				  html: "<i class='fa-solid fa-xmark'></i> Or <i class='fa-solid fa-check'></i>",
+				});
+				
+				//Swal.fire("Please select <i class='fa-solid fa-xmark'></i>");
+			}
+			
 		}
 		
+		return false;
 		var current_id = $('#current_checklist_id').val();
 		//alert(current_id);
 		var category_id = $('#category_id').val();
@@ -690,6 +714,7 @@ $(document ).ready(function() {
 				//alert(response.subcategoryname);
 				//$('.previous_question').css('visibility', 'visible');
 				$('.previous_question').show();
+				$('.checklist-question').html('');
 				// -- progress bar work -----------------
 				if(response.progressStatus!='')
 				{

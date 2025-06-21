@@ -753,6 +753,71 @@ class DashboardInspectorController extends Controller
 		}
 		
 		$checklistdata = [];
+		
+		//-------- if no next checklist ----
+		
+		//$chklistdata = '';
+		//$checklistdata = [];
+		if((empty($nextId) && $nextId==''))
+		{
+			$checklists = Checklist::where('category_id',$category_id)
+									//->where('subcategory_id', $subcategory_id) // 21-05-2025
+									->where('status','!=', 2)->orderBy('order_no')->get();
+									
+			foreach ($checklists as $chklist) {
+				$status = '';
+				$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
+							//->where('task_list_subcategory_id', $subcategory_id)//21-05-2025
+							->where('checklist_id', $chklist->id)->exists();
+				if($hasTaskChecklist)
+				{
+					$status = Task_list_checklists::where('task_list_id', $task_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
+							->where('checklist_id', $chklist->id)->first()->approve;
+					
+				}
+				else
+				{
+					$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
+							->where('task_list_checklist_id', $chklist->id)->exists();
+					if($hasTaskSubChecklist)
+					{
+						/*$status = Task_list_subchecklists::where('task_list_id', $task_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
+							->where('task_list_checklist_id', $chklist->id)->first()->approve;*/
+							
+						$getstatus = Task_list_subchecklists::where('task_list_id', $task_id)
+									->where('task_list_checklist_id', $chklist->id)->get();
+						if($getstatus->isNotEmpty())
+						{
+							$status = 1;
+							foreach($getstatus as $val)
+							{
+								if($val->approve == 0)
+								{
+									$status = 0;
+								}
+							}
+						}
+					}
+				}
+
+				$checklistdata[] = [
+					'id' => $chklist->id,
+					'name' => $chklist->name,
+					'approve' => $status,
+				];
+			}						
+			
+				//echo "<pre>"; print_r($checklistdata);die;
+									
+			//$subcategoryname = Subcategory::where('id', $subcategory_id)->first()->name;
+			
+			// update the status of Task_list table
+			Task_lists::where('id', $task_id)->update(['status'=> 1]);
+		}
+		
 		// if click the edit button after save get the final edit page no next checklist
 		if(isset($request->directEdit) && $request->directEdit == 'directEdit')
 		{
@@ -817,70 +882,8 @@ class DashboardInspectorController extends Controller
 				];
 			}
 		}
-		//-------- if no next checklist ----
-		
-		//$chklistdata = '';
-		//$checklistdata = [];
-		if((empty($nextId) && $nextId==''))
-		{
-			$checklists = Checklist::where('category_id',$category_id)
-									//->where('subcategory_id', $subcategory_id) // 21-05-2025
-									->where('status','!=', 2)->orderBy('order_no')->get();
-									
-			foreach ($checklists as $chklist) {
-				$status = '';
-				$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
-							//->where('task_list_subcategory_id', $subcategory_id)//21-05-2025
-							->where('checklist_id', $chklist->id)->exists();
-				if($hasTaskChecklist)
-				{
-					$status = Task_list_checklists::where('task_list_id', $task_id)
-							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
-							->where('checklist_id', $chklist->id)->first()->approve;
-					
-				}
-				else
-				{
-					$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
-							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
-							->where('task_list_checklist_id', $chklist->id)->exists();
-					if($hasTaskSubChecklist)
-					{
-						/*$status = Task_list_subchecklists::where('task_list_id', $task_id)
-							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
-							->where('task_list_checklist_id', $chklist->id)->first()->approve;*/
-							
-						$getstatus = Task_list_subchecklists::where('task_list_id', $task_id)
-									->where('task_list_checklist_id', $chklist->id)->get();
-						if($getstatus->isNotEmpty())
-						{
-							$status = 1;
-							foreach($getstatus as $val)
-							{
-								if($val->approve == 0)
-								{
-									$status = 0;
-								}
-							}
-						}
-					}
-				}
-
-				$checklistdata[] = [
-					'id' => $chklist->id,
-					'name' => $chklist->name,
-					'approve' => $status,
-				];
-			}						
-			
-				//echo "<pre>"; print_r($checklistdata);die;
-									
-			//$subcategoryname = Subcategory::where('id', $subcategory_id)->first()->name;
-			
-			// update the status of Task_list table
-			Task_lists::where('id', $task_id)->update(['status'=> 1]);
-		}
 		//--------------------------------------------
+		
 			// for progress bar 
 			//$previous_checklist_id = $current_question_id;
 			$progressStatus = '';
