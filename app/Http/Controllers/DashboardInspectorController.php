@@ -385,6 +385,15 @@ class DashboardInspectorController extends Controller
 			
 			//---21-06-2025----
 			$totalChecklist = Checklist::where('category_id', $category_id)->count();
+			$countTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)->where('category_id', $category_id)->count();
+			$countTaskSubChecklist = Task_list_subchecklists::distinct('task_list_checklist_id')->where('task_list_id', $task_id)->where('category_id', $category_id)->count();
+			$allChecklistDone = $countTaskChecklist + $countTaskSubChecklist;
+			
+			$finalEditPage = 0;
+			if($totalChecklist == $allChecklistDone)
+			{
+				$finalEditPage = 1;
+			}
 			//-------------------
 			
 			
@@ -398,14 +407,14 @@ class DashboardInspectorController extends Controller
 				return response()->json(['hasData'=> false,'message'=>'This category has no checklist. Create checklist and subchecklist', 'id'=>NULL]);
 			}
 			
-			return response()->json(['hasData'=> true, 'taskid'=>$task_id]);
+			return response()->json(['hasData'=> true, 'taskid'=>$task_id, 'finalEditPage'=>$finalEditPage]);
 		}
 		else{
 			return response()->json(['hasData'=> false, 'id'=>NULL]);
 		}
 	}
 	
-	public function checklist_question($taskid='', $cat_id='')
+	public function checklist_question($taskid='', $cat_id='', $mode='')
     {
 		if (auth()->user()->user_type == 2 || auth()->user()->user_type == 3) {
 			return redirect('inspector-dashboard');
@@ -428,6 +437,7 @@ class DashboardInspectorController extends Controller
 		$data['task_id'] = $taskid;
 		$task_data = Task_lists::where('id', $taskid)->first();
 		$data['location_id'] = $task_data ? $task_data->location_id : '';
+		$data['isFinalEdit'] = $mode;
         return view('inspector.checklist-question', $data);
     }
 	public function checklist_next_question(Request $request)
@@ -2098,5 +2108,74 @@ class DashboardInspectorController extends Controller
 		
 		return response()->json(['message'=>'success']);
 	}
+	public function get_final_edit_page(Request $request)
+	{
+		$task_id = $request->task_id;
+		$category_id = $request->category_id;
+		$categoryName = Category::where('id', $category_id)->first()->name;
+		
+		$checklists = Checklist::where('category_id',$category_id)->where('status','!=', 2)->orderBy('order_no')->get();
+									
+			foreach ($checklists as $chklist) {
+				$status = '';
+				$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $chklist->id)->exists();
+				if($hasTaskChecklist)
+				{
+					$status = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $chklist->id)->first()->approve;
+					
+				}
+				else
+				{
+					$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $chklist->id)->exists();
+					if($hasTaskSubChecklist)
+					{
+						$getstatus = Task_list_subchecklists::where('task_list_id', $task_id)
+									->where('task_list_checklist_id', $chklist->id)->get();
+						if($getstatus->isNotEmpty())
+						{
+							$status = 1;
+							foreach($getstatus as $val)
+							{
+								if($val->approve == 0)
+								{
+									$status = 0;
+								}
+							}
+						}
+					}
+				}
 
+				$checklistdata[] = [
+					'id' => $chklist->id,
+					'name' => $chklist->name,
+					'approve' => $status,
+				];
+			}						
+			
+			//echo "<pre>"; print_r($checklistdata);die;
+			
+			// update the status of Task_list table
+			Task_lists::where('id', $task_id)->update(['status'=> 1]);
+		
+		return response()->json
+		(
+			[
+				'task_id'=>$task_id,
+				'category_id'=>$category_id,
+				'currentid'=> '',
+				'order_no'=> null,
+				'name' => '',
+				'subchecklist' => array(),
+				'subcategoryname' => '',
+				'categoryName' => $categoryName,
+				'next_rejected_region'=> '',
+				'next_approve'=>'',
+				'existingNextFiles'=> array(),
+				'fetchsubChklistArr'=> '',
+				'existingSubChecklistFiles'=> array(),
+				'checklistdata'=>$checklistdata,
+				'progressStatus'=>1
+			]
+		);
+	}
 }

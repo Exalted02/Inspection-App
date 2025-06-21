@@ -897,10 +897,17 @@ $(document ).ready(function() {
 					  });
 				}
 				else {
+					var mode = 'no';
+					if(response.finalEditPage==1)
+					{
+						mode = 'yes';
+					}
+					
 					var taskid = $('#taskid').val();
 					var baseUrl = "{{ url('/checklist-question') }}";
-					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id;
+					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + mode;
 					window.location.href = redirectUrl;
+					
 				}
 			},
 		});

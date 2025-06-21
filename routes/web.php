@@ -58,7 +58,7 @@ Route::get('lang/change', [LangController::class, 'change'])->name('changeLang')
 
 	
 Route::middleware(['auth', 'verified'])->group(function () {
-	Route::get('/checklist-question/{taskid}/{cat_id}', [DashboardInspectorController::class, 'checklist_question'])->name('checklist-question');
+	Route::get('/checklist-question/{taskid}/{cat_id}/{mode}', [DashboardInspectorController::class, 'checklist_question'])->name('checklist-question');
 	Route::post('checklist-next-question', [DashboardInspectorController::class, 'checklist_next_question'])->name('checklist-next-question');
 	Route::post('checklist-previous-question', [DashboardInspectorController::class, 'checklist_previous_question'])->name('checklist-previous-question');
 	Route::get('/category/{location_id}/{task_id}/{active}', [DashboardInspectorController::class, 'category'])->name('category');
@@ -114,7 +114,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('inspector-subchecklist-second-approve-by-lo/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_subchecklist_second_approve_by_lo'])->name('inspector-subchecklist-second-approve-by-lo');
 	
 	Route::post('submit-inspector-approved', [DashboardInspectorController::class, 'submit_inspector_approved'])->name('submit-inspector-approved');
-		
+	
+	Route::post('/get-final-edit-page', [DashboardInspectorController::class, 'get_final_edit_page'])->name('get-final-edit-page'); // 21-06-2025
+	
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
 	Route::get('/management-location/{id}', [ManagementController::class, 'management_location'])->name('management-location');

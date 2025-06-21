@@ -46,7 +46,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 //echo "<pre>";print_r($existingSubChecklistFiles);die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
-	<div class="container checklist-question">
+	<div class="container checklist-question" style="display : {{ $isFinalEdit== 'no' ? 'block' : 'none' }}">
 	@if(isset($checklistdata) && $checklistdata->get_subchecklist->isEmpty())
 		@php 
 			$checkImageFile = App\Models\Task_list_checklists::where('task_list_id',$task_id)
@@ -150,7 +150,8 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	<input type="hidden" id="category_id" value="{{ $checklistdata->category_id ?? '' }}">
 	<input type="hidden" id="subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
 	<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
-	<div class="checklist-question-sticky-footer">
+	<input type="hidden" id="isFinalEdit" value="{{ $isFinalEdit }}">
+	<div class="checklist-question-sticky-footer" style="display : {{ $isFinalEdit== 'no' ? 'block' : 'none' }}">
 	
 		<div class="d-flex justify-content-between mb-3" style="gap: 4px;" id="progress-bar-section">
 		@if(!empty($total_checklist))
@@ -192,6 +193,108 @@ $(document).ready(function() {
 	var footerHeight = $('.checklist-question-sticky-footer').outerHeight();
 	$('.checklist-question').css('padding-bottom', footerHeight + 'px');
 	
+	//-- 21-06-2025--
+	var isFinalEdit = $('#isFinalEdit').val();
+	if(isFinalEdit == 'yes')
+	{
+		var task_id = $('#task_id').val();
+		var category_id = $('#category_id').val();
+		var URL = "{{ route('get-final-edit-page') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {
+				task_id: task_id,
+				category_id: category_id,
+				_token: csrfToken
+			},
+			traditional: true,
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.task_id);alert(response.category_id)
+				//$(".question-navigation").hide();
+					//$('.question-navigation').css('display', 'none');
+					$('.checklist-question-sticky-footer').addClass('d-none');
+					$('.sticky-footer-completed').removeClass('d-none');
+					
+					if (!document.querySelector('link[href*="bootstrap.min.css"]')) {
+						var bootstrapCSS = document.createElement('link');
+						bootstrapCSS.rel = 'stylesheet';
+						bootstrapCSS.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
+						document.head.appendChild(bootstrapCSS);
+					}
+					
+					
+					//const redirectUrl = checkoutUrlTemplate.replace('TASK_ID', task_id).replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
+					//window.location.href = redirectUrl; hidden
+					//return;
+					let htmlCompleted = '<div class="container checklist">';
+						htmlCompleted += '<h2 class="checklist-title">Review your checklist</h2>'; 
+						htmlCompleted += '<h4>Review and check before moving on to </br>next section. Checmical bonding & stor</h4>';
+						htmlCompleted += '<div class="location-section">';
+						htmlCompleted += '<div class="location-label">' + response.subcategoryname + '</div>';
+						htmlCompleted += '</div>';
+					htmlCompleted += '<div class="main-content-area clearfix">';
+						htmlCompleted += '<section class="custom-padding1">';
+							htmlCompleted += '<div class="container1">';
+							htmlCompleted += '<div class="custom-tab">';
+							htmlCompleted += '<div class="tab-content">';
+							htmlCompleted += '<div role="tabpanel" class="tab-pane active" id="uncomplete_tab">';
+							response.checklistdata.forEach((chklist, index) => {
+								
+								var aprvStatusHtml = '';
+								var approveStatus = chklist.approve;
+								//alert(approveStatus);
+								if(approveStatus=='0')
+								{
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-danger" style="pointer-events: none; background-color: transparent; border-color: #dc3545; color: #dc3545;">Rejected</button>';
+								}
+								else if(approveStatus=='1')
+								{
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754;">Accepted</button>';
+								}
+								else
+								{
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Pending</button>';
+								}
+								
+								htmlCompleted += '<div class="checklist-item">';
+									htmlCompleted += '<div class="text">';
+									htmlCompleted += '<div class="title">' + chklist.name + '</div>';
+									htmlCompleted += '<div class="subtitle mt-3">' + aprvStatusHtml + '</div>';
+									htmlCompleted += '</div>';
+									htmlCompleted += '<a href="javascript:void(0)" style="text-decoration: none;"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '"><small>Edit</small></div></a>';
+								htmlCompleted += '</div>';
+							})
+								htmlCompleted += '<div class="sticky-footer-completed">';
+									htmlCompleted += '<button class="submit_task">Submit checklist</button>';
+								htmlCompleted += '</div>';
+								
+							htmlCompleted += '</div>';
+								htmlCompleted += '<div role="tabpanel" class="tab-pane" id="reject_tab">';
+								htmlCompleted += 'Not have any data';
+								htmlCompleted += '</div>';
+							
+							htmlCompleted += '</div>';
+							htmlCompleted += '</div>';
+							htmlCompleted += '</div>';
+							htmlCompleted += '<input type="hidden" id="completed_task_id" value="' + task_id+ '">';
+							htmlCompleted += '<input type="hidden" id="completed_category_id" value="' + category_id+ '">';
+							htmlCompleted += '<input type="hidden" id="completed_subcategory_id" value="' + subcategory_id+ '">';
+						htmlCompleted += '</section>';
+					
+					
+					htmlCompleted += '</div>';  // main-content-area end
+					htmlCompleted += '</div>'; // main div end
+					//alert(htmlCompleted);
+					$('.checklist-question').show();
+					$('.checklist-question').html(htmlCompleted);
+					return;
+			}
+		
+		});
+	}
+	//---------end----------
 	//$('.previous_question').css('visibility', 'hidden');
 });
 //Dropzone.autoDiscover = false;
@@ -398,7 +501,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
         init: function () {
             this.on("success", function (file, response) {
                 console.log('Uploaded:', response);
-                alert('response.filename');
+                //alert('response.filename');
                 // Attach filename to file object so we can use it on removal
                 file.uploadedFilename = response.filename;
 
@@ -436,9 +539,14 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 const checkoutUrlTemplate = "{{ url('completed-task/TASK_ID/CAT_ID/SUBCAT_ID') }}";
 
 $(document ).ready(function() {
-	setTimeout(function() {
-        $('#getchecklist').trigger('click');
-    }, 100); 
+	
+	var isFinalEdit = $('#isFinalEdit').val();
+	if(isFinalEdit == 'no')
+	{
+		setTimeout(function() {
+			$('#getchecklist').trigger('click');
+		}, 100); 
+	}
 	
 	var approveStatus = $('#approveStatus').val();
 	if(approveStatus == '0')
@@ -1381,6 +1489,7 @@ $(document ).ready(function() {
 	});
 	
 	$(document).on('click','.get_checklist', function(){
+	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var cat_id = $(this).data('cat');
 	   var subcat_id = $(this).data('subcat');
 	   var task_id = $(this).data('task');
@@ -1392,7 +1501,7 @@ $(document ).ready(function() {
 			data: {checklist_id:checklist_id, task_id:task_id, cat_id:cat_id, subcat_id:subcat_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
-				
+				//alert(response.barHtml);
 				// ------progress bar work ----------
 				
 					$('#progress-bar-section').append(response.barHtml);
@@ -1411,7 +1520,7 @@ $(document ).ready(function() {
 				const rejectFilesRoute = "{{ route('reject-files') }}";
 				const rejectSubcheckFilesRoute = "{{ route('reject-subchecklist-files') }}";
 				if (response.subchecklist.length > 0) {
-					
+				//alert("hello "+response.subchecklist.length);
 				$('.checklist-question-sticky-footer').removeClass('d-none');
 				$('.sticky-footer').addClass('d-none');
 				// Has subchecklists
