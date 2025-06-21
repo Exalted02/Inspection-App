@@ -151,6 +151,8 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	<input type="hidden" id="subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
 	<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
 	<input type="hidden" id="isFinalEdit" value="{{ $isFinalEdit }}">
+	<input type="hidden" id="direct_edit">
+	
 	<div class="checklist-question-sticky-footer" style="display : {{ $isFinalEdit== 'no' ? 'block' : 'none' }}">
 	
 		<div class="d-flex justify-content-between mb-3" style="gap: 4px;" id="progress-bar-section">
@@ -193,6 +195,7 @@ $(document).ready(function() {
 	var footerHeight = $('.checklist-question-sticky-footer').outerHeight();
 	$('.checklist-question').css('padding-bottom', footerHeight + 'px');
 	
+	$('#direct_edit').val('');
 	//-- 21-06-2025--
 	var isFinalEdit = $('#isFinalEdit').val();
 	if(isFinalEdit == 'yes')
@@ -263,7 +266,7 @@ $(document).ready(function() {
 									htmlCompleted += '<div class="title">' + chklist.name + '</div>';
 									htmlCompleted += '<div class="subtitle mt-3">' + aprvStatusHtml + '</div>';
 									htmlCompleted += '</div>';
-									htmlCompleted += '<a href="javascript:void(0)" style="text-decoration: none;"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '"><small>Edit</small></div></a>';
+									htmlCompleted += '<a href="javascript:void(0)" style="text-decoration: none;"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '" data-dedit="directEdit"><small>Edit</small></div></a>';
 								htmlCompleted += '</div>';
 							})
 								htmlCompleted += '<div class="sticky-footer-completed">';
@@ -633,6 +636,7 @@ $(document ).ready(function() {
 		var subcategory_id = $('#subcategory_id').val();
 		var task_id = $('#task_id').val();
 		var order_no = $('#order_no').val();
+		var directEdit = $('#direct_edit').val()
 		//var mode = $('#mode').val();
 		//alert(mode);
 		var rejectTextsSingle = '';
@@ -675,6 +679,7 @@ $(document ).ready(function() {
 				current_question_id: current_id,
 				category_id: category_id,
 				subcategory_id: subcategory_id,
+				directEdit: directEdit,
 				rejectTextsSingle: rejectTextsSingle,
 				rejectTextsMultiple: JSON.stringify(rejectTextsMultiple), // <--- Fix here
 				_token: csrfToken
@@ -744,7 +749,7 @@ $(document ).ready(function() {
 									htmlCompleted += '<div class="title">' + chklist.name + '</div>';
 									htmlCompleted += '<div class="subtitle mt-3">' + aprvStatusHtml + '</div>';
 									htmlCompleted += '</div>';
-									htmlCompleted += '<a href="javascript:void(0)" style="text-decoration: none;"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '"><small>Edit</small></div></a>';
+									htmlCompleted += '<a href="javascript:void(0)" style="text-decoration: none;"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '" data-dedit="directEdit"><small>Edit</small></div></a>';
 								htmlCompleted += '</div>';
 							})
 								htmlCompleted += '<div class="sticky-footer-completed">';
@@ -1490,6 +1495,8 @@ $(document ).ready(function() {
 	
 	$(document).on('click','.get_checklist', function(){
 	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
+	   var directEdit = $(this).data('dedit'); // 21-06-2025
+	   
 	   var cat_id = $(this).data('cat');
 	   var subcat_id = $(this).data('subcat');
 	   var task_id = $(this).data('task');
@@ -1498,10 +1505,11 @@ $(document ).ready(function() {
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {checklist_id:checklist_id, task_id:task_id, cat_id:cat_id, subcat_id:subcat_id, _token: csrfToken},
+			data: {checklist_id:checklist_id, task_id:task_id, cat_id:cat_id, subcat_id:subcat_id,directEdit:directEdit, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.barHtml);
+				$('#direct_edit').val(response.directEdit);
 				// ------progress bar work ----------
 				
 					$('#progress-bar-section').append(response.barHtml);

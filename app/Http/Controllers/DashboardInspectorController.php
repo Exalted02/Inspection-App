@@ -751,11 +751,77 @@ class DashboardInspectorController extends Controller
 			}
 			
 		}
+		
+		$checklistdata = [];
+		// if click the edit button after save get the final edit page no next checklist
+		if(isset($request->directEdit) && $request->directEdit == 'directEdit')
+		{
+			$nextId = '';
+			$next_order_no = '';
+			$name = '';
+			$subChklistArr = [];
+			$subcategoryname = '';
+			$next_rejected_region = '';
+			$next_approve = '';
+			$existingFiles = [];
+			$fetchsubChklistArr = '';
+			$existingSubChecklistFiles = [];
+			
+			$checklists = Checklist::where('category_id',$category_id)
+									//->where('subcategory_id', $subcategory_id) // 21-05-2025
+									->where('status','!=', 2)->orderBy('order_no')->get();
+									
+			foreach ($checklists as $chklist) {
+				$status = '';
+				$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
+							//->where('task_list_subcategory_id', $subcategory_id)//21-05-2025
+							->where('checklist_id', $chklist->id)->exists();
+				if($hasTaskChecklist)
+				{
+					$status = Task_list_checklists::where('task_list_id', $task_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
+							->where('checklist_id', $chklist->id)->first()->approve;
+					
+				}
+				else
+				{
+					$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
+							->where('task_list_checklist_id', $chklist->id)->exists();
+					if($hasTaskSubChecklist)
+					{
+						/*$status = Task_list_subchecklists::where('task_list_id', $task_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
+							->where('task_list_checklist_id', $chklist->id)->first()->approve;*/
+							
+						$getstatus = Task_list_subchecklists::where('task_list_id', $task_id)
+									->where('task_list_checklist_id', $chklist->id)->get();
+						if($getstatus->isNotEmpty())
+						{
+							$status = 1;
+							foreach($getstatus as $val)
+							{
+								if($val->approve == 0)
+								{
+									$status = 0;
+								}
+							}
+						}
+					}
+				}
+
+				$checklistdata[] = [
+					'id' => $chklist->id,
+					'name' => $chklist->name,
+					'approve' => $status,
+				];
+			}
+		}
 		//-------- if no next checklist ----
 		
 		//$chklistdata = '';
-		$checklistdata = [];
-		if(empty($nextId) && $nextId=='')
+		//$checklistdata = [];
+		if((empty($nextId) && $nextId==''))
 		{
 			$checklists = Checklist::where('category_id',$category_id)
 									//->where('subcategory_id', $subcategory_id) // 21-05-2025
@@ -1344,6 +1410,7 @@ class DashboardInspectorController extends Controller
 					'existingSubChecklistFiles'=>$existingSubChecklistFiles,
 					'category_id'=>$category_id,
 					'subcategory_id'=>'',
+					'directEdit' => $request->directEdit,
 					//'subcategory_id'=>$subcategory_id,// 21-05-2025
 					'barHtml'=>$barHtml
 				]
