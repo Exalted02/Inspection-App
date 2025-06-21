@@ -54,7 +54,7 @@ foreach($approvedCompleted as $result)
 	<div class="container checklist">
 		<h2 class="checklist-title">{{ $task_name ?? '' }}</h2>
 		@if(auth()->user()->user_type == 1)
-		<div class="location-section">
+		{{--<div class="location-section">
 			<div class="location-label">Location details</div>
 			<div class="location-input" id="displayBox">
 			{{ $location_details ?? 'Tap to add address' }}
@@ -63,18 +63,21 @@ foreach($approvedCompleted as $result)
 			<span id="successMessage" class="task-location-msg">
 				Details saved successfully!
 			</span>
-			{{--<span id="errorMessage" style="display: none; color: red;"></span>--}}
+			
 				
 			<div class="location-edit" id="editBox">
 				<input type="text" id="addressInput" placeholder="Add location" value="{{ $location_details ?? ''}}"/>
 				<button id="doneBtn" class="donesubmit">Done</button>
 			</div>
 			<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
-				{{--<input type="hidden" id="category_id" value="{{ $categoryData[0]->id ?? '' }}">--}}
+				
 			<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
 			<input type="hidden" id="taskid">
-		</div>
+		</div>--}}
 		@endif
+		<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
+		<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
+		<input type="hidden" id="taskid">
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
 		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
 		<div class="main-content-area clearfix corrective-checked">
@@ -878,6 +881,7 @@ $(document ).ready(function() {
 	   //var subcat_id = $(this).data('subcat');
 	   var location_id = $(this).data('location');
 	   var task_id = $(this).data('taskid');
+	   //alert(task_id);
 	   var URL = "{{ route('check-task-id') }}";
 	   //alert(cat_id);alert(task_id);
 	   
@@ -889,7 +893,7 @@ $(document ).ready(function() {
 			success: function(response) {
 				//alert(response.hasData);
 				$('#taskid').val(response.taskid);
-				if(!response.hasData)
+				/*if(!response.hasData)
 				{
 					$('#error-msg-modal').modal('show');
 					//$('#errorMessage').text(response.message).fadeIn().delay(8000).fadeOut();
@@ -901,19 +905,21 @@ $(document ).ready(function() {
 						$('#error-msg-modal').modal('hide');
 					  });
 				}
-				else {
+				else {*/
 					var mode = 'no';
 					if(response.finalEditPage==1)
 					{
 						mode = 'yes';
 					}
 					
-					var taskid = $('#taskid').val();
+					//var taskid = $('#taskid').val();
+					//alert(taskid);
+					var taskid = task_id;
 					var baseUrl = "{{ url('/checklist-question') }}";
 					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + mode;
 					window.location.href = redirectUrl;
 					
-				}
+				//}
 			},
 		});
 	   

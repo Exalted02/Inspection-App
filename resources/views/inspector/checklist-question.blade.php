@@ -270,8 +270,8 @@ $(document).ready(function() {
 									htmlCompleted += '<a href="javascript:void(0)" style="text-decoration: none;"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '" data-dedit="directEdit"><small>Edit</small></div></a>';
 								htmlCompleted += '</div>';
 							})
-								htmlCompleted += '<div class="sticky-footer-completed">';
-									htmlCompleted += '<button class="submit_task">Submit checklist</button>';
+								htmlCompleted += '<div class="sticky-footer-completed submit_task">';
+									htmlCompleted += '<button class="submit_task_s">Submit checklist</button>';
 								htmlCompleted += '</div>';
 								
 							htmlCompleted += '</div>';
@@ -599,7 +599,8 @@ $(document ).ready(function() {
 			{
 				Swal.fire({
 					  title: "Please select any one",
-					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #00000;"></i></span></div>'
+					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #00000;"></i></span></div>',
+					  confirmButtonColor: "#0b2b57",
 					  
 					});
 					
@@ -647,12 +648,12 @@ $(document ).ready(function() {
 				return false;
 			}
 			
-			if(mulSelected == 0)
+			if(mulSelected != mulCounter)
 			{
 				Swal.fire({
-					  title: "Please select at least one",
-					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: 00000;"></i></span></div>'
-					  
+					  title: "Please select any one",
+					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: 00000;"></i></span></div>',
+					  confirmButtonColor: "#0b2b57",
 					});
 					
 				return false;
@@ -665,6 +666,7 @@ $(document ).ready(function() {
 		var category_id = $('#category_id').val();
 		var subcategory_id = $('#subcategory_id').val();
 		var task_id = $('#task_id').val();
+		//alert(task_id);
 		var order_no = $('#order_no').val();
 		var directEdit = $('#direct_edit').val()
 		//var mode = $('#mode').val();
@@ -784,8 +786,8 @@ $(document ).ready(function() {
 									htmlCompleted += '<a href="javascript:void(0)" style="text-decoration: none;"><div class="arrow get_checklist" data-checklist="' + chklist.id + '" data-task="' + task_id + '" data-cat="' + category_id + '" data-subcat="' + subcategory_id + '" data-dedit="directEdit"><small>Edit</small></div></a>';
 								htmlCompleted += '</div>';
 							})
-								htmlCompleted += '<div class="sticky-footer-completed">';
-									htmlCompleted += '<button class="submit_task">Submit checklist</button>';
+								htmlCompleted += '<div class="sticky-footer-completed submit_task">';
+									htmlCompleted += '<button class="submit_task_s">Submit checklist</button>';
 								htmlCompleted += '</div>';
 								
 							htmlCompleted += '</div>';
