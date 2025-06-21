@@ -652,7 +652,7 @@ $(document ).ready(function() {
 			if(mulSelected == 0)
 			{
 				Swal.fire({
-					  title: "Please select any one",
+					  title: "Please select at least one",
 					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #f8d7da; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #842029;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #d1e7dd; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #0f5132;"></i></span></div>'
 					  
 					});
