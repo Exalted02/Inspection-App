@@ -2,6 +2,7 @@
 @section('content')
 @php 
 //echo "<pre>";print_r($userdata);die;
+echo "<pre>";print_r($correctiveNeeded);die;
 //echo "<pre>";print_r($correctiveCheck);die;
 //echo "<pre>";print_r($correctiveAction);die;
 //echo "<pre>";print_r($approvedCompleted);die;
@@ -735,6 +736,12 @@ $(document).ready(function() {
 		$('a[href="#inprogress_tab"]').tab('show');
 		$('#inprogress_tab').show();
 		$('#isactive').val(0);
+		
+		var norecord_j = $('#norecord_j').val();
+		if(norecord_j==0)
+		{
+			$('#no_record').show();
+		}
 	}
 	
   

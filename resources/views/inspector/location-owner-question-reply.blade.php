@@ -2,7 +2,7 @@
 @section('content')
 @php 
  //echo "<pre>";print_r($categoryData);die;
- 
+ //echo $task_id; die;
  $rejected_region = '';
  $image_arr = [];
  
@@ -173,6 +173,7 @@ $(document).ready(function() {
    
    $(document).on('click','.submitChecklist', function(){
 	   var task_id = $('#task_id').val();
+	    alert(task_id);
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var type = $('#type').val();
@@ -195,7 +196,7 @@ $(document).ready(function() {
 			return false;
 		}*/
 	  
-		   var URL = "{{ route('submit-lo-corrective-action') }}";
+		   /*var URL = "{{ route('submit-lo-corrective-action') }}";
 		   $.ajax({
 				url: URL,
 				type: "POST",
@@ -219,7 +220,7 @@ $(document).ready(function() {
 					window.location.href = redirectUrl;
 					
 				},
-			});
+			});*/
 	});
 	
 	$(document).on('click', '#lo_direct_approve', function(){
