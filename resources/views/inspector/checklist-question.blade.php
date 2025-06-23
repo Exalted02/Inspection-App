@@ -47,6 +47,9 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist-question" style="display : {{ $isFinalEdit== 'no' ? 'block' : 'none' }}">
+	
+	<button class="task-filter-button save-next">Save & exit</button>
+	
 	@if(isset($checklistdata) && $checklistdata->get_subchecklist->isEmpty())
 		@php 
 			$checkImageFile = App\Models\Task_list_checklists::where('task_list_id',$task_id)
@@ -598,6 +601,7 @@ $(document ).ready(function() {
 			if(approveStatus == '')
 			{
 				Swal.fire({
+					  icon: "warning",
 					  title: "Please select any one",
 					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #00000;"></i></span></div>',
 					  confirmButtonColor: "#0b2b57",
@@ -651,6 +655,7 @@ $(document ).ready(function() {
 			if(mulSelected != mulCounter)
 			{
 				Swal.fire({
+					  icon: "warning",
 					  title: "Please select any one",
 					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: 00000;"></i></span></div>',
 					  confirmButtonColor: "#0b2b57",
@@ -822,7 +827,8 @@ $(document ).ready(function() {
 				$('.sticky-footer-completed').addClass('d-none');
 				// Has subchecklists
 				let autoClicks = [];
-				let html = '<div class="sub-checklist">';
+				let html = '<button class="task-filter-button save-next">Save & exit</button>';
+				html += '<div class="sub-checklist">';
 				html += '<div class="question-header">' + response.categoryName + '</div>';
 				html += '<div class="question-text">';
 				html += '<span id="multiple-question">' + response.name + '</span>';
@@ -1003,7 +1009,8 @@ $(document ).ready(function() {
 						$('.checklist-question-sticky-footer').removeClass('d-none');
 						$('.sticky-footer-completed').addClass('d-none');
 						//alert(response.next_approve);
-						let html = '<div class="single-checklist">';
+						html = '<button class="task-filter-button save-next">Save & exit</button>';
+						html += '<div class="single-checklist">';
 						html += '<div class="question-header">' + response.categoryName + '</div>';
 						html += '<div class="question-text">';
 						html += '<span id="single-question">' + response.name + '</span>';
@@ -1195,7 +1202,8 @@ $(document ).ready(function() {
 				if (response.subchecklist.length > 0) {
 				// Has subchecklists
 				let autoClicks = [];
-				let html = '<div class="sub-checklist">';
+				let html = '<button class="task-filter-button save-next">Save & exit</button>';
+				html += '<div class="sub-checklist">';
 				html += '<div class="question-header">' + response.categoryName + '</div>';
 				html += '<div class="question-text">';
 				html += '<span id="multiple-question">' + response.name + '</span>';
@@ -1370,7 +1378,8 @@ $(document ).ready(function() {
 						
 				} else {
 						
-						let html = '<div class="single-checklist">';
+						let html = '<button class="task-filter-button save-next">Save & exit</button>';
+						html += '<div class="single-checklist">';
 						html += '<div class="question-header">' + response.categoryName + '</div>';
 						html += '<div class="question-text">';
 						html += '<span id="single-question">' + response.name + '</span>';
@@ -1530,7 +1539,6 @@ $(document ).ready(function() {
 	$(document).on('click','.get_checklist', function(){
 	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var directEdit = $(this).data('dedit'); // 21-06-2025
-	   
 	   var cat_id = $(this).data('cat');
 	   var subcat_id = $(this).data('subcat');
 	   var task_id = $(this).data('task');
@@ -1566,7 +1574,8 @@ $(document ).ready(function() {
 				$('.sticky-footer').addClass('d-none');
 				// Has subchecklists
 				let autoClicks = [];
-				let html = '<div class="sub-checklist">';
+				let html = '<button class="task-filter-button save-next">Save & exit</button>';
+				html += '<div class="sub-checklist">';
 				html += '<div class="question-header">' + response.categoryName + '</div>';
 				html += '<div class="question-text">';
 				html += '<span id="multiple-question">' + response.name + '</span>';
@@ -1614,7 +1623,6 @@ $(document ).ready(function() {
 					});
 
 						html += '</div>'; 
-
 						$('.checklist-question').html(html);
 						
 						setTimeout(() => {
@@ -1746,7 +1754,8 @@ $(document ).ready(function() {
 						$('.checklist-question-sticky-footer').removeClass('d-none');
 						$('.sticky-footer').addClass('d-none');
 						//alert(response.next_approve);
-						let html = '<div class="single-checklist">';
+						let html = '<button class="task-filter-button save-next">Save & exit</button>';
+						html += '<div class="single-checklist">';
 						html += '<div class="question-header">' + response.categoryName + '</div>';
 						html += '<div class="question-text">';
 						html += '<span id="single-question">' + response.name + '</span>';
@@ -1920,6 +1929,29 @@ $(document ).ready(function() {
 			},
 		});
    });
+   
+   $(document).on('click', '.save-next', function(){
+	   
+	   Swal.fire({
+			  title: "Are you sure you want to exit?",
+			  html: '<div style="font-size: 14px;font-family: initial;">You can continue your saved attempt from the task list labeled as "incomplete".</div>',
+			  icon: "warning",
+			  showCancelButton: true,
+			  cancelButtonText: "Cancel",
+			  confirmButtonText: "Save and Exit",
+			  confirmButtonColor: "#0b2b57", 
+			  cancelButtonColor: "#e0e0e0",
+			  customClass: {
+				cancelButton: 'swal-cancel-black'
+			  }
+			}).then((result) => {
+			  if (result.isConfirmed) {
+				saveAndExit(); // your function
+			  }
+			});
+
+
+   })
 });
 
 function initializeDropzones() {
@@ -1934,6 +1966,13 @@ function initializeDropzones() {
 			// same config...
 		});
 	});
+}
+function saveAndExit()
+{
+	const location_id = $('#location_id').val();
+	const refreshUrl = "{{ url('location-details/LOCATION_ID') }}";
+	const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id);
+	window.location.href = redirectUrl;
 }
 
 // call this after dynamic HTML is loaded

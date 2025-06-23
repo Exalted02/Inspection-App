@@ -1558,8 +1558,12 @@ body {
 	color: #000000 !important;
 	font-weight: 600;
 	font-size: 14px;
-	border-radius: 15px;
+	border-radius: 70px;
 	padding: 10px 24px;
 	border: none;
 	margin-top: 6px;
+	margin-bottom: 9px;
+}
+.swal-cancel-black {
+  color: #000 !important; /* black text */
 }
