@@ -90,6 +90,7 @@ if(!empty($userdata->profile_image))
 						@endphp
                             <div class="col-md-4 col-xs-6 col-sm-6">
 								<div class="category-grid-box-1">
+								@if(auth()->user()->user_type == 1)
 								<a title="" href="{{route('location-details', ['id' => $locations->location_id ])}}">
 									<div class="image" style="background-image: url('{{ $loc_image }}');">
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
@@ -100,7 +101,35 @@ if(!empty($userdata->profile_image))
 									</div>
 									<div class="short-description-1 clearfix">
 										<h3>{{ $lacationData->location_name ?? '' }}</h3>
+									</a>
+								@elseif(auth()->user()->user_type == 3)
+									<a title="" href="{{route('los-task-status', ['id' => $locations->location_id, 'active'=>1])}}">
+									<div class="image" style="background-image: url('{{ $loc_image }}');">
+										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
+										<div class="ribbon popular"></div>
+										<div class="price-tag">
+											<div class="price"><span>4 pending tasks</span></div>
+										</div>
+									</div>
+									<div class="short-description-1 clearfix">
+										<h3>{{ $lacationData->location_name ?? '' }}</h3>
+									</a>
+								
+								@elseif(auth()->user()->user_type == 2)
+									<a title="" href="{{ route('lo-task-status', ['id' => $locations->location_id, 'active'=>1 ])}}">
+									<div class="image" style="background-image: url('{{ $loc_image }}');">
+										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
+										<div class="ribbon popular"></div>
+										<div class="price-tag">
+											<div class="price"><span>4 pending tasks</span></div>
+										</div>
+									</div>
+									<div class="short-description-1 clearfix">
+										<h3>{{ $lacationData->location_name ?? '' }}</h3>
 								</a>
+								
+								@endif
+								
 								{{--<div class="category-title"> <span>{{ $city ?? '' }}, {{ $state ?? '' }}, {{ $country ?? '' }}, {{ $lacationData->zipcode ?? '' }}</span> </div>--}}
 									</div>
 								</div>

@@ -64,6 +64,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('/category/{location_id}/{task_id}/{active}', [DashboardInspectorController::class, 'category'])->name('category');
 	
 	Route::get('/inspector-filter/{location_id}/{active}', [DashboardInspectorController::class, 'inspector_filter'])->name('inspector-filter');
+	Route::get('/los-task-status/{id}/{active}', [DashboardInspectorController::class, 'los_task_status'])->name('los-task-status');
+	Route::get('lo-task-status/{id}/{active}', [DashboardInspectorController::class, 'lo_task_status'])->name('lo-task-status');
 	
 	Route::get('/location-details/{id}', [DashboardInspectorController::class, 'location_details'])->name('location-details');
 	Route::get('/inspector-dashboard', [DashboardInspectorController::class, 'inspector_dashboard'])->name('inspector-dashboard');
