@@ -980,7 +980,7 @@ $(document ).ready(function() {
 		}
 		
 		localStorage.setItem('selectedTab', tabId);
-		const refreshUrl = "{{ url('inspector-filter/LOCATION_ID/ISACTIVE') }}";
+		const refreshUrl = "{{ url('los-task-status/LOCATION_ID/ISACTIVE') }}";
 		const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('ISACTIVE', 0);
 		window.location.href = redirectUrl;
 	});

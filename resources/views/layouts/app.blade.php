@@ -185,12 +185,13 @@
 			}
 			
 			function goBackAndReload() {
-				@if(auth()->check() && (auth()->user()->user_type == 1 || auth()->user()->user_type == 3))
+				@if(auth()->check() && (auth()->user()->user_type == 1))
 				{
 					var app_url =  "{{ env('APP_URL') }}";
 					var page_url1 = app_url+'/category';
 					var page_url2 = app_url+'/location-details';
 					var page_url3 = app_url+'/checklist-question';
+					var page_url4 = app_url+'/inspector-filter';
 					var current_url = window.location.href;
 					//alert(page_url1);alert(current_url);
 					if(current_url.includes(page_url1))
@@ -222,11 +223,39 @@
 							window.location.href = redirectUrl;
 						}, 100);
 					}
+					else if(current_url.includes(page_url4))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/location-details') }}";
+							var redirectUrl = baseUrl + '/' + location_id;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
 					else{
 						history.back();
 					}
 				}
 		        @endif
+				
+				@if(auth()->check() && auth()->user()->user_type == 3)
+				{
+					var app_url =  "{{ env('APP_URL') }}";
+					var page_url1 = app_url+'/los-task-status';
+					var current_url = window.location.href;
+					
+					if(current_url.includes(page_url1))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/inspector-dashboard') }}";
+							var redirectUrl = baseUrl;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+
+				}				
+				@endif
 				
 				@if(auth()->check() && auth()->user()->user_type == 2)
 				{
