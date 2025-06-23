@@ -99,7 +99,7 @@ foreach($approvedCompleted as $result)
 								{{--<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Final checks</a></li> 
 									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Approved final checked</a></li>--}}
 									@if(auth()->user()->user_type == 1)
-									<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
+									{{--<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>--}}
 									@endif
 									{{--<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab"><span class="counter-grey">{{ $countNedded }}</span> Corrective Needed</a></li>--}}
 										{{--<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter-red">{{ $countAction }}</span> Corrective Action</a></li>--}}
@@ -910,13 +910,20 @@ $(document ).ready(function() {
 					if(response.finalEditPage==1)
 					{
 						mode = 'yes';
+						var order_no = 0;
+					}
+					
+				
+					if(response.finalEditPage == 2)
+					{
+						var order_no = response.order_no;
 					}
 					
 					//var taskid = $('#taskid').val();
 					//alert(taskid);
 					var taskid = task_id;
 					var baseUrl = "{{ url('/checklist-question') }}";
-					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + mode;
+					var redirectUrl = baseUrl + '/'+ taskid + '/' + cat_id + '/' + mode + '/' + order_no;
 					window.location.href = redirectUrl;
 					
 				//}

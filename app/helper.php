@@ -37,6 +37,8 @@ use App\Models\Source;
 use App\Models\Followup_remarks;
 
 use App\Models\Task_lists;
+use App\Models\Task_list_checklists;
+use App\Models\Task_list_subchecklists;
 
 
 // use File;
@@ -561,5 +563,23 @@ use App\Models\Task_lists;
 		};
 		return $text;
 	}
-
+	function checklist_next_question($category_id='', $order_no='')
+	{
+		$checklistQuestion = Checklist::where('category_id', $category_id)
+		->where('status', '!=', 2)->get();
+		foreach($checklistQuestion as $list)
+		{
+			$hasChecklists = Task_list_checklists::where('category_id', $category_id)->where('checklist_id', $list->id)->exists();
+			
+			$hasSubChecklists = Task_list_subchecklists::where('category_id', $category_id)->where('task_list_checklist_id', $list->id)->exists();
+			
+			if(!$hasChecklists || !$hasSubChecklists)
+			{
+				$checklist_id = $list->id;
+				
+				break;
+			}
+		}
+		
+	}
 ?>

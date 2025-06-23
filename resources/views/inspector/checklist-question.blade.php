@@ -157,6 +157,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	<input type="hidden" id="task_id" value="{{ $task_id ?? '' }}">
 	<input type="hidden" id="isFinalEdit" value="{{ $isFinalEdit }}">
 	<input type="hidden" id="direct_edit">
+	<input type="hidden" id="skip_order_no" value="{{ $skip_order_no ?? ''}}">
 	
 	<div class="checklist-question-sticky-footer" style="display : {{ $isFinalEdit== 'no' ? 'block' : 'none' }}">
 	
@@ -204,6 +205,8 @@ $(document).ready(function() {
 	$('#direct_edit').val('');
 	//-- 21-06-2025--
 	var isFinalEdit = $('#isFinalEdit').val();
+	var skip_order_no = $('#skip_order_no').val();
+
 	if(isFinalEdit == 'yes')
 	{
 		var task_id = $('#task_id').val();
@@ -264,7 +267,7 @@ $(document).ready(function() {
 								}
 								else
 								{
-									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Pending</button>';
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Not available</button>';
 								}
 								
 								htmlCompleted += '<div class="checklist-item">';
@@ -304,6 +307,11 @@ $(document).ready(function() {
 		});
 	}
 	//---------end----------
+	if(skip_order_no != '' && isFinalEdit == 'no')
+	{
+		
+		
+	}
 	//$('.previous_question').css('visibility', 'hidden');
 });
 //Dropzone.autoDiscover = false;
@@ -626,7 +634,7 @@ $(document ).ready(function() {
 				Swal.fire({
 					  icon: "warning",
 					  title: "Please select any one",
-					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #00000;"></i></span></div>',
+					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;font-size:15px;color:black;">NA</span></div>',
 					  confirmButtonColor: "#0b2b57",
 					  
 					});
@@ -681,7 +689,7 @@ $(document ).ready(function() {
 				Swal.fire({
 					  icon: "warning",
 					  title: "Please select any one",
-					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: 00000;"></i></span></div>',
+					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: 00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;font-size:15px;color:black;">NA</span></div>',
 					  confirmButtonColor: "#0b2b57",
 					});
 					
@@ -804,7 +812,7 @@ $(document ).ready(function() {
 								}
 								else
 								{
-									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Pending</button>';
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Not available</button>';
 								}
 								
 								htmlCompleted += '<div class="checklist-item">';
@@ -2046,8 +2054,9 @@ function initializeDropzones() {
 function saveAndExit()
 {
 	const location_id = $('#location_id').val();
-	const refreshUrl = "{{ url('location-details/LOCATION_ID') }}";
-	const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id);
+	const task_id = $('#task_id').val();
+	const refreshUrl = "{{ url('category/LOCATION_ID/TASK_ID/ACTIVE') }}";
+	const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ACTIVE', 1);
 	window.location.href = redirectUrl;
 }
 

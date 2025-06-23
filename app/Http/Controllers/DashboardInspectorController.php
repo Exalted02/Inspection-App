@@ -394,9 +394,28 @@ class DashboardInspectorController extends Controller
 			{
 				$finalEditPage = 1;
 			}
-			//-------------------
-			
-			
+			//------------getting between checklist id---
+			$order_no = '';
+			$checklistQuestion = Checklist::where('category_id', $category_id)->where('status', '!=', 2)->orderBy('order_no')->get();
+			foreach ($checklistQuestion as $list) {
+				$hasChecklists = Task_list_checklists::where('category_id', $category_id)
+					->where('checklist_id', $list->id)
+					->exists();
+
+				$hasSubChecklists = Task_list_subchecklists::where('category_id', $category_id)
+					->where('task_list_checklist_id', $list->id)
+					->exists();
+
+				if (!$hasChecklists && !$hasSubChecklists) {
+					$order_no = $list->order_no;
+					break;
+				}
+			}
+			if(!empty($order_no))
+			{
+				return response()->json(['hasData'=> true, 'taskid'=>$task_id, 'finalEditPage'=> 2, 'order_no'=>$order_no]);
+			}
+			//-------------------------------------------
 			/*if(!$taskLocationDtls)
 			{
 				return response()->json(['hasData'=> false,'message'=>'Please enter location details.', 'id'=>NULL]);
@@ -407,14 +426,14 @@ class DashboardInspectorController extends Controller
 				return response()->json(['hasData'=> false,'message'=>'This category has no checklist. Create checklist and subchecklist', 'id'=>NULL]);
 			}*/
 			
-			return response()->json(['hasData'=> true, 'taskid'=>$task_id, 'finalEditPage'=>$finalEditPage]);
+			return response()->json(['hasData'=> true, 'taskid'=>$task_id, 'finalEditPage'=>$finalEditPage, 'order_no', $order_no]);
 		}
 		else{
 			return response()->json(['hasData'=> false, 'id'=>NULL]);
 		}
 	}
 	
-	public function checklist_question($taskid='', $cat_id='', $mode='')
+	public function checklist_question($taskid='', $cat_id='', $mode='' ,$order_no='')
     {
 		if (auth()->user()->user_type == 2 || auth()->user()->user_type == 3) {
 			return redirect('inspector-dashboard');
@@ -438,6 +457,7 @@ class DashboardInspectorController extends Controller
 		$task_data = Task_lists::where('id', $taskid)->first();
 		$data['location_id'] = $task_data ? $task_data->location_id : '';
 		$data['isFinalEdit'] = $mode;
+		$data['skip_order_no'] = $order_no;
         return view('inspector.checklist-question', $data);
     }
 	public function checklist_next_question(Request $request)
