@@ -263,6 +263,7 @@
 					var page_url1 = app_url + '/location-owner';
 					var page_url2 = app_url+'/location-details';
 					var page_url3 = '/corrective-action';
+					var page_url4 = '/lo-task-status';
 					var current_url = window.location.href;
 					//alert(page_url);alert(current_url);
 					
@@ -288,6 +289,14 @@
 						}, 100);
 					}
 					else if(current_url.includes(page_url2))
+					{
+						setTimeout(function() {
+							var baseUrl = "{{ url('/inspector-dashboard') }}";
+							var redirectUrl = baseUrl;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					else if(current_url.includes(page_url4))
 					{
 						setTimeout(function() {
 							var baseUrl = "{{ url('/inspector-dashboard') }}";
