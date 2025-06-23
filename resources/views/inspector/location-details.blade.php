@@ -53,6 +53,9 @@ $getCategotyArr = [];
 						</ul>--}}
 						<!-- Tab panes -->
 						<div class="tab-content">
+						@if(auth()->user()->user_type == 1)
+						<button class="task-filter-button inspector-location-filter" data-location="{{ $location_id ?? ''}}"><span style="margin-right:5px;"><i class="fa-solid fa-arrow-down"></i><i class="fa-solid fa-arrow-up"></i></span>Filter by other status</button>
+						@endif
 						<span class="tasks-list-title">On-going and Upcoming Tasks</span>
 							<div role="tabpanel" class="tab-pane active" id="inprogress_tab">
 							@if($task_list_data->isNotEmpty())
@@ -409,6 +412,18 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		//alert(location_id);
 		var redirectUrl = baseUrl + '/'+ location_id;
+		window.location.href = redirectUrl;
+	});
+	
+	$(document).on('click','.inspector-location-filter', function(){
+		
+		var location_id = $(this).data('location');
+		//alert(location_id);
+		var active = 1;
+		var task_id = 1;
+		var baseUrl = "{{ url('/inspector-filter') }}";
+		//var redirectUrl = baseUrl + '/'+ location_id +'/' + task_id + '/' + active;
+		var redirectUrl = baseUrl + '/'+ location_id + '/' + active;
 		window.location.href = redirectUrl;
 	});
 });

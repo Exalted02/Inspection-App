@@ -63,6 +63,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('checklist-previous-question', [DashboardInspectorController::class, 'checklist_previous_question'])->name('checklist-previous-question');
 	Route::get('/category/{location_id}/{task_id}/{active}', [DashboardInspectorController::class, 'category'])->name('category');
 	
+	Route::get('/inspector-filter/{location_id}/{active}', [DashboardInspectorController::class, 'inspector_filter'])->name('inspector-filter');
+	
 	Route::get('/location-details/{id}', [DashboardInspectorController::class, 'location_details'])->name('location-details');
 	Route::get('/inspector-dashboard', [DashboardInspectorController::class, 'inspector_dashboard'])->name('inspector-dashboard');
 	

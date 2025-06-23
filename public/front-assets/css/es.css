@@ -1552,3 +1552,14 @@ body {
 	text-align:center !important;
 	margin-left: 56px;
 }
+
+.task-filter-button{
+	background:#F2F2F2 !important;
+	color: #000000 !important;
+	font-weight: 600;
+	font-size: 14px;
+	border-radius: 15px;
+	padding: 10px 24px;
+	border: none;
+	margin-top: 6px;
+}
