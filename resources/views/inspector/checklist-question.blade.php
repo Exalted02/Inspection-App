@@ -95,6 +95,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 			<div class="action-buttons-without-text">
 				<button class="rejected" id="question-reject-1" onclick="handleReject(1)"><i class="fa-solid fa-xmark"></i></button>
 				<button class="approved" id="question-approve-1" onclick="handleApprove(1)"><i class="fa-solid fa-check"></i></button>
+				<button class="notavailable" id="question-na-1" onclick="handleNotavailable(1)"><span style="font-size:15px;">NA</span></button>
 			</div>
 		</div>
 	@else
@@ -119,6 +120,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 						<div class="btn-div">
 							<button class="rejected" id="question-reject-{{ $subchecklists->id }}" onclick="handleReject({{ $subchecklists->id }})"><i class="fa-solid fa-xmark"></i></button>
 							<button class="approved" id="question-approve-{{ $subchecklists->id }}" onclick="handleApprove({{ $subchecklists->id }})"><i class="fa-solid fa-check"></i></button>
+							<button class="notavailable" id="question-na-{{ $subchecklists->id }}" onclick="handleNotavailable({{ $subchecklists->id }})"><span style="font-size:15px;">NA</span></button>
 						</div>
 					</div>
 					<span id="errorMulmsg{{ $subchecklists->id }}"  class="question-error-message">
@@ -329,6 +331,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				document.getElementById('question-reject-{{ $subchecklists->id }}')?.click();
 			@elseif($approve == '1')
 				document.getElementById('question-approve-{{ $subchecklists->id }}')?.click();
+			@elseif($approve == '2')
+				document.getElementById('question-na-{{ $subchecklists->id }}')?.click();
 			@endif
 		@endforeach
 	@endif
@@ -475,6 +479,7 @@ function handleReject(id) {
 	document.getElementById('rejectForm-'+id).style.display = 'flex';
 	
 	document.getElementById("question-approve-"+id).classList.remove("active");
+	document.getElementById("question-na-"+id).classList.remove("active");
 	document.getElementById("question-reject-"+id).classList.add("active");
 	$('#approveStatus').val(0);
 	$('#approveMultipleStatus' + id).val(0);
@@ -483,9 +488,20 @@ function handleApprove(id) {
 	document.getElementById('rejectForm-'+id).style.display = 'none';
 	
 	document.getElementById("question-reject-"+id).classList.remove("active");
+	document.getElementById("question-na-"+id).classList.remove("active");
 	document.getElementById("question-approve-"+id).classList.add("active");
 	$('#approveStatus').val(1);
 	$('#approveMultipleStatus' + id).val(1);
+}
+
+function handleNotavailable(id) {
+	document.getElementById('rejectForm-'+id).style.display = 'none';
+	
+	document.getElementById("question-reject-"+id).classList.remove("active");
+	document.getElementById("question-approve-"+id).classList.remove("active");
+	document.getElementById("question-na-"+id).classList.add("active");
+	$('#approveStatus').val(2);
+	$('#approveMultipleStatus' + id).val(2);
 }
 
 Dropzone.autoDiscover = false; // very important
@@ -568,6 +584,12 @@ $(document ).ready(function() {
 		approveButton.click();
 	}
 	
+	if(approveStatus == '2')
+	{
+		const approveButton = document.getElementById('question-na-1');
+		approveButton.click();
+	}
+	
 	
 	// ========= NEXT BUTTON ==============
 	
@@ -576,6 +598,7 @@ $(document ).ready(function() {
 		var mode = $('#mode').val();
 		//alert(mode);
 		var approveStatus = $('#approveStatus').val();
+		//alert(approveStatus);
 		//alert("approveStatus" + approveStatus);
 		if(mode=='single')
 		{
@@ -620,6 +643,7 @@ $(document ).ready(function() {
 				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
 				const text = $(this).find('textarea').val().trim();
 				const approveMulStatus = $('#approveMultipleStatus' + subchecklistId).val();
+				//alert(approveMulStatus);
 				//var hasEditMultipleFile = parseInt($('#hasEditMultipleFile' + subchecklistId).val(), 10);
 				var hasEditMultipleFile = $('#hasEditMultipleFile' + subchecklistId).val();
 				//alert(hasEditMultipleFile); //if 1 get then has files if 0 no files
@@ -849,6 +873,7 @@ $(document ).ready(function() {
 						html += '<div class="btn-div">';
 						html += '<button class="rejected" id="question-reject-' + item.id + '" onclick="handleReject(' + item.id + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
+						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span style="font-size:15px;">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>';
 						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
@@ -874,6 +899,12 @@ $(document ).ready(function() {
 						{
 							autoClicks.push({ type: 'approve', id: item.id });
 						}
+						
+						if(approveStatus== '2')
+						{
+							autoClicks.push({ type: 'notavailable', id: item.id });
+						}
+						
 					});
 
 						html += '</div>'; 
@@ -888,6 +919,10 @@ $(document ).ready(function() {
 								}
 								if (click.type === 'approve') {
 									const btn = document.getElementById('question-approve-' + click.id);
+									if (btn) btn.click();
+								}
+								if (click.type === 'notavailable') {
+									const btn = document.getElementById('question-na-' + click.id);
 									if (btn) btn.click();
 								}
 							});
@@ -1033,6 +1068,7 @@ $(document ).ready(function() {
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + response.currentid + '" onclick="handleApprove(' + response.currentid + ')"><i class="fa-solid fa-check"></i></button>';
+						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span style="font-size:15px;">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>'; 
 
@@ -1048,6 +1084,12 @@ $(document ).ready(function() {
 						{
 							const approveButton = document.getElementById('question-approve-' + response.currentid);
 							approveButton.click();
+						}
+						
+						if(response.next_approve== '2')
+						{
+							const naButton = document.getElementById('question-na-' + response.currentid);
+							naButton.click();
 						}
 						
 						// dropzone work
@@ -1222,6 +1264,7 @@ $(document ).ready(function() {
 						html += '<div class="btn-div">';
 						html += '<button class="rejected" id="question-reject-' + item.id + '" onclick="handleReject(' + item.id + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
+						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span style="font-size:15px;">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>'; 
 						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
@@ -1247,6 +1290,11 @@ $(document ).ready(function() {
 						{
 							autoClicks.push({ type: 'approve', id: item.id });
 						}
+						
+						if(approveStatus== '2')
+						{
+							autoClicks.push({ type: 'notavailable', id: item.id });
+						}
 					});
 
 						html += '</div>'; 
@@ -1261,6 +1309,10 @@ $(document ).ready(function() {
 								}
 								if (click.type === 'approve') {
 									const btn = document.getElementById('question-approve-' + click.id);
+									if (btn) btn.click();
+								}
+								if (click.type === 'notavailable') {
+									const btn = document.getElementById('question-na-' + click.id);
 									if (btn) btn.click();
 								}
 							});
@@ -1403,6 +1455,7 @@ $(document ).ready(function() {
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + response.currentid + '" onclick="handleApprove(' + response.currentid + ')"><i class="fa-solid fa-check"></i></button>';
+						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span style="font-size:15px;">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>'; 
 
@@ -1417,6 +1470,12 @@ $(document ).ready(function() {
 						{
 							const approveButton = document.getElementById('question-approve-' + response.currentid);
 							approveButton.click();
+						}
+						
+						if(response.next_approve== '2')
+						{
+							const naButton = document.getElementById('question-na-' + response.currentid);
+							naButton.click();
 						}
 						
 						// dropzone work
@@ -1595,6 +1654,7 @@ $(document ).ready(function() {
 						html += '<div class="btn-div">';
 						html += '<button class="rejected" id="question-reject-' + item.id + '" onclick="handleReject(' + item.id + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
+						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span style="font-size:15px;">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>';
 						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
@@ -1620,6 +1680,11 @@ $(document ).ready(function() {
 						{
 							autoClicks.push({ type: 'approve', id: item.id });
 						}
+						
+						if(approveStatus== '2')
+						{
+							autoClicks.push({ type: 'notavailable', id: item.id });
+						}
 					});
 
 						html += '</div>'; 
@@ -1633,6 +1698,10 @@ $(document ).ready(function() {
 								}
 								if (click.type === 'approve') {
 									const btn = document.getElementById('question-approve-' + click.id);
+									if (btn) btn.click();
+								}
+								if (click.type === 'notavailable') {
+									const btn = document.getElementById('question-na-' + click.id);
 									if (btn) btn.click();
 								}
 							});
@@ -1778,6 +1847,7 @@ $(document ).ready(function() {
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + response.currentid + '" onclick="handleApprove(' + response.currentid + ')"><i class="fa-solid fa-check"></i></button>';
+						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span style="font-size:15px;">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>'; 
 
@@ -1793,6 +1863,12 @@ $(document ).ready(function() {
 						{
 							const approveButton = document.getElementById('question-approve-' + response.currentid);
 							approveButton.click();
+						}
+						
+						if(response.next_approve== '2')
+						{
+							const naButton = document.getElementById('question-na-' + response.currentid);
+							naButton.click();
 						}
 						
 						// dropzone work
@@ -1938,7 +2014,7 @@ $(document ).ready(function() {
 			  icon: "warning",
 			  showCancelButton: true,
 			  cancelButtonText: "Cancel",
-			  confirmButtonText: "Save and Exit",
+			  confirmButtonText: "Save and exit",
 			  confirmButtonColor: "#0b2b57", 
 			  cancelButtonColor: "#e0e0e0",
 			  customClass: {
