@@ -256,8 +256,8 @@ $(document).ready(function() {
 					var active = 1;
 					@if(auth()->user()->user_type == 1)
 					{
-						var baseUrl = "{{ url('/inspector-filter') }}";
-						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
+						var baseUrl = "{{ url('/location-details') }}";
+						var redirectUrl = baseUrl + '/'+ location_id;
 					}
 					@endif
 					
@@ -308,8 +308,21 @@ $(document).ready(function() {
 						localStorage.setItem('insPlanRejected', 1);
 					}
 					
-					var baseUrl = "{{ url('/location-details') }}";
-					var redirectUrl = baseUrl + '/'+ location_id ;
+					var active = 1;
+					@if(auth()->user()->user_type == 1)
+					{
+						var baseUrl = "{{ url('/location-details') }}";
+						var redirectUrl = baseUrl + '/'+ location_id ;
+					}
+					@endif
+					
+					@if(auth()->user()->user_type == 3)
+					{
+						var baseUrl = "{{ url('/los-task-status') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
+					}
+					@endif
+					
 					window.location.href = redirectUrl;
 				}
 			},
