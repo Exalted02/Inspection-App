@@ -2360,191 +2360,180 @@ class DashboardInspectorController extends Controller
 		//$taskData = Task_lists::where('location_id', $lid)->where('id', $task_id)->get();
 		
 		//-- 23-06-2025--
-		$taskData = Task_lists::where('location_id', $lid)->get();
+		$taskData = Task_lists::where('inspector_id', auth()->user()->id)->where('location_id', $lid)->get();
 		//------
 		
 		if($taskData->isNotEmpty())
 		{
 			foreach($taskData as $val)
 			{
-				//$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
-				
-				$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();
-				
-				if($correctiveActions->isNotEmpty())
-				{
-					foreach($correctiveActions as $correctiveAction)
+				$ifTaskRxists = Task_list_subcategories::where('task_list_id', $val->id)->exists();
+					//$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
+				if($ifTaskRxists)
+				{					
+					$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();
+					
+					if($correctiveActions->isNotEmpty())
 					{
-						$type = '';
-						$image = '';
-						//$type = $correctiveAction->subchecklist_id == null ? 'checklist' : 'subchecklist';
-						
-						if($correctiveAction->subchecklist_id == null)
+						foreach($correctiveActions as $correctiveAction)
 						{
-							$type = 'checklist';
+							$type = '';
+							$image = '';
+							//$type = $correctiveAction->subchecklist_id == null ? 'checklist' : 'subchecklist';
 							
-							$checklistFile = Task_list_checklists::with('get_checklist_files')->where('task_list_id', $val->id)->where('checklist_id', $correctiveAction->checklist_id)->first();
-							
-							$image = $checklistFile && $checklistFile->get_checklist_files->isNotEmpty() ? $checklistFile->get_checklist_files->first()->file : null;
-							
-						}
-						else
-						{
-							$type = 'subchecklist';
-							
-							$subChecklistFile = Task_list_subchecklists::with('get_subchecklist_files')->where('task_list_id', $val->id)->where('task_list_checklist_id', $correctiveAction->checklist_id)->where('subchecklist_id', $correctiveAction->subchecklist_id)->first();
-							
-							$image = $subChecklistFile && $subChecklistFile->get_subchecklist_files->isNotEmpty() ? $subChecklistFile->get_subchecklist_files->first()->file : null;
-						}
-						
-						$correctiveActionChecklistArray[] = [
-							'type' => $type ,
-							'task_id' => $val->id,
-							'checklist_id' => $correctiveAction->checklist_id,
-							'subchecklist_id' => $correctiveAction->subchecklist_id,
-							'rejected_region' => $correctiveAction->lo_corrective_action_plan,
-							'inspector_action' => $correctiveAction->inspector_action,
-							'los_action' => $correctiveAction->los_action,
-							'second_checked' => $correctiveAction->lo_corrective_action_plan_second_check,
-							'lo_direct_approve' => $correctiveAction->lo_direct_approve,
-							'image' => $image,
-						];
-					}
-				}
-				
-				//----------------------12-05-2025----------------------------
-				// checklist and  respective files approve=1 
-				$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
-				if($taskChklist->isNotEmpty())
-				{
-					foreach($taskChklist as $task)
-					{
-						
-						$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)
-						->where('checklist_id', $task->checklist_id)
-						->first();
-						if($task->approve == 0)
-						{
-							if(!$task_list_checklist_corrective_needed)
-							{								
-								$isfiles = '';
-								$images = '';
-								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+							if($correctiveAction->subchecklist_id == null)
+							{
+								$type = 'checklist';
 								
-								$images = $isfiles ? $isfiles->file  : '';
+								$checklistFile = Task_list_checklists::with('get_checklist_files')->where('task_list_id', $val->id)->where('checklist_id', $correctiveAction->checklist_id)->first();
+								
+								$image = $checklistFile && $checklistFile->get_checklist_files->isNotEmpty() ? $checklistFile->get_checklist_files->first()->file : null;
+								
+							}
+							else
+							{
+								$type = 'subchecklist';
+								
+								$subChecklistFile = Task_list_subchecklists::with('get_subchecklist_files')->where('task_list_id', $val->id)->where('task_list_checklist_id', $correctiveAction->checklist_id)->where('subchecklist_id', $correctiveAction->subchecklist_id)->first();
+								
+								$image = $subChecklistFile && $subChecklistFile->get_subchecklist_files->isNotEmpty() ? $subChecklistFile->get_subchecklist_files->first()->file : null;
+							}
+							
+							$correctiveActionChecklistArray[] = [
+								'type' => $type ,
+								'task_id' => $val->id,
+								'checklist_id' => $correctiveAction->checklist_id,
+								'subchecklist_id' => $correctiveAction->subchecklist_id,
+								'rejected_region' => $correctiveAction->lo_corrective_action_plan,
+								'inspector_action' => $correctiveAction->inspector_action,
+								'los_action' => $correctiveAction->los_action,
+								'second_checked' => $correctiveAction->lo_corrective_action_plan_second_check,
+								'lo_direct_approve' => $correctiveAction->lo_direct_approve,
+								'image' => $image,
+							];
+						}
+					}
+					
+					//----------------------12-05-2025----------------------------
+					// checklist and  respective files approve=1 
+					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
+					if($taskChklist->isNotEmpty())
+					{
+						foreach($taskChklist as $task)
+						{
+							
+							$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)
+							->where('checklist_id', $task->checklist_id)
+							->first();
+							if($task->approve == 0)
+							{
+								if(!$task_list_checklist_corrective_needed)
+								{								
+									$isfiles = '';
+									$images = '';
+									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+									
+									$images = $isfiles ? $isfiles->file  : '';
+										$correctiveNeddedChecklistArray[] = [
+												'type' => 'checklist',
+												'task_id' => $val->id,
+												'checklist_id' => $task->checklist_id,
+												'rejected_region' => $task->rejected_region,
+												'image' => $images,
+												'inspector_action' => '',
+												'los_action' => '',
+											];
+								}
+								else
+								{
+									// newimplement
+									$isfiles = '';
+									$images = '';
+									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+									$images = $isfiles ? $isfiles->file  : '';
 									$correctiveNeddedChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'image' => $images,
-											'inspector_action' => '',
-											'los_action' => '',
-										];
-							}
-							else
-							{
-								// newimplement
-								$isfiles = '';
-								$images = '';
-								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
-								$images = $isfiles ? $isfiles->file  : '';
-								$correctiveNeddedChecklistArray[] = [
-									'type' => 'checklist',
-									'task_id' => $val->id,
-									'checklist_id' => $task->checklist_id,
-									'rejected_region' => $task->rejected_region,
-									'image' => $images,
-									'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
-									'los_action'=> $task_list_checklist_corrective_needed->los_action,
-								];
-								//--------
+										'type' => 'checklist',
+										'task_id' => $val->id,
+										'checklist_id' => $task->checklist_id,
+										'rejected_region' => $task->rejected_region,
+										'image' => $images,
+										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+										'los_action'=> $task_list_checklist_corrective_needed->los_action,
+									];
+									//--------
+									
+									$isfiles = '';
+									$images = '';
+									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+									$images = $isfiles ? $isfiles->file  : '';
+									$completedApprChecklistArray[] = [
+												'type' => 'checklist',
+												'task_id' => $val->id,
+												'checklist_id' => $task->checklist_id,
+												'rejected_region' => $task->rejected_region,
+												'image' => $images,
+												'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+												'los_action'=> $task_list_checklist_corrective_needed->los_action,
+												//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
+											];
+								}
 								
-								$isfiles = '';
-								$images = '';
-								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
-								$images = $isfiles ? $isfiles->file  : '';
-								$completedApprChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'image' => $images,
-											'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
-											'los_action'=> $task_list_checklist_corrective_needed->los_action,
-											//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
-										];
 							}
-							
-						}
-						elseif($task->approve == 1)
-						{
-							$completedApprChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'inspector_action' => 1,
-											'los_action' => 1,
-										];
+							elseif($task->approve == 1)
+							{
+								$completedApprChecklistArray[] = [
+												'type' => 'checklist',
+												'task_id' => $val->id,
+												'checklist_id' => $task->checklist_id,
+												'rejected_region' => $task->rejected_region,
+												'inspector_action' => 1,
+												'los_action' => 1,
+											];
+							}
 						}
 					}
-				}
-				
-				// subchecklist and respective files
-				$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
-				if($taskSubChklist->isNotEmpty())
-				{
-					foreach($taskSubChklist as $subtask)
+					
+					// subchecklist and respective files
+					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
+					if($taskSubChklist->isNotEmpty())
 					{
-						$task_list_subchecklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)
-						->where('checklist_id', $subtask->task_list_checklist_id)
-						->where('subchecklist_id', $subtask->subchecklist_id)
-						->first();
-						
-						if($subtask->approve == 0)
+						foreach($taskSubChklist as $subtask)
 						{
-							if(!$task_list_subchecklist_corrective_needed)
+							$task_list_subchecklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)
+							->where('checklist_id', $subtask->task_list_checklist_id)
+							->where('subchecklist_id', $subtask->subchecklist_id)
+							->first();
+							
+							if($subtask->approve == 0)
 							{
-								$isSubChecklistfiles = '';
-								$subChecklistimages = '';
-								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
-								
-								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
-								$correctiveNeddedSubchecklistArray[] = [
-											'type' => 'subchecklist',
-											'task_id' => $val->id,
-											'checklist_id' => $subtask->task_list_checklist_id,
-											'subchecklist_id'=>$subtask->subchecklist_id,
-											'rejected_region' => $subtask->rejected_region,
-											'image' => $subChecklistimages,
-											'inspector_action' => '',
-											'los_action' => '',
-										];
-							}
-							else
-							{
-								$isSubChecklistfiles = '';
-								$subChecklistimages = '';
-								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
-								
-								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
-								
-								//  new implement
-								$correctiveNeddedSubchecklistArray[] = [
-										'type' => 'subchecklist',
-										'task_id' => $val->id,
-										'checklist_id' => $subtask->task_list_checklist_id,
-										'subchecklist_id'=>$subtask->subchecklist_id,
-										'rejected_region' => $subtask->rejected_region,
-										'image' => $subChecklistimages,
-										'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
-										'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
-									];
-								//----
-								
-								
-								$completedApprSubcheckListArray[] = [
+								if(!$task_list_subchecklist_corrective_needed)
+								{
+									$isSubChecklistfiles = '';
+									$subChecklistimages = '';
+									$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+									
+									$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+									$correctiveNeddedSubchecklistArray[] = [
+												'type' => 'subchecklist',
+												'task_id' => $val->id,
+												'checklist_id' => $subtask->task_list_checklist_id,
+												'subchecklist_id'=>$subtask->subchecklist_id,
+												'rejected_region' => $subtask->rejected_region,
+												'image' => $subChecklistimages,
+												'inspector_action' => '',
+												'los_action' => '',
+											];
+								}
+								else
+								{
+									$isSubChecklistfiles = '';
+									$subChecklistimages = '';
+									$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+									
+									$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+									
+									//  new implement
+									$correctiveNeddedSubchecklistArray[] = [
 											'type' => 'subchecklist',
 											'task_id' => $val->id,
 											'checklist_id' => $subtask->task_list_checklist_id,
@@ -2553,27 +2542,41 @@ class DashboardInspectorController extends Controller
 											'image' => $subChecklistimages,
 											'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 											'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
-											//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 										];
+									//----
+									
+									
+									$completedApprSubcheckListArray[] = [
+												'type' => 'subchecklist',
+												'task_id' => $val->id,
+												'checklist_id' => $subtask->task_list_checklist_id,
+												'subchecklist_id'=>$subtask->subchecklist_id,
+												'rejected_region' => $subtask->rejected_region,
+												'image' => $subChecklistimages,
+												'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
+												'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+												//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
+											];
+									
+								}
+							}
+							elseif($subtask->approve == 1)
+							{
+								$completedApprSubcheckListArray[] = [
+										'type' => 'subchecklist',
+										'task_id' => $val->id,
+										'checklist_id' => $subtask->task_list_checklist_id,
+										'subchecklist_id'=>$subtask->subchecklist_id,
+										'rejected_region' => $subtask->rejected_region,
+										'inspector_action' => 1,
+										'los_action' => 1,
+										
+									];
 								
 							}
 						}
-						elseif($subtask->approve == 1)
-						{
-							$completedApprSubcheckListArray[] = [
-									'type' => 'subchecklist',
-									'task_id' => $val->id,
-									'checklist_id' => $subtask->task_list_checklist_id,
-									'subchecklist_id'=>$subtask->subchecklist_id,
-									'rejected_region' => $subtask->rejected_region,
-									'inspector_action' => 1,
-									'los_action' => 1,
-									
-								];
-							
-						}
+						
 					}
-					
 				}
 					
 			} // task array end 
@@ -2630,358 +2633,55 @@ class DashboardInspectorController extends Controller
 		{
 			foreach($taskData as $val)
 			{
-				//$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
-				
-				$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();
-				
-				if($correctiveActions->isNotEmpty())
+				$ifTaskRxists = Task_list_subcategories::where('task_list_id', $val->id)->exists();
+				if($ifTaskRxists)
 				{
-					foreach($correctiveActions as $correctiveAction)
+					//$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
+					
+					$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();
+					
+					if($correctiveActions->isNotEmpty())
 					{
-						$type = '';
-						$image = '';
-						//$type = $correctiveAction->subchecklist_id == null ? 'checklist' : 'subchecklist';
-						
-						if($correctiveAction->subchecklist_id == null)
+						foreach($correctiveActions as $correctiveAction)
 						{
-							$type = 'checklist';
+							$type = '';
+							$image = '';
+							//$type = $correctiveAction->subchecklist_id == null ? 'checklist' : 'subchecklist';
 							
-							$checklistFile = Task_list_checklists::with('get_checklist_files')->where('task_list_id', $val->id)->where('checklist_id', $correctiveAction->checklist_id)->first();
-							
-							$image = $checklistFile && $checklistFile->get_checklist_files->isNotEmpty() ? $checklistFile->get_checklist_files->first()->file : null;
-							
-						}
-						else
-						{
-							$type = 'subchecklist';
-							
-							$subChecklistFile = Task_list_subchecklists::with('get_subchecklist_files')->where('task_list_id', $val->id)->where('task_list_checklist_id', $correctiveAction->checklist_id)->where('subchecklist_id', $correctiveAction->subchecklist_id)->first();
-							
-							$image = $subChecklistFile && $subChecklistFile->get_subchecklist_files->isNotEmpty() ? $subChecklistFile->get_subchecklist_files->first()->file : null;
-						}
-						
-						$correctiveActionChecklistArray[] = [
-							'type' => $type ,
-							'task_id' => $val->id,
-							'checklist_id' => $correctiveAction->checklist_id,
-							'subchecklist_id' => $correctiveAction->subchecklist_id,
-							'rejected_region' => $correctiveAction->lo_corrective_action_plan,
-							'inspector_action' => $correctiveAction->inspector_action,
-							'los_action' => $correctiveAction->los_action,
-							'second_checked' => $correctiveAction->lo_corrective_action_plan_second_check,
-							'lo_direct_approve' => $correctiveAction->lo_direct_approve,
-							'image' => $image,
-						];
-					}
-				}
-				
-				//----------------------12-05-2025----------------------------
-				// checklist and  respective files approve=1 
-				$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
-				if($taskChklist->isNotEmpty())
-				{
-					foreach($taskChklist as $task)
-					{
-						
-						$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)
-						->where('checklist_id', $task->checklist_id)
-						->first();
-						if($task->approve == 0)
-						{
-							if(!$task_list_checklist_corrective_needed)
-							{								
-								$isfiles = '';
-								$images = '';
-								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+							if($correctiveAction->subchecklist_id == null)
+							{
+								$type = 'checklist';
 								
-								$images = $isfiles ? $isfiles->file  : '';
-									$correctiveNeddedChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'image' => $images,
-											'inspector_action' => '',
-											'los_action' => '',
-										];
+								$checklistFile = Task_list_checklists::with('get_checklist_files')->where('task_list_id', $val->id)->where('checklist_id', $correctiveAction->checklist_id)->first();
+								
+								$image = $checklistFile && $checklistFile->get_checklist_files->isNotEmpty() ? $checklistFile->get_checklist_files->first()->file : null;
+								
 							}
 							else
 							{
-								// newimplement
-								$isfiles = '';
-								$images = '';
-								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
-								$images = $isfiles ? $isfiles->file  : '';
-								$correctiveNeddedChecklistArray[] = [
-									'type' => 'checklist',
-									'task_id' => $val->id,
-									'checklist_id' => $task->checklist_id,
-									'rejected_region' => $task->rejected_region,
-									'image' => $images,
-									'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
-									'los_action'=> $task_list_checklist_corrective_needed->los_action,
-								];
-								//--------
+								$type = 'subchecklist';
 								
-								$isfiles = '';
-								$images = '';
-								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
-								$images = $isfiles ? $isfiles->file  : '';
-								$completedApprChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'image' => $images,
-											'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
-											'los_action'=> $task_list_checklist_corrective_needed->los_action,
-											//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
-										];
+								$subChecklistFile = Task_list_subchecklists::with('get_subchecklist_files')->where('task_list_id', $val->id)->where('task_list_checklist_id', $correctiveAction->checklist_id)->where('subchecklist_id', $correctiveAction->subchecklist_id)->first();
+								
+								$image = $subChecklistFile && $subChecklistFile->get_subchecklist_files->isNotEmpty() ? $subChecklistFile->get_subchecklist_files->first()->file : null;
 							}
 							
-						}
-						elseif($task->approve == 1)
-						{
-							$completedApprChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'inspector_action' => 1,
-											'los_action' => 1,
-										];
-						}
-					}
-				}
-				
-				// subchecklist and respective files
-				$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
-				if($taskSubChklist->isNotEmpty())
-				{
-					foreach($taskSubChklist as $subtask)
-					{
-						$task_list_subchecklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)
-						->where('checklist_id', $subtask->task_list_checklist_id)
-						->where('subchecklist_id', $subtask->subchecklist_id)
-						->first();
-						
-						if($subtask->approve == 0)
-						{
-							if(!$task_list_subchecklist_corrective_needed)
-							{
-								$isSubChecklistfiles = '';
-								$subChecklistimages = '';
-								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
-								
-								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
-								$correctiveNeddedSubchecklistArray[] = [
-											'type' => 'subchecklist',
-											'task_id' => $val->id,
-											'checklist_id' => $subtask->task_list_checklist_id,
-											'subchecklist_id'=>$subtask->subchecklist_id,
-											'rejected_region' => $subtask->rejected_region,
-											'image' => $subChecklistimages,
-											'inspector_action' => '',
-											'los_action' => '',
-										];
-							}
-							else
-							{
-								$isSubChecklistfiles = '';
-								$subChecklistimages = '';
-								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
-								
-								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
-								
-								//  new implement
-								$correctiveNeddedSubchecklistArray[] = [
-										'type' => 'subchecklist',
-										'task_id' => $val->id,
-										'checklist_id' => $subtask->task_list_checklist_id,
-										'subchecklist_id'=>$subtask->subchecklist_id,
-										'rejected_region' => $subtask->rejected_region,
-										'image' => $subChecklistimages,
-										'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
-										'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
-									];
-								//----
-								
-								
-								$completedApprSubcheckListArray[] = [
-											'type' => 'subchecklist',
-											'task_id' => $val->id,
-											'checklist_id' => $subtask->task_list_checklist_id,
-											'subchecklist_id'=>$subtask->subchecklist_id,
-											'rejected_region' => $subtask->rejected_region,
-											'image' => $subChecklistimages,
-											'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
-											'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
-											//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
-										];
-								
-							}
-						}
-						elseif($subtask->approve == 1)
-						{
-							$completedApprSubcheckListArray[] = [
-									'type' => 'subchecklist',
-									'task_id' => $val->id,
-									'checklist_id' => $subtask->task_list_checklist_id,
-									'subchecklist_id'=>$subtask->subchecklist_id,
-									'rejected_region' => $subtask->rejected_region,
-									'inspector_action' => 1,
-									'los_action' => 1,
-									
-								];
-							
+							$correctiveActionChecklistArray[] = [
+								'type' => $type ,
+								'task_id' => $val->id,
+								'checklist_id' => $correctiveAction->checklist_id,
+								'subchecklist_id' => $correctiveAction->subchecklist_id,
+								'rejected_region' => $correctiveAction->lo_corrective_action_plan,
+								'inspector_action' => $correctiveAction->inspector_action,
+								'los_action' => $correctiveAction->los_action,
+								'second_checked' => $correctiveAction->lo_corrective_action_plan_second_check,
+								'lo_direct_approve' => $correctiveAction->lo_direct_approve,
+								'image' => $image,
+							];
 						}
 					}
 					
-				}
-					
-			} // task array end 
-		}
-		
-		//-----------12-06-2025--------------------
-		$data['correctiveNeeded'] = array_merge($correctiveNeddedChecklistArray,$correctiveNeddedSubchecklistArray);
-		$data['approvedCompleted'] = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
-		//------------------------------------------
-		//echo "<pre>";print_r($correctiveActionChecklistArray);die;
-		$data['correctiveAction'] = $correctiveActionChecklistArray;
-		//-----
-		return view('inspector.los-task-status', $data);
-    }
-	//public function lo_task_status($lid='',$taskid='', $active='')
-	public function lo_task_status($lid='', $active='')
-	{
-		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 3) {
-			return redirect('inspector-dashboard');
-		}
-		//--- if location owner login ---
-		$correctiveActionChecklistArray = [];
-		$correctiveActionSubcheckListArray = [];
-		$correctiveCheckChecklistArray = [];
-		$correctiveCheckSubcheckListArray = [];
-		
-		$correctiveNeddedChecklistArray = [];
-		$completedApprChecklistArray = [];
-		
-		$correctiveNeddedSubchecklistArray = [];
-		$completedApprSubcheckListArray = [];
-		
-		if(auth()->user()->user_type == 2)
-		{
-			$user_type = auth()->user()->user_type;
-			//$taskData = Task_lists::where('location_id', $lid)->where('category_id', $catid)->get();
-			/*$taskData = Task_lists::where('location_id', $lid)->where('id', $taskid)->get();*/
-			
-			$taskData = Task_lists::where('location_id', $lid)->get();
-			
-			if($taskData->isNotEmpty())
-			{
-				foreach($taskData as $val)
-				{
-					// checklist and  respective files approve=0 
-					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->where('approve', 0)->get();
-					if($taskChklist->isNotEmpty())
-					{
-						foreach($taskChklist as $task)
-						{
-							
-							$task_list_checklist_corrective_action = Task_list_corrective_action::where('task_list_id', $val->id)
-							->where('checklist_id', $task->checklist_id)
-							->first();
-							
-							if(!$task_list_checklist_corrective_action)
-							{								
-								$isfiles = '';
-								$images = '';
-								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
-								
-								$images = $isfiles ? $isfiles->file  : '';
-								$correctiveActionChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'image' => $images,
-										];
-							}
-							else
-							{
-								$isfiles = '';
-								$images = '';
-								$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
-								$images = $isfiles ? $isfiles->file  : '';
-								$correctiveCheckChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'image' => $images,
-											'inspector_action'=> $task_list_checklist_corrective_action->inspector_action,
-											'los_action'=> $task_list_checklist_corrective_action->los_action,
-											'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
-											'lo_direct_approve'=> $task_list_checklist_corrective_action->lo_direct_approve,
-										];
-							}
-							
-							
-						}
-					}
-					
-					// subchecklist and respective files
-					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->where('approve', 0)->get();
-					if($taskSubChklist->isNotEmpty())
-					{
-						foreach($taskSubChklist as $subtask)
-						{
-							$task_list_subchecklist_corrective_action = Task_list_corrective_action::where('task_list_id', $val->id)
-							->where('checklist_id', $subtask->task_list_checklist_id)
-							->where('subchecklist_id', $subtask->subchecklist_id)
-							->first();
-							
-							if(!$task_list_subchecklist_corrective_action)
-							{
-								$isSubChecklistfiles = '';
-								$subChecklistimages = '';
-								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
-								
-								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
-								$correctiveActionSubcheckListArray[] = [
-											'type' => 'subchecklist',
-											'task_id' => $val->id,
-											'checklist_id' => $subtask->task_list_checklist_id,
-											'subchecklist_id'=>$subtask->subchecklist_id,
-											'rejected_region' => $subtask->rejected_region,
-											'image' => $subChecklistimages,
-										];
-							}
-							else
-							{
-								$isSubChecklistfiles = '';
-								$subChecklistimages = '';
-								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
-								
-								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
-								$correctiveCheckSubcheckListArray[] = [
-											'type' => 'subchecklist',
-											'task_id' => $val->id,
-											'checklist_id' => $subtask->task_list_checklist_id,
-											'subchecklist_id'=>$subtask->subchecklist_id,
-											'rejected_region' => $subtask->rejected_region,
-											'image' => $subChecklistimages,
-											'inspector_action'=> $task_list_subchecklist_corrective_action->inspector_action,
-											'los_action'=> $task_list_subchecklist_corrective_action->los_action,
-											'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
-											'lo_direct_approve'=> $task_list_subchecklist_corrective_action->lo_direct_approve,
-										];
-								
-							}
-						}
-						
-					}
-					//----------------------12-06-2025----------------------------
+					//----------------------12-05-2025----------------------------
 					// checklist and  respective files approve=1 
 					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
 					if($taskChklist->isNotEmpty())
@@ -3001,35 +2701,38 @@ class DashboardInspectorController extends Controller
 									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
 									
 									$images = $isfiles ? $isfiles->file  : '';
-									$correctiveNeddedChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'image' => $images,
-											'inspector_action' => '',
-											'los_action' => '',
-										];
+										$correctiveNeddedChecklistArray[] = [
+												'type' => 'checklist',
+												'task_id' => $val->id,
+												'checklist_id' => $task->checklist_id,
+												'rejected_region' => $task->rejected_region,
+												'image' => $images,
+												'inspector_action' => '',
+												'los_action' => '',
+											];
 								}
 								else
 								{
+									// newimplement
 									$isfiles = '';
 									$images = '';
 									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
 									$images = $isfiles ? $isfiles->file  : '';
-									
-									//---- new implement 
 									$correctiveNeddedChecklistArray[] = [
-											'type' => 'checklist',
-											'task_id' => $val->id,
-											'checklist_id' => $task->checklist_id,
-											'rejected_region' => $task->rejected_region,
-											'image' => $images,
-											'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
-											'los_action'=> $task_list_checklist_corrective_needed->los_action,
-										];
-									//------
+										'type' => 'checklist',
+										'task_id' => $val->id,
+										'checklist_id' => $task->checklist_id,
+										'rejected_region' => $task->rejected_region,
+										'image' => $images,
+										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+										'los_action'=> $task_list_checklist_corrective_needed->los_action,
+									];
+									//--------
 									
+									$isfiles = '';
+									$images = '';
+									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+									$images = $isfiles ? $isfiles->file  : '';
 									$completedApprChecklistArray[] = [
 												'type' => 'checklist',
 												'task_id' => $val->id,
@@ -3050,8 +2753,8 @@ class DashboardInspectorController extends Controller
 												'task_id' => $val->id,
 												'checklist_id' => $task->checklist_id,
 												'rejected_region' => $task->rejected_region,
-												'inspector_action'=> 1,
-												'los_action'=> 1,
+												'inspector_action' => 1,
+												'los_action' => 1,
 											];
 							}
 						}
@@ -3096,7 +2799,7 @@ class DashboardInspectorController extends Controller
 									
 									$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
 									
-									// new implement 
+									//  new implement
 									$correctiveNeddedSubchecklistArray[] = [
 											'type' => 'subchecklist',
 											'task_id' => $val->id,
@@ -3107,7 +2810,8 @@ class DashboardInspectorController extends Controller
 											'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 											'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
 										];
-									//-------
+									//----
+									
 									
 									$completedApprSubcheckListArray[] = [
 												'type' => 'subchecklist',
@@ -3133,6 +2837,7 @@ class DashboardInspectorController extends Controller
 										'rejected_region' => $subtask->rejected_region,
 										'inspector_action' => 1,
 										'los_action' => 1,
+										
 									];
 								
 							}
@@ -3140,16 +2845,310 @@ class DashboardInspectorController extends Controller
 						
 					}
 					
-					
 				}
-				
-				//echo count($correctiveActionSubcheckListArray); die;
-				/*$data['correctiveAction'] = array_merge($correctiveActionChecklistArray, $correctiveActionSubcheckListArray);
-				
-				$data['correctiveCheck'] = array_merge($correctiveCheckChecklistArray, $correctiveCheckSubcheckListArray);
-				
-				$data['total_corrective_action'] = count($correctiveActionChecklistArray) + count($correctiveActionSubcheckListArray);*/
-				
+					
+			} // task array end 
+		}
+		
+		//-----------12-06-2025--------------------
+		$data['correctiveNeeded'] = array_merge($correctiveNeddedChecklistArray,$correctiveNeddedSubchecklistArray);
+		$data['approvedCompleted'] = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
+		//------------------------------------------
+		//echo "<pre>";print_r($correctiveActionChecklistArray);die;
+		$data['correctiveAction'] = $correctiveActionChecklistArray;
+		//-----
+		return view('inspector.los-task-status', $data);
+    }
+	//public function lo_task_status($lid='',$taskid='', $active='')
+	public function lo_task_status($lid='', $active='')
+	{
+		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 3) {
+			return redirect('inspector-dashboard');
+		}
+		//--- if location owner login ---
+		$correctiveActionChecklistArray = [];
+		$correctiveActionSubcheckListArray = [];
+		$correctiveCheckChecklistArray = [];
+		$correctiveCheckSubcheckListArray = [];
+		
+		$correctiveNeddedChecklistArray = [];
+		$completedApprChecklistArray = [];
+		
+		$correctiveNeddedSubchecklistArray = [];
+		$completedApprSubcheckListArray = [];
+		
+		if(auth()->user()->user_type == 2)
+		{
+			$user_type = auth()->user()->user_type;
+			$taskData = Task_lists::where('location_id', $lid)->get();
+			
+			if($taskData->isNotEmpty())
+			{
+				foreach($taskData as $val)
+				{
+					$ifTaskRxists = Task_list_subcategories::where('task_list_id', $val->id)->exists();
+					if($ifTaskRxists)
+					{
+						// checklist and  respective files approve=0 
+						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->where('approve', 0)->get();
+						if($taskChklist->isNotEmpty())
+						{
+							foreach($taskChklist as $task)
+							{
+								
+								$task_list_checklist_corrective_action = Task_list_corrective_action::where('task_list_id', $val->id)
+								->where('checklist_id', $task->checklist_id)
+								->first();
+								
+								if(!$task_list_checklist_corrective_action)
+								{								
+									$isfiles = '';
+									$images = '';
+									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+									
+									$images = $isfiles ? $isfiles->file  : '';
+									$correctiveActionChecklistArray[] = [
+												'type' => 'checklist',
+												'task_id' => $val->id,
+												'checklist_id' => $task->checklist_id,
+												'rejected_region' => $task->rejected_region,
+												'image' => $images,
+											];
+								}
+								else
+								{
+									$isfiles = '';
+									$images = '';
+									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+									$images = $isfiles ? $isfiles->file  : '';
+									$correctiveCheckChecklistArray[] = [
+												'type' => 'checklist',
+												'task_id' => $val->id,
+												'checklist_id' => $task->checklist_id,
+												'rejected_region' => $task->rejected_region,
+												'image' => $images,
+												'inspector_action'=> $task_list_checklist_corrective_action->inspector_action,
+												'los_action'=> $task_list_checklist_corrective_action->los_action,
+												'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
+												'lo_direct_approve'=> $task_list_checklist_corrective_action->lo_direct_approve,
+											];
+								}
+								
+								
+							}
+						}
+						
+						// subchecklist and respective files
+						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->where('approve', 0)->get();
+						if($taskSubChklist->isNotEmpty())
+						{
+							foreach($taskSubChklist as $subtask)
+							{
+								$task_list_subchecklist_corrective_action = Task_list_corrective_action::where('task_list_id', $val->id)
+								->where('checklist_id', $subtask->task_list_checklist_id)
+								->where('subchecklist_id', $subtask->subchecklist_id)
+								->first();
+								
+								if(!$task_list_subchecklist_corrective_action)
+								{
+									$isSubChecklistfiles = '';
+									$subChecklistimages = '';
+									$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+									
+									$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+									$correctiveActionSubcheckListArray[] = [
+												'type' => 'subchecklist',
+												'task_id' => $val->id,
+												'checklist_id' => $subtask->task_list_checklist_id,
+												'subchecklist_id'=>$subtask->subchecklist_id,
+												'rejected_region' => $subtask->rejected_region,
+												'image' => $subChecklistimages,
+											];
+								}
+								else
+								{
+									$isSubChecklistfiles = '';
+									$subChecklistimages = '';
+									$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+									
+									$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+									$correctiveCheckSubcheckListArray[] = [
+												'type' => 'subchecklist',
+												'task_id' => $val->id,
+												'checklist_id' => $subtask->task_list_checklist_id,
+												'subchecklist_id'=>$subtask->subchecklist_id,
+												'rejected_region' => $subtask->rejected_region,
+												'image' => $subChecklistimages,
+												'inspector_action'=> $task_list_subchecklist_corrective_action->inspector_action,
+												'los_action'=> $task_list_subchecklist_corrective_action->los_action,
+												'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
+												'lo_direct_approve'=> $task_list_subchecklist_corrective_action->lo_direct_approve,
+											];
+									
+								}
+							}
+							
+						}
+						//----------------------12-06-2025----------------------------
+						// checklist and  respective files approve=1 
+						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
+						if($taskChklist->isNotEmpty())
+						{
+							foreach($taskChklist as $task)
+							{
+								
+								$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)
+								->where('checklist_id', $task->checklist_id)
+								->first();
+								if($task->approve == 0)
+								{
+									if(!$task_list_checklist_corrective_needed)
+									{								
+										$isfiles = '';
+										$images = '';
+										$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+										
+										$images = $isfiles ? $isfiles->file  : '';
+										$correctiveNeddedChecklistArray[] = [
+												'type' => 'checklist',
+												'task_id' => $val->id,
+												'checklist_id' => $task->checklist_id,
+												'rejected_region' => $task->rejected_region,
+												'image' => $images,
+												'inspector_action' => '',
+												'los_action' => '',
+											];
+									}
+									else
+									{
+										$isfiles = '';
+										$images = '';
+										$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+										$images = $isfiles ? $isfiles->file  : '';
+										
+										//---- new implement 
+										$correctiveNeddedChecklistArray[] = [
+												'type' => 'checklist',
+												'task_id' => $val->id,
+												'checklist_id' => $task->checklist_id,
+												'rejected_region' => $task->rejected_region,
+												'image' => $images,
+												'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+												'los_action'=> $task_list_checklist_corrective_needed->los_action,
+											];
+										//------
+										
+										$completedApprChecklistArray[] = [
+													'type' => 'checklist',
+													'task_id' => $val->id,
+													'checklist_id' => $task->checklist_id,
+													'rejected_region' => $task->rejected_region,
+													'image' => $images,
+													'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+													'los_action'=> $task_list_checklist_corrective_needed->los_action,
+													//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
+												];
+									}
+									
+								}
+								elseif($task->approve == 1)
+								{
+									$completedApprChecklistArray[] = [
+													'type' => 'checklist',
+													'task_id' => $val->id,
+													'checklist_id' => $task->checklist_id,
+													'rejected_region' => $task->rejected_region,
+													'inspector_action'=> 1,
+													'los_action'=> 1,
+												];
+								}
+							}
+						}
+						
+						// subchecklist and respective files
+						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
+						if($taskSubChklist->isNotEmpty())
+						{
+							foreach($taskSubChklist as $subtask)
+							{
+								$task_list_subchecklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)
+								->where('checklist_id', $subtask->task_list_checklist_id)
+								->where('subchecklist_id', $subtask->subchecklist_id)
+								->first();
+								
+								if($subtask->approve == 0)
+								{
+									if(!$task_list_subchecklist_corrective_needed)
+									{
+										$isSubChecklistfiles = '';
+										$subChecklistimages = '';
+										$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+										
+										$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+										$correctiveNeddedSubchecklistArray[] = [
+													'type' => 'subchecklist',
+													'task_id' => $val->id,
+													'checklist_id' => $subtask->task_list_checklist_id,
+													'subchecklist_id'=>$subtask->subchecklist_id,
+													'rejected_region' => $subtask->rejected_region,
+													'image' => $subChecklistimages,
+													'inspector_action' => '',
+													'los_action' => '',
+												];
+									}
+									else
+									{
+										$isSubChecklistfiles = '';
+										$subChecklistimages = '';
+										$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+										
+										$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+										
+										// new implement 
+										$correctiveNeddedSubchecklistArray[] = [
+												'type' => 'subchecklist',
+												'task_id' => $val->id,
+												'checklist_id' => $subtask->task_list_checklist_id,
+												'subchecklist_id'=>$subtask->subchecklist_id,
+												'rejected_region' => $subtask->rejected_region,
+												'image' => $subChecklistimages,
+												'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
+												'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+											];
+										//-------
+										
+										$completedApprSubcheckListArray[] = [
+													'type' => 'subchecklist',
+													'task_id' => $val->id,
+													'checklist_id' => $subtask->task_list_checklist_id,
+													'subchecklist_id'=>$subtask->subchecklist_id,
+													'rejected_region' => $subtask->rejected_region,
+													'image' => $subChecklistimages,
+													'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
+													'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+													//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
+												];
+										
+									}
+								}
+								elseif($subtask->approve == 1)
+								{
+									$completedApprSubcheckListArray[] = [
+											'type' => 'subchecklist',
+											'task_id' => $val->id,
+											'checklist_id' => $subtask->task_list_checklist_id,
+											'subchecklist_id'=>$subtask->subchecklist_id,
+											'rejected_region' => $subtask->rejected_region,
+											'inspector_action' => 1,
+											'los_action' => 1,
+										];
+									
+								}
+							}
+							
+						}
+					}
+				}
 			}
 			
 			$data['correctiveAction'] = array_merge($correctiveActionChecklistArray, $correctiveActionSubcheckListArray);
@@ -3340,5 +3339,215 @@ class DashboardInspectorController extends Controller
 					'barHtml'=>$barHtml
 				]
 			);
+	}
+	public function save_exist_question(Request $request)
+	{
+		$approveStatus = $request->post('approveStatus');
+		$mode = $request->post('mode');
+		$order_no = $request->post('order_no');
+		$rejectTextsSingle = $request->post('rejectTextsSingle');
+		$rejectTextsMultiple = json_decode($request->input('rejectTextsMultiple'), true);
+		//echo "<pre>";print_r($rejectTextsMultiple);die;
+		/*if(!empty($rejectTextsMultiple) && is_array($rejectTextsMultiple)) {
+				foreach ($rejectTextsMultiple as $subChecklistId => $text) {
+					echo "SubChecklist ID: " . $subChecklistId . " - Reason: " . $text['text'] ." status- ".$text['approve_status'] . "<br>";
+				}
+			}
+		*/
+		//-------------------------------------
+		$task_id = $request->post('task_id');
+		$current_question_id = $request->post('current_question_id');
+		$category_id = $request->post('category_id');
+		//$subcategory_id = $request->post('subcategory_id');
+		$nextQuestionExists = Checklist::where('category_id', $category_id)
+		//->where('subcategory_id', $subcategory_id)
+		->where('status', '!=', 2)
+		->where('order_no', '>', $order_no)
+		//->where('id', '>', $current_question_id)
+		->orderByRaw('CAST(order_no as UNSIGNED) ASC')
+		//->orderBy('id', 'asc')
+		->exists();
+		
+		$nextId = '';
+		$name  = '';
+		$subchecklist = '';
+		$subcategoryname = '';
+		$categoryDtls = Category::where('id',$category_id)->first();
+		$categoryName = $categoryDtls ? $categoryDtls->name : '';
+		//$subChklistArr = [];
+		
+		//---add record to table
+		if($mode == 'single')
+		{
+			if($approveStatus !='')
+			{
+				// 21-05-2025--
+				/*$checkTastChecklistExists  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $current_question_id)->first();
+				$hasid = $checkTastChecklistExists ? $checkTastChecklistExists->id : null;*/
+				
+				$checkTastChecklistExists  = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $current_question_id)->first();
+				$hasid = $checkTastChecklistExists ? $checkTastChecklistExists->id : null;
+				
+				if($hasid)
+				{
+					$model = Task_list_checklists::find($hasid);
+					$model->rejected_region = $approveStatus == 0 ? $rejectTextsSingle : null;
+					$model->approve 	= $approveStatus;
+					$model->save();
+					$task_list_checklist_id = $hasid;
+					
+					// if file uploaded and get next or back if i choose tick sign then delete the files
+					if($approveStatus=='1')
+					{
+						$chklistFiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->get();
+						if($chklistFiles->isNotEmpty()){
+							
+							foreach($chklistFiles as $filemn)
+							{
+								$f_name = $filemn->file;
+								$filePath = public_path('uploads/reject-files/' . $f_name);
+								if (file_exists($filePath)) {
+									unlink($filePath);
+								}
+							}
+							
+							Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+						}
+					}
+					
+				}
+				else
+				{
+					
+					$model = new Task_list_checklists();	
+					$model->task_list_id = $task_id ?? null;
+					$model->category_id = $category_id ?? null; //- 21-06-2025
+					//$model->task_list_subcategory_id = $subcategory_id ?? null; // 21-05-2025
+					$model->checklist_id = $current_question_id ?? null;
+					$model->rejected_region = $approveStatus == 0 ? $rejectTextsSingle :'';
+					$model->approve 	= $approveStatus;
+					$model->save();
+					$task_list_checklist_id = $model->id;
+				}
+				
+				$checkTemps = Task_list_checklist_temp_rejected_files::where(
+				[
+					'inspector_id'=> auth()->user()->id,
+					'task_id'=> $task_id,
+					'task_list_checklist_id'=>$current_question_id,
+					//'subcategory_id'=>$subcategory_id // 21-05-2025
+				])->get();
+				
+				if ($checkTemps->isNotEmpty()) {
+					foreach ($checkTemps as $tempFile) {
+						$filename = $tempFile->file;
+
+						$sourcePath = public_path('uploads/temp-reject-files/' . $filename);
+						$destinationPath = public_path('uploads/reject-files/' . $filename);
+						
+						if($approveStatus=='0')
+						{
+							if (!file_exists(dirname($destinationPath))) {
+								mkdir(dirname($destinationPath), 0777, true);
+							}
+
+							if (file_exists($sourcePath)) {
+								rename($sourcePath, $destinationPath);
+							}
+
+							$fileModel = new Task_list_checklist_rejected_files();
+							$fileModel->task_list_checklist_id = $task_list_checklist_id;
+							$fileModel->file = $filename;
+							$fileModel->save();
+						}
+						else{
+							$filePath = public_path('uploads/temp-reject-files/' . $filename);
+							if(file_exists($filePath)) {
+								unlink($filePath);
+							}
+						}
+						//$tempFile->delete();
+						Task_list_checklist_temp_rejected_files::where('file', $filename)->delete();
+					}
+				}
+			}
+
+		}
+		else
+		{
+			if (!empty($rejectTextsMultiple) && is_array($rejectTextsMultiple)) {
+				foreach ($rejectTextsMultiple as $subChecklistId => $text) {
+					//echo "SubChecklist ID: " . $subChecklistId . " - Reason: " . $text['text'] ." status- ".$text['approve_status'] . "<br>";
+					if($text['approve_status'] !='')
+					{
+						$checkTastSubChecklistExists  = Task_list_subchecklists::where('task_list_id', $task_id)
+						//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
+						->where('task_list_checklist_id', $current_question_id)
+						->where('subchecklist_id', $subChecklistId)
+						->first();
+						$hasid = $checkTastSubChecklistExists ? $checkTastSubChecklistExists->id : null;
+						if($hasid)
+						{
+							$model = Task_list_subchecklists::find($hasid);
+							
+							$model->rejected_region = $text['approve_status'] == 0 ? $text['text'] : '';
+							$model->approve = $text['approve_status'];
+							$model->save();
+							$task_list_subchecklist_id = $hasid;
+						}
+						else
+						{
+							$model = new Task_list_subchecklists();
+							$model->task_list_id = $task_id ?? null;
+							$model->category_id = $category_id ?? null; // 21-06-2025
+							//$model->task_list_subcategory_id = $subcategory_id ?? null; //21-05-2025
+							$model->task_list_checklist_id = $current_question_id ?? null;
+							$model->subchecklist_id = $subChecklistId ?? null;
+							$model->rejected_region = $text['text'] ?? '';
+							$model->approve = $text['approve_status'];
+							$model->save();
+							$task_list_subchecklist_id = $model->id;
+						}
+						
+						// file transffer from temp folder to main folder
+						$checkSubChecklistTemps = Task_list_subchecklist_temp_rejected_files::where(
+						[
+							'inspector_id'=> auth()->user()->id,
+							'task_list_id'=> $task_id,
+							'task_list_checklist_id'=>$current_question_id,
+							'subchecklist_id'=>$subChecklistId
+						])->get();
+						
+						if ($checkSubChecklistTemps->isNotEmpty()) {
+								foreach ($checkSubChecklistTemps as $tempFile) {
+									$filename = $tempFile->file;
+
+									$sourcePath = public_path('uploads/temp-reject-files/' . $filename);
+									$destinationPath = public_path('uploads/reject-files/subchecklist/' . $filename);
+
+									if (!file_exists(dirname($destinationPath))) {
+										mkdir(dirname($destinationPath), 0777, true);
+									}
+
+									if (file_exists($sourcePath)) {
+										rename($sourcePath, $destinationPath);
+									}
+
+									$fileModel = new Task_list_subchecklist_rejected_files();
+									$fileModel->task_list_checklist_id = $current_question_id;
+									$fileModel->task_list_subchecklist_id = $task_list_subchecklist_id;
+									$fileModel->file = $filename;
+									$fileModel->save();
+
+									//$tempFile->delete();
+									Task_list_subchecklist_temp_rejected_files::where('file', $filename)->delete();
+								}
+							}
+					}
+				}
+			}
+		}
+		
+		return response()->json(['message'=> 'success']);
 	}
 }

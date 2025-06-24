@@ -326,6 +326,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.barHtml);
+				$('.previous_question').show();
 				$('#direct_edit').val(response.directEdit);
 				// ------progress bar work ----------
 				
@@ -2452,11 +2453,174 @@ function initializeDropzones() {
 }
 function saveAndExit()
 {
-	const location_id = $('#location_id').val();
+	
+	var mode = $('#mode').val();
+		//alert(mode);
+		var approveStatus = $('#approveStatus').val();
+		//alert(approveStatus);
+		//alert("approveStatus" + approveStatus);
+		if(mode=='single')
+		{
+			if(approveStatus == '0')
+			{
+				var textIsEmpty = $('#single_rejecttext').val().trim() === '';
+				var hasEditFile = $('#hasEditFile').val();
+				//alert(hasEditFile);
+				var hasFiles = false;
+				try {
+					var dzInstance = Dropzone.forElement('#dropzone-1');
+					hasFiles = dzInstance.files.length > 0;
+				} catch (e) {
+					console.warn("Dropzone not found or not initialized yet.");
+				}
+				
+				if (textIsEmpty &&  !hasFiles && !hasEditFile) {
+					$('#errormsg').fadeIn().delay(2000).fadeOut();
+					return false;
+				}
+			}
+			
+			if(approveStatus == '')
+			{
+				Swal.fire({
+					  icon: "warning",
+					  title: "Please select any one",
+					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;font-size:15px;color:black;">NA</span></div>',
+					  confirmButtonColor: "#0b2b57",
+					  
+					});
+					
+				return false;
+			}
+		}
+		else
+		{
+			let mulSelected = 0; // 21-06-2025
+			let mulCounter = 0 ;  // 21-06-2025
+			let hasError = false;
+			$('.reject-form').each(function () {
+				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
+				const text = $(this).find('textarea').val().trim();
+				const approveMulStatus = $('#approveMultipleStatus' + subchecklistId).val();
+				//alert(approveMulStatus);
+				//var hasEditMultipleFile = parseInt($('#hasEditMultipleFile' + subchecklistId).val(), 10);
+				var hasEditMultipleFile = $('#hasEditMultipleFile' + subchecklistId).val();
+				//alert(hasEditMultipleFile); //if 1 get then has files if 0 no files
+				//alert(approveMulStatus);
+				if(approveMulStatus == '0')
+				{
+	
+					const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
+					const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
+					
+					
+					//if (text === ''  && !hasEditMultipleFile)
+					if (text === '' && files.length === 0 && !hasEditMultipleFile)
+					{
+						$('#errorMulmsg' + subchecklistId).fadeIn().delay(2000).fadeOut();
+						hasError = true;
+						return false;
+					}
+				}
+				
+				// validation without select cross or tick cannot go next
+				if(approveMulStatus != '')
+				{
+					mulSelected++ ;
+				}
+				mulCounter++;
+			});
+			
+			if (hasError) {
+				return false;
+			}
+			
+			if(mulSelected != mulCounter)
+			{
+				Swal.fire({
+					  icon: "warning",
+					  title: "Please select any one",
+					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: 00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;font-size:15px;color:black;">NA</span></div>',
+					  confirmButtonColor: "#0b2b57",
+					});
+					
+				return false;
+			}
+			
+		}
+		
+		var current_id = $('#current_checklist_id').val();
+		//alert(current_id);
+		var category_id = $('#category_id').val();
+		var subcategory_id = $('#subcategory_id').val();
+		var task_id = $('#task_id').val();
+		//alert(task_id);
+		var order_no = $('#order_no').val();
+		var directEdit = $('#direct_edit').val()
+		//var mode = $('#mode').val();
+		//alert(mode);
+		var rejectTextsSingle = '';
+		let rejectTextsMultiple = {};
+		if(mode=='single')
+		{
+			 var rejectTextsSingle = $('#single_rejecttext').val();
+		}
+		else{
+			
+			$('.reject-form').each(function () {
+				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
+				const text = $(this).find('textarea').val().trim();
+				const approveStatus = $('#approveMultipleStatus' + subchecklistId).val();
+				// Save only if there's any text entered (optional)
+				
+				if (text !== '' || approveStatus !== '') {
+					rejectTextsMultiple[subchecklistId] = {
+						text: text,
+						approve_status: approveStatus
+					};
+				}
+				
+				/*if (text !== '') {
+					rejectTextsMultiple[subchecklistId] = text;
+				}*/
+			});
+			//alert(rejectTextsMultiple);
+		}
+		
+		var URL = "{{ route('save-exist-question') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {
+				approveStatus: approveStatus,
+				mode: mode,
+				task_id: task_id,
+				order_no: order_no,
+				current_question_id: current_id,
+				category_id: category_id,
+				subcategory_id: subcategory_id,
+				directEdit: directEdit,
+				rejectTextsSingle: rejectTextsSingle,
+				rejectTextsMultiple: JSON.stringify(rejectTextsMultiple), // <--- Fix here
+				_token: csrfToken
+			},
+			traditional: true,
+			dataType: 'json',
+			success: function(response) {
+				const location_id = $('#location_id').val();
+				const task_id = $('#task_id').val();
+				const refreshUrl = "{{ url('category/LOCATION_ID/TASK_ID/ACTIVE') }}";
+				const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ACTIVE', 1);
+				window.location.href = redirectUrl;
+			}
+			
+		});
+	
+	/*const location_id = $('#location_id').val();
 	const task_id = $('#task_id').val();
 	const refreshUrl = "{{ url('category/LOCATION_ID/TASK_ID/ACTIVE') }}";
 	const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ACTIVE', 1);
-	window.location.href = redirectUrl;
+	window.location.href = redirectUrl;*/
 }
 
 // call this after dynamic HTML is loaded

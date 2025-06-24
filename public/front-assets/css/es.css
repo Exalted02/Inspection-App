@@ -1590,4 +1590,7 @@ body {
   margin-top: 10px;
   text-align:left;
 }
+.submit_task {
+	cursor:pointer;
+}
 
