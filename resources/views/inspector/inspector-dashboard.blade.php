@@ -87,6 +87,8 @@ if(!empty($userdata->profile_image))
 							$state = App\Models\States::where('id', $lacationData->state_id)->first()->name;
 							$country = App\Models\Countries::where('id', $lacationData->country_id)->first()->name;
 							$loc_image = $lacationData && $lacationData->image != null ? url('uploads/location/' .$lacationData->image) : url('images/noimages/noimage_region.png');
+							
+							$total_task = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->count();
 						@endphp
                             <div class="col-md-4 col-xs-6 col-sm-6">
 								<div class="category-grid-box-1">
@@ -96,7 +98,7 @@ if(!empty($userdata->profile_image))
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-											<div class="price"><span>4 pending tasks</span></div>
+											<div class="price"><span>{{ $total_task ?? '0'}} pending tasks</span></div>
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">

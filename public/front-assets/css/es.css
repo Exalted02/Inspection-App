@@ -394,6 +394,7 @@ body {
 .checklist-item .text .subtitle {
 	font-size: 14px;
 	color: #777;
+	margin-top: 6px;
 	/* padding-bottom: 12px; */
 }
 .arrow {
