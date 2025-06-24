@@ -2415,16 +2415,17 @@ $(document ).ready(function() {
    $(document).on('click', '.save-next', function(){
 	   
 	   Swal.fire({
-			  title: "Are you sure you want to exit?",
-			  html: '<div style="font-size: 14px;font-family: initial;">You can continue your saved attempt from the task list labeled as "incomplete".</div>',
-			  icon: "warning",
+			  title: '<div class="swal-title-class">Are you sure you want to exit ?</div>',
+			  html: '<div class="swal-message-class">You can continue your saved attempt from the task list labeled as "incomplete".</div>',
+			  //icon: "warning",
 			  showCancelButton: true,
 			  cancelButtonText: "Cancel",
 			  confirmButtonText: "Save and exit",
 			  confirmButtonColor: "#0b2b57", 
 			  cancelButtonColor: "#e0e0e0",
 			  customClass: {
-				cancelButton: 'swal-cancel-black'
+				cancelButton: 'swal-cancel-black',
+				confirmButton : 'swal-save-exist-black'
 			  }
 			}).then((result) => {
 			  if (result.isConfirmed) {

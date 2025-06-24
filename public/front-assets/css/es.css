@@ -1566,5 +1566,28 @@ body {
 	margin-bottom: 9px;
 }
 .swal-cancel-black {
-  color: #000 !important; /* black text */
+  color: #000 !important;
+  /*padding: 2px 5px;*/
+  height: 35px;
+  width: 111px;
+  border-radius: 10px;
+  margin-left: -273px;
+  font-size: 13px;
 }
+.swal-save-exist-black {
+  height: 35px;
+  width: 111px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+.swal-title-class {
+	text-align:left;
+	font-size:20px;
+}
+.swal-message-class {
+  font-size: 14px;
+  color: #333;
+  margin-top: 10px;
+  text-align:left;
+}
+

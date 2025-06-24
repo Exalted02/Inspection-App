@@ -835,6 +835,12 @@ $(document ).ready(function() {
 	{
 		//$('a[href="#uncomplete_tab"]').tab('show');
 		//$('#uncomplete_tab').show();
+		var norecord_j = $('#norecord_j').val();
+		if(norecord_j==0)
+		{
+			$('#no_record').show();
+		}
+		
 		$('a[href="#corrective_needed_tab"]').tab('show');
 		$('#isactive').val(0);
 	}
