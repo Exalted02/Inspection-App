@@ -173,7 +173,7 @@ $(document).ready(function() {
    
    $(document).on('click','.submitChecklist', function(){
 	   var task_id = $('#task_id').val();
-	    alert(task_id);
+	   //alert(task_id);
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var type = $('#type').val();
@@ -196,7 +196,7 @@ $(document).ready(function() {
 			return false;
 		}*/
 	  
-		   /*var URL = "{{ route('submit-lo-corrective-action') }}";
+		   var URL = "{{ route('submit-lo-corrective-action') }}";
 		   $.ajax({
 				url: URL,
 				type: "POST",
@@ -215,12 +215,14 @@ $(document).ready(function() {
 					let location_id = response.location_id;
 					let task_id = response.task_id;
 					var active = 1;
-					var baseUrl = "{{ url('/location-owner') }}";
-					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id + '/' + active;
+					//var baseUrl = "{{ url('/location-owner') }}";
+					var baseUrl = "{{ url('/lo-task-status') }}";
+					//var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id + '/' + active;
+					var redirectUrl = baseUrl + '/'+ location_id + '/' + active;
 					window.location.href = redirectUrl;
 					
 				},
-			});*/
+			});
 	});
 	
 	$(document).on('click', '#lo_direct_approve', function(){

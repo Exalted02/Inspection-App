@@ -253,8 +253,21 @@ $(document).ready(function() {
 						localStorage.setItem('insPlanApproved', 1);
 					}
 					
-					var baseUrl = "{{ url('/location-details') }}";
-					var redirectUrl = baseUrl + '/'+ location_id ;
+					var active = 1;
+					@if(auth()->user()->user_type == 1)
+					{
+						var baseUrl = "{{ url('/inspector-filter') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
+					}
+					@endif
+					
+					@if(auth()->user()->user_type == 3)
+					{
+						var baseUrl = "{{ url('/los-task-status') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
+					}
+					@endif
+					
 					window.location.href = redirectUrl;
 				}
 				/*let location_id = response.location_id;

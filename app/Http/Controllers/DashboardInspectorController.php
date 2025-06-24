@@ -2435,7 +2435,8 @@ class DashboardInspectorController extends Controller
 							}
 							
 						}
-						else{
+						elseif($task->approve == 1)
+						{
 							$completedApprChecklistArray[] = [
 											'type' => 'checklist',
 											'task_id' => $val->id,
@@ -2515,7 +2516,7 @@ class DashboardInspectorController extends Controller
 								
 							}
 						}
-						else
+						elseif($subtask->approve == 1)
 						{
 							$completedApprSubcheckListArray[] = [
 									'type' => 'subchecklist',
@@ -2697,7 +2698,8 @@ class DashboardInspectorController extends Controller
 							}
 							
 						}
-						else{
+						elseif($task->approve == 1)
+						{
 							$completedApprChecklistArray[] = [
 											'type' => 'checklist',
 											'task_id' => $val->id,
@@ -2777,7 +2779,7 @@ class DashboardInspectorController extends Controller
 								
 							}
 						}
-						else
+						elseif($subtask->approve == 1)
 						{
 							$completedApprSubcheckListArray[] = [
 									'type' => 'subchecklist',
@@ -2999,7 +3001,8 @@ class DashboardInspectorController extends Controller
 								}
 								
 							}
-							else{
+							elseif($task->approve == 1)
+							{
 								$completedApprChecklistArray[] = [
 												'type' => 'checklist',
 												'task_id' => $val->id,
@@ -3078,7 +3081,7 @@ class DashboardInspectorController extends Controller
 									
 								}
 							}
-							else
+							elseif($subtask->approve == 1)
 							{
 								$completedApprSubcheckListArray[] = [
 										'type' => 'subchecklist',
