@@ -280,9 +280,10 @@ $(document).ready(function() {
 					@if(auth()->user()->user_type == 3)
 					{
 						var baseUrl = "{{ url('/los-task-status') }}";
-						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;
+						var redirectUrl = baseUrl + '/'+ active ;
 					}
 					@endif
+					
 					window.location.href = redirectUrl;
 				}
 				/*let location_id = response.location_id;
@@ -332,7 +333,7 @@ $(document).ready(function() {
 					@if(auth()->user()->user_type == 3)
 					{
 						var baseUrl = "{{ url('/los-task-status') }}";
-						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;
+						var redirectUrl = baseUrl + '/'+ active ;
 					}
 					@endif
 					
@@ -379,7 +380,7 @@ $(document).ready(function() {
 					@if(auth()->user()->user_type == 3)
 					{
 						var baseUrl = "{{ url('/los-task-status') }}";
-						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;
+						var redirectUrl = baseUrl + '/'+ active ;
 					}
 					@endif
 					

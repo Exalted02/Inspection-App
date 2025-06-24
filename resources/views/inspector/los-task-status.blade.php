@@ -492,7 +492,7 @@ foreach($approvedCompleted as $result)
 											<img src="{{ $val['image'] }}" width="50" height="50">
 										</div>
 										<div class="flex-grow-1">
-											<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
+											<a href="{{ route('inspector-subchecklist-second-approve-plan-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
 											<h6>{{ $checklistName ?? '' }} 
 											@if($val!='')
 												-> {{$val['name'] ?? ''}}
@@ -536,7 +536,7 @@ foreach($approvedCompleted as $result)
 											<img src="{{ $images }}" width="50" height="50">
 										</div>
 										<div class="flex-grow-1">
-											<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
+											<a href="{{ route('inspector-checklist-second-approve-plan-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
 											<h6>{{ $checklistName ?? '' }} 
 											</h6>
 												<p class="text-muted mb-0">
@@ -1001,6 +1001,50 @@ $(document ).ready(function() {
     $('#scrollRight').click(function () {
         scrollWrapper.animate({ scrollLeft: scrollWrapper.scrollLeft() + 150 }, 300);
     });
+	
+	var insActionApproved 	= localStorage.getItem('insActionApproved');
+	var insPlanApproved 	= localStorage.getItem('insPlanApproved');
+	var insActionRejected 	= localStorage.getItem('insActionRejected');
+	var insPlanRejected 	= localStorage.getItem('insPlanRejected');
+	var insFinalApproved 	= localStorage.getItem('insFinalApproved');
+	var insFinalRejected 	= localStorage.getItem('insFinalRejected');
+	
+	if(insActionApproved == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action approved&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insActionApproved');
+	}
+	
+	if(insPlanApproved == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective plan approved&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insPlanApproved');
+	}
+	
+	if(insActionRejected == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action rejected&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insActionRejected');
+	}
+	
+	if(insPlanRejected == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective plan rejected&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insPlanRejected');
+	}
+	
+	if(insFinalApproved == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Approved final round check&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insFinalApproved');
+	}
+	
+	if(insFinalRejected == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Rejected final round check&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insFinalRejected');
+	}
+	
 });
 </script>
 @endsection

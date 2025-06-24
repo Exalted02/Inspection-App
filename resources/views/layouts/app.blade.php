@@ -243,6 +243,11 @@
 					var app_url =  "{{ env('APP_URL') }}";
 					var page_url1 = app_url+'/los-task-status';
 					var page_url2 = app_url+'/inspector-checklist-question-reply/';
+					
+					var page_url3 = app_url + '/inspector-subchecklist-question-reply/';
+					var page_url4 = app_url + '/inspector-checklist-second-approve-by-lo/';
+					var page_url5 = app_url + '/inspector-subchecklist-second-approve-plan-by-lo/';
+					
 					var current_url = window.location.href;
 					var active = 1;
 					if(current_url.includes(page_url1))
@@ -264,6 +269,34 @@
 							window.location.href = redirectUrl;
 						}, 100);
 					}
+					
+					if(current_url.includes(page_url3))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/los-task-status') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					if(current_url.includes(page_url4))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/los-task-status') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					if(current_url.includes(page_url5))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/los-task-status') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
 
 				}				
 				@endif
@@ -275,6 +308,9 @@
 					var page_url2 = app_url+'/location-owner-checklist-question-reply';
 					var page_url3 = '/location-owner-subchecklist-question-reply';
 					var page_url4 = '/lo-task-status';
+					
+					var page_url5 = app_url + '/location-owner-subchecklist-rejected-question-reply/';
+					
 					var current_url = window.location.href;
 					//alert(page_url);alert(current_url);
 					var active = 1;
@@ -309,6 +345,14 @@
 						setTimeout(function() {
 							var baseUrl = "{{ url('/inspector-dashboard') }}";
 							var redirectUrl = baseUrl;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					else if(current_url.includes(page_url5))
+					{
+						setTimeout(function() {
+							var baseUrl = "{{ url('/lo-task-status') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' +  active;
 							window.location.href = redirectUrl;
 						}, 100);
 					}

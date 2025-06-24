@@ -492,7 +492,7 @@ foreach($approvedCompleted as $result)
 											<img src="{{ $val['image'] }}" width="50" height="50">
 										</div>
 										<div class="flex-grow-1">
-											<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
+											<a href="{{ route('inspector-subchecklist-second-approve-plan-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
 											<h6>{{ $checklistName ?? '' }} 
 											@if($val!='')
 												-> {{$val['name'] ?? ''}}
@@ -536,7 +536,7 @@ foreach($approvedCompleted as $result)
 											<img src="{{ $images }}" width="50" height="50">
 										</div>
 										<div class="flex-grow-1">
-											<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
+											<a href="{{ route('inspector-checklist-second-approve-plan-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
 											<h6>{{ $checklistName ?? '' }} 
 											</h6>
 												<p class="text-muted mb-0">

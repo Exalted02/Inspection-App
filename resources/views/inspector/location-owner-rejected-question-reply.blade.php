@@ -281,9 +281,10 @@ $('#lo_file').on('change', function (e) {
 				{
 					localStorage.setItem('loFinalSubmited', 1); 
 					//history.back();
+					var active = 1;
 					var activeTab = 0;
-					var baseUrl = "{{ url('/location-owner') }}";
-					var redirectUrl = baseUrl + '/'+ location_id + '/' + task_id + '/' + activeTab ;
+					var baseUrl = "{{ url('/lo-task-status') }}";
+					var redirectUrl = baseUrl + '/'+ location_id +  '/' + active ;
 					window.location.href = redirectUrl;
 				}
 				

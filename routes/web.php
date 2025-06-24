@@ -113,9 +113,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('save-lo-reply-rejected-question', [DashboardInspectorController::class, 'save_lo_reply_rejected_question'])->name('save-lo-reply-rejected-question');
 	
 	
-	Route::get('inspector-checklist-second-approve-by-lo/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_checklist_second_approve_by_lo'])->name('inspector-checklist-second-approve-by-lo');
+	Route::get('inspector-checklist-second-approve-by-lo/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_checklist_second_approve_by_lo'])->name('inspector-checklist-second-approve-by-lo');  
 	
 	Route::get('inspector-subchecklist-second-approve-by-lo/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_subchecklist_second_approve_by_lo'])->name('inspector-subchecklist-second-approve-by-lo');
+	
+	Route::get('inspector-checklist-second-approve-plan-by-lo/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_checklist_second_approve_plan_by_lo'])->name('inspector-checklist-second-approve-plan-by-lo');
+	
+	Route::get('inspector-subchecklist-second-approve-plan-by-lo/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_subchecklist_second_approve_plan_by_lo'])->name('inspector-subchecklist-second-approve-plan-by-lo');
 	
 	Route::post('submit-inspector-approved', [DashboardInspectorController::class, 'submit_inspector_approved'])->name('submit-inspector-approved');
 	
