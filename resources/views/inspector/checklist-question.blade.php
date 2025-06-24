@@ -1035,6 +1035,9 @@ $(document ).ready(function() {
 					  title: "Please select any one",
 					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;font-size:15px;color:black;">NA</span></div>',
 					  confirmButtonColor: "#0b2b57",
+					  customClass: {
+						confirmButton : 'swal-save-exist-black'
+					  }
 					  
 					});
 					
@@ -1090,6 +1093,9 @@ $(document ).ready(function() {
 					  title: "Please select any one",
 					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: 00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;font-size:15px;color:black;">NA</span></div>',
 					  confirmButtonColor: "#0b2b57",
+					  customClass: {
+						confirmButton : 'swal-save-exist-black'
+					  }
 					});
 					
 				return false;
@@ -2487,6 +2493,9 @@ function saveAndExit()
 					  title: "Please select any one",
 					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;font-size:15px;color:black;">NA</span></div>',
 					  confirmButtonColor: "#0b2b57",
+					  customClass: {
+						confirmButton : 'swal-save-exist-black'
+					  }
 					  
 					});
 					
@@ -2542,6 +2551,10 @@ function saveAndExit()
 					  title: "Please select any one",
 					  html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 20px; color: #00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 20px; color: 00000;"></i></span><span style="align-self: center;font-size: 20px"><strong>OR</strong></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff;border:1px solid #000000; display: flex; align-items: center; justify-content: center;font-size:15px;color:black;">NA</span></div>',
 					  confirmButtonColor: "#0b2b57",
+					  customClass: {
+						confirmButton : 'swal-save-exist-black'
+					  }
+					  
 					});
 					
 				return false;
