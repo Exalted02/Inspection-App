@@ -1590,7 +1590,11 @@ body {
   margin-top: 10px;
   text-align:left;
 }
-.submit_task {
+.submit_task,
+.save-task,
+.submitChecklist,
+.location-owner-approve {
 	cursor:pointer;
 }
+
 
