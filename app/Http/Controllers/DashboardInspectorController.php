@@ -383,7 +383,7 @@ class DashboardInspectorController extends Controller
 			
 			$hasChecklists = Checklist::where('category_id', $category_id)->first();
 			
-			//---21-06-2025----
+			//---21-06-2025 direct get the final edit page----
 			$totalChecklist = Checklist::where('category_id', $category_id)->count();
 			$countTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)->where('category_id', $category_id)->count();
 			$countTaskSubChecklist = Task_list_subchecklists::distinct('task_list_checklist_id')->where('task_list_id', $task_id)->where('category_id', $category_id)->count();
@@ -394,8 +394,17 @@ class DashboardInspectorController extends Controller
 			{
 				$finalEditPage = 1;
 			}
-			//------------getting between checklist id---
-			$order_no = '';
+			
+			//----- first time when no checklist or subchecklist added --
+			$ifExistsChecklist  = Task_list_checklists::where('task_list_id', $task_id)->where('category_id', $category_id)->exists();
+			
+			$ifExistsSubChecklist  = Task_list_subchecklists::where('task_list_id', $task_id)->where('category_id', $category_id)->exists();
+			if(!$ifExistsChecklist && !$ifExistsSubChecklist)
+			{
+				return response()->json(['hasData'=> true, 'taskid'=>$task_id, 'finalEditPage'=> 2, 'order_no'=>0]);
+			}
+			//------------reaching exists  checklist id-----------------
+			$order_no = 0;
 			$checklistQuestion = Checklist::where('category_id', $category_id)->where('status', '!=', 2)->orderBy('order_no')->get();
 			foreach ($checklistQuestion as $list) {
 				$hasChecklists = Task_list_checklists::where('category_id', $category_id)
@@ -413,7 +422,7 @@ class DashboardInspectorController extends Controller
 			}
 			if(!empty($order_no))
 			{
-				return response()->json(['hasData'=> true, 'taskid'=>$task_id, 'finalEditPage'=> 2, 'order_no'=>$order_no]);
+				return response()->json(['hasData'=> true, 'taskid'=>$task_id, 'finalEditPage'=> 3, 'order_no'=>$order_no]);
 			}
 			//-------------------------------------------
 			/*if(!$taskLocationDtls)
@@ -426,7 +435,7 @@ class DashboardInspectorController extends Controller
 				return response()->json(['hasData'=> false,'message'=>'This category has no checklist. Create checklist and subchecklist', 'id'=>NULL]);
 			}*/
 			
-			return response()->json(['hasData'=> true, 'taskid'=>$task_id, 'finalEditPage'=>$finalEditPage, 'order_no', $order_no]);
+			return response()->json(['hasData'=> true, 'taskid'=>$task_id, 'finalEditPage'=>$finalEditPage, 'order_no'=>$order_no]);
 		}
 		else{
 			return response()->json(['hasData'=> false, 'id'=>NULL]);
@@ -3118,5 +3127,173 @@ class DashboardInspectorController extends Controller
 			
 			return view('inspector.lo-task-status', $data);
 		}
+	}
+	public function get_save_exist_checklist_page(Request $request)
+	{
+		$current_question_id = Checklist::where('category_id', $request->cat_id)->where('order_no', $request->order_no)->first()->id;
+		
+		$task_id = $request->task_id;
+		$category_id = $request->cat_id;
+		$categoryDtls = Category::where('id',$category_id)->first();
+		$categoryName = $categoryDtls ? $categoryDtls->name : '';
+		$checklistDtls = Checklist::where('id', $current_question_id)->where('category_id', $category_id)->first();
+		$order_no = $checklistDtls ? $checklistDtls->order_no : '';
+		//$subcategory_id = $request->subcat_id; // 21-05-2025
+		$subChklistArr = [];
+		$existingFiles = [];
+		$existingSubChecklistFiles = [];
+		
+		/*$checklistdata= Checklist::with('get_subchecklist','get_category','get_subcategory')
+		->where('category_id',$category_id)->where('subcategory_id', $subcategory_id)
+		->where('status','!=', 2)->first();*/
+		
+		// fetch record with respect ti checklist
+		$nextQuestion = Checklist::with('get_subchecklist','get_category')->where('category_id', $category_id)
+			->where('category_id', $category_id)
+			//->where('subcategory_id', $subcategory_id) // 21-05-2025
+			->where('status', '!=', 2)
+			->where('id', $current_question_id)
+			->orderBy('id', 'asc')
+			->first();
+			//echo "<pre>";print_r($nextQuestion);die;
+			$nextId = $nextQuestion->id;
+			$name = $nextQuestion->name;
+			
+			if(!empty($nextQuestion->get_subchecklist))
+			{
+				//$subchecklist = $nextQuestion->get_subchecklist;
+				foreach($nextQuestion->get_subchecklist as $subchecklists)
+				{
+					$subChklistArr[] = [
+						'id' => $subchecklists->id,
+						'name' => $subchecklists->name
+					];
+				}
+				
+				$subcategoryname = '';
+				//$subcategoryname = $nextQuestion->get_subcategory->name; //21-05-2025
+			}
+			
+			// fetch data from task_list_checklist
+			// -- 21-05-2025 ---
+			/*$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('task_list_subcategory_id', $subcategory_id)->where('checklist_id', $nextId)->first();*/
+			//--------
+			
+			$iffetch  = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $nextId)->first();
+			
+			$next_rejected_region = $iffetch ? $iffetch->rejected_region : null;
+			$next_approve = $iffetch ? $iffetch->approve : '';
+			
+			// fetch files 
+			$task_list_checklist_id = $iffetch ? $iffetch->id : null;
+			//$existingFiles = [];
+			if (isset($task_list_checklist_id)) {
+				$imageData = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
+				foreach ($imageData as $file) {
+					$filename = $file->file;
+					$existingFiles[] = [
+						'name' => $filename,
+						'size' => file_exists(public_path('uploads/reject-files/' . $filename)) ? filesize(public_path('uploads/reject-files/' . $filename)) : 123456, // default if unknown
+						'url' => asset('uploads/reject-files/' . $filename),
+					];
+				}
+			}
+			
+			// fetch data from task_list_subchecklist
+			$fetchsubChklistArr = [];
+			$ifsubfetch  = Task_list_subchecklists::where('task_list_id', $task_id)
+							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
+							->where('task_list_checklist_id', $nextId)
+							->get();
+			if($ifsubfetch->isNotEmpty())
+			{
+				foreach($ifsubfetch as $subchecklistval)
+				{
+					$fetchsubChklistArr[] = [
+						'subchecklist_id' => $subchecklistval->subchecklist_id,
+						'rejected_region' => $subchecklistval->rejected_region ?? '',
+						'approve' => $subchecklistval->approve
+					];
+					
+					// fetch files for subchecklist
+					if(isset($subchecklistval->id))
+					{
+						$imageSubChecklistData = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistval->id)->get();
+						foreach ($imageSubChecklistData as $file) {
+							$filename = $file->file;
+							$existingSubChecklistFiles[] = [
+								'name' => $filename,
+								//'subchecklist_id' => $file->task_list_subchecklist_id,
+								'subchecklist_id' => $subchecklistval->subchecklist_id,
+								'size' => file_exists(public_path('uploads/reject-files/subchecklist/' . $filename)) ? filesize(public_path('uploads/reject-files/subchecklist/' . $filename)) : 123456, // default if unknown
+								'url' => asset('uploads/reject-files/subchecklist/' . $filename),
+							];
+						}
+					}
+				}
+			}
+			
+			//------- progress bar work ---------------
+			$total_checklist = Checklist::where('category_id', $category_id)
+								//->where('subcategory_id', $subcategory_id) // 21-05-2025
+								->get();
+			$countCheklist  = $total_checklist->count();
+			$percentage = ceil(100/$countCheklist);
+			
+			if(!empty($total_checklist))
+			{
+				$barHtml = '<div class="d-flex justify-content-between mb-3" style="gap: 4px;" id="progress-bar-section">';
+				foreach($total_checklist as $val)
+				{
+						$progressStatus = '';
+						$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
+										//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
+										->where('checklist_id', $val->id)->exists();
+						if($hasTaskChecklist)
+						{
+							$progressStatus = 'completed';
+						}
+						else 
+						{
+							$hasTaskSubChecklist = Task_list_subchecklists::where('task_list_id', $task_id)
+										//->where('task_list_subcategory_id', $subcategory_id)  // 21-05-2025
+										->where('task_list_checklist_id', $val->id)->exists();
+							if($hasTaskSubChecklist)
+							{
+								$progressStatus = 'completed';
+							}
+						}
+					
+					$barHtml .= '<div class="step-block '.$progressStatus .'" style="width:{{ $percentage  }}%;" id="progress-status-{{ $val->id }}"></div>';
+				}
+				$barHtml .= '</div>';
+			}
+			
+			
+			
+			//-----------------------------------------
+			
+			return response()->json
+			(
+				[
+					'task_id'=>$task_id,
+					'currentid'=> $nextId ?? null,
+					'name' => $name ?? null,
+					'subchecklist' => $subChklistArr,
+					'subcategoryname' => $subcategoryname,
+					'order_no' => $order_no,
+					'categoryName' => $categoryName,
+					'next_rejected_region'=> $next_rejected_region ?? '',
+					'next_approve'=>$next_approve,
+					'existingNextFiles'=>$existingFiles,
+					'fetchsubChklistArr'=>$fetchsubChklistArr,
+					'existingSubChecklistFiles'=>$existingSubChecklistFiles,
+					'category_id'=>$category_id,
+					'subcategory_id'=>'',
+					'directEdit' => $request->directEdit,
+					//'subcategory_id'=>$subcategory_id,// 21-05-2025
+					'barHtml'=>$barHtml
+				]
+			);
 	}
 }

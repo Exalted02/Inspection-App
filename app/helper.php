@@ -563,7 +563,7 @@ use App\Models\Task_list_subchecklists;
 		};
 		return $text;
 	}
-	function checklist_next_question($category_id='', $order_no='')
+	/*function checklist_next_question($category_id='', $order_no='')
 	{
 		$checklistQuestion = Checklist::where('category_id', $category_id)
 		->where('status', '!=', 2)->get();
@@ -581,5 +581,5 @@ use App\Models\Task_list_subchecklists;
 			}
 		}
 		
-	}
+	}*/
 ?>

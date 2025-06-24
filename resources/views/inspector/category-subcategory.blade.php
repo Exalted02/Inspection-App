@@ -907,16 +907,22 @@ $(document ).ready(function() {
 				}
 				else {*/
 					var mode = 'no';
+					var order_no = 0;
 					if(response.finalEditPage==1)
 					{
 						mode = 'yes';
-						var order_no = 0;
+						//var order_no = 0;
 					}
 					
 				
-					if(response.finalEditPage == 2)
+					if(response.finalEditPage == 2 && response.order_no==0)
 					{
-						var order_no = response.order_no;
+						order_no = response.order_no;
+					}
+					
+					if(response.finalEditPage == 3 && response.order_no !=0)
+					{
+						order_no = response.order_no;
 					}
 					
 					//var taskid = $('#taskid').val();

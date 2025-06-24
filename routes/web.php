@@ -121,6 +121,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::post('/get-final-edit-page', [DashboardInspectorController::class, 'get_final_edit_page'])->name('get-final-edit-page'); // 21-06-2025
 	
+	Route::post('/get-save-exist-checklist-page', [DashboardInspectorController::class, 'get_save_exist_checklist_page'])->name('get-save-exist-checklist-page');
+	
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
 	Route::get('/management-location/{id}', [ManagementController::class, 'management_location'])->name('management-location');
