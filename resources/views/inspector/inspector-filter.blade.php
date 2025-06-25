@@ -284,6 +284,7 @@ foreach($approvedCompleted as $result)
 									@endif
 								@endif
 								@endforeach
+								<div class="load-more">Load more</div>
 							</div>
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
 							

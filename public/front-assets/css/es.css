@@ -1597,4 +1597,17 @@ body {
 	cursor:pointer;
 }
 
+.load-more {
+	cursor:pointer;
+	padding: 10px 24px;
+	border-radius: 8px;
+	border: none;
+	background: #0b2b57;
+	color: white;
+	font-size: 14px;
+	width: fit-content;
+	margin: 20px auto;
+	display:block;
+}
+
 

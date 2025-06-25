@@ -2362,13 +2362,12 @@ class DashboardInspectorController extends Controller
 		//-- 23-06-2025--
 		$taskData = Task_lists::where('inspector_id', auth()->user()->id)->where('location_id', $lid)->get();
 		//------
-		
+		//$task_cat = [1, 2];
 		if($taskData->isNotEmpty())
 		{
 			foreach($taskData as $val)
 			{
 				$ifTaskRxists = Task_list_subcategories::where('task_list_id', $val->id)->exists();
-					//$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
 				if($ifTaskRxists)
 				{					
 					$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();

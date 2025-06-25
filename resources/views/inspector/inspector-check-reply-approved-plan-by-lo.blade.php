@@ -280,7 +280,7 @@ $(document).ready(function() {
 					@if(auth()->user()->user_type == 3)
 					{
 						var baseUrl = "{{ url('/los-task-status') }}";
-						var redirectUrl = baseUrl + '/'+ active ;
+						var redirectUrl = baseUrl + '/' +location_id + '/'+ active ;
 					}
 					@endif
 					
@@ -333,7 +333,7 @@ $(document).ready(function() {
 					@if(auth()->user()->user_type == 3)
 					{
 						var baseUrl = "{{ url('/los-task-status') }}";
-						var redirectUrl = baseUrl + '/'+ active ;
+						var redirectUrl = baseUrl + '/' +location_id + '/'+ active ;
 					}
 					@endif
 					
@@ -380,7 +380,7 @@ $(document).ready(function() {
 					@if(auth()->user()->user_type == 3)
 					{
 						var baseUrl = "{{ url('/los-task-status') }}";
-						var redirectUrl = baseUrl + '/'+ active ;
+						var redirectUrl = baseUrl + '/' +location_id + '/'+ active ;
 					}
 					@endif
 					
