@@ -129,6 +129,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::post('save-exist-question', [DashboardInspectorController::class, 'save_exist_question'])->name('save-exist-question');
 	
+	Route::post('ins-load-more-needed-data', [DashboardInspectorController::class, 'ins_load_more_needed_data'])->name('ins-load-more-needed-data');
+	
+	Route::post('ins-load-more-action-data', [DashboardInspectorController::class, 'ins_load_more_action_data'])->name('ins-load-more-action-data');
+	
+	Route::post('ins-load-more-plan-data', [DashboardInspectorController::class, 'ins_load_more_plan_data'])->name('ins-load-more-plan-data');
+	
+	Route::post('ins-load-more-appr-data', [DashboardInspectorController::class, 'ins_load_more_appr_data'])->name('ins-load-more-appr-data');
+	
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
 	Route::get('/management-location/{id}', [ManagementController::class, 'management_location'])->name('management-location');

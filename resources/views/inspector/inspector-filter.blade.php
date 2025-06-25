@@ -49,6 +49,12 @@ foreach($approvedCompleted as $result)
 	}
 }
 
+$totalNeeded = count($correctiveNeeded);
+$action_show = config('custom.LOAD_MORE_LIST_SHOW');
+
+$totalAction = $countAction;
+$totalPlan = $countPlan;
+$action_show = config('custom.LOAD_MORE_LIST_SHOW');
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -89,18 +95,6 @@ foreach($approvedCompleted as $result)
 						<div class="scroll-arrow left-arrow" id="scrollLeft"><i class="fa fa-chevron-left"></i></div>
 							<div class="tab-scroll-wrapper" id="tabScrollWrapper">--}}
 								<ul class="nav nav-tabs custom-tab-style" role="tablist">
-								@if(auth()->user()->user_type == 1)
-								{{--<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
-									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>--}}
-								@endif
-								@if(auth()->user()->user_type == 3)
-								{{--<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>--}}
-								@endif
-								{{--<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Final checks</a></li> 
-									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Approved final checked</a></li>--}}
-									@if(auth()->user()->user_type == 1)
-									{{--<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>--}}
-									@endif
 									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab"><span class="counter-grey">{{ $countNedded }}</span> Corrective Needed</a></li>
 									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter-red">{{ $countAction }}</span> Corrective Action</a></li>
 									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter-red">{{ $countPlan}}</span> Corrective Plan</a></li> 
@@ -111,42 +105,9 @@ foreach($approvedCompleted as $result)
 						</div>--}}
 						<!-- Tab panes -->
 						<div class="tab-content">
-						@if(auth()->user()->user_type == 1)
-						{{--<div role="tabpanel" class="tab-pane" id="uncomplete_tab">
-							@if($categoryData->isNotEmpty())
-								@foreach($categoryData as $categories)
-								@php 
-									$tot_checklist = App\Models\Checklist::where('category_id', $categories->id)->count();
-									$tot_checklist_completed = App\Models\Task_list_checklists::where('task_list_id',$task_id)->where('category_id', $categories->id)->count();
-									$tot_subchecklist_completed = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('category_id', $categories->id)->distinct('task_list_checklist_id')->count();
-									$tot_completed_task = $tot_checklist_completed+$tot_subchecklist_completed;
-									
-									$ifSubmitted = App\Models\Task_list_subcategories::where('task_list_id', $task_id)->where('task_list_category_id', $categories->id)->exists();
-
-								@endphp
-								
-									@if(!$ifSubmitted)
-									<div class="checklist-item">
-										<div class="text">
-											<div class="title">{{ $categories->name ?? ''}}</div>
-											<div class="subtitle">Completed {{ $tot_completed_task ?? ''}} of {{ $tot_checklist ?? ''}}</div>
-										</div>
-										
-										<a href="#" class="chk-task-id" data-cat="{{ $categories->id ?? ''}}" data-location="{{ $location_id ?? ''}}" data-taskid="{{ $task_id }}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
-									</div>
-									@endif
-								@endforeach
-							@else	
-								<div class="text-center"><strong><h3>No record founds</h3></strong></div>
-							@endif
-							</div>--}}
-						@endif
-							<div role="tabpanel" class="tab-pane" id="reject_tab">
-								Not have any data
-							</div>
 							<div class="tab-pane corrective_needed_tab" id="corrective_needed_tab">
-							
-								@foreach($correctiveNeeded as $result)
+								<span id="neddedDiv">
+								@foreach($correctiveNeddedArray as $result)
 								@if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
 									@php 
 										$j++;
@@ -284,12 +245,13 @@ foreach($approvedCompleted as $result)
 									@endif
 								@endif
 								@endforeach
-								<div class="load-more">Load more</div>
+								</span>
+								<div class="load-more-needed" id="showloadneeded">Load more</div>
+								<input type="hidden" value="{{ $moreloadneeded ?? '' }}" id="moreloadneeded">
 							</div>
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
-							
-								@foreach($correctiveAction as $result)
-								@if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+							<span id="actionDiv">
+								@foreach($correctiveActionArray as $result)
 									@php 
 										$k++;
 										$arrSubchecklist = [];
@@ -431,12 +393,16 @@ foreach($approvedCompleted as $result)
 										</div>
 									</div>
 									@endif
-								@endif
 								@endforeach
+							</span>
+							
+							<div class="load-more-action" id="showloadaction">Load more</div>
+								<input type="hidden" value="{{ $moreloadaction ?? '' }}" id="moreloadaction">
 							</div>
+							
 							<div role="tabpanel" class="tab-pane" id="process_final_checked_tab">
-								@foreach($correctiveAction as $result)
-								@if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+								<span id="planDiv">
+								@foreach($correctivePlanArray as $result)
 									@php 
 										$l++;
 										$arrSubchecklist = [];
@@ -570,11 +536,13 @@ foreach($approvedCompleted as $result)
 										</div>
 									</div>
 									@endif
-								@endif
 								@endforeach
-								
+								</span>
+								<div class="load-more-plan" id="showloadplan">Load more</div>
+								<input type="hidden" value="{{ $moreloadplan ?? '' }}" id="moreloadplan">
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
+							<span id="appCompletedDiv">
 							@foreach($approvedCompleted as $result)
 								@if($result['inspector_action'] == 1 && $result['los_action'] == 1)
 									@php 
@@ -685,6 +653,9 @@ foreach($approvedCompleted as $result)
 									@endif
 								@endif
 							@endforeach
+							</span>
+							<div class="load-more-appr" id="showloadappr">Load more</div>
+								<input type="hidden" value="{{ $moreloadappr ?? '' }}" id="moreloadappr">
 							</div>
 						</div>
 						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>	
@@ -735,6 +706,11 @@ foreach($approvedCompleted as $result)
 	<input type="hidden" value="{{ $k ?? ''}}" id="norecord_k">
 	<input type="hidden" value="{{ $l ?? ''}}" id="norecord_l">
 	<input type="hidden" value="{{ $m ?? ''}}" id="norecord_m">
+	
+	<input type="hidden" value="{{ $action_show ?? ''}}" id="action_show">
+	<input type="hidden" value="{{ $totalNeeded ?? ''}}" id="totalNeeded">
+	<input type="hidden" value="{{ $totalAction ?? ''}}" id="totalAction">
+	<input type="hidden" value="{{ $totalPlan ?? ''}}" id="totalPlan">
 
 	
 @endsection 
@@ -787,6 +763,7 @@ $(document ).ready(function() {
 				if(norecord_j==0)
 				{
 					$('#no_record').show();
+					$('#showloadneeded').hide();
 				}
 				
 				//$('#uncomplete_tab').hide();
@@ -798,6 +775,7 @@ $(document ).ready(function() {
 				if(norecord_k==0)
 				{
 					$('#no_record').show();
+					$('#showloadaction').hide();
 				}
 				
 				//$('#uncomplete_tab').hide();
@@ -839,7 +817,9 @@ $(document ).ready(function() {
 		var norecord_j = $('#norecord_j').val();
 		if(norecord_j==0)
 		{
+			alert('ok');
 			$('#no_record').show();
+			$('#showloadneeded').hide();
 		}
 		
 		$('a[href="#corrective_needed_tab"]').tab('show');
@@ -1002,6 +982,138 @@ $(document ).ready(function() {
     $('#scrollRight').click(function () {
         scrollWrapper.animate({ scrollLeft: scrollWrapper.scrollLeft() + 150 }, 300);
     });
+	
+	$(document).on('click', '.load-more-needed', function(){
+		var location_id = $('#location_id').val();
+		var moreload = $("#moreloadneeded").val();
+		//alert(moreload);
+		var URL = "{{ route('ins-load-more-needed-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				if(response.remain>0)
+				{
+					$('#showloadneeded').show();
+				}
+				else
+				{
+					$('#showloadneeded').hide();
+				}
+				$("#moreloadneeded").val(response.loadmore)
+				$("#neddedDiv").append(response.html);
+				
+			},
+		});
+		
+	});
+	
+	$(document).on('click', '.load-more-action', function(){
+		var location_id = $('#location_id').val();
+		var moreload = $("#moreloadaction").val();
+		//alert(moreload);
+		var URL = "{{ route('ins-load-more-action-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				if(response.remain>0)
+				{
+					$('#showloadaction').show();
+				}
+				else
+				{
+					$('#showloadaction').hide();
+				}
+				$("#moreloadaction").val(response.loadmore)
+				$("#actionDiv").append(response.html);
+				
+			},
+		});
+		
+	});
+	
+	$(document).on('click', '.load-more-plan', function(){
+		var location_id = $('#location_id').val();
+		var moreload = $("#moreloadplan").val();
+		//alert(moreload);
+		var URL = "{{ route('ins-load-more-plan-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				if(response.remain>0)
+				{
+					$('#showloadplan').show();
+				}
+				else
+				{
+					$('#showloadplan').hide();
+				}
+				$("#moreloadplan").val(response.loadmore)
+				$("#planDiv").append(response.html);
+				
+			},
+		});
+		
+	});
+	
+	$(document).on('click', '.load-more-appr', function(){
+		var location_id = $('#location_id').val();
+		var moreload = $("#moreloadappr").val();
+		//alert(moreload);
+		var URL = "{{ route('ins-load-more-appr-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				if(response.remain>0)
+				{
+					$('#showloadplan').show();
+				}
+				else
+				{
+					$('#showloadappr').hide();
+				}
+				$("#moreloadappr").val(response.loadmore)
+				$("#appCompletedDiv").append(response.html);
+				
+			},
+		});
+		
+	});
+	
+	// -- load more button first time check -- 
+	var action_show = $('#action_show').val();
+	var totalNeeded = $('#totalNeeded').val();
+	var totalAction = $('#totalAction').val();
+	var totalPlan = $('#totalPlan').val();
+	
+	
+	if(totalNeeded > action_show)
+	{
+		$('#showloadneeded').show();
+	}
+	if(totalAction > action_show)
+	{
+		$('#showloadaction').show();
+	}
+	if(totalPlan > action_show)
+	{
+		$('#showloadplan').show();
+	}
 });
 </script>
 @endsection

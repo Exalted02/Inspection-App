@@ -1597,7 +1597,9 @@ body {
 	cursor:pointer;
 }
 
-.load-more {
+.load-more-needed,
+ .load-more-action,
+.load-more-plan {
 	cursor:pointer;
 	padding: 10px 24px;
 	border-radius: 8px;
@@ -1607,7 +1609,7 @@ body {
 	font-size: 14px;
 	width: fit-content;
 	margin: 20px auto;
-	display:block;
+	display:none;
 }
 
 
