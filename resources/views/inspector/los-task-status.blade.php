@@ -49,13 +49,13 @@ foreach($approvedCompleted as $result)
 	}
 }
 
-$correctiveNeededArray = [];
+//$correctiveNeededArray = [];
 $correctiveActionArray = [];
 $correctivePlanArray = [];
 $approvedCompletedArray = [];
 
 //echo "<pre>";print_r($correctiveNeeded);die;
-$correctiveNeededArray = array_slice($correctiveNeeded, 0, config('custom.LOAD_MORE_LIST_SHOW'));
+//$correctiveNeededArray = array_slice($correctiveNeeded, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 
 
 foreach($correctiveAction as $action)
@@ -260,7 +260,7 @@ $totalapprcompleted = $countCompleted;
 							</div>
 							<div class="tab-pane corrective_needed_tab" id="corrective_needed_tab">
 							<span id="neddedDiv">
-								@foreach($correctiveNeededArray as $result)
+								@foreach($correctiveNeddedArray as $result)
 								@if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
 									@php 
 										$j++;
@@ -1311,7 +1311,7 @@ $(document ).ready(function() {
 	{
 		$('#showloadneeded').show();
 	}
-	//alert(totalAction);alert(action_show);
+	
 	if(parseInt(totalAction) > parseInt(action_show))
 	{
 		$('#showloadaction').show();
