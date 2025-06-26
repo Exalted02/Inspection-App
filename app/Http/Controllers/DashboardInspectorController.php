@@ -2660,7 +2660,42 @@ class DashboardInspectorController extends Controller
 		//echo "<pre>";print_r($correctiveActionArray);die;
 		$data['correctivePlanArray'] = array_slice($correctivePlanArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 		$data['moreloadplan'] = config('custom.LOAD_MORE_LIST_SHOW');
-		//==============================================
+		//==================Approved/completed=================
+		
+		$approvedCompletedArray = [];
+		$approvedCompleted = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
+		//$data['approvedCompleted'] = $approvedCompleted;
+		foreach($approvedCompleted as $appr)
+		{
+			if($appr['inspector_action'] == 1 && $appr['los_action'] == 1)
+			{
+				if(isset($appr['subchecklist_id']))
+				{
+					$approvedCompletedArray[] = [
+						'type' => $appr['type'],
+						'task_id' => $appr['task_id'],
+						'checklist_id' => $appr['checklist_id'],
+						'subchecklist_id'=>$appr['subchecklist_id'],
+						'rejected_region' => $appr['rejected_region'],
+						'inspector_action' => $appr['inspector_action'],
+						'los_action' => $appr['los_action'],
+					];
+				}
+				else{
+					$approvedCompletedArray[] = [
+						'type' => $appr['type'],
+						'task_id' => $appr['task_id'],
+						'checklist_id' => $appr['checklist_id'],
+						'rejected_region' => $appr['rejected_region'],
+						'inspector_action' => $appr['inspector_action'],
+						'los_action' => $appr['los_action'],
+					];
+				}
+			}
+		}
+		$data['approvedCompletedArray'] = array_slice($approvedCompletedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
+		$data['moreloadappr'] = config('custom.LOAD_MORE_LIST_SHOW');
+		//=====================================================
 		return view('inspector.inspector-filter', $data);
     }
 	public function los_task_status($lid='',$active='')
@@ -4001,7 +4036,165 @@ class DashboardInspectorController extends Controller
 	}
 	public function ins_load_more_appr_data(Request $request)
 	{
+		$location_id = $request->location_id;
+		$data = array();
+		$interval = config('custom.LOAD_MORE_INTERVAL');
+		$lower = empty($request->moreload) ? 0 : $request->moreload;
+		$upper = empty($request->moreload) ? config('custom.LOAD_MORE_LIST_SHOW') : config('custom.LOAD_MORE_INTERVAL');
+		//---------------------------------------------------
+		$completedApprChecklistArray = [];
+		$completedApprSubcheckListArray = [];
+		$taskData = Task_lists::where('inspector_id', auth()->user()->id)->where('location_id', $location_id)->get();
+
+		if($taskData->isNotEmpty())
+		{
+			foreach($taskData as $val)
+			{
+				$ifTaskRxists = Task_list_subcategories::where('task_list_id', $val->id)->exists();
+				if($ifTaskRxists)
+				{
+					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
+					if($taskChklist->isNotEmpty())
+					{
+						foreach($taskChklist as $task)
+						{
+							$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)->where('checklist_id', $task->checklist_id)->first();
+							
+							if($task->approve == 0)
+							{
+								if($task_list_checklist_corrective_needed)
+								{
+									$isfiles = '';
+									$images = '';
+									$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
+									$images = $isfiles ? $isfiles->file  : '';
+									$completedApprChecklistArray[] = [
+										'type' => 'checklist',
+										'task_id' => $val->id,
+										'checklist_id' => $task->checklist_id,
+										'rejected_region' => $task->rejected_region,
+										'image' => $images,
+										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+										'los_action'=> $task_list_checklist_corrective_needed->los_action,
+										//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
+									];
+								
+								}
+							}
+							elseif($task->approve == 1)
+							{
+								$completedApprChecklistArray[] = [
+									'type' => 'checklist',
+									'task_id' => $val->id,
+									'checklist_id' => $task->checklist_id,
+									'rejected_region' => $task->rejected_region,
+									'inspector_action' => 1,
+									'los_action' => 1,
+								];
+							}
+					
+					
+						}
+					}
+					
+					// subchecklist and respective files
+					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
+					if($taskSubChklist->isNotEmpty())
+					{
+						foreach($taskSubChklist as $subtask)
+						{
+							$task_list_subchecklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $val->id)->where('checklist_id', $subtask->task_list_checklist_id)->where('subchecklist_id', $subtask->subchecklist_id)->first();
+							
+							if($subtask->approve == 0)
+							{
+								if($task_list_subchecklist_corrective_needed)
+								{
+									$completedApprSubcheckListArray[] = [
+										'type' => 'subchecklist',
+										'task_id' => $val->id,
+										'checklist_id' => $subtask->task_list_checklist_id,
+										'subchecklist_id'=>$subtask->subchecklist_id,
+										'rejected_region' => $subtask->rejected_region,
+										'image' => $subChecklistimages,
+										'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
+										'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+										//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
+									];
+								
+								}
+							
+							
+							}
+							elseif($subtask->approve == 1)
+							{
+								$completedApprSubcheckListArray[] = [
+										'type' => 'subchecklist',
+										'task_id' => $val->id,
+										'checklist_id' => $subtask->task_list_checklist_id,
+										'subchecklist_id'=>$subtask->subchecklist_id,
+										'rejected_region' => $subtask->rejected_region,
+										'inspector_action' => 1,
+										'los_action' => 1,
+										
+									];
+								
+							}	
+								
+						}
+					}
+					
+					
+				}
+			
+			
+			}
+		}
 		
 		
+		$approvedCompletedArray = [];
+		$approvedCompleted = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
+		$totalRecord = $approvedCompleted;
+		//$data['approvedCompleted'] = $approvedCompleted;
+		foreach($approvedCompleted as $appr)
+		{
+			if($appr['inspector_action'] == 1 && $appr['los_action'] == 1)
+			{
+				if(isset($appr['subchecklist_id']))
+				{
+					$approvedCompletedArray[] = [
+						'type' => $appr['type'],
+						'task_id' => $appr['task_id'],
+						'checklist_id' => $appr['checklist_id'],
+						'subchecklist_id'=>$appr['subchecklist_id'],
+						'rejected_region' => $appr['rejected_region'],
+						'inspector_action' => $appr['inspector_action'],
+						'los_action' => $appr['los_action'],
+					];
+				}
+				else{
+					$approvedCompletedArray[] = [
+						'type' => $appr['type'],
+						'task_id' => $appr['task_id'],
+						'checklist_id' => $appr['checklist_id'],
+						'rejected_region' => $appr['rejected_region'],
+						'inspector_action' => $appr['inspector_action'],
+						'los_action' => $appr['los_action'],
+					];
+				}
+			}
+		}
+		$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
+		$data['approvedCompletedArray'] = $approvedCompletedArray;
+		
+		$data['location_id'] = $location_id;
+		$data['mode'] = 'corrective_appr';
+		
+		$html = view('inspector.loadmore.ins-filter-load-more-data', $data)->render();
+		
+		//--------------------------------------
+		$count  = $request->moreload =='' ? config('custom.LOAD_MORE_LIST_SHOW') : $request->moreload + $interval;
+		$remain = count($totalRecord) - $count;
+		
+		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
 	}
 }

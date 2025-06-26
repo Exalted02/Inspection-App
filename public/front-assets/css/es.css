@@ -1598,8 +1598,9 @@ body {
 }
 
 .load-more-needed,
- .load-more-action,
-.load-more-plan {
+.load-more-action,
+.load-more-plan,
+.load-more-appr {
 	cursor:pointer;
 	padding: 10px 24px;
 	border-radius: 8px;

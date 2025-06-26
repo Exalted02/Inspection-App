@@ -49,12 +49,13 @@ foreach($approvedCompleted as $result)
 	}
 }
 
-$totalNeeded = count($correctiveNeeded);
-$action_show = config('custom.LOAD_MORE_LIST_SHOW');
 
+$action_show = config('custom.LOAD_MORE_LIST_SHOW');
+$totalNeeded = count($correctiveNeeded);
 $totalAction = $countAction;
 $totalPlan = $countPlan;
-$action_show = config('custom.LOAD_MORE_LIST_SHOW');
+$totalapprcompleted = $countCompleted;
+
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -543,9 +544,8 @@ $action_show = config('custom.LOAD_MORE_LIST_SHOW');
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
 							<span id="appCompletedDiv">
-							@foreach($approvedCompleted as $result)
-								@if($result['inspector_action'] == 1 && $result['los_action'] == 1)
-									@php 
+							@foreach($approvedCompletedArray as $result)
+								@php 
 										$m++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
@@ -651,7 +651,6 @@ $action_show = config('custom.LOAD_MORE_LIST_SHOW');
 										</div>
 									</div>
 									@endif
-								@endif
 							@endforeach
 							</span>
 							<div class="load-more-appr" id="showloadappr">Load more</div>
@@ -711,6 +710,8 @@ $action_show = config('custom.LOAD_MORE_LIST_SHOW');
 	<input type="hidden" value="{{ $totalNeeded ?? ''}}" id="totalNeeded">
 	<input type="hidden" value="{{ $totalAction ?? ''}}" id="totalAction">
 	<input type="hidden" value="{{ $totalPlan ?? ''}}" id="totalPlan">
+	<input type="hidden" value="{{ 
+$totalapprcompleted ?? ''}}" id="totalapprcompleted">
 
 	
 @endsection 
@@ -1100,6 +1101,7 @@ $(document ).ready(function() {
 	var totalNeeded = $('#totalNeeded').val();
 	var totalAction = $('#totalAction').val();
 	var totalPlan = $('#totalPlan').val();
+	var totalapprcompleted = $('#totalapprcompleted').val();
 	
 	
 	if(totalNeeded > action_show)
@@ -1113,6 +1115,10 @@ $(document ).ready(function() {
 	if(totalPlan > action_show)
 	{
 		$('#showloadplan').show();
+	}
+	if(totalapprcompleted > action_show)
+	{
+		$('#showloadappr').show();
 	}
 });
 </script>

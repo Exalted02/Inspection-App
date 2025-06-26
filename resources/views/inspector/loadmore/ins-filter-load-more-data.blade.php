@@ -4,7 +4,7 @@ $j = 0;
 $k = 0;
 $l = 0;
 $m = 0;
-//echo "<pre>";print_r($correctiveActionArray);die;
+$location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 @endphp
 @if($mode == 'corrective_needed')					
 	@foreach($correctiveNeddedArray as $result)
@@ -436,4 +436,116 @@ $m = 0;
 		</div>
 		@endif
 	@endforeach
+@endif
+
+@if($mode == 'corrective_appr')
+@foreach($approvedCompletedArray as $result)
+	@php 
+			$m++;
+			$arrSubchecklist = [];
+			$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
+			
+			/*$subchecklistData = App\Models\Subchecklist::where('id', $result['checklist_id'])->first();*/
+			
+			/*$checklistName = $checklistData ? $checklistData->name : ($subchecklistData ?  $subchecklistData->name : '');*/
+			
+			$checklistName = $checklistData ? $checklistData->name : '';
+			
+			$rejectedRegionData = $result['type'] == 'checklist'
+			? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
+			: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+
+			
+			//$images =url('images/noimages/noimage_region.png');
+			if (isset($result['image']) && $result['image'] != '') {
+				$images = $result['type'] == 'checklist'
+					? url('uploads/reject-files/' . $result['image'])
+					: url('uploads/reject-files/subchecklist/' . $result['image']);
+			} else {
+				$images = url('images/noimages/noimage_region.png');
+			}
+			
+			
+			if($result['type'] == 'subchecklist')
+			{
+				$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->first();
+				if($subchecklistData)
+				{
+					//foreach($subchecklistData as $subcheck)
+					//{
+						//$arrSubchecklist = [];
+						$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
+						
+						$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+						
+						$images = $filedata && $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+						//$images =url('images/noimages/noimage_region.png');
+						
+						$arrSubchecklist[] = [
+							'id' => $subchecklistData->id,
+							'name' => $subchecklistName ? $subchecklistName->name : '',
+							'image' => $images,
+							'subchecklist_id' => $subchecklistData->subchecklist_id,
+						];
+					//}
+				}
+			}
+			//echo "<pre>";print_r($arrSubchecklist);
+		@endphp
+		@if(!empty($arrSubchecklist))
+			@foreach($arrSubchecklist as $val)
+		<div class="d-flex mb-3 task">
+			<div class="date-box">
+				<img src="{{ $val['image'] }}" width="50" height="50">
+			</div>
+			<div class="flex-grow-1">
+				<a href="javascript:void(0);">
+				<h6>{{ $checklistName ?? '' }} 
+				@if($val['name']!='')
+					-> {{$val['name'] ?? ''}}
+				@endif
+				</h6>
+					<p class="text-muted mb-0">
+					{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+					</p>
+					@if($rejectedRegionData)	
+					<p class="text-muted mb-0">
+					<i class="fa fa-clock">
+					{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+					</p>
+					@endif
+					<p class="text-muted mb-0">
+					<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+					</p>
+				</a>
+			</div>
+		</div>
+		@endforeach
+		
+		@else 
+			<div class="d-flex mb-3 task">
+			<div class="date-box">
+				<img src="{{ $images }}" width="50" height="50">
+			</div>
+			<div class="flex-grow-1">
+				<a href="javascript:void(0);">
+				<h6>{{ $checklistName ?? '' }} 
+				</h6>
+					<p class="text-muted mb-0">
+					{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+					</p>
+					@if($rejectedRegionData)
+					<p class="text-muted mb-0">
+					<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+					</p>
+					@endif
+					<p class="text-muted mb-0">
+					<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+					</p>
+				</a>
+			</div>
+		</div>
+		@endif
+@endforeach
+
 @endif
