@@ -293,7 +293,7 @@ $location_name = App\Models\Manage_location::where('id', $location_id)->first()-
 @endif
 
 @if($mode == 'corrective_plan')
-	@foreach($correctivePlanArray as $result)
+	@foreach($correctiveActionArray as $result)
 		@php 
 			$k++;
 			$arrSubchecklist = [];

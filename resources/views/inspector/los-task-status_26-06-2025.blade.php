@@ -49,13 +49,6 @@ foreach($approvedCompleted as $result)
 	}
 }
 
-
-$action_show = config('custom.LOAD_MORE_LIST_SHOW');
-$totalNeeded = $countNedded;
-$totalAction = $countAction;
-$totalPlan = $countPlan;
-$totalapprcompleted = $countCompleted;
-
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -96,6 +89,18 @@ $totalapprcompleted = $countCompleted;
 						<div class="scroll-arrow left-arrow" id="scrollLeft"><i class="fa fa-chevron-left"></i></div>
 							<div class="tab-scroll-wrapper" id="tabScrollWrapper">--}}
 								<ul class="nav nav-tabs custom-tab-style" role="tablist">
+								@if(auth()->user()->user_type == 1)
+								{{--<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>
+									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>--}}
+								@endif
+								@if(auth()->user()->user_type == 3)
+								{{--<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"> Corrective checked</a></li>--}}
+								@endif
+								{{--<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab">Final checks</a></li> 
+									<li role="presentation"><a class="approvedFinalChecked" href="#approved_final_checked_tab" aria-controls="reject_tab" role="tab">Approved final checked</a></li>--}}
+									@if(auth()->user()->user_type == 1)
+									{{--<li role="presentation" class=""><a class="unCompletetab" href="#uncomplete_tab" aria-controls="uncomplete_tab" role="tab"><span class="counter_s"></span>Uncompleted</a></li>--}}
+									@endif
 									<li role="presentation"><a class="correctiveNeeded" href="#corrective_needed_tab" aria-controls="reject_tab" role="tab"><span class="counter-grey">{{ $countNedded }}</span> Corrective Needed</a></li>
 									<li role="presentation"><a class="correctiveChecked" href="#corrective_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter-red">{{ $countAction }}</span> Corrective Action</a></li>
 									<li role="presentation"><a class="finalChecked" href="#process_final_checked_tab" aria-controls="reject_tab" role="tab"><span class="counter-red">{{ $countPlan}}</span> Corrective Plan</a></li> 
@@ -106,9 +111,42 @@ $totalapprcompleted = $countCompleted;
 						</div>--}}
 						<!-- Tab panes -->
 						<div class="tab-content">
+						@if(auth()->user()->user_type == 1)
+						{{--<div role="tabpanel" class="tab-pane" id="uncomplete_tab">
+							@if($categoryData->isNotEmpty())
+								@foreach($categoryData as $categories)
+								@php 
+									$tot_checklist = App\Models\Checklist::where('category_id', $categories->id)->count();
+									$tot_checklist_completed = App\Models\Task_list_checklists::where('task_list_id',$task_id)->where('category_id', $categories->id)->count();
+									$tot_subchecklist_completed = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('category_id', $categories->id)->distinct('task_list_checklist_id')->count();
+									$tot_completed_task = $tot_checklist_completed+$tot_subchecklist_completed;
+									
+									$ifSubmitted = App\Models\Task_list_subcategories::where('task_list_id', $task_id)->where('task_list_category_id', $categories->id)->exists();
+
+								@endphp
+								
+									@if(!$ifSubmitted)
+									<div class="checklist-item">
+										<div class="text">
+											<div class="title">{{ $categories->name ?? ''}}</div>
+											<div class="subtitle">Completed {{ $tot_completed_task ?? ''}} of {{ $tot_checklist ?? ''}}</div>
+										</div>
+										
+										<a href="#" class="chk-task-id" data-cat="{{ $categories->id ?? ''}}" data-location="{{ $location_id ?? ''}}" data-taskid="{{ $task_id }}"><div class="arrow"><i class="fa-solid fa-arrow-right"></i></div></a>
+									</div>
+									@endif
+								@endforeach
+							@else	
+								<div class="text-center"><strong><h3>No record founds</h3></strong></div>
+							@endif
+							</div>--}}
+						@endif
+							<div role="tabpanel" class="tab-pane" id="reject_tab">
+								Not have any data
+							</div>
 							<div class="tab-pane corrective_needed_tab" id="corrective_needed_tab">
-								<span id="neddedDiv">
-								@foreach($correctiveNeddedArray as $result)
+							
+								@foreach($correctiveNeeded as $result)
 								@if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
 									@php 
 										$j++;
@@ -246,13 +284,11 @@ $totalapprcompleted = $countCompleted;
 									@endif
 								@endif
 								@endforeach
-								</span>
-								<div class="load-more-needed" id="showloadneeded">Load more</div>
-								<input type="hidden" value="{{ $moreloadneeded ?? '' }}" id="moreloadneeded">
 							</div>
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
-							<span id="actionDiv">
-								@foreach($correctiveActionArray as $result)
+							
+								@foreach($correctiveAction as $result)
+								@if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 									@php 
 										$k++;
 										$arrSubchecklist = [];
@@ -394,166 +430,153 @@ $totalapprcompleted = $countCompleted;
 										</div>
 									</div>
 									@endif
+								@endif
 								@endforeach
-							</span>
-							
-							<div class="load-more-action" id="showloadaction">Load more</div>
-								<input type="hidden" value="{{ $moreloadaction ?? '' }}" id="moreloadaction">
 							</div>
-							
 							<div role="tabpanel" class="tab-pane" id="process_final_checked_tab">
-								<span id="planDiv">
-								@foreach($correctivePlanArray as $result)
-								@php 
-									$l++;
-									$arrSubchecklist = [];
-									$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
-									
-									/*$subchecklistData = App\Models\Subchecklist::where('id', $result['checklist_id'])->first();*/
-									
-									/*$checklistName = $checklistData ? $checklistData->name : ($subchecklistData ?  $subchecklistData->name : '');*/
-									
-									$checklistName = $checklistData ? $checklistData->name : '';
-									
-									$rejectedRegionData = $result['type'] == 'checklist'
-									? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-									: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+								@foreach($correctiveAction as $result)
+								@if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+									@php 
+										$l++;
+										$arrSubchecklist = [];
+										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
+										
+										/*$subchecklistData = App\Models\Subchecklist::where('id', $result['checklist_id'])->first();*/
+										
+										/*$checklistName = $checklistData ? $checklistData->name : ($subchecklistData ?  $subchecklistData->name : '');*/
+										
+										$checklistName = $checklistData ? $checklistData->name : '';
+										
+										$rejectedRegionData = $result['type'] == 'checklist'
+										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
+										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
-									if($result['image'] != '')
-									{
-										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
-									}
-									else{
-										$images = url('images/noimages/noimage_region.png');
-									}
-									
-									
-									if($result['type'] == 'subchecklist')
-									{
-										$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
-										if($subchecklistData)
+										if($result['image'] != '')
 										{
-											//foreach($subchecklistData as $subcheck)
-											//{
-												//$arrSubchecklist = [];
-												$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
-												
-												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
-												
-												$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
-												
-												$arrSubchecklist[] = [
-													'id' => $subchecklistData->id,
-													'name' => $subchecklistName ? $subchecklistName->name : '',
-													'image' => $images,
-													'subchecklist_id' => $subchecklistData->subchecklist_id,
-												];
-											//}
+											$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
 										}
-									}
+										else{
+											$images = url('images/noimages/noimage_region.png');
+										}
+										
+										
+										if($result['type'] == 'subchecklist')
+										{
+											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->where('approve',0)->first();
+											if($subchecklistData)
+											{
+												//foreach($subchecklistData as $subcheck)
+												//{
+													//$arrSubchecklist = [];
+													$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
+													
+													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+													
+													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													
+													$arrSubchecklist[] = [
+														'id' => $subchecklistData->id,
+														'name' => $subchecklistName ? $subchecklistName->name : '',
+														'image' => $images,
+														'subchecklist_id' => $subchecklistData->subchecklist_id,
+													];
+												//}
+											}
+										}
+										
+									@endphp
+									@if(!empty($arrSubchecklist))
+										@foreach($arrSubchecklist as $val)
+									<div class="d-flex mb-3 task">
+										<div class="date-box">
+											<img src="{{ $val['image'] }}" width="50" height="50">
+										</div>
+										<div class="flex-grow-1">
+											<a href="{{ route('inspector-subchecklist-second-approve-plan-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
+											<h6>{{ $checklistName ?? '' }} 
+											@if($val!='')
+												-> {{$val['name'] ?? ''}}
+											@endif
+											</h6>
+												<p class="text-muted mb-0">
+												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+												</p>
+												@if($rejectedRegionData)	
+												<p class="text-muted mb-0">
+												<i class="fa fa-clock">
+												{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												</p>
+												@endif
+												<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
+												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												@if(auth()->user()->user_type == 1)
+													@if($result['inspector_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['inspector_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												
+												@if(auth()->user()->user_type == 3)
+													@if($result['los_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['los_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												</p>
+											</a>
+										</div>
+									</div>
+									@endforeach
 									
-								@endphp
-								@if(!empty($arrSubchecklist))
-									@foreach($arrSubchecklist as $val)
-								<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<img src="{{ $val['image'] }}" width="50" height="50">
-									</div>
-									<div class="flex-grow-1">
-										@if($result['second_checked'] == '')
-										<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-										@else
-										<a href="{{ route('inspector-subchecklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-										@endif
-										<h6>{{ $checklistName ?? '' }} 
-										@if($val!='')
-											-> {{$val['name'] ?? ''}}
-										@endif
-										</h6>
-											<p class="text-muted mb-0">
-											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
-											</p>
-											@if($rejectedRegionData)	
-											<p class="text-muted mb-0">
-											<i class="fa fa-clock">
-											{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
-											</p>
-											@endif
-											<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
-											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-											@if(auth()->user()->user_type == 1)
-												@if($result['inspector_action'] == 1)
-													<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-												@elseif($result['inspector_action'] == 0)
-													<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+									@else 
+										<div class="d-flex mb-3 task">
+										<div class="date-box">
+											<img src="{{ $images }}" width="50" height="50">
+										</div>
+										<div class="flex-grow-1">
+											<a href="{{ route('inspector-checklist-second-approve-plan-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-plan']) }}">
+											<h6>{{ $checklistName ?? '' }} 
+											</h6>
+												<p class="text-muted mb-0">
+												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
+												</p>
+												@if($rejectedRegionData)
+												<p class="text-muted mb-0">
+												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												</p>
 												@endif
-											@endif
-											
-											@if(auth()->user()->user_type == 3)
-												@if($result['los_action'] == 1)
-													<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-												@elseif($result['los_action'] == 0)
-													<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+												<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
+												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+												@if(auth()->user()->user_type == 1)
+													@if($result['inspector_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['inspector_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
 												@endif
-											@endif
-											</p>
-										</a>
+												
+												@if(auth()->user()->user_type == 3)
+													@if($result['los_action'] == 1)
+														<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
+													@elseif($result['los_action'] == 0)
+														<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+													@endif
+												@endif
+												</p>
+											</a>
+										</div>
 									</div>
-								</div>
+									@endif
+								@endif
 								@endforeach
 								
-								@else 
-									<div class="d-flex mb-3 task">
-									<div class="date-box">
-										<img src="{{ $images }}" width="50" height="50">
-									</div>
-									<div class="flex-grow-1">
-										@if($result['second_checked'] == '')
-										<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-										@else
-										<a href="{{ route('inspector-checklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-										@endif
-										<h6>{{ $checklistName ?? '' }} 
-										</h6>
-											<p class="text-muted mb-0">
-											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
-											</p>
-											@if($rejectedRegionData)
-											<p class="text-muted mb-0">
-											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
-											</p>
-											@endif
-											<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
-											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-											@if(auth()->user()->user_type == 1)
-												@if($result['inspector_action'] == 1)
-													<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-												@elseif($result['inspector_action'] == 0)
-													<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-												@endif
-											@endif
-											
-											@if(auth()->user()->user_type == 3)
-												@if($result['los_action'] == 1)
-													<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-												@elseif($result['los_action'] == 0)
-													<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-												@endif
-											@endif
-											</p>
-										</a>
-									</div>
-								</div>
-								@endif
-							@endforeach
-								</span>
-								<div class="load-more-plan" id="showloadplan">Load more</div>
-								<input type="hidden" value="{{ $moreloadplan ?? '' }}" id="moreloadplan">
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
-							<span id="appCompletedDiv">
-							@foreach($approvedCompletedArray as $result)
-								@php 
+							@foreach($approvedCompleted as $result)
+								@if($result['inspector_action'] == 1 && $result['los_action'] == 1)
+									@php 
 										$m++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
@@ -659,10 +682,8 @@ $totalapprcompleted = $countCompleted;
 										</div>
 									</div>
 									@endif
+								@endif
 							@endforeach
-							</span>
-							<div class="load-more-appr" id="showloadappr">Load more</div>
-								<input type="hidden" value="{{ $moreloadappr ?? '' }}" id="moreloadappr">
 							</div>
 						</div>
 						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>	
@@ -713,13 +734,6 @@ $totalapprcompleted = $countCompleted;
 	<input type="hidden" value="{{ $k ?? ''}}" id="norecord_k">
 	<input type="hidden" value="{{ $l ?? ''}}" id="norecord_l">
 	<input type="hidden" value="{{ $m ?? ''}}" id="norecord_m">
-	
-	<input type="hidden" value="{{ $action_show ?? ''}}" id="action_show">
-	<input type="hidden" value="{{ $totalNeeded ?? ''}}" id="totalNeeded">
-	<input type="hidden" value="{{ $totalAction ?? ''}}" id="totalAction">
-	<input type="hidden" value="{{ $totalPlan ?? ''}}" id="totalPlan">
-	<input type="hidden" value="{{ 
-$totalapprcompleted ?? ''}}" id="totalapprcompleted">
 
 	
 @endsection 
@@ -772,7 +786,6 @@ $(document ).ready(function() {
 				if(norecord_j==0)
 				{
 					$('#no_record').show();
-					$('#showloadneeded').hide();
 				}
 				
 				//$('#uncomplete_tab').hide();
@@ -784,7 +797,6 @@ $(document ).ready(function() {
 				if(norecord_k==0)
 				{
 					$('#no_record').show();
-					$('#showloadaction').hide();
 				}
 				
 				//$('#uncomplete_tab').hide();
@@ -793,6 +805,7 @@ $(document ).ready(function() {
 			if(selectedTab == '#process_final_checked_tab')
 			{
 				var norecord_l = $('#norecord_l').val();
+				
 				if(norecord_l==0)
 				{
 					$('#no_record').show();
@@ -818,26 +831,25 @@ $(document ).ready(function() {
 		}
 	}
 	
-	if(isactive == 1 && user_id == 1)
+	/*if(isactive == 1 && user_id == 1)
 	{
 		//$('a[href="#uncomplete_tab"]').tab('show');
 		//$('#uncomplete_tab').show();
-		var norecord_j = $('#norecord_j').val();
-		if(norecord_j==0)
-		{
-			$('#no_record').show();
-			$('#showloadneeded').hide();
-		}
-		
 		$('a[href="#corrective_needed_tab"]').tab('show');
 		$('#isactive').val(0);
-	}
+	}*/
 	
 	
 	if(isactive == 1 && user_id == 3)
 	{
 		$('a[href="#corrective_needed_tab"]').tab('show');
 		$('#isactive').val(0);
+		
+		var norecord_j = $('#norecord_j').val();
+		if(norecord_j==0)
+		{
+			$('#no_record').show();
+		}
 	}
 	
 	//alert(isactive);
@@ -974,7 +986,7 @@ $(document ).ready(function() {
 		}
 		
 		localStorage.setItem('selectedTab', tabId);
-		const refreshUrl = "{{ url('inspector-filter/LOCATION_ID/ISACTIVE') }}";
+		const refreshUrl = "{{ url('los-task-status/LOCATION_ID/ISACTIVE') }}";
 		const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('ISACTIVE', 0);
 		window.location.href = redirectUrl;
 	});
@@ -990,144 +1002,49 @@ $(document ).ready(function() {
         scrollWrapper.animate({ scrollLeft: scrollWrapper.scrollLeft() + 150 }, 300);
     });
 	
-	$(document).on('click', '.load-more-needed', function(){
-		var location_id = $('#location_id').val();
-		var moreload = $("#moreloadneeded").val();
-		//alert(moreload);
-		var URL = "{{ route('ins-load-more-needed-data') }}";
-		$.ajax({
-			url: URL,
-			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
-			dataType: 'json',
-			success: function(response) {
-				//alert(response.html);
-				if(response.remain>0)
-				{
-					$('#showloadneeded').show();
-				}
-				else
-				{
-					$('#showloadneeded').hide();
-				}
-				$("#moreloadneeded").val(response.loadmore)
-				$("#neddedDiv").append(response.html);
-				
-			},
-		});
-		
-	});
+	var insActionApproved 	= localStorage.getItem('insActionApproved');
+	var insPlanApproved 	= localStorage.getItem('insPlanApproved');
+	var insActionRejected 	= localStorage.getItem('insActionRejected');
+	var insPlanRejected 	= localStorage.getItem('insPlanRejected');
+	var insFinalApproved 	= localStorage.getItem('insFinalApproved');
+	var insFinalRejected 	= localStorage.getItem('insFinalRejected');
 	
-	$(document).on('click', '.load-more-action', function(){
-		var location_id = $('#location_id').val();
-		var moreload = $("#moreloadaction").val();
-		//alert(moreload);
-		var URL = "{{ route('ins-load-more-action-data') }}";
-		$.ajax({
-			url: URL,
-			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
-			dataType: 'json',
-			success: function(response) {
-				//alert(response.html);
-				if(response.remain>0)
-				{
-					$('#showloadaction').show();
-				}
-				else
-				{
-					$('#showloadaction').hide();
-				}
-				$("#moreloadaction").val(response.loadmore)
-				$("#actionDiv").append(response.html);
-				
-			},
-		});
-		
-	});
-	
-	$(document).on('click', '.load-more-plan', function(){
-		var location_id = $('#location_id').val();
-		var moreload = $("#moreloadplan").val();
-		//alert(moreload);
-		var URL = "{{ route('ins-load-more-plan-data') }}";
-		$.ajax({
-			url: URL,
-			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
-			dataType: 'json',
-			success: function(response) {
-				//alert(response.html);
-				if(response.remain>0)
-				{
-					$('#showloadplan').show();
-				}
-				else
-				{
-					$('#showloadplan').hide();
-				}
-				$("#moreloadplan").val(response.loadmore)
-				$("#planDiv").append(response.html);
-				
-			},
-		});
-		
-	});
-	
-	$(document).on('click', '.load-more-appr', function(){
-		var location_id = $('#location_id').val();
-		var moreload = $("#moreloadappr").val();
-		//alert(moreload);
-		var URL = "{{ route('ins-load-more-appr-data') }}";
-		$.ajax({
-			url: URL,
-			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
-			dataType: 'json',
-			success: function(response) {
-				//alert(response.html);
-				if(response.remain>0)
-				{
-					$('#showloadplan').show();
-				}
-				else
-				{
-					$('#showloadappr').hide();
-				}
-				$("#moreloadappr").val(response.loadmore)
-				$("#appCompletedDiv").append(response.html);
-				
-			},
-		});
-		
-	});
-	
-	// -- load more button first time check -- 
-	var action_show = $('#action_show').val();
-	var totalNeeded = $('#totalNeeded').val();
-	var totalAction = $('#totalAction').val();
-	var totalPlan = $('#totalPlan').val();
-	var totalapprcompleted = $('#totalapprcompleted').val();
-	
-	if(parseInt(totalNeeded) > parseInt(action_show))
+	if(insActionApproved == 1)
 	{
-		$('#showloadneeded').show();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action approved&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insActionApproved');
 	}
 	
-	if(parseInt(totalAction) > parseInt(action_show))
+	if(insPlanApproved == 1)
 	{
-		$('#showloadaction').show();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective plan approved&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insPlanApproved');
 	}
 	
-	if(parseInt(totalPlan) > parseInt(action_show))
+	if(insActionRejected == 1)
 	{
-		$('#showloadplan').show();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective action rejected&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insActionRejected');
 	}
 	
-	if(parseInt(totalapprcompleted) > parseInt(action_show))
+	if(insPlanRejected == 1)
 	{
-		$('#showloadappr').show();
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Corrective plan rejected&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insPlanRejected');
 	}
+	
+	if(insFinalApproved == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Approved final round check&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insFinalApproved');
+	}
+	
+	if(insFinalRejected == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Rejected final round check&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('insFinalRejected');
+	}
+	
 });
 </script>
 @endsection

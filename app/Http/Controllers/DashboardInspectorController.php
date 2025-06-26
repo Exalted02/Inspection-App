@@ -2664,6 +2664,7 @@ class DashboardInspectorController extends Controller
 		
 		$approvedCompletedArray = [];
 		$approvedCompleted = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
+		//echo "<pre>";print_r($approvedCompleted);die;
 		//$data['approvedCompleted'] = $approvedCompleted;
 		foreach($approvedCompleted as $appr)
 		{
@@ -2671,28 +2672,61 @@ class DashboardInspectorController extends Controller
 			{
 				if(isset($appr['subchecklist_id']))
 				{
-					$approvedCompletedArray[] = [
-						'type' => $appr['type'],
-						'task_id' => $appr['task_id'],
-						'checklist_id' => $appr['checklist_id'],
-						'subchecklist_id'=>$appr['subchecklist_id'],
-						'rejected_region' => $appr['rejected_region'],
-						'inspector_action' => $appr['inspector_action'],
-						'los_action' => $appr['los_action'],
-					];
+					if(isset($appr['image']))
+					{
+						$approvedCompletedArray[] = [
+							'type' => $appr['type'],
+							'task_id' => $appr['task_id'],
+							'checklist_id' => $appr['checklist_id'],
+							'subchecklist_id'=>$appr['subchecklist_id'],
+							'rejected_region' => $appr['rejected_region'],
+							'image' => $appr['image'],
+							'inspector_action' => $appr['inspector_action'],
+							'los_action' => $appr['los_action'],
+						];
+					}
+					else{
+						$approvedCompletedArray[] = [
+							'type' => $appr['type'],
+							'task_id' => $appr['task_id'],
+							'checklist_id' => $appr['checklist_id'],
+							'subchecklist_id'=>$appr['subchecklist_id'],
+							'rejected_region' => $appr['rejected_region'],
+							'inspector_action' => $appr['inspector_action'],
+							'los_action' => $appr['los_action'],
+						];
+					}
+					
 				}
-				else{
-					$approvedCompletedArray[] = [
-						'type' => $appr['type'],
-						'task_id' => $appr['task_id'],
-						'checklist_id' => $appr['checklist_id'],
-						'rejected_region' => $appr['rejected_region'],
-						'inspector_action' => $appr['inspector_action'],
-						'los_action' => $appr['los_action'],
-					];
+				else
+				{
+					if(isset($appr['image']))
+					{
+						$approvedCompletedArray[] = [
+							'type' => $appr['type'],
+							'task_id' => $appr['task_id'],
+							'checklist_id' => $appr['checklist_id'],
+							'rejected_region' => $appr['rejected_region'],
+							'image' => $appr['image'],
+							'inspector_action' => $appr['inspector_action'],
+							'los_action' => $appr['los_action'],
+						];
+					}
+					else{
+						$approvedCompletedArray[] = [
+							'type' => $appr['type'],
+							'task_id' => $appr['task_id'],
+							'checklist_id' => $appr['checklist_id'],
+							'rejected_region' => $appr['rejected_region'],
+							'inspector_action' => $appr['inspector_action'],
+							'los_action' => $appr['los_action'],
+						];
+					}
+					
 				}
 			}
 		}
+		//echo "<pre>";print_r($approvedCompletedArray);die;
 		$data['approvedCompletedArray'] = array_slice($approvedCompletedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 		$data['moreloadappr'] = config('custom.LOAD_MORE_LIST_SHOW');
 		//=====================================================
@@ -4026,7 +4060,7 @@ class DashboardInspectorController extends Controller
 		//echo "<pre>";print_r($correctiveActionArray);
 		$data['location_id'] = $location_id;
 		$data['mode'] = 'corrective_plan';
-		$data['correctiveActionArray'] = $correctiveActionArray;
+		$data['correctivePlanArray'] = $correctiveActionArray;
 		$html = view('inspector.loadmore.ins-filter-load-more-data', $data)->render();
 		//----------------
 		$count  = $request->moreload =='' ? config('custom.LOAD_MORE_LIST_SHOW') : $request->moreload + $interval;
@@ -4107,6 +4141,12 @@ class DashboardInspectorController extends Controller
 							
 							if($subtask->approve == 0)
 							{
+								$isSubChecklistfiles = '';
+								$subChecklistimages = '';
+								$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subtask->id)->first();
+								
+								$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
+						
 								if($task_list_subchecklist_corrective_needed)
 								{
 									$completedApprSubcheckListArray[] = [
@@ -4153,7 +4193,7 @@ class DashboardInspectorController extends Controller
 		
 		$approvedCompletedArray = [];
 		$approvedCompleted = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
-		$totalRecord = $approvedCompleted;
+		//$totalRecord = count($approvedCompleted);
 		//$data['approvedCompleted'] = $approvedCompleted;
 		foreach($approvedCompleted as $appr)
 		{
@@ -4161,28 +4201,58 @@ class DashboardInspectorController extends Controller
 			{
 				if(isset($appr['subchecklist_id']))
 				{
-					$approvedCompletedArray[] = [
-						'type' => $appr['type'],
-						'task_id' => $appr['task_id'],
-						'checklist_id' => $appr['checklist_id'],
-						'subchecklist_id'=>$appr['subchecklist_id'],
-						'rejected_region' => $appr['rejected_region'],
-						'inspector_action' => $appr['inspector_action'],
-						'los_action' => $appr['los_action'],
-					];
+					if(isset($appr['image']))
+					{
+						$approvedCompletedArray[] = [
+							'type' => $appr['type'],
+							'task_id' => $appr['task_id'],
+							'checklist_id' => $appr['checklist_id'],
+							'subchecklist_id'=>$appr['subchecklist_id'],
+							'rejected_region' => $appr['rejected_region'],
+							'image' => $appr['image'],
+							'inspector_action' => $appr['inspector_action'],
+							'los_action' => $appr['los_action'],
+						];
+					}
+					else{
+						$approvedCompletedArray[] = [
+							'type' => $appr['type'],
+							'task_id' => $appr['task_id'],
+							'checklist_id' => $appr['checklist_id'],
+							'subchecklist_id'=>$appr['subchecklist_id'],
+							'rejected_region' => $appr['rejected_region'],
+							'inspector_action' => $appr['inspector_action'],
+							'los_action' => $appr['los_action'],
+						];
+					}
 				}
 				else{
-					$approvedCompletedArray[] = [
-						'type' => $appr['type'],
-						'task_id' => $appr['task_id'],
-						'checklist_id' => $appr['checklist_id'],
-						'rejected_region' => $appr['rejected_region'],
-						'inspector_action' => $appr['inspector_action'],
-						'los_action' => $appr['los_action'],
-					];
+					if(isset($appr['image']))
+					{
+						$approvedCompletedArray[] = [
+							'type' => $appr['type'],
+							'task_id' => $appr['task_id'],
+							'checklist_id' => $appr['checklist_id'],
+							'rejected_region' => $appr['rejected_region'],
+							'image' => $appr['image'],
+							'inspector_action' => $appr['inspector_action'],
+							'los_action' => $appr['los_action'],
+						];
+					}
+					else{
+						$approvedCompletedArray[] = [
+							'type' => $appr['type'],
+							'task_id' => $appr['task_id'],
+							'checklist_id' => $appr['checklist_id'],
+							'inspector_action' => $appr['inspector_action'],
+							'los_action' => $appr['los_action'],
+						];
+					}
 				}
 			}
 		}
+		//echo "<pre>";print_r($approvedCompletedArray);die;
+		$totalRecord = $approvedCompletedArray;
 		$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
 		$data['approvedCompletedArray'] = $approvedCompletedArray;
 		
