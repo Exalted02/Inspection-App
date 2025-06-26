@@ -2998,6 +2998,7 @@ class DashboardInspectorController extends Controller
 		//echo "<pre>";print_r($correctiveActionChecklistArray);die;
 		$data['correctiveAction'] = $correctiveActionChecklistArray;
 		$data['moreloadneeded'] = config('custom.LOAD_MORE_LIST_SHOW');
+		$data['moreloadaction'] = config('custom.LOAD_MORE_LIST_SHOW');
 		$data['moreloadplan'] = config('custom.LOAD_MORE_LIST_SHOW');
 		$data['moreloadappr'] = config('custom.LOAD_MORE_LIST_SHOW');
 		//-----
@@ -4537,25 +4538,54 @@ class DashboardInspectorController extends Controller
 					$countNedded++;
 				}
 			}
-			$totalRecord = $correctiveNeeded;
+			$totalRecord = count($correctiveNeeded);
 		}
 		
 		if($request->tab == 'correctiveaction')
 		{
 			$data['correctiveAction'] = $correctiveActionChecklistArray;
 			$data['mode'] = 'corrective_action';
+			
+			foreach($correctiveActionChecklistArray as $result)
+			{
+				if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+				{
+					$countAction++;
+				}
+			}
+			$totalRecord = $countAction;
 		}
 		
 		if($request->tab == 'correctiveplan')
 		{
 			$data['correctiveAction'] = $correctiveActionChecklistArray;
 			$data['mode'] = 'corrective_plan';
+			
+			foreach($correctiveActionChecklistArray as $result)
+			{
+				
+				if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+				{
+					$countPlan++;
+				}
+			}
+			$totalRecord = $countPlan;
 		}
 		
 		if($request->tab == 'correctiveapproved')
 		{
 			$data['approvedCompleted'] = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
 			$data['mode'] = 'corrective_appr';
+			$apprArray = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
+			
+			foreach($apprArray as $result)
+			{
+				if($result['inspector_action'] == 1 && $result['los_action'] == 1)
+				{
+					$countCompleted++;
+				}
+			}
+			$totalRecord = $countCompleted;
 		}
 		
 		
@@ -4567,7 +4597,7 @@ class DashboardInspectorController extends Controller
 		
 		//--------------------------------------
 		//$count  = $request->moreload =='' ? config('custom.LOAD_MORE_LIST_SHOW') : $request->moreload + $interval;
-		$remain = count($totalRecord) - $count;
+		$remain = $totalRecord - $count;
 		
 		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
 	}

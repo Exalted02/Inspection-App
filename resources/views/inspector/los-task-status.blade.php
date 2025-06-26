@@ -51,14 +51,111 @@ foreach($approvedCompleted as $result)
 
 $correctiveNeededArray = [];
 $correctiveActionArray = [];
+$correctivePlanArray = [];
 $approvedCompletedArray = [];
 
 //echo "<pre>";print_r($correctiveNeeded);die;
 $correctiveNeededArray = array_slice($correctiveNeeded, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 
-$correctiveActionArray = array_slice($correctiveAction, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 
-$approvedCompletedArray = array_slice($approvedCompleted, 0, config('custom.LOAD_MORE_LIST_SHOW'));
+foreach($correctiveAction as $action)
+{
+	if($action['lo_direct_approve'] == 1 && ($action['inspector_action'] == 0 || $action['los_action'] == 0))
+	{
+		$correctiveActionArray[] = [
+			'type' =>  $action['type'],
+			'task_id' =>  $action['task_id'],
+			'checklist_id' =>  $action['checklist_id'],
+			'subchecklist_id' =>  $action['subchecklist_id'],
+			'rejected_region' =>  $action['rejected_region'],
+			'inspector_action' =>  $action['inspector_action'],
+			'los_action' =>  $action['los_action'],
+			'second_checked' =>  $action['second_checked'],
+			'lo_direct_approve' =>  $action['lo_direct_approve'],
+			'image' =>  $action['image']
+		];
+	}
+	
+	if($action['lo_direct_approve'] == 0 && ($action['inspector_action'] == 0 || $action['los_action'] == 0))
+	{
+		$correctivePlanArray[] = [
+			'type' =>  $action['type'],
+			'task_id' =>  $action['task_id'],
+			'checklist_id' =>  $action['checklist_id'],
+			'subchecklist_id' =>  $action['subchecklist_id'],
+			'rejected_region' =>  $action['rejected_region'],
+			'inspector_action' =>  $action['inspector_action'],
+			'los_action' =>  $action['los_action'],
+			'second_checked' =>  $action['second_checked'],
+			'lo_direct_approve' =>  $action['lo_direct_approve'],
+			'image' =>  $action['image']
+		];
+	}
+	
+}
+$correctiveActionArray = array_slice($correctiveActionArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
+$correctivePlanArray = array_slice($correctivePlanArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
+
+//echo "<pre>";print_r($approvedCompleted);die;
+foreach($approvedCompleted as $appr)
+{
+	if($appr['inspector_action'] == 1 && $appr['los_action'] == 1)
+	{
+		if($appr['type'] == 'checklist')
+		{
+			if(isset($appr['image']))
+			{
+				$approvedCompletedArray[] = [
+					'type' => $appr['type'],
+					'task_id' => $appr['task_id'],
+					'checklist_id' => $appr['checklist_id'],
+					'rejected_region' => $appr['rejected_region'],
+					'image' => $appr['image'],
+					'inspector_action' => $appr['inspector_action'],
+					'los_action' => $appr['los_action']
+				];
+			}
+			else{
+				$approvedCompletedArray[] = [
+					'type' => $appr['type'],
+					'task_id' => $appr['task_id'],
+					'checklist_id' => $appr['checklist_id'],
+					'rejected_region' => $appr['rejected_region'],
+					'inspector_action' => $appr['inspector_action'],
+					'los_action' => $appr['los_action']
+				];
+			}
+		}
+		else{
+			if(isset($appr['image']))
+			{
+				$approvedCompletedArray[] = [
+					'type' => $appr['type'],
+					'task_id' => $appr['task_id'],
+					'checklist_id' => $appr['checklist_id'],
+					'subchecklist_id' => $appr['subchecklist_id'],
+					'rejected_region' => $appr['rejected_region'],
+					'image' => $appr['image'],
+					'inspector_action' => $appr['inspector_action'],
+					'los_action' => $appr['los_action']
+				];
+			}
+			else{
+				$approvedCompletedArray[] = [
+					'type' => $appr['type'],
+					'task_id' => $appr['task_id'],
+					'checklist_id' => $appr['checklist_id'],
+					'subchecklist_id' => $appr['subchecklist_id'],
+					'rejected_region' => $appr['rejected_region'],
+					'inspector_action' => $appr['inspector_action'],
+					'los_action' => $appr['los_action']
+				];
+			}
+		}
+	}
+}
+
+$approvedCompletedArray = array_slice($approvedCompletedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 
 $action_show = config('custom.LOAD_MORE_LIST_SHOW');
 $totalNeeded = $countNedded;
@@ -307,8 +404,7 @@ $totalapprcompleted = $countCompleted;
 							</div>
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
 							<span id="actionDiv">
-								@foreach($correctiveAction as $result)
-								@if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+								@foreach($correctiveActionArray as $result)
 									@php 
 										$k++;
 										$arrSubchecklist = [];
@@ -450,18 +546,17 @@ $totalapprcompleted = $countCompleted;
 										</div>
 									</div>
 									@endif
-								@endif
+								
 								@endforeach
 							</span>
-							<div class="load-more-action" id="showloadaction">Load more2</div>
+							<div class="load-more-action" id="showloadaction">Load more</div>
 								<input type="hidden" value="{{ $moreloadaction ?? '' }}" id="moreloadaction">
 							</div>
 							<div role="tabpanel" class="tab-pane" id="process_final_checked_tab">
 							<span id="planDiv">
-								@foreach($correctiveAction as $result)
-								@if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+								@foreach($correctivePlanArray as $result)
 									@php 
-										$k++;
+										$l++;
 										$arrSubchecklist = [];
 										$checklistData = App\Models\Checklist::where('id', $result['checklist_id'])->first();
 										
@@ -601,17 +696,16 @@ $totalapprcompleted = $countCompleted;
 										</div>
 									</div>
 									@endif
-								@endif
+								
 								@endforeach
 								</span>
 							
-								<div class="load-more-plan" id="showloadplan">Load more3</div>
+								<div class="load-more-plan" id="showloadplan">Load more</div>
 								<input type="hidden" value="{{ $moreloadplan ?? '' }}" id="moreloadplan">
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
 							<span id="appCompletedDiv">
-							@foreach($approvedCompleted as $result)
-								@if($result['inspector_action'] == 1 && $result['los_action'] == 1)
+							@foreach($approvedCompletedArray as $result)
 									@php 
 										$m++;
 										$arrSubchecklist = [];
@@ -718,7 +812,7 @@ $totalapprcompleted = $countCompleted;
 										</div>
 									</div>
 									@endif
-								@endif
+								
 							@endforeach
 							</span>
 							<div class="load-more-appr" id="showloadappr">Load more</div>
@@ -1124,7 +1218,7 @@ $(document ).ready(function() {
 		var moreload = $("#moreloadaction").val();
 		var tab = 'correctiveaction';
 		//alert(moreload);
-		var URL = "{{ route('ins-load-more-action-data') }}";
+		var URL = "{{ route('los-load-more-needed-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1153,14 +1247,14 @@ $(document ).ready(function() {
 		var moreload = $("#moreloadplan").val();
 		var tab = 'correctiveplan';
 		//alert(moreload);
-		var URL = "{{ route('ins-load-more-plan-data') }}";
+		var URL = "{{ route('los-load-more-needed-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
 			data: {tab:tab, location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
-				//alert(response.html);
+				//alert(response.remain);
 				if(response.remain>0)
 				{
 					$('#showloadplan').show();
@@ -1182,14 +1276,14 @@ $(document ).ready(function() {
 		var moreload = $("#moreloadappr").val();
 		var tab = 'correctiveapproved';
 		//alert(moreload);
-		var URL = "{{ route('ins-load-more-appr-data') }}";
+		var URL = "{{ route('los-load-more-needed-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
 			data: {tab:tab, location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
-				//alert(response.html);
+				//alert(response.remain);
 				if(response.remain>0)
 				{
 					$('#showloadplan').show();
@@ -1217,7 +1311,7 @@ $(document ).ready(function() {
 	{
 		$('#showloadneeded').show();
 	}
-	
+	//alert(totalAction);alert(action_show);
 	if(parseInt(totalAction) > parseInt(action_show))
 	{
 		$('#showloadaction').show();
