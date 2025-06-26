@@ -135,7 +135,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('ins-load-more-plan-data', [DashboardInspectorController::class, 'ins_load_more_plan_data'])->name('ins-load-more-plan-data');
 	Route::post('ins-load-more-appr-data', [DashboardInspectorController::class, 'ins_load_more_appr_data'])->name('ins-load-more-appr-data');
 	
-	Route::post('los-load-more-needed-data', [DashboardInspectorController::class, 'los_load_more_needed_data'])->name('los-load-more-needed-data');
+	Route::post('los-load-more-needed-data', [DashboardInspectorController::class, 'los_load_more_data'])->name('los-load-more-needed-data');
 	
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');

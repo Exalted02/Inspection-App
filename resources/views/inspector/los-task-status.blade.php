@@ -302,7 +302,7 @@ $totalapprcompleted = $countCompleted;
 								@endif
 								@endforeach
 							</span>
-							<div class="load-more-needed" id="showloadneeded">Load more1</div>
+							<div class="load-more-needed" id="showloadneeded">Load more</div>
 								<input type="hidden" value="{{ $moreloadneeded ?? '' }}" id="moreloadneeded">
 							</div>
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
@@ -456,8 +456,6 @@ $totalapprcompleted = $countCompleted;
 							<div class="load-more-action" id="showloadaction">Load more2</div>
 								<input type="hidden" value="{{ $moreloadaction ?? '' }}" id="moreloadaction">
 							</div>
-							
-							</div>
 							<div role="tabpanel" class="tab-pane" id="process_final_checked_tab">
 							<span id="planDiv">
 								@foreach($correctiveAction as $result)
@@ -605,11 +603,10 @@ $totalapprcompleted = $countCompleted;
 									@endif
 								@endif
 								@endforeach
-							</span>
+								</span>
 							
 								<div class="load-more-plan" id="showloadplan">Load more3</div>
 								<input type="hidden" value="{{ $moreloadplan ?? '' }}" id="moreloadplan">
-								
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
 							<span id="appCompletedDiv">
@@ -724,9 +721,8 @@ $totalapprcompleted = $countCompleted;
 								@endif
 							@endforeach
 							</span>
-							<div class="load-more-appr" id="showloadappr">Load more4</div>
+							<div class="load-more-appr" id="showloadappr">Load more</div>
 								<input type="hidden" value="{{ $moreloadappr ?? '' }}" id="moreloadappr">
-							
 						</div>
 						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>	
 					</div>
@@ -1097,12 +1093,13 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-needed', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadneeded").val();
+		var tab = 'correctiveneeded';
 		//alert(moreload);
 		var URL = "{{ route('los-load-more-needed-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {tab:tab, location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
@@ -1125,12 +1122,13 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-action', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadaction").val();
+		var tab = 'correctiveaction';
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-action-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {tab:tab, location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
@@ -1153,12 +1151,13 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-plan', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadplan").val();
+		var tab = 'correctiveplan';
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-plan-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {tab:tab, location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
@@ -1181,12 +1180,13 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-appr', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadappr").val();
+		var tab = 'correctiveapproved';
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-appr-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {tab:tab, location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
@@ -1215,25 +1215,21 @@ $(document ).ready(function() {
 	
 	if(parseInt(totalNeeded) > parseInt(action_show))
 	{
-		//alert('ok1');
 		$('#showloadneeded').show();
 	}
 	
 	if(parseInt(totalAction) > parseInt(action_show))
 	{
-		//alert('ok2');
 		$('#showloadaction').show();
 	}
 	
 	if(parseInt(totalPlan) > parseInt(action_show))
 	{
-		//alert('ok3');
 		$('#showloadplan').show();
 	}
-	//alert(totalapprcompleted);alert(action_show);
+	
 	if(parseInt(totalapprcompleted) > parseInt(action_show))
 	{
-		//alert('ok4');
 		$('#showloadappr').show();
 	}
 });
