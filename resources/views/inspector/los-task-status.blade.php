@@ -1189,7 +1189,7 @@ $(document ).ready(function() {
 		var moreload = $("#moreloadneeded").val();
 		var tab = 'correctiveneeded';
 		//alert(moreload);
-		var URL = "{{ route('los-load-more-needed-data') }}";
+		var URL = "{{ route('los-load-more-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1218,7 +1218,7 @@ $(document ).ready(function() {
 		var moreload = $("#moreloadaction").val();
 		var tab = 'correctiveaction';
 		//alert(moreload);
-		var URL = "{{ route('los-load-more-needed-data') }}";
+		var URL = "{{ route('los-load-more-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1247,7 +1247,7 @@ $(document ).ready(function() {
 		var moreload = $("#moreloadplan").val();
 		var tab = 'correctiveplan';
 		//alert(moreload);
-		var URL = "{{ route('los-load-more-needed-data') }}";
+		var URL = "{{ route('los-load-more-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1276,7 +1276,7 @@ $(document ).ready(function() {
 		var moreload = $("#moreloadappr").val();
 		var tab = 'correctiveapproved';
 		//alert(moreload);
-		var URL = "{{ route('los-load-more-needed-data') }}";
+		var URL = "{{ route('los-load-more-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
