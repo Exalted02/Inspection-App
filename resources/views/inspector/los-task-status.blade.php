@@ -49,6 +49,23 @@ foreach($approvedCompleted as $result)
 	}
 }
 
+$correctiveNeededArray = [];
+$correctiveActionArray = [];
+$approvedCompletedArray = [];
+
+//echo "<pre>";print_r($correctiveNeeded);die;
+$correctiveNeededArray = array_slice($correctiveNeeded, 0, config('custom.LOAD_MORE_LIST_SHOW'));
+
+$correctiveActionArray = array_slice($correctiveAction, 0, config('custom.LOAD_MORE_LIST_SHOW'));
+
+$approvedCompletedArray = array_slice($approvedCompleted, 0, config('custom.LOAD_MORE_LIST_SHOW'));
+
+$action_show = config('custom.LOAD_MORE_LIST_SHOW');
+$totalNeeded = $countNedded;
+$totalAction = $countAction;
+$totalPlan = $countPlan;
+$totalapprcompleted = $countCompleted;
+
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -145,8 +162,8 @@ foreach($approvedCompleted as $result)
 								Not have any data
 							</div>
 							<div class="tab-pane corrective_needed_tab" id="corrective_needed_tab">
-							
-								@foreach($correctiveNeeded as $result)
+							<span id="neddedDiv">
+								@foreach($correctiveNeededArray as $result)
 								@if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
 									@php 
 										$j++;
@@ -284,9 +301,12 @@ foreach($approvedCompleted as $result)
 									@endif
 								@endif
 								@endforeach
+							</span>
+							<div class="load-more-needed" id="showloadneeded">Load more1</div>
+								<input type="hidden" value="{{ $moreloadneeded ?? '' }}" id="moreloadneeded">
 							</div>
 							<div class="tab-pane corrective_checked_tab" id="corrective_checked_tab">
-							
+							<span id="actionDiv">
 								@foreach($correctiveAction as $result)
 								@if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 									@php 
@@ -432,8 +452,14 @@ foreach($approvedCompleted as $result)
 									@endif
 								@endif
 								@endforeach
+							</span>
+							<div class="load-more-action" id="showloadaction">Load more2</div>
+								<input type="hidden" value="{{ $moreloadaction ?? '' }}" id="moreloadaction">
+							</div>
+							
 							</div>
 							<div role="tabpanel" class="tab-pane" id="process_final_checked_tab">
+							<span id="planDiv">
 								@foreach($correctiveAction as $result)
 								@if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 									@php 
@@ -579,9 +605,14 @@ foreach($approvedCompleted as $result)
 									@endif
 								@endif
 								@endforeach
+							</span>
+							
+								<div class="load-more-plan" id="showloadplan">Load more3</div>
+								<input type="hidden" value="{{ $moreloadplan ?? '' }}" id="moreloadplan">
 								
 							</div>
 							<div role="tabpanel" class="tab-pane" id="approved_final_checked_tab">
+							<span id="appCompletedDiv">
 							@foreach($approvedCompleted as $result)
 								@if($result['inspector_action'] == 1 && $result['los_action'] == 1)
 									@php 
@@ -692,7 +723,10 @@ foreach($approvedCompleted as $result)
 									@endif
 								@endif
 							@endforeach
-							</div>
+							</span>
+							<div class="load-more-appr" id="showloadappr">Load more4</div>
+								<input type="hidden" value="{{ $moreloadappr ?? '' }}" id="moreloadappr">
+							
 						</div>
 						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>	
 					</div>
@@ -742,7 +776,13 @@ foreach($approvedCompleted as $result)
 	<input type="hidden" value="{{ $k ?? ''}}" id="norecord_k">
 	<input type="hidden" value="{{ $l ?? ''}}" id="norecord_l">
 	<input type="hidden" value="{{ $m ?? ''}}" id="norecord_m">
-
+	
+	<input type="hidden" value="{{ $action_show ?? ''}}" id="action_show">
+	<input type="hidden" value="{{ $totalNeeded ?? ''}}" id="totalNeeded">
+	<input type="hidden" value="{{ $totalAction ?? ''}}" id="totalAction">
+	<input type="hidden" value="{{ $totalPlan ?? ''}}" id="totalPlan">
+	<input type="hidden" value="{{ 
+$totalapprcompleted ?? ''}}" id="totalapprcompleted">
 	
 @endsection 
 @section('scripts')
@@ -1053,6 +1093,149 @@ $(document ).ready(function() {
 		localStorage.removeItem('insFinalRejected');
 	}
 	
+	
+	$(document).on('click', '.load-more-needed', function(){
+		var location_id = $('#location_id').val();
+		var moreload = $("#moreloadneeded").val();
+		//alert(moreload);
+		var URL = "{{ route('los-load-more-needed-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				if(response.remain>0)
+				{
+					$('#showloadneeded').show();
+				}
+				else
+				{
+					$('#showloadneeded').hide();
+				}
+				$("#moreloadneeded").val(response.loadmore)
+				$("#neddedDiv").append(response.html);
+				
+			},
+		});
+		
+	});
+	
+	$(document).on('click', '.load-more-action', function(){
+		var location_id = $('#location_id').val();
+		var moreload = $("#moreloadaction").val();
+		//alert(moreload);
+		var URL = "{{ route('ins-load-more-action-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				if(response.remain>0)
+				{
+					$('#showloadaction').show();
+				}
+				else
+				{
+					$('#showloadaction').hide();
+				}
+				$("#moreloadaction").val(response.loadmore)
+				$("#actionDiv").append(response.html);
+				
+			},
+		});
+		
+	});
+	
+	$(document).on('click', '.load-more-plan', function(){
+		var location_id = $('#location_id').val();
+		var moreload = $("#moreloadplan").val();
+		//alert(moreload);
+		var URL = "{{ route('ins-load-more-plan-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				if(response.remain>0)
+				{
+					$('#showloadplan').show();
+				}
+				else
+				{
+					$('#showloadplan').hide();
+				}
+				$("#moreloadplan").val(response.loadmore)
+				$("#planDiv").append(response.html);
+				
+			},
+		});
+		
+	});
+	
+	$(document).on('click', '.load-more-appr', function(){
+		var location_id = $('#location_id').val();
+		var moreload = $("#moreloadappr").val();
+		//alert(moreload);
+		var URL = "{{ route('ins-load-more-appr-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				if(response.remain>0)
+				{
+					$('#showloadplan').show();
+				}
+				else
+				{
+					$('#showloadappr').hide();
+				}
+				$("#moreloadappr").val(response.loadmore)
+				$("#appCompletedDiv").append(response.html);
+				
+			},
+		});
+		
+	});
+	
+	// -- load more button first time check -- 
+	var action_show = $('#action_show').val();
+	var totalNeeded = $('#totalNeeded').val();
+	var totalAction = $('#totalAction').val();
+	var totalPlan = $('#totalPlan').val();
+	var totalapprcompleted = $('#totalapprcompleted').val();
+	
+	if(parseInt(totalNeeded) > parseInt(action_show))
+	{
+		//alert('ok1');
+		$('#showloadneeded').show();
+	}
+	
+	if(parseInt(totalAction) > parseInt(action_show))
+	{
+		//alert('ok2');
+		$('#showloadaction').show();
+	}
+	
+	if(parseInt(totalPlan) > parseInt(action_show))
+	{
+		//alert('ok3');
+		$('#showloadplan').show();
+	}
+	//alert(totalapprcompleted);alert(action_show);
+	if(parseInt(totalapprcompleted) > parseInt(action_show))
+	{
+		//alert('ok4');
+		$('#showloadappr').show();
+	}
 });
 </script>
 @endsection

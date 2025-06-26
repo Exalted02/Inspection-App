@@ -4267,4 +4267,8 @@ class DashboardInspectorController extends Controller
 		
 		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
 	}
+	public function los_load_more_needed_data(Request $request)
+	{
+		
+	}
 }
