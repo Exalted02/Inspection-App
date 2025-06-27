@@ -17,7 +17,7 @@ $location_name = $locationData ? $locationData->location_name : '';
 					<h3 class="page-title">{{ __('category') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ $location_name ?? '' }}</li>
+						<li class="breadcrumb-item active"><a class="breadcrumb-item active" href="javascript:history.back()">{{ $location_name ?? '' }}</a></li>
 					</ul>
 				</div>
 				<div class="col-md-8 float-end ms-auto">
