@@ -177,15 +177,11 @@ $(document).ready(function() {
 				Swal.fire({
 				  html: '<div class="swal-category-message">Category not present for this location, please add from admin</div>',
 				  icon: "warning",
-				  //showCancelButton: true,
-				  //cancelButtonText: "Cancel",
-				  //confirmButtonText: "Save and exit",
 				  confirmButtonColor: "#0b2b57", 
 				  cancelButtonColor: "#e0e0e0",
 				  customClass: {
 					cancelButton: 'swal-cancel-black',
-					//confirmButton : 'swal-save-exist-black'
-				  }
+					}
 				}).then((result) => {
 				  if (result.isConfirmed) {
 					//saveAndExit(); // your function
