@@ -24,7 +24,7 @@ $userFolderName = ''
 				<div class="col-md-8 float-end ms-auto">
 					<div class="d-flex title-head">
 						<div class="view-icons">
-							<a href="{{ route('admin.inspector') }}" class="grid-view btn btn-link"><i class="las la-redo-alt"></i></a>
+							<a href="{{ route('admin.manage-company-users', ['id'=>$company_id]) }}" class="grid-view btn btn-link"><i class="las la-redo-alt"></i></a>
 							<a href="#" class="list-view btn btn-link" id="collapse-header"><i class="las la-expand-arrows-alt"></i></a>
 							<a href="javascript:void(0);" class="list-view btn btn-link" id="filter_search"><i class="las la-filter"></i></a>
 						</div>
@@ -239,9 +239,9 @@ $userFolderName = ''
 		</div>
 	</div>
 </div>
-<input type="text" id="companyid" value="{{ $company_id ?? '' }}">
+<input type="hidden" id="companyid" value="{{ $company_id ?? '' }}">
 	<!-- /Page Content -->
-<input type="text" id="check_location_by_user_type" value="{{ route('admin.check-location-by-user-type') }}">
+<input type="hidden" id="check_location_by_user_type" value="{{ route('admin.check-location-by-user-type') }}">
 
 @include('modal.common')
 @include('admin.modal.inspector-modal')

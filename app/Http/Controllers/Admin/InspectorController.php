@@ -28,7 +28,12 @@ class InspectorController extends Controller
 			$has_search  = 1;
 		}
 		$data['has_search'] = $has_search;
-		$data['company_id'] = $request->src_company_id ?? '';
+		
+		$data['company_id'] = $id;
+		if(!empty($request->src_company_id))
+		{
+			$data['company_id'] = $request->src_company_id ?? '';
+		}
 		
 		$dataArr = User::with('get_company'); 
 		
@@ -86,13 +91,14 @@ class InspectorController extends Controller
 		{
 			$dataArr->where('company_name', $request->src_company_id)->where('status', $request->search_status);
 		} else {
-			$dataArr->where('company_name', $request->src_company_id)->where('status', '!=', 2);
+			$dataArr->where('company_name', $id)->where('status', '!=', 2);
 		}
 		
 		$dataArr->orderBy('name', 'ASC'); 
 		$data['inspector'] = $dataArr->get();
 		$data['companies'] = Manage_company::where('status','!=',2)->get();
 		$data['locations'] = Manage_location::where('status','!=',2)->get();
+		
 		return view('admin.location.inspector',$data);
 	}
 	

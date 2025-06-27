@@ -219,11 +219,11 @@ class MasterController extends Controller
 		{
 			$dataArr->where('company_id', $request->src_company_id)->where('status', $request->search_status);
 		} 
-		/*else {
-			$dataArr->where('company_id', $request->src_company_id)->where('status', '!=', 2);
-		}*/
+		else {
+			$dataArr->where('company_id', $id)->where('status', '!=', 2);
+		}
 		
-		$dataArr->where('company_id', $id)->where('status', '!=', 2);
+		//$dataArr->where('company_id', $id)->where('status', '!=', 2);
 		//$dataArr->orderBy('location_name', 'ASC'); 
 		
 		$data['manage_location'] = $dataArr->get();
