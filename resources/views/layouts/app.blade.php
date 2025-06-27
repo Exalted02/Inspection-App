@@ -306,8 +306,8 @@
 					var app_url =  "{{ env('APP_URL') }}";
 					var page_url1 = app_url + '/lo-task-status';
 					var page_url2 = app_url+'/location-owner-checklist-question-reply';
-					var page_url3 = '/location-owner-subchecklist-question-reply';
-					var page_url4 = '/lo-task-status';
+					var page_url3 =app_url +'/location-owner-subchecklist-question-reply';
+					
 					
 					var page_url5 = app_url + '/location-owner-subchecklist-rejected-question-reply/';
 					
@@ -319,10 +319,15 @@
 					{
 						var task_id = $('#task_id').val();
 						setTimeout(function() {
+							var baseUrl = "{{ url('/inspector-dashboard') }}";
+							var redirectUrl = baseUrl; 
+							window.location.href = redirectUrl;
+						}, 100);
+						/*setTimeout(function() {
 							var baseUrl = "{{ url('/lo-task-status') }}";
 							var redirectUrl = baseUrl + '/' + location_id + '/' +  active; 
 							window.location.href = redirectUrl;
-						}, 100);
+						}, 100);*/
 					}
 					else if(current_url.includes(page_url2))
 					{
@@ -337,14 +342,6 @@
 						setTimeout(function() {
 							var baseUrl = "{{ url('/lo-task-status') }}";
 							var redirectUrl = baseUrl + '/' + location_id + '/' +  active;
-							window.location.href = redirectUrl;
-						}, 100);
-					}
-					else if(current_url.includes(page_url4))
-					{
-						setTimeout(function() {
-							var baseUrl = "{{ url('/inspector-dashboard') }}";
-							var redirectUrl = baseUrl;
 							window.location.href = redirectUrl;
 						}, 100);
 					}
