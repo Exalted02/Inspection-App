@@ -162,7 +162,7 @@ $(document).on('click','.edit-inspector', function(){
 			let selectedLocations = Array.isArray(response.location_data)? response.location_data : String(response.location_data).split(',');
 			selectedLocations = selectedLocations.map(String);
 			
-			$('#user_type').prop('disabled', true);
+			$('#user_type').prop('readonly', true);
 			
 			$('input[name="location[]"]').each(function () {
 				let val = $(this).val().toString();
