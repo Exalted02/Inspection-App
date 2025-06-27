@@ -51,13 +51,15 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 	Route::get('/manage-company-users/{id}', [InspectorController::class, 'index'])->name('manage-company-users');
 	Route::post('/manage-company-users/{id}', [InspectorController::class, 'index'])->name('manage-company-users');
 	
-	Route::get('/manage-location-wise-category/{id}', [CategoryController::class, 'manage_location_wise_category'])->name('manage-location-wise-category');
+	//Route::get('/manage-location-wise-category/{id}', [CategoryController::class, 'manage_location_wise_category'])->name('manage-location-wise-category');
+	Route::get('/manage-location-wise-category/{id}', [CategoryController::class, 'index'])->name('manage-location-wise-category');
 	Route::post('/manage-location-wise-category/{id}', [CategoryController::class, 'index'])->name('manage-location-wise-category');
 	
 	Route::get('/manage-location-wise-subcategory/{id}', [SubCategoryController::class, 'manage_location_wise_subcategory'])->name('manage-location-wise-subcategory');
 	Route::post('/manage-location-wise-subcategory/{id}', [SubCategoryController::class, 'index'])->name('manage-location-wise-subcategory');
 	
-	Route::get('/manage-location-wise-category-checklist/{catid}', [ChecklistController::class, 'manage_location_wise_category_checklist'])->name('manage-location-wise-category-checklist');
+	//Route::get('/manage-location-wise-category-checklist/{catid}', [ChecklistController::class, 'manage_location_wise_category_checklist'])->name('manage-location-wise-category-checklist');
+	Route::get('/manage-location-wise-category-checklist/{catid}', [ChecklistController::class, 'index'])->name('manage-location-wise-category-checklist');
 	Route::post('/manage-location-wise-category-checklist/{catid}', [ChecklistController::class, 'index'])->name('manage-location-wise-category-checklist');
 	
 	Route::get('/manage-location-wise-subcategory-subchecklist/{id}', [SubChecklistController::class, 'manage_location_wise_subcategory_subchecklist'])->name('manage-location-wise-subcategory-subchecklist');

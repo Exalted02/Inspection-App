@@ -14,7 +14,7 @@ class ChecklistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, $catid='')
 	{
 		$has_search  = 0;
 		if($request->all() && count($request->all()) > 0)
@@ -22,12 +22,19 @@ class ChecklistController extends Controller
 			$has_search  = 1;
 		}
 		$data['has_search'] = $has_search;
-		$data['category_id'] = $request->src_category;
+		
+		$data['category_id'] = $catid;
+		if(!empty($request->src_category))
+		{
+			$data['category_id'] = $request->src_category;
+		}
 		//$data['subcategory_id'] = $request->src_subcategory;
 		
-		$dataArr = Checklist::with('get_category','get_subcategory');
+		//$dataArr = Checklist::with('get_category','get_subcategory');
+		$dataArr = Checklist::with('get_category'); // 27-06-2025
 		
-		$dataArr->where('category_id', $request->src_category);
+		//$dataArr->where('category_id', $request->src_category);
+		$dataArr->where('category_id', $catid); // new added 27-06-2025
 		
 		//$dataArr->where('subcategory_id', $request->src_subcategory);
 		

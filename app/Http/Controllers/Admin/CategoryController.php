@@ -26,12 +26,17 @@ class CategoryController extends Controller
 		}
 		$data['has_search'] = $has_search;
 		
-		$data['location_id'] = $request->src_location_id;
+		$data['location_id'] = $id;
 		
-		$dataArr = Category::whereHas('locationCategories', function ($q) use ($id) {
+		if(!empty($request->src_location_id))
+		{
+			$data['location_id'] = $request->src_location_id;
+		}
+		
+		/*$dataArr = Category::whereHas('locationCategories', function ($q) use ($id) {
 			$q->where('location_id', $id);
-		});
-		//$dataArr = Category::query();
+		});*/
+		$dataArr = Category::query(); // 27-06-2025
 		
 		if($request->search_name)
 		{
@@ -75,6 +80,7 @@ class CategoryController extends Controller
 			$dataArr->where('status', '!=', 2);
 		}
 		
+		$dataArr->where('location_id', $id); // new added 27-06-2025
 		$dataArr->orderBy('name', 'ASC'); 
 		$data['category'] = $dataArr->get();
 		return view('admin.location.category',$data);
