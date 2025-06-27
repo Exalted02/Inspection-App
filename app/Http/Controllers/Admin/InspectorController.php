@@ -198,7 +198,7 @@ class InspectorController extends Controller
 		}
 		
 		$userFolderName = $request->post('user_type') ==1 ? 'inspector' : ($request->post('user_type') == 2 ? 'locationowner' : ($request->post('user_type') == 3 ? 'locationownersupervisor' : 'management'));
-		//echo $userFolderName; die;
+		
 		$fileName = '';
 		if($request->hasFile('avatar')) {
 			$destinationPath = public_path('uploads/profile/' . $id .'/'. $userFolderName .'/');

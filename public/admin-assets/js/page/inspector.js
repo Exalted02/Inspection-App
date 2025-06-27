@@ -85,6 +85,7 @@ $(document).ready(function() {
 			//var form = $("#frmlocation");
 			var URL = $('#frminspector').attr('action');
 			var id = $('#id').val();
+			$('#user_type').prop('disabled', false); 
 			
 			let formData = new FormData($('#frminspector')[0]);
 			formData.append('_token', csrfToken);
@@ -162,7 +163,7 @@ $(document).on('click','.edit-inspector', function(){
 			let selectedLocations = Array.isArray(response.location_data)? response.location_data : String(response.location_data).split(',');
 			selectedLocations = selectedLocations.map(String);
 			
-			$('#user_type').prop('readonly', true);
+			$('#user_type').prop('disabled', true);
 			
 			$('input[name="location[]"]').each(function () {
 				let val = $(this).val().toString();

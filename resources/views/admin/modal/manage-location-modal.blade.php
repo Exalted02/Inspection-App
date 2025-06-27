@@ -126,8 +126,14 @@
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
-												<label class="col-form-label">{{ __('image') }}</label>
-												<input class="form-control" type="file" name="location_image" id="location_image" accept="image/*">
+												<label for="location_image" class="col-form-label">{{ __('image') }}</label>
+												<div class="upload-wrapper">
+												<input class="form-control" type="file" name="location_image" id="location_image" accept="image/*" style="display:none;">
+												<label for="location_image" class="profile-upload-label">
+													<i class="fa fa-upload task-upload-icon"></i>
+													<span class="task-upload-text">Upload image</span>
+												</label>
+												</div>
 												<span id="taskimage_id_error" style="display:none;color: red;">please </span>
 												{{--<div class="invalid-feedback">{{ __('please_enter') }} {{ __('image')}}.</div>--}}
 											</div>
