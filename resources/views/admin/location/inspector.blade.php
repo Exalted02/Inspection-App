@@ -264,7 +264,7 @@ $(document).ready(function() {
 	});
 	
 	const translations = {
-        addlocation: @json(__('add_inspector')),
+        addlocation: @json(__('Add user')),
     };
 	
 	$(document).on('click','.add_inspector', function(){
