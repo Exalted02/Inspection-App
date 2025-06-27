@@ -221,6 +221,32 @@ class InspectorController extends Controller
 				}
 			}
 		}
+		else
+		{
+			
+			if($request->post('id') == 0)
+			{
+				$filename = 'avatar.png';
+				$sourcePath = public_path('uploads/profile/' . $filename);
+				
+				$destinationPath = public_path('uploads/profile/' . $id .'/'.$userFolderName .'/'. $filename);
+			
+				
+				if (!file_exists(dirname($destinationPath))) {
+					mkdir(dirname($destinationPath), 0777, true);
+				}
+
+				if (file_exists($sourcePath)) {
+					copy($sourcePath, $destinationPath);
+				}
+				
+				$updtmodel= User::find($id);
+				$updtmodel->profile_image = 'avatar.png';
+				$updtmodel->save();
+			}
+		}
+		
+		
 		
 		$backgroundImgfileName = '';
 		if($request->hasFile('backgroung_image')) {
@@ -242,6 +268,29 @@ class InspectorController extends Controller
 				if (file_exists($path)) {
 					unlink($path);
 				}
+			}
+		}
+		else
+		{
+			
+			if($request->post('id') == 0)
+			{
+				$filename = 'bg.png';
+				$sourcePath = public_path('uploads/profile/' . $filename);
+				
+				$destinationPath = public_path('uploads/profile/' . $id .'/'.$userFolderName .'/'. $filename);
+				
+				if (!file_exists(dirname($destinationPath))) {
+					mkdir(dirname($destinationPath), 0777, true);
+				}
+
+				if (file_exists($sourcePath)) {
+					copy($sourcePath, $destinationPath);
+				}
+				
+				$updtmodel= User::find($id);
+				$updtmodel->background_image = 'bg.png';
+				$updtmodel->save();
 			}
 		}
 		

@@ -95,24 +95,35 @@
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
-												<label class="col-form-label">{{ __('avatar') }}</label>
-												<input class="form-control" type="file" name="avatar" id="avatar" accept="image/*">
+												<label for="avatar" class="col-form-label">{{ __('avatar') }}</label>
+												<div class="upload-wrapper">
+												<input class="form-control" type="file" name="avatar" id="avatar" accept="image/*" style="display:none;">
+												<label for="avatar" class="profile-upload-label">
+													<i class="fa fa-upload task-upload-icon"></i>
+													<span class="task-upload-text">Upload image</span>
+												</label>
+												</div>
 												{{--<div class="invalid-feedback">{{ __('please_enter') }} {{ __('image')}}.</div>--}}
 												<span id="avatar_id_error" style="display:none;  color: red;">please </span>
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
-											<label class="col-form-label"></label>
-											<img id="preview" src="#" alt="" style="max-width: 70px; margin-top: 25px; display: none;" />
+											<img id="preview" src="{{ url('uploads/profile/avatar.png')}}" alt="" width="80" height="80" style="margin-top: 10px;"/>
 											</div>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
-												<label class="col-form-label">{{ __('backgroung_image') }}</label>
-												<input class="form-control" type="file" name="backgroung_image" id="backgroung_image" accept="image/*">
+												<label for="backgroung_image" class="col-form-label">{{ __('backgroung_image') }}</label>
+												<div class="upload-wrapper">
+												<input class="form-control" type="file" name="backgroung_image" id="backgroung_image" accept="image/*" style="display:none;">
+												<label for="backgroung_image" class="profile-upload-label">
+													<i class="fa fa-upload task-upload-icon"></i>
+													<span class="task-upload-text">Upload image</span>
+												</label>
+												</div>
 												{{--<div class="invalid-feedback">{{ __('please_enter') }} {{ __('backgroung_image')}}.</div>--}}
 												<span id="backgroung_image_id_error" style="display:none;  color: red;">please </span>
 											</div>
@@ -120,7 +131,7 @@
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
 											<label class="col-form-label"></label>
-											<img id="preview_backgrnd" src="#" alt="" style="max-width: 70px; margin-top: 25px; display: none;" />
+											<img id="preview_backgrnd" src="{{ url('uploads/profile/bg.png')}}" alt="" width="80" height="80" style="margin-top: 10px;"/>
 											</div>
 										</div>
 									</div>

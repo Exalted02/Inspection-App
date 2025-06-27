@@ -68,7 +68,7 @@ $(document).ready(function() {
 			isValid = false;
 		}
 		
-		if(edit_id == '')
+		/*if(edit_id == '')
 		{
 			if (avatar === 0) {
 				$('#avatar_id_error').text('Please select avatar').fadeIn().delay(5000).fadeOut();
@@ -79,7 +79,7 @@ $(document).ready(function() {
 				$('#backgroung_image_id_error').text('Please select background image').fadeIn().delay(5000).fadeOut();
 				isValid = false;
 			}
-		}
+		}*/
 		
 		if (isValid) {
 			//var form = $("#frmlocation");
