@@ -15,7 +15,7 @@ class SubChecklistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, $id='')
 	{
 		$has_search  = 0;
 		if($request->all() && count($request->all()) > 0)
@@ -23,13 +23,21 @@ class SubChecklistController extends Controller
 			$has_search  = 1;
 		}
 		$data['has_search'] = $has_search;
-		$data['checklist_id'] = $request->src_checklist;
+		
+		$data['checklist_id'] = $id;
+		if(!empty($request->src_checklist))
+		{
+			$data['checklist_id'] = $request->src_checklist;
+		}
 		
 		$dataArr = Subchecklist::with('get_checklist');
 		
 		if($request->src_checklist)
 		{
 			$dataArr->where('checklist_id', 'like', '%' . $request->src_checklist . '%');
+		}
+		else{
+			$dataArr->where('checklist_id', $id);
 		}
 		
 		if($request->search_name)
