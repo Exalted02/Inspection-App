@@ -175,18 +175,15 @@ $(document).ready(function() {
 			@if(empty($locationWisecategory))
 			{
 				Swal.fire({
-				  html: '<div class="swal-category-message">Category not present for this location, please add from admin</div>',
-				  icon: "warning",
-				  confirmButtonColor: "#0b2b57", 
-				  cancelButtonColor: "#e0e0e0",
-				  customClass: {
-					cancelButton: 'swal-cancel-black',
-					}
-				}).then((result) => {
-				  if (result.isConfirmed) {
-					//saveAndExit(); // your function
-				  }
-				});
+					  icon: "warning",
+					  title: "Category not present for this location, please add from admin",
+					  
+					  confirmButtonColor: "#0b2b57",
+					  customClass: {
+						confirmButton : 'swal-save-exist-black'
+					  }
+					  
+					});
 			}
 			@endif
 			return false;
