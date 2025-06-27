@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 @php 
- //echo "<pre>";print_r($categoryData);die;
+ //echo "<pre>";print_r($locationWisecategory );die;
  
  $rejected_region = '';
  
@@ -66,6 +66,7 @@
 										<button type="button" class="task-img-delete" id="delete-image">×</button>
 									</div>
 								</div>
+								@if(!empty($locationWisecategory))
 								<div class="row form-group">
 									<div class="col-md-12">
 										<label><strong>Select Category</strong></label>
@@ -83,7 +84,9 @@
 										</div>
 									</div>
 								</div>
-								
+								@else
+									<span class="category-message">Category not present for this location, please add from admin</span>
+								@endif
 								
 							<div class="sticky-footer save-task">
 								<button type="button">Add Task</button>
@@ -99,6 +102,7 @@
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
 	flatpickr("#set_time", {
@@ -167,8 +171,28 @@ $(document).ready(function() {
 		
 		if (selectedLocations.length === 0) {
 			$('#tasktcategory_id_error').text('Please select category').fadeIn().delay(2000).fadeOut();
-			/*$('input[name="location[]"]').first().addClass('is-invalid');
-			$('input[name="location[]"]').first().closest('.select-people-checkbox-s').siblings('.invalid-feedback').show();*/
+			
+			@if(empty($locationWisecategory))
+			{
+				Swal.fire({
+				  html: '<div class="swal-category-message">Category not present for this location, please add from admin</div>',
+				  icon: "warning",
+				  //showCancelButton: true,
+				  //cancelButtonText: "Cancel",
+				  //confirmButtonText: "Save and exit",
+				  confirmButtonColor: "#0b2b57", 
+				  cancelButtonColor: "#e0e0e0",
+				  customClass: {
+					cancelButton: 'swal-cancel-black',
+					//confirmButton : 'swal-save-exist-black'
+				  }
+				}).then((result) => {
+				  if (result.isConfirmed) {
+					//saveAndExit(); // your function
+				  }
+				});
+			}
+			@endif
 			return false;
 		}
 		

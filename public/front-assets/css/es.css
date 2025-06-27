@@ -1612,5 +1612,25 @@ body {
 	margin: 20px auto;
 	display:none;
 }
-
+.category-message {
+	font-size: 21px;
+	color: crimson;
+	font-weight: bold;
+}
+.swal-category-cancel {
+  color: #000 !important;
+  /*padding: 2px 5px;*/
+  height: 35px;
+  width: 111px;
+  border-radius: 10px;
+  margin-left: 100pxpx;
+  font-size: 13px;
+}
+.swal-category-message {
+  font-size: 18px;
+  color: #333;
+  margin-top: 10px;
+  text-align:left;
+  font-weight: bold;
+}
 
