@@ -23,7 +23,7 @@ $company_name = $companyData ? $companyData->company_name : '';
 				<div class="col-md-8 float-end ms-auto">
 					<div class="d-flex title-head">
 						<div class="view-icons">
-							<a href="{{ route('admin.manage-location') }}" class="grid-view btn btn-link"><i class="las la-redo-alt"></i></a>
+							<a href="{{ route('admin.manage-company-location', ['id'=>$company_id] ) }}" class="grid-view btn btn-link"><i class="las la-redo-alt"></i></a>
 							<a href="#" class="list-view btn btn-link" id="collapse-header"><i class="las la-expand-arrows-alt"></i></a>
 							<a href="javascript:void(0);" class="list-view btn btn-link" id="filter_search"><i class="las la-filter"></i></a>
 						</div>
@@ -138,7 +138,7 @@ $company_name = $companyData ? $companyData->company_name : '';
 						<li>
 							<div class="form-sort">
 								<i class="las la-sort-alpha-up-alt"></i>
-								<form  method="post" action="" id="search-sortby">
+								<form  method="post" action="{{ route('admin.manage-company-location', ['id' => $company_id])}}" id="search-sortby">
 						@csrf
 								<select class="select search-sort-by form-control" name="search_sort_by">
 									<option value="">{{ __('select_sort_by') }}</option>

@@ -153,7 +153,7 @@ class MasterController extends Controller
 		echo json_encode($data);
 	}
 	
-	public function manage_location(Request $request)
+	public function manage_location(Request $request, $id='')
 	{
 		$has_search  = 0;
 		$data['company_location_id'] = '';
@@ -167,6 +167,7 @@ class MasterController extends Controller
 		$dataArr = Manage_location::with('get_country','get_state','get_city');
 		if($request->search_name)
 		{
+			//echo $request->search_name; die;
 			$dataArr->where('location_name', 'like', '%' . $request->search_name . '%');
 		}
 		
@@ -197,6 +198,7 @@ class MasterController extends Controller
 		
 		if($request->search_sort_by)
 		{
+			
 			if($request->search_sort_by == 'ASC' || $request->search_sort_by == 'DESC')
 			{
 				$dataArr->orderBy('location_name', $request->search_sort_by);
@@ -216,11 +218,14 @@ class MasterController extends Controller
 		if($request->has('search_status') && $request->search_status !== '' && isset($request->search_status))
 		{
 			$dataArr->where('company_id', $request->src_company_id)->where('status', $request->search_status);
-		} else {
+		} 
+		/*else {
 			$dataArr->where('company_id', $request->src_company_id)->where('status', '!=', 2);
-		}
+		}*/
 		
-		$dataArr->orderBy('location_name', 'ASC'); 
+		$dataArr->where('company_id', $id)->where('status', '!=', 2);
+		//$dataArr->orderBy('location_name', 'ASC'); 
+		
 		$data['manage_location'] = $dataArr->get();
 		$data['countries'] = Countries::all();
 		
@@ -231,6 +236,7 @@ class MasterController extends Controller
 		$data['src_city_id'] = $request->src_city_id;
 		
 		$data['categories'] = Category::where('status','!=',2)->get();
+		$data['company_id'] = $id;
 		
 		return view('admin.master.manage-location',$data);
 	
@@ -394,6 +400,7 @@ class MasterController extends Controller
 	}
 	public function manage_company_location(Request $request ,$id='')
 	{
+		//echo $id; die;
 		$data = [];
 		$data['company_id'] = $id;
 		$has_search  = 0;
