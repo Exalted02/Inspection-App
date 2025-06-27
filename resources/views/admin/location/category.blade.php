@@ -13,14 +13,14 @@ $location_name = $locationData ? $locationData->location_name : '';
 		<!-- Page Header -->
 		<div class="page-header">
 			<div class="row align-items-center">
-				<div class="col-md-4">
+				<div class="col-md-7">
 					<h3 class="page-title">{{ __('category') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
 						<li class="breadcrumb-item active"><a class="breadcrumb-item active" href="javascript:history.back()">{{ $location_name ?? '' }}</a></li>
 					</ul>
 				</div>
-				<div class="col-md-8 float-end ms-auto">
+				<div class="col-md-5 float-end ms-auto">
 					<div class="d-flex title-head">
 						<div class="view-icons">
 							<a href="{{ route('admin.manage-location-wise-category', ['id'=>$location_id])}}" class="grid-view btn btn-link"><i class="las la-redo-alt"></i></a>

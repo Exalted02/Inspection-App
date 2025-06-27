@@ -18,14 +18,14 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';*/
 		<!-- Page Header -->
 		<div class="page-header">
 			<div class="row align-items-center">
-				<div class="col-md-4">
+				<div class="col-md-8">
 					<h3 class="page-title">{{ __('checklist') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
 						<li class="breadcrumb-item active"><a class="breadcrumb-item active" href="javascript:history.back()">{{ $category_name .''.$subcategory_name }}</a></li>
 					</ul>
 				</div>
-				<div class="col-md-8 float-end ms-auto">
+				<div class="col-md-4 float-end ms-auto">
 					<div class="d-flex title-head">
 						<div class="view-icons">
 							<a href="" class="grid-view btn btn-link"><i class="las la-redo-alt"></i></a>
