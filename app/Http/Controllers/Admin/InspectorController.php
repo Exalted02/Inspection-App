@@ -97,7 +97,7 @@ class InspectorController extends Controller
 		$dataArr->orderBy('name', 'ASC'); 
 		$data['inspector'] = $dataArr->get();
 		$data['companies'] = Manage_company::where('status','!=',2)->get();
-		$data['locations'] = Manage_location::where('status','!=',2)->get();
+		$data['locations'] = Manage_location::where('company_id', $id)->where('status','!=',2)->get();
 		
 		return view('admin.location.inspector',$data);
 	}

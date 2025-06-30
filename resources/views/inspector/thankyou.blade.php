@@ -46,6 +46,7 @@
 			margin: 200px auto 20px;
 			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 			cursor:pointer;
+			max-height: 50px;
         }
     </style>
 </head>

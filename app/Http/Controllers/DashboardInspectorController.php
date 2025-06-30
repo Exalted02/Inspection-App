@@ -22,6 +22,7 @@ use App\Models\Subcategory;
 use App\Models\Task_list_corrective_action;
 use App\Models\Task_list_corrective_action_file;
 use App\Models\Task_location_categories;
+use Illuminate\Support\Facades\DB;
 
 class DashboardInspectorController extends Controller
 {
@@ -2326,6 +2327,7 @@ class DashboardInspectorController extends Controller
 			return redirect('inspector-dashboard');
 		}
 		
+	    		
 		$data = [];
 		//$active = 1;
 		$correctiveNeddedChecklistArray = [];
@@ -2399,7 +2401,7 @@ class DashboardInspectorController extends Controller
 					}
 					
 					//----------------------12-05-2025----------------------------
-					// checklist and  respective files approve=1 
+					// checklist and  respective files approve= 0 or 1 
 					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
 					if($taskChklist->isNotEmpty())
 					{
@@ -2574,7 +2576,7 @@ class DashboardInspectorController extends Controller
 		$correctiveNeddedArray = [];
 		foreach($correctiveNeeded as $needed)
 		{
-			if(($needed['inspector_action']=='' && $needed['inspector_action']=='') || ($needed['inspector_action']== 2 && $needed['inspector_action']==2))
+			if(($needed['inspector_action']=='' && $needed['los_action']=='') || ($needed['inspector_action']== 2 && $needed['los_action']==2))
 			{
 				if(isset($needed['subchecklist_id']))
 				{

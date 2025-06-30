@@ -109,7 +109,7 @@ $totalapprcompleted = $countCompleted;
 							<div class="tab-pane corrective_needed_tab" id="corrective_needed_tab">
 								<span id="neddedDiv">
 								@foreach($correctiveNeddedArray as $result)
-								@if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
+								@if(($result['inspector_action']=='' && $result['los_action']=='') || ($result['inspector_action']== 2 && $result['los_action']==2))
 									@php 
 										$j++;
 										$arrSubchecklist = [];

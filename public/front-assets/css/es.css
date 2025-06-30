@@ -531,6 +531,7 @@ body {
 .reject-form .dropzone .dz-preview .dz-image {
     width: 80px;
     height: 80px;
+	display: -webkit-inline-box;
 }
 .reject-form .dropzone .dz-preview .dz-details {
 	padding: 5px;
@@ -1624,8 +1625,12 @@ body {
   height: 35px;
   width: 111px;
   border-radius: 10px;
-  margin-left: 100pxpx;
+  margin-left: 100px;
   font-size: 13px;
 }
-
+/*.dz-image img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain;
+}*/
 
