@@ -271,8 +271,10 @@ $(document).ready(function() {
 		$('#frminspector')[0].reset();
 		$('#id').val('');
 		$('#company_name').val('').trigger('change');
-		//$('#preview').attr('src', '').show();
-		//$('#preview_backgrnd').attr('src', '').show();
+		var avatar = "{{ url('uploads/profile/avatar.png')}}";
+		var bg = "{{ url('uploads/profile/bg.png')}}";
+		$('#preview').attr('src', avatar).show();
+		$('#preview_backgrnd').attr('src', bg).show();
 		$('#head-label').html(translations.addlocation);
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
