@@ -1995,11 +1995,19 @@ class DashboardInspectorController extends Controller
 		
 		//$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;
 		
-		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first()->id;
+		$query = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id);
+		
+		if (!empty($subchecklist_id)) {
+			$query->where('subchecklist_id', $subchecklist_id);
+		}
+		
+		$record = $query->first();
+		$id = $record ? $record->id : null;
 		
 		$model = Task_list_corrective_action::find($id);
 		if($inspector_action == 1)
 		{
+			//echo $inspector_action; die; 
 			if(auth()->user()->user_type == 1)
 			{
 				$model->inspector_action_date = date('Y-m-d h:i:s');

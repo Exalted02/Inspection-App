@@ -241,6 +241,7 @@ $(document).ready(function() {
 			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id, inspector_action:inspector_action,_token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
+				//alert(response.message);
 				if(response.message=='success')
 				{
 					if(tab == 'corrective-action')
@@ -256,8 +257,10 @@ $(document).ready(function() {
 					var active = 1;
 					@if(auth()->user()->user_type == 1)
 					{
-						var baseUrl = "{{ url('/location-details') }}";
-						var redirectUrl = baseUrl + '/'+ location_id;
+						//var baseUrl = "{{ url('/location-details') }}";
+						//var redirectUrl = baseUrl + '/'+ location_id;
+						var baseUrl = "{{ url('/inspector-filter') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
 					}
 					@endif
 					
@@ -311,8 +314,10 @@ $(document).ready(function() {
 					var active = 1;
 					@if(auth()->user()->user_type == 1)
 					{
-						var baseUrl = "{{ url('/location-details') }}";
-						var redirectUrl = baseUrl + '/'+ location_id ;
+						//var baseUrl = "{{ url('/location-details') }}";
+						//var redirectUrl = baseUrl + '/'+ location_id ;
+						var baseUrl = "{{ url('/inspector-filter') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
 					}
 					@endif
 					

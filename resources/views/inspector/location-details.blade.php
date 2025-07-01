@@ -100,7 +100,7 @@ $getCategotyArr = [];
 										<img src="{{$img }}" alt="Task"/>
 										
 											<h6>{{ $tasks->task_title ?? '' }}</h6>
-											<p class="text-muted mb-0" style="color:red"><i class="fa fa-clock"></i> Pending Submission</p>
+											<p class="text-muted mb-0" style="color:red"><i class="fa fa-clock"></i> Incomplete</p>
 												{{--<p class="text-muted mb-0">{{ get_task_status(auth()->user()->id, $tasks->id, $tasks->location_id) }}</p>--}}
 										</a>
 									</div>

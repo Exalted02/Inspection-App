@@ -89,6 +89,15 @@ if(!empty($userdata->profile_image))
 							$loc_image = $lacationData && $lacationData->image != null ? url('uploads/location/' .$lacationData->image) : url('images/noimages/noimage_region.png');
 							
 							$total_task = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->count();
+							
+							$tasks_exists = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
+							$tasksArr = [];
+							if($tasks_exists->isNotempty())
+							{
+								$tasksArr = $tasks_exists->pluck('id')->toArray();
+							}
+							
+							//echo "<pre>";print_r($tasksArr);
 						@endphp
                             <div class="col-md-4 col-xs-6 col-sm-6">
 								<div class="category-grid-box-1">
