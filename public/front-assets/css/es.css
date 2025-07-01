@@ -700,9 +700,17 @@ body {
 	margin-bottom: 8px;
 }
 .location-owner-details .date-box {
-	width: 118px !important;
+	/*width: 118px !important;
+	text-align: center;
+	margin-right: 12px;*/
+	
+	width: 100px;
+	min-width: 100px;
 	text-align: center;
 	margin-right: 12px;
+	display: flex;
+	align-items: center;      
+	justify-content: center;
 }
 .location-owner-details .date-box .date {
 	background-color: #eee;
@@ -734,6 +742,14 @@ body {
 .location-owner-details .tab-content .flex-grow-1 p {
 	font-size: 13px;
 }
+
+.location-owner-details .date-box img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	object-fit: cover;
+}
+
 .owner-checklist{
 	margin-left: 19px;
 }
@@ -1677,4 +1693,15 @@ body {
 	}
 }
 
+@media (max-width: 576px) {
+	.location-owner-details .date-box {
+		width: 50px;
+		min-width: 50px;
+	}
+
+	.location-owner-details .date-box img {
+		width: 100%;
+		height: auto;
+	}
+}
 
