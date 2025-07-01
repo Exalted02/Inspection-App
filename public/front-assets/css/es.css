@@ -784,9 +784,16 @@ body {
 	margin-bottom: 8px;
 }
 .corrective-checked .date-box {
-	width: 118px !important;
+	/*width: 118px !important;
+	text-align: center;
+	margin-right: 12px;*/
+	width: 100px;
+	min-width: 100px;
 	text-align: center;
 	margin-right: 12px;
+	display: flex;
+	align-items: center;      
+	justify-content: center;
 }
 .corrective-checked .date-box .date {
 	background-color: #eee;
@@ -817,6 +824,13 @@ body {
 }
 .corrective-checked .tab-content .flex-grow-1 p {
 	font-size: 13px;
+}
+
+.corrective-checked .date-box img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	object-fit: cover;
 }
 
 /*-In location-details add new category-*/
@@ -1649,6 +1663,18 @@ body {
     font-size: 1.8rem;
     font-weight: 500px;
   }
+}
+
+@media (max-width: 576px) {
+	.corrective-checked .date-box {
+		width: 50px;
+		min-width: 50px;
+	}
+
+	.corrective-checked .date-box img {
+		width: 100%;
+		height: auto;
+	}
 }
 
 

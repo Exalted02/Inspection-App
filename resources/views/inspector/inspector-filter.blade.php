@@ -163,7 +163,7 @@ $totalapprcompleted = $countCompleted;
 										@foreach($arrSubchecklist as $val)
 									<div class="d-flex mb-3 task">
 										<div class="date-box">
-											<img src="{{ $val['image'] }}" width="50" height="50">
+											<img src="{{ $val['image'] }}">
 										</div>
 										<div class="flex-grow-1">
 										{{--<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">--}}
@@ -208,7 +208,7 @@ $totalapprcompleted = $countCompleted;
 									@else 
 										<div class="d-flex mb-3 task">
 										<div class="date-box">
-											<img src="{{ $images }}" width="50" height="50">
+											<img src="{{ $images }}">
 										</div>
 										<div class="flex-grow-1">
 											<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
