@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('content')
 @php 
+use Illuminate\Support\Facades\DB;
+
 //echo "<pre>";print_r($userdata);die;
 $path = '';
 if(auth()->user()->user_type == 1)
@@ -90,12 +92,43 @@ if(!empty($userdata->profile_image))
 							
 							$total_task = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->count();
 							
-							$tasks_exists = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
+							/*$tasks_exists = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
 							$tasksArr = [];
 							if($tasks_exists->isNotempty())
 							{
 								$tasksArr = $tasks_exists->pluck('id')->toArray();
-							}
+								
+								foreach($tasksArr as $tasks)
+								{
+									
+									$hasChecklist = DB::table('task_list_checklists')
+									->join('task_list_corrective_actions', function($join) {
+										$join->on('task_list_checklists.task_list_id', '=', 'task_list_corrective_actions.task_list_id')
+										->on('task_list_checklists.checklist_id', '=', 'task_list_corrective_actions.checklist_id');
+										})
+										->where('task_list_checklists.task_list_id', $tasks)
+										->where('task_list_checklists.approve', 0)
+										->where(function($query) {
+											$query->where(function($q) {
+												$q->where('inspector_action', 1)
+												  ->where('los_action', 0);
+											})->orWhere(function($q) {
+												$q->where('inspector_action', 0)
+												  ->where('los_action', 1);
+											});
+										})
+										->exists();
+										
+									if($hasChecklist)
+									{
+										echo 'yes';
+									}
+									else
+									{
+										echo 'no';
+									}
+								}
+							}*/
 							
 							//echo "<pre>";print_r($tasksArr);
 						@endphp
