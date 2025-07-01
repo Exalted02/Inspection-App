@@ -859,16 +859,16 @@ body {
     justify-content: center;
     align-items: center;
     /*margin: 0 auto;*/
-    cursor: pointer;
+    /*cursor: pointer;*/
     border-radius: 8px;
     transition: all 0.3s ease;
 	margin-left:-12px;
 }
 
-.add-task-box:hover {
+/*.add-task-box:hover {
     background-color: #f8f8f8;
     border-color: #333;
-}
+}*/
 
 .plus-sign {
     font-size: 36px;
@@ -1320,11 +1320,28 @@ body {
 }
 
 .custom-left-placeholder {
-    left: 15px;
+    left: 12px;
 }
 
 .custom-right-placeholder {
-    right: 15px;
+    right: 12px;
+}
+
+@media (max-width: 576px) {
+    .custom-left-placeholder,
+    .custom-right-placeholder {
+        font-size: 12px;
+        top: 35%; /* Adjust based on your layout */
+        transform: none;
+    }
+
+    .custom-left-placeholder {
+        left: 10px;
+    }
+
+    .custom-right-placeholder {
+        right: 10px;
+    }
 }
 
 .task-upload-label {
@@ -1516,7 +1533,7 @@ body {
     background: #FFFFFF;
     border-radius: 50%;
     text-align: center;
-    font-size: 12px;
+    font-size: 14px;
     /*vertical-align: middle;*/
     /*color: #888;*/
     color: red;

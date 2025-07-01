@@ -207,6 +207,7 @@ $(document).ready(function() {
 	var isFinalEdit = $('#isFinalEdit').val();
 	var skip_order_no = $('#skip_order_no').val();
     //alert(skip_order_no);
+	//alert(isFinalEdit);
 	if(isFinalEdit == 'yes')
 	{
 		var task_id = $('#task_id').val();
@@ -265,9 +266,13 @@ $(document).ready(function() {
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754;">Accepted</button>';
 								}
-								else
+								else if(approveStatus=='2')
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Not available</button>';
+								}
+								else
+								{
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #000000; color: #000000;">Pending</button>';
 								}
 								
 								htmlCompleted += '<div class="checklist-item">';
@@ -1028,7 +1033,7 @@ $(document ).ready(function() {
 				}
 			}
 			
-			if(approveStatus == '')
+			/*if(approveStatus == '')
 			{
 				Swal.fire({
 					  icon: "warning",
@@ -1042,7 +1047,7 @@ $(document ).ready(function() {
 					});
 					
 				return false;
-			}
+			}*/
 		}
 		else
 		{
@@ -1086,7 +1091,7 @@ $(document ).ready(function() {
 				return false;
 			}
 			
-			if(mulSelected != mulCounter)
+			/*if(mulSelected != mulCounter)
 			{
 				Swal.fire({
 					  icon: "warning",
@@ -1099,7 +1104,7 @@ $(document ).ready(function() {
 					});
 					
 				return false;
-			}
+			}*/
 			
 		}
 		
@@ -1215,9 +1220,13 @@ $(document ).ready(function() {
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754;">Accepted</button>';
 								}
-								else
+								else if(approveStatus=='2')
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Not available</button>';
+								}
+								else
+								{
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #000000; color: #000000;">Pending</button>';
 								}
 								
 								htmlCompleted += '<div class="checklist-item">';
@@ -2420,7 +2429,6 @@ $(document ).ready(function() {
    });
    
    $(document).on('click', '.save-next', function(){
-	   
 	   Swal.fire({
 			  title: '<div class="swal-title-class">Are you sure you want to exit ?</div>',
 			  html: '<div class="swal-message-class">You can continue your saved attempt from the task list labeled as "incomplete".</div>',
@@ -2486,7 +2494,7 @@ function saveAndExit()
 				}
 			}
 			
-			if(approveStatus == '')
+			/*if(approveStatus == '')
 			{
 				Swal.fire({
 					  icon: "warning",
@@ -2500,7 +2508,7 @@ function saveAndExit()
 					});
 					
 				return false;
-			}
+			}*/
 		}
 		else
 		{
@@ -2544,7 +2552,7 @@ function saveAndExit()
 				return false;
 			}
 			
-			if(mulSelected != mulCounter)
+			/*if(mulSelected != mulCounter)
 			{
 				Swal.fire({
 					  icon: "warning",
@@ -2558,7 +2566,7 @@ function saveAndExit()
 					});
 					
 				return false;
-			}
+			}*/
 			
 		}
 		
