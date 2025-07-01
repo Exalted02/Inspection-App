@@ -57,17 +57,7 @@ $getCategotyArr = [];
 						<button class="task-filter-button inspector-location-filter" data-location="{{ $location_id ?? ''}}"><span style="margin-right:5px;"><i class="fa-solid fa-arrow-down"></i><i class="fa-solid fa-arrow-up"></i></span>Filter by other status</button>
 						@endif
 						
-						@if($task_list_data->isEmpty())
-							<div class="col-md-12 col-sm-12 d-grid">
-								<div class="form-group text-center">
-										<div class="add-task-box">
-											<div class="no-tasks-list-title">No On-going and Upcoming Task</div>
-										</div>
-								</div>
-							</div>
-						@endif
 						
-						@if($task_list_data->isNotEmpty())
 						<span class="tasks-list-title">On-going and Upcoming Tasks</span>
 							<div role="tabpanel" class="tab-pane active" id="inprogress_tab">
 							@if($task_list_data->isNotEmpty())
@@ -120,10 +110,16 @@ $getCategotyArr = [];
 								@endif
 								@endforeach
 							@else
-							{{--<div class="text-left"><strong><h3>No record found</h3></strong></div>--}}
+								<div class="col-md-12 col-sm-12 d-grid">
+									<div class="form-group text-center">
+											<div class="add-task-box">
+												<div class="no-tasks-list-title">no on-going and </br>upcoming Task</div>
+											</div>
+									</div>
+								</div>
 							@endif
 							</div>
-						@endif
+						
 							<div role="tabpanel" class="tab-pane" id="completed_tab">
 								
 							</div>
