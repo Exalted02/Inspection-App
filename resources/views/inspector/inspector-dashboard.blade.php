@@ -92,43 +92,75 @@ if(!empty($userdata->profile_image))
 							
 							$total_task = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->count();
 							
-							/*$tasks_exists = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
+							$correctiveActionChecklistArray = [];
+							$taskData = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
 							$tasksArr = [];
-							if($tasks_exists->isNotempty())
+							if($taskData->isNotempty())
 							{
-								$tasksArr = $tasks_exists->pluck('id')->toArray();
-								
-								foreach($tasksArr as $tasks)
+								foreach($taskData as $val)
 								{
-									
-									$hasChecklist = DB::table('task_list_checklists')
-									->join('task_list_corrective_actions', function($join) {
-										$join->on('task_list_checklists.task_list_id', '=', 'task_list_corrective_actions.task_list_id')
-										->on('task_list_checklists.checklist_id', '=', 'task_list_corrective_actions.checklist_id');
-										})
-										->where('task_list_checklists.task_list_id', $tasks)
-										->where('task_list_checklists.approve', 0)
-										->where(function($query) {
-											$query->where(function($q) {
-												$q->where('inspector_action', 1)
-												  ->where('los_action', 0);
-											})->orWhere(function($q) {
-												$q->where('inspector_action', 0)
-												  ->where('los_action', 1);
-											});
-										})
-										->exists();
+									$ifTaskRxists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->exists();
+									if($ifTaskRxists)
+									{					
+										$correctiveActions = App\Models\Task_list_corrective_action::where('task_list_id', $val->id)->get();
 										
-									if($hasChecklist)
-									{
-										echo 'yes';
-									}
-									else
-									{
-										echo 'no';
+										if($correctiveActions->isNotEmpty())
+										{
+											foreach($correctiveActions as $correctiveAction)
+											{
+												$type = '';
+												$image = '';
+												//$type = $correctiveAction->subchecklist_id == null ? 'checklist' : 'subchecklist';
+												
+												if($correctiveAction->subchecklist_id == null)
+												{
+													$type = 'checklist';
+													
+													$checklistFile = App\Models\Task_list_checklists::with('get_checklist_files')->where('task_list_id', $val->id)->where('checklist_id', $correctiveAction->checklist_id)->first();
+													
+													$image = $checklistFile && $checklistFile->get_checklist_files->isNotEmpty() ? $checklistFile->get_checklist_files->first()->file : null;
+													
+												}
+												else
+												{
+													$type = 'subchecklist';
+													
+													$subChecklistFile = App\Models\Task_list_subchecklists::with('get_subchecklist_files')->where('task_list_id', $val->id)->where('task_list_checklist_id', $correctiveAction->checklist_id)->where('subchecklist_id', $correctiveAction->subchecklist_id)->first();
+													
+													$image = $subChecklistFile && $subChecklistFile->get_subchecklist_files->isNotEmpty() ? $subChecklistFile->get_subchecklist_files->first()->file : null;
+												}
+												
+												$correctiveActionChecklistArray[] = [
+													'type' => $type ,
+													'task_id' => $val->id,
+													'checklist_id' => $correctiveAction->checklist_id,
+													'subchecklist_id' => $correctiveAction->subchecklist_id,
+													'rejected_region' => $correctiveAction->lo_corrective_action_plan,
+													'inspector_action' => $correctiveAction->inspector_action,
+													'los_action' => $correctiveAction->los_action,
+													'second_checked' => $correctiveAction->lo_corrective_action_plan_second_check,
+													'lo_direct_approve' => $correctiveAction->lo_direct_approve,
+													'image' => $image,
+												];
+											}
+										}
 									}
 								}
-							}*/
+							}
+							$countAction = 0;
+							$countPlan = 0;
+							foreach($correctiveActionChecklistArray as $result)
+							{
+								if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+								{
+									$countAction++;
+								}
+								
+								if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
+								{
+									$countPlan++;
+								}
+							}
 							
 							//echo "<pre>";print_r($tasksArr);
 						@endphp
@@ -140,7 +172,7 @@ if(!empty($userdata->profile_image))
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-											<div class="price"><span>{{ $total_task ?? '0'}} pending tasks</span></div>
+											<div class="price"><span>{{ $countAction + $countPlan }} pending tasks</span></div>
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">
