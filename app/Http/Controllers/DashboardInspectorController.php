@@ -677,7 +677,13 @@ class DashboardInspectorController extends Controller
 				}
 			}
 		}
-		//-------
+		
+		// update Task_list table if whenever checklist start added then status =1
+		
+		$modelTask = Task_lists::find($task_id);
+		$modelTask->status = 1;
+		$modelTask->save();
+		//-----------
 		$subChklistArr = [];
 		$existingFiles = [];
 		$existingSubChecklistFiles = [];
@@ -1279,6 +1285,11 @@ class DashboardInspectorController extends Controller
 			$model->completed_task = 0;
 			$model->is_submit = 1;
 			$model->save();
+			
+			// update task_list table 
+			$taskModel = Task_lists::find($task_id);
+			$taskModel->status = 2;
+			$taskModel->save();
 		}
 		return response()->json(['msg'=>'success']);
 	}
@@ -1871,6 +1882,7 @@ class DashboardInspectorController extends Controller
 				];
 			}
 		}
+		
 		$data['locationWisecategory']= $locationWisecategory;
 		return view('inspector.add-new-task', $data);
 	}

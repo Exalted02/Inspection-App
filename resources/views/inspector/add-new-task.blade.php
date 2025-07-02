@@ -37,7 +37,7 @@
 									<div class="col-md-12">
 										<label>{{ __('Timeline') }}</label>
 										<div class="split-placeholder-wrapper">
-											<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time">
+											<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time" readonly>
 											<span class="custom-left-placeholder" id="selected_time">Settime</span>
 											<span class="custom-right-placeholder" id="selected_date">Setdate</span>
 										</div>
@@ -111,21 +111,83 @@ $(document).ready(function() {
     onChange: function(selectedDates, dateStr, instance) {
 			if (selectedDates.length == 1) {
 				const date = selectedDates[0];
+				//alert(date);
 				const dateOnly = flatpickr.formatDate(date, "d M Y");
 				const timeOnly = flatpickr.formatDate(date, "H:i");
-
+                //alert(date);alert(dateOnly);alert(timeOnly);
 				document.getElementById('selected_time').innerText = 'Settime';
 				document.getElementById('selected_date').innerText = dateOnly;
 				$('#hidden_set_date').val(dateOnly);
 				$('#hidden_set_time').val(timeOnly);
+				
+				// Responsive fix for mobile view
+				if (window.innerWidth <= 576) {
+					//instance.input.value = '';
+					//instance.input.blur();
+					//$('.custom-left-placeholder').hide();
+					//alert(timeOnly);
+					//document.getElementById('selected_time').innerText = 'Settime';
+					//$('.split-placeholder-wrapper').hide();
+					//$('#set_time').val('');
+					//$('#selected_time').val('');
+					
+					// Stack vertically in mobile view
+					/*$('.custom-left-placeholder').css({
+						'font-size': '12px',
+						'top': '35%',
+						'transform': 'none',
+						'left': '10px',
+						'display': 'block'
+					});
+					
+					$('.custom-right-placeholder').css({
+						'font-size': '12px',
+						'top': '35%',
+						'transform': 'none',
+						'right': '10px'
+					});*/
+					
+					
+					//setTimeout(() => {
+							instance.input.value = '';
+							instance.input.blur();
+						//}, 0);
+					
+					
+				} else {
+					// Reset for desktop
+					$('#selected_time').css({
+						'display': '',
+						'position': '',
+						'text-align': '',
+						'margin-bottom': ''
+					});
+					$('#selected_date').css({
+						'display': '',
+						'position': '',
+						'text-align': ''
+					});
+					
+					setTimeout(() => {
+						instance.input.value = '';
+						instance.input.blur();
+					}, 0);
+				}
+				
 				// Delay clearing input to prevent recursion
-				setTimeout(() => {
+				/*setTimeout(() => {
 					instance.input.value = '';
 					instance.input.blur();
-				}, 0);
+				}, 0);*/
 			} else {
 				document.getElementById('selected_date').innerText = "Setdate";
 			}
+		},
+		onValueUpdate: function(selectedDates, dateStr, instance) {
+			// Always clear the input after selection
+			//if(window.innerWidth <= 576) {
+					instance.input.value = '';
+				//}
 		}
 	});
 	

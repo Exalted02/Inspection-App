@@ -1326,12 +1326,27 @@ body {
 .custom-right-placeholder {
     right: 12px;
 }
-
 @media (max-width: 576px) {
+  #set_time {
+    color: transparent !important;
+    text-shadow: 0 0 0 #000;
+  }
+}
+
+/*@media (max-width: 576px) {
+	.custom-left-placeholder,
+	.custom-right-placeholder {
+		position: relative;
+		display: block;
+		text-align: left;
+	}
+}*/
+
+/*@media (max-width: 576px) {
     .custom-left-placeholder,
     .custom-right-placeholder {
         font-size: 12px;
-        top: 35%; /* Adjust based on your layout */
+        top: 35%;
         transform: none;
     }
 
@@ -1342,7 +1357,7 @@ body {
     .custom-right-placeholder {
         right: 10px;
     }
-}
+}*/
 
 .task-upload-label {
 	display: flex;

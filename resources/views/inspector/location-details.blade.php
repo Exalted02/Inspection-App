@@ -60,10 +60,10 @@ $getCategotyArr = [];
 						
 						<span class="tasks-list-title">On-going and Upcoming Tasks</span>
 							<div role="tabpanel" class="tab-pane active" id="inprogress_tab">
-							@if($task_list_data->isNotEmpty())
+							@if($task_list_data->isNotEmpty() && $task_list_data->contains(fn($task) => in_array($task->status, [0, 1])))
 								@foreach($task_list_data as $tasks)
 								@php
-								
+									$getCategotyArr = [];
 								   /*$categoryData = App\Models\Category::where('id', $categories->category_id)->first();*/
 								   
 								   $month = Carbon::parse($tasks->created_at)->format('M');
@@ -81,6 +81,10 @@ $getCategotyArr = [];
 								   $matchedCount = App\Models\Task_list_subcategories::where('task_list_id',$tasks->id)->whereIn('task_list_category_id',$getCategotyArr)->distinct('task_list_category_id')->count('task_list_category_id');
 								   
 								   $ifAllCategoryExists = $matchedCount === count($getCategotyArr);
+								   
+								    $taskStatus = $tasks->status == 0 ? '' : ($tasks->status == 1 ? 'Incomplete' : '');
+										 
+								   
 								@endphp
 								
 								@if(!$ifAllCategoryExists)
@@ -102,7 +106,9 @@ $getCategotyArr = [];
 										<img src="{{$img }}" alt="Task"/>
 										
 											<h6>{{ $tasks->task_title ?? '' }}</h6>
-											<p class="text-muted mb-0" style="color:red"><i class="fa fa-clock"></i> Incomplete</p>
+											@if(!empty($taskStatus))
+											<p class="text-muted mb-0" style="color:red"><i class="fa fa-clock"></i> {{ $taskStatus }}</p>
+										@endif
 												{{--<p class="text-muted mb-0">{{ get_task_status(auth()->user()->id, $tasks->id, $tasks->location_id) }}</p>--}}
 										</a>
 									</div>

@@ -1115,7 +1115,7 @@ $(document ).ready(function() {
 		var task_id = $('#task_id').val();
 		//alert(task_id);
 		var order_no = $('#order_no').val();
-		var directEdit = $('#direct_edit').val()
+		var directEdit = $('#direct_edit').val();
 		//var mode = $('#mode').val();
 		//alert(mode);
 		var rejectTextsSingle = '';
