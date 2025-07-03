@@ -93,8 +93,11 @@ if(!empty($userdata->profile_image))
 							$total_task = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->count();
 							
 							$correctiveActionChecklistArray = [];
+							
 							$taskData = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
 							$tasksArr = [];
+							$locCatArr = [];
+							$taskCnt = 0;
 							if($taskData->isNotempty())
 							{
 								foreach($taskData as $val)
@@ -145,6 +148,19 @@ if(!empty($userdata->profile_image))
 											}
 										}
 									}
+									
+									$locCatArr = App\Models\Task_location_categories::where('task_list_id', $val->id)->pluck('category_id')->toArray();
+								
+									//echo "<pre>";print_r($locCatArr);
+									$taskCnt = 0;
+									foreach($locCatArr as $cat)
+									{
+										$exists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->where('task_list_category_id', $cat)->exists();
+										if(!$exists)
+										{
+											$taskCnt++;
+										}
+									}
 								}
 							}
 							$countAction = 0;
@@ -162,6 +178,8 @@ if(!empty($userdata->profile_image))
 								}
 							}
 							
+							/*App\Models\Task_lists::with('get_location')where('location_id', $locations->location_id)->where('inspector_id', auth()->user()->id)->first();*/
+							
 							//echo "<pre>";print_r($tasksArr);
 						@endphp
                             <div class="col-md-4 col-xs-6 col-sm-6">
@@ -172,7 +190,7 @@ if(!empty($userdata->profile_image))
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-											<div class="price"><span>{{ $countAction + $countPlan }} pending tasks</span></div>
+											<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }} pending tasks</span></div>
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">

@@ -63,7 +63,7 @@ $getCategotyArr = [];
 							@if($task_list_data->isNotEmpty() && $task_list_data->contains(fn($task) => in_array($task->status, [0, 1])))
 							
 								@foreach($task_list_data as $tasks)
-								@if($tasks->status == 0 || $tasks->status == 1)
+								
 								@php
 									$getCategotyArr = [];
 								   /*$categoryData = App\Models\Category::where('id', $categories->category_id)->first();*/
@@ -89,7 +89,7 @@ $getCategotyArr = [];
 								   
 								@endphp
 								
-								
+								@if(!$ifAllCategoryExists)
 								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
@@ -115,8 +115,8 @@ $getCategotyArr = [];
 										</a>
 									</div>
 								</div>
-								
 								@endif
+								
 								@endforeach
 							@else
 								<div class="col-md-12 col-sm-12 d-grid">

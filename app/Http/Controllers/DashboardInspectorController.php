@@ -1286,10 +1286,28 @@ class DashboardInspectorController extends Controller
 			$model->is_submit = 1;
 			$model->save();
 			
-			// update task_list table 
+			// update task_list table 03-07-2025
+			
+			$taskLocationCat = Task_location_categories::where('task_list_id', $task_id)->get();
+		   foreach($taskLocationCat as $categories)
+		   {
+			   $getCategotyArr[] = $categories->category_id;
+		   }
+		   //echo "<pre>";print_r($getCategotyArr);die;
+		   $matchedCount = Task_list_subcategories::where('task_list_id',$task_id)->whereIn('task_list_category_id',$getCategotyArr)->distinct('task_list_category_id')->count('task_list_category_id');
+		   
+		   $ifAllCategoryExists = $matchedCount === count($getCategotyArr);
+			
 			$taskModel = Task_lists::find($task_id);
-			$taskModel->status = 2;
+			if(!$ifAllCategoryExists)
+			{
+				$taskModel->status = 1;
+			}
+			else{
+				$taskModel->status = 2;
+			}
 			$taskModel->save();
+			//---
 		}
 		return response()->json(['msg'=>'success']);
 	}
