@@ -98,14 +98,18 @@ if(!empty($userdata->profile_image))
 							$tasksArr = [];
 							$locCatArr = [];
 							$taskCnt = 0;
+							$categoriesArr = [];
 							if($taskData->isNotempty())
 							{
 								foreach($taskData as $val)
 								{
 									$ifTaskRxists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->exists();
 									if($ifTaskRxists)
-									{					
-										$correctiveActions = App\Models\Task_list_corrective_action::where('task_list_id', $val->id)->get();
+									{	
+
+										$categoriesArr = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+										//echo "<pre>";print_r($categoriesArr);
+										$correctiveActions = App\Models\Task_list_corrective_action::where('task_list_id', $val->id)->whereIn('category_id', $categoriesArr)->get();
 										
 										if($correctiveActions->isNotEmpty())
 										{
@@ -148,25 +152,6 @@ if(!empty($userdata->profile_image))
 											}
 										}
 									}
-									
-									$locCatArr = App\Models\Task_location_categories::where('task_list_id', $val->id)->pluck('category_id')->toArray();
-								
-									//echo "<pre>";print_r($locCatArr);
-									$taskCnt = 0;
-									
-									$existsInChecklists = \App\Models\Task_list_checklists::where('task_list_id', $val->id)->exists();
-									$existsInSubChecklists = \App\Models\Task_list_subchecklists::where('task_list_id', $val->id)->exists();
-									
-									if($existsInChecklists || $existsInSubChecklists)				{			
-										foreach($locCatArr as $cat)
-										{
-											$exists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->where('task_list_category_id', $cat)->exists();
-											if(!$exists)
-											{
-												$taskCnt++;
-											}
-										}
-									}
 								}
 							}
 							$countAction = 0;
@@ -185,7 +170,42 @@ if(!empty($userdata->profile_image))
 								}
 							}
 							
-							/*App\Models\Task_lists::with('get_location')where('location_id', $locations->location_id)->where('inspector_id', auth()->user()->id)->first();*/
+							// if task not checklist submit then count pending
+							
+							$allTaskLocationWise = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
+							if($allTaskLocationWise->isNotempty())
+							{
+								foreach($allTaskLocationWise as $val)
+								{
+									$existsInChecklists = \App\Models\Task_list_checklists::where('task_list_id', $val->id)->exists();
+									$existsInSubChecklists = \App\Models\Task_list_subchecklists::where('task_list_id', $val->id)->exists();
+									
+									if($existsInChecklists || $existsInSubChecklists)				{	
+
+										// Get category_ids from both tables
+										$checklistCategories = \App\Models\Task_list_checklists::where('task_list_id', $val->id)
+											->pluck('category_id')
+											->toArray();
+
+										$subChecklistCategories = \App\Models\Task_list_subchecklists::where('task_list_id', $val->id)
+											->pluck('category_id')
+											->toArray();
+
+										// Merge and get unique category_ids
+										$allCategories = array_unique(array_merge($checklistCategories, $subChecklistCategories));
+										//echo "<pre>";print_r($allCategories);
+										
+										foreach($allCategories as $cat)
+										{
+											$exists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->where('task_list_category_id', $cat)->exists();
+											if(!$exists)
+											{
+												$taskCnt++;
+											}
+										}
+									}
+								}
+							}
 							
 							//echo "<pre>";print_r($tasksArr);
 						@endphp

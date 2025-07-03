@@ -10,6 +10,7 @@ class Task_list_corrective_action extends Model
     use HasFactory;
 	protected $fillable = [
         'task_list_id', 
+        'category_id', 
         'checklist_id', 
         'subchecklist_id', 
         'lo_id', 

@@ -2373,6 +2373,7 @@ class DashboardInspectorController extends Controller
 		
 		$correctiveNeddedSubchecklistArray = [];
 		$completedApprSubcheckListArray = [];
+		$categoriesArr = [];
 		// -- if inspector login 
 		$data['location_id'] = $lid;
 		
@@ -2394,8 +2395,10 @@ class DashboardInspectorController extends Controller
 			{
 				$ifTaskRxists = Task_list_subcategories::where('task_list_id', $val->id)->exists();
 				if($ifTaskRxists)
-				{					
-					$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();
+				{		
+					$categoriesArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+					
+					$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->whereIn('category_id', $categoriesArr)->get();
 					
 					if($correctiveActions->isNotEmpty())
 					{
@@ -2439,8 +2442,10 @@ class DashboardInspectorController extends Controller
 					}
 					
 					//----------------------12-05-2025----------------------------
+					$categoriesChecklistArr = [];
+					$categoriesChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
 					// checklist and  respective files approve= 0 or 1 
-					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
+					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->get();
 					if($taskChklist->isNotEmpty())
 					{
 						foreach($taskChklist as $task)
@@ -2518,7 +2523,11 @@ class DashboardInspectorController extends Controller
 					}
 					
 					// subchecklist and respective files
-					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
+					
+					$categoriesSubChecklistArr = [];
+					$categoriesSubChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+					
+					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesSubChecklistArr)->get();
 					if($taskSubChklist->isNotEmpty())
 					{
 						foreach($taskSubChklist as $subtask)
