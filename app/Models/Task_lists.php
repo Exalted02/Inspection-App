@@ -26,9 +26,4 @@ class Task_lists extends Model
 	{
 		return $this->belongsTo(User::class, 'inspector_id');
 	}
-	
-	public function get_location()
-	{
-		return $this->hasMany(Task_location_categories::class, 'task_list_id');
-	}
 }

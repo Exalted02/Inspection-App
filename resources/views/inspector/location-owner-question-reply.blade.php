@@ -99,6 +99,20 @@
 								<span id="action_plan" style="display: none; color: red;">This field is require.</span>
 							</div>
 						</div>
+						<div class="row align-items-center">
+							<div class="col-md-4">
+								<label for="lo_file"></label>
+								<div class="upload-wrapper">
+								  <input type="file" name="lo_file[]" id="lo_file" multiple style="display: none;">
+								  <label for="lo_file" class="custom-upload-label">
+									<span class="upload-text">Upload image</span>
+									<i class="fa fa-upload upload-icon"></i>
+								  </label>
+								</div>
+							</div>
+							<div class="col-md-8 d-flex flex-wrap gap-2" id="preview-container">
+							</div>
+						</div>
 						<div class="row">
 							<div class="col-md-12">
 								<label class="d-block col-form-label"></label>
@@ -171,6 +185,9 @@ $(document).ready(function() {
 		}
 	});
    
+   let previewContainer = $('#preview-container');
+   let selectedFiles = [];
+
    $(document).on('click','.submitChecklist', function(){
 	   var task_id = $('#task_id').val();
 	   //alert(task_id);
@@ -195,13 +212,36 @@ $(document).ready(function() {
 			$('#settimeline_id_error').text('Please enter date').fadeIn().delay(2000).fadeOut();
 			return false;
 		}*/
+		let files = $('#lo_file')[0].files;
+		
+		let form = document.getElementById('myForm');
+		let formData = new FormData();
+		
+		selectedFiles.forEach(file => {
+			formData.append('lo_file[]', file);
+		});
+		
+		formData.append('type', type);
+		formData.append('task_id', task_id);
+		formData.append('checklist_id', checklist_id);
+		formData.append('subchecklist_id', subchecklist_id);
+		formData.append('tab', tab);
+		formData.append('lo_corrective_action_plan', lo_corrective_action_plan);
+		formData.append('lo_direct_approve', lo_direct_approve);
+		formData.append('hidden_set_date', hidden_set_date);
+		formData.append('hidden_set_time', hidden_set_time);
+		formData.append('_token', csrfToken);
+		
+		//data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,hidden_set_date:hidden_set_date,hidden_set_time:hidden_set_time, _token: csrfToken},
 	  
 		   var URL = "{{ route('submit-lo-corrective-action') }}";
 		   $.ajax({
 				url: URL,
 				type: "POST",
-				data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,hidden_set_date:hidden_set_date,hidden_set_time:hidden_set_time, _token: csrfToken},
+				data: formData,
 				dataType: 'json',
+				contentType: false,
+				processData: false, 
 				success: function(response) {
 					
 					if(lo_direct_approve)
@@ -235,7 +275,74 @@ $(document).ready(function() {
 			$('.set_time_div').show();
 		}
 	});
+	
+
+
+
+$('#lo_file').on('change', function (e) {
+	
+	let files = Array.from(e.target.files); // new
+	selectedFiles = files; // new
+	//selectedFiles = [...selectedFiles, ...files];
+    previewContainer.empty(); // Clear previous previews
+	
+	Array.from(files).forEach((file, index) => {
+	  if (file) {
+		let reader = new FileReader();
+		reader.onload = function (e) {
+		  let previewHtml = '';
+
+		  if (file.type.startsWith('image/')) {
+			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><img src="' + e.target.result + '" class="preview-image" /><div class="remove-image" data-index="' + index + '">&times;</div></div>';
+		  }else if (file.type.startsWith('video/')) {
+			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><div class="remove-image" data-index="' + index + '">&times;</div></div>';
+		  }
+		  previewContainer.append(previewHtml);
+		};
+
+		reader.readAsDataURL(file);
+	  }
+	});
+})
+/*$('#lo_file').on('change', function (e) {
+    //let files = e.target.files;
+	let files = Array.from(e.target.files); // new
+	selectedFiles = files; // new
+	//selectedFiles = [...selectedFiles, ...files];
+    previewContainer.empty(); // Clear previous previews
+
+    Array.from(files).forEach((file, index) => {
+      if (file && file.type.startsWith('image/')) {
+        let reader = new FileReader();
+		//$('#preview-container').show();
+        reader.onload = function (e) {
+          let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image" data-index="' + index +'">&times;</div></div>';
+          previewContainer.append(imgHtml);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+	
+	//updateFileInput();
+  });*/
+  
+  previewContainer.on('click', '.remove-image', function () {
+	const indexToRemove = $(this).data('index');
+	//alert(indexToRemove);alert(selectedFiles);
+    $(this).parent().remove();
+	selectedFiles[indexToRemove] = null;
+	selectedFiles = selectedFiles.filter(file => file !== null);
+  });
+	
 });
+function updateFileInput() {
+  const dataTransfer = new DataTransfer();
+  selectedFiles.forEach(file => {
+    if (file) dataTransfer.items.add(file);
+  });
+  document.getElementById('lo_file').files = dataTransfer.files;
+}
 </script>
 @endsection
 

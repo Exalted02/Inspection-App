@@ -1856,6 +1856,20 @@ class DashboardInspectorController extends Controller
 		}
 		//echo $lo_completed_by; die;
 		
+		//----- new add 03-07-2025 =======
+		$category_id = null;
+		if(!empty($checklist_id) && !empty($subchecklist_id))
+		{
+			$categoryData = Task_list_subchecklists::where('task_list_id', $task_list_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
+			$category_id = $categoryData ? $categoryData->category_id : null;
+		}
+		else if(!empty($checklist_id) && empty($subchecklist_id))
+		{
+			$categoryData = Task_list_checklists::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first();
+			$category_id = $categoryData ? $categoryData->category_id : null;
+		}
+		//------------------------
+		
 		$taskData  = Task_lists::where('id', $task_list_id)->first();
 		$inspector_id = $taskData ? $taskData->inspector_id : null;
 		$location_id = $taskData ? $taskData->location_id : null;
@@ -1864,6 +1878,7 @@ class DashboardInspectorController extends Controller
 		
 		$model = new Task_list_corrective_action();
 		$model->task_list_id = $task_list_id;
+		$model->category_id = $category_id;
 		$model->checklist_id = $checklist_id;
 		$model->subchecklist_id = $subchecklist_id;
 		$model->lo_id = auth()->user()->id;
@@ -1873,9 +1888,50 @@ class DashboardInspectorController extends Controller
 		$model->inspector_id = $inspector_id;
 		$model->los_id = $los_id;
 		$model->save();
+		$id = $model->id;
 		
 		// update the status Task lists table
 		$taskData  = Task_lists::where('id', $task_list_id)->update(['status'=>2]);
+		
+		//---------03-07-2025-----------
+		$lo_files = $request->file('lo_file');
+
+		if ($lo_files && is_array($lo_files)) {
+			
+			// unlink previous file 
+			$correctiveFiles = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->get();
+			if($correctiveFiles->isNotEmpty()){
+				
+				foreach($correctiveFiles as $filemn)
+				{
+					$f_name = $filemn->file;
+					$filePath = public_path('uploads/corrective_action/' . $f_name);
+					if (file_exists($filePath)) {
+						unlink($filePath);
+					}
+				}
+				
+				Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->delete();
+			}
+			
+			// save new files
+			foreach ($lo_files as $file) {
+				
+				$destinationPath = public_path('uploads/corrective_action');
+				if (!file_exists($destinationPath)) {
+					mkdir($destinationPath, 0777, true);
+				}
+				
+				$filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+				$file->move($destinationPath, $filename);
+
+				$fileModel = new Task_list_corrective_action_file();
+				$fileModel->task_list_corrective_actions_id = $id;
+				$fileModel->file = $filename;
+				$fileModel->save();
+			}
+		}
+		//---------------------------
 		
 		return response()->json(['location_id'=>$location_id, 'task_id'=>$task_list_id]);
 	}
@@ -2817,6 +2873,7 @@ class DashboardInspectorController extends Controller
 		// for corrective checked work 
 		$correctiveActionChecklistArray = [];
 		/*$taskData = Task_lists::where('location_id', $lid)->where('id', $task_id)->get();*/
+		$categoriesArr = [];
 		
 		$taskData = Task_lists::where('location_id', $lid)->get();
 		if($taskData->isNotEmpty())
@@ -2827,8 +2884,9 @@ class DashboardInspectorController extends Controller
 				if($ifTaskRxists)
 				{
 					//$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
+					$categoriesArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
 					
-					$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();
+					$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->whereIn('category_id', $categoriesArr)->get();
 					
 					if($correctiveActions->isNotEmpty())
 					{
@@ -2873,7 +2931,10 @@ class DashboardInspectorController extends Controller
 					
 					//----------------------12-05-2025----------------------------
 					// checklist and  respective files approve=1 
-					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
+					$categoriesChecklistArr = [];
+					$categoriesChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+					
+					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->get();
 					if($taskChklist->isNotEmpty())
 					{
 						foreach($taskChklist as $task)
@@ -2951,7 +3012,10 @@ class DashboardInspectorController extends Controller
 					}
 					
 					// subchecklist and respective files
-					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
+					$categoriesSubChecklistArr = [];
+					$categoriesSubChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+					
+					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesSubChecklistArr)->get();
 					if($taskSubChklist->isNotEmpty())
 					{
 						foreach($taskSubChklist as $subtask)
@@ -3118,6 +3182,8 @@ class DashboardInspectorController extends Controller
 			$user_type = auth()->user()->user_type;
 			$taskData = Task_lists::where('location_id', $lid)->get();
 			
+			$categoriesChecklistArr = [];
+			
 			if($taskData->isNotEmpty())
 			{
 				foreach($taskData as $val)
@@ -3126,7 +3192,11 @@ class DashboardInspectorController extends Controller
 					if($ifTaskRxists)
 					{
 						// checklist and  respective files approve=0 
-						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->where('approve', 0)->get();
+						
+						
+					    $categoriesChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+						
+						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->where('approve', 0)->get();
 						if($taskChklist->isNotEmpty())
 						{
 							foreach($taskChklist as $task)
@@ -3175,7 +3245,7 @@ class DashboardInspectorController extends Controller
 						}
 						
 						// subchecklist and respective files
-						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->where('approve', 0)->get();
+						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->where('approve', 0)->get();
 						if($taskSubChklist->isNotEmpty())
 						{
 							foreach($taskSubChklist as $subtask)
@@ -3227,7 +3297,7 @@ class DashboardInspectorController extends Controller
 						}
 						//----------------------12-06-2025----------------------------
 						// checklist and  respective files approve=1 
-						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
+						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->get();
 						if($taskChklist->isNotEmpty())
 						{
 							foreach($taskChklist as $task)
@@ -3302,7 +3372,7 @@ class DashboardInspectorController extends Controller
 						}
 						
 						// subchecklist and respective files
-						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
+						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->get();
 						if($taskSubChklist->isNotEmpty())
 						{
 							foreach($taskSubChklist as $subtask)

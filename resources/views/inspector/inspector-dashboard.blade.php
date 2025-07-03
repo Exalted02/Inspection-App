@@ -228,9 +228,9 @@ if(!empty($userdata->profile_image))
 									<div class="image" style="background-image: url('{{ $loc_image }}');">
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
-										{{--<div class="price-tag">
-										<div class="price"><span>4 pending tasks</span></div>
-										</div>--}}
+										<div class="price-tag">
+										<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>
+										</div>
 									</div>
 									<div class="short-description-1 clearfix">
 										<h3>{{ $lacationData->location_name ?? '' }}</h3>
@@ -241,9 +241,9 @@ if(!empty($userdata->profile_image))
 									<div class="image" style="background-image: url('{{ $loc_image }}');">
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
-										{{--<div class="price-tag">
-											<div class="price"><span>4 pending tasks</span></div>
-										</div>--}}
+										<div class="price-tag">
+											<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>
+										</div>
 									</div>
 									<div class="short-description-1 clearfix">
 										<h3>{{ $lacationData->location_name ?? '' }}</h3>

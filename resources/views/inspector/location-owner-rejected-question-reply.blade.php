@@ -112,6 +112,7 @@
 								</div>
 							</div>
 						</div>
+						
 						<div class="row" style="margin-top: 1rem !important;">
 							<div class="col-md-12">
 								<label>Completed By</label>
@@ -196,8 +197,25 @@ $('#lo_file').on('change', function (e) {
 	selectedFiles = files; // new
 	//selectedFiles = [...selectedFiles, ...files];
     previewContainer.empty(); // Clear previous previews
+	
+	Array.from(files).forEach((file, index) => {
+	  if (file) {
+		let reader = new FileReader();
+		reader.onload = function (e) {
+		  let previewHtml = '';
 
-    Array.from(files).forEach((file, index) => {
+		  if (file.type.startsWith('image/')) {
+			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><img src="' + e.target.result + '" class="preview-image" /><div class="remove-image" data-index="' + index + '">&times;</div></div>';
+		  }else if (file.type.startsWith('video/')) {
+			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><div class="remove-image" data-index="' + index + '">&times;</div></div>';
+		  }
+		  previewContainer.append(previewHtml);
+		};
+
+		//reader.readAsDataURL(file);
+	  }
+	});
+    /*Array.from(files).forEach((file, index) => {
       if (file && file.type.startsWith('image/')) {
         let reader = new FileReader();
 		//$('#preview-container').show();
@@ -208,7 +226,7 @@ $('#lo_file').on('change', function (e) {
 
         reader.readAsDataURL(file);
       }
-    });
+    });*/
 	
 	//updateFileInput();
   });

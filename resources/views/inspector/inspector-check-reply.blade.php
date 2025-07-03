@@ -151,6 +151,32 @@
 						</div>
 						@endif
 						
+						<div class="row">
+							<div class="col-md-12">
+								@if(!empty($corrective_action_files))
+									<div class="d-flex flex-wrap gap-3">
+										@foreach($corrective_action_files as $fileurl)
+											@php 
+												$url = $fileurl['url'] ?? '';
+												$extension = pathinfo($url, PATHINFO_EXTENSION);
+												$extension = strtolower($extension);
+											@endphp
+											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) 
+											<div class="cheklist-reply-images">
+												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;" target="_blank">
+											</div>
+											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<div class="cheklist-reply-images">
+											
+											<video src="{{ $fileurl['url'] ?? '' }}" controls style="max-width: 100px; height: auto; border: 1px solid #ccc; padding: 5px;" target="_blank"></video>
+											</div>
+											@endif
+										@endforeach
+									</div>
+								@endif
+							</div>
+						</div>
+						
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 							<label>Completed By</label>
