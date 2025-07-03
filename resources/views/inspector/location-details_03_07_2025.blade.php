@@ -89,7 +89,7 @@ $getCategotyArr = [];
 								   
 								@endphp
 								
-								
+								@if(!$ifAllCategoryExists)
 								<div class="d-flex mb-3 task">
 									<div class="date-box">
 										<div class="date">
@@ -115,7 +115,7 @@ $getCategotyArr = [];
 										</a>
 									</div>
 								</div>
-								
+								@endif
 								@endif
 								@endforeach
 							@else
