@@ -153,18 +153,25 @@ if(!empty($userdata->profile_image))
 								
 									//echo "<pre>";print_r($locCatArr);
 									$taskCnt = 0;
-									foreach($locCatArr as $cat)
-									{
-										$exists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->where('task_list_category_id', $cat)->exists();
-										if(!$exists)
+									
+									$existsInChecklists = \App\Models\Task_list_checklists::where('task_list_id', $val->id)->exists();
+									$existsInSubChecklists = \App\Models\Task_list_subchecklists::where('task_list_id', $val->id)->exists();
+									
+									if($existsInChecklists || $existsInSubChecklists)				{			
+										foreach($locCatArr as $cat)
 										{
-											$taskCnt++;
+											$exists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->where('task_list_category_id', $cat)->exists();
+											if(!$exists)
+											{
+												$taskCnt++;
+											}
 										}
 									}
 								}
 							}
 							$countAction = 0;
 							$countPlan = 0;
+							//echo "<pre>";print_r($correctiveActionChecklistArray);
 							foreach($correctiveActionChecklistArray as $result)
 							{
 								if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
