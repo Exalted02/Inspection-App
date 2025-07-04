@@ -35,8 +35,22 @@
 	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
 	 
 	 $corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
+	 //---------------------------------------------
 	 
-	 $corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->get();
+		 $corrective_first_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 1)->get();
+		 
+		 $corrective_first_action_files = [];
+		 if($corrective_first_action_file_data->isNotEmpty())
+		 {
+			 foreach($corrective_first_action_file_data as $corrective_files)
+			 {
+				$corrective_first_action_files[] = [
+					'url' => url('uploads/corrective_action/' .$corrective_files->file),
+				];
+			 }
+		 }
+	 //---------------------------------------------
+	 $corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 2)->get();
 	 
 	 $corrective_action_files = [];
 	 if($corrective_action_file_data->isNotEmpty())
@@ -90,7 +104,23 @@
 	
 	$lo_corrective_action_plan_second_check = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan_second_check : '';
 	
-	$corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->get();
+	//---------------------------------------------
+	 
+		 $corrective_first_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 1)->get();
+		 
+		 $corrective_first_action_files = [];
+		 if($corrective_first_action_file_data->isNotEmpty())
+		 {
+			 foreach($corrective_first_action_file_data as $corrective_files)
+			 {
+				$corrective_first_action_files[] = [
+					'url' => url('uploads/corrective_action/' .$corrective_files->file),
+				];
+			 }
+		 }
+	 //---------------------------------------------
+	
+	$corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 2)->get();
 	 
 	 $corrective_action_files = [];
 	 if($corrective_action_file_data->isNotEmpty())
@@ -151,6 +181,32 @@
 								<div>
 									{{ $lo_corrective_action_plan ?? '' }}
 								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								@if(!empty($corrective_first_action_files))
+									<div class="d-flex flex-wrap gap-3">
+										@foreach($corrective_first_action_files as $fileurl)
+											@php 
+												$url = $fileurl['url'] ?? '';
+												$extension = pathinfo($url, PATHINFO_EXTENSION);
+												$extension = strtolower($extension);
+											@endphp
+											
+											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+											<div class="cheklist-reply-images">
+												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+											</div>
+											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<div class="cheklist-reply-images">
+											
+											<video src="{{ $fileurl['url'] ?? '' }}" controls style="max-width: 100px; height: auto; border: 1px solid #ccc; padding: 5px;" target="_blank"></video>
+											</div>
+											@endif
+										@endforeach
+									</div>
+								@endif
 							</div>
 						</div>
 						

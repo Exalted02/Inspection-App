@@ -26,6 +26,24 @@
 	$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 	
 	$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
+	
+	//---------------------------------------------
+	$corrective_action_primary_id = $corrective_action ? $corrective_action->id : '';
+	 
+		 $corrective_first_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 1)->get();
+		 
+		 $corrective_first_action_files = [];
+		 if($corrective_first_action_file_data->isNotEmpty())
+		 {
+			 foreach($corrective_first_action_file_data as $corrective_files)
+			 {
+				$corrective_first_action_files[] = [
+					'url' => url('uploads/corrective_action/' .$corrective_files->file),
+				];
+			 }
+		 }
+	 //---------------------------------------------
+	
  }
  
  $taskSubChecklist = null;
@@ -57,12 +75,31 @@
 		$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 		
 		$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
+		
+		//---------------------------------------------
+		$corrective_action_primary_id = $corrective_action ? $corrective_action->id : '';
+	 
+		 $corrective_first_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 1)->get();
+		 
+		 $corrective_first_action_files = [];
+		 if($corrective_first_action_file_data->isNotEmpty())
+		 {
+			 foreach($corrective_first_action_file_data as $corrective_files)
+			 {
+				$corrective_first_action_files[] = [
+					'url' => url('uploads/corrective_action/' .$corrective_files->file),
+				];
+			 }
+		 }
+	 //---------------------------------------------
 	}
  }
  
 	$taskData = App\Models\Task_lists::where('id',$task_id)->first();
 	$task_location_id = $taskData ? $taskData->location_id : '';
 	$task_category_id = $taskData ? $taskData->category_id : '';
+	
+	//echo "<pre>";print_r($corrective_first_action_files);die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -112,6 +149,32 @@
 								</div>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col-md-12">
+								@if(!empty($corrective_first_action_files))
+									<div class="d-flex flex-wrap gap-3">
+										@foreach($corrective_first_action_files as $fileurl)
+											@php 
+												$url = $fileurl['url'] ?? '';
+												$extension = pathinfo($url, PATHINFO_EXTENSION);
+												$extension = strtolower($extension);
+											@endphp
+											
+											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+											<div class="cheklist-reply-images">
+												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+											</div>
+											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<div class="cheklist-reply-images">
+											
+											<video src="{{ $fileurl['url'] ?? '' }}" controls style="max-width: 100px; height: auto; border: 1px solid #ccc; padding: 5px;" target="_blank"></video>
+											</div>
+											@endif
+										@endforeach
+									</div>
+								@endif
+							</div>
+						</div>
 						
 						<div class="row" style="margin-top: 1rem !important;">
 							<div class="col-md-12">
@@ -152,7 +215,7 @@
 								{{--<input type="hidden" id="category_id" value="{{ $task_category_id ?? ''}}">--}}
 							
 					</div>
-					<div class="sticky-footer location-owner-approve">
+					<div class="sticky-footer location-owner-submit">
 						<button class="submitChecklist">Submit</button>
 					</div>
 				</div>
@@ -198,35 +261,49 @@ $('#lo_file').on('change', function (e) {
 	//selectedFiles = [...selectedFiles, ...files];
     previewContainer.empty(); // Clear previous previews
 	
-	Array.from(files).forEach((file, index) => {
+	/*Array.from(files).forEach((file, index) => {
 	  if (file) {
 		let reader = new FileReader();
 		reader.onload = function (e) {
+			alert(e.target.result);
 		  let previewHtml = '';
-
+			
 		  if (file.type.startsWith('image/')) {
 			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><img src="' + e.target.result + '" class="preview-image" /><div class="remove-image" data-index="' + index + '">&times;</div></div>';
-		  }else if (file.type.startsWith('video/')) {
+		  }
+		  else if (file.type.startsWith('video/')) {
 			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><div class="remove-image" data-index="' + index + '">&times;</div></div>';
 		  }
+		  alert(previewHtml);
 		  previewContainer.append(previewHtml);
 		};
 
 		//reader.readAsDataURL(file);
 	  }
-	});
-    /*Array.from(files).forEach((file, index) => {
-      if (file && file.type.startsWith('image/')) {
+	});*/
+	
+    Array.from(files).forEach((file, index) => {
+      //if (file && file.type.startsWith('image/')) {
+      if (file) {
         let reader = new FileReader();
 		//$('#preview-container').show();
+		let imgHtml = '';
         reader.onload = function (e) {
-          let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image" data-index="' + index +'">&times;</div></div>';
-          previewContainer.append(imgHtml);
+			//alert(file.type);
+			if (file.type.startsWith('image/')) {
+			  let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image" data-index="' + index +'">&times;</div></div>';
+			  previewContainer.append(imgHtml);
+			}
+			else if (file.type.startsWith('video/')) {
+				imgHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><div class="remove-image" data-index="' + index + '">&times;</div></div>';
+				previewContainer.append(imgHtml);
+			}
+			  //previewContainer.append(imgHtml);
         };
 
         reader.readAsDataURL(file);
       }
-    });*/
+    });
 	
 	//updateFileInput();
   });
@@ -241,7 +318,7 @@ $('#lo_file').on('change', function (e) {
 	selectedFiles = selectedFiles.filter(file => file !== null);
   });
    
-   $(document).on('click','.location-owner-approve', function(){
+   $(document).on('click','.location-owner-submit', function(){
 	   //e.preventDefault();
 	   var task_id = $('#task_id').val();
 	   var checklist_id = $('#checklist_id').val();

@@ -1899,7 +1899,7 @@ class DashboardInspectorController extends Controller
 		if ($lo_files && is_array($lo_files)) {
 			
 			// unlink previous file 
-			$correctiveFiles = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->get();
+			$correctiveFiles = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->where('status',1)->get();
 			if($correctiveFiles->isNotEmpty()){
 				
 				foreach($correctiveFiles as $filemn)
@@ -1911,7 +1911,7 @@ class DashboardInspectorController extends Controller
 					}
 				}
 				
-				Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->delete();
+				Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->where('status', 1)->delete();
 			}
 			
 			// save new files
@@ -2185,7 +2185,7 @@ class DashboardInspectorController extends Controller
 		if ($lo_files && is_array($lo_files)) {
 			
 			// unlink previous file 
-			$correctiveFiles = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->get();
+			$correctiveFiles = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->where('status', 2)->get();
 			if($correctiveFiles->isNotEmpty()){
 				
 				foreach($correctiveFiles as $filemn)
@@ -2197,7 +2197,7 @@ class DashboardInspectorController extends Controller
 					}
 				}
 				
-				Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->delete();
+				Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->where('status', 2)->delete();
 			}
 			
 			// save new files
