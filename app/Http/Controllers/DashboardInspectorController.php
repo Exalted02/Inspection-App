@@ -1177,6 +1177,7 @@ class DashboardInspectorController extends Controller
 	
 	public function reject_subchecklist_files(Request $request)
 	{
+		//echo "<pre>";print_r($request->all());die;
 		$current_checklist_id = $request->post('current_checklist_id');
 		$subchecklist_id = $request->post('subchecklist_id');
 		$task_id = $request->post('task_id');

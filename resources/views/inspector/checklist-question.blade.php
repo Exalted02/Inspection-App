@@ -509,7 +509,7 @@ $(document).ready(function() {
 								init: function () {
 									this.on("success", function (file, response) {
 										console.log('Uploaded:', response);
-
+										//alert(response.filename);
 										// Attach filename to file object so we can use it on removal
 										file.uploadedFilename = response.filename;
 										//alert(response.filename);
@@ -2018,6 +2018,7 @@ $(document ).ready(function() {
 	});
 	
 	$(document).on('click','.get_checklist', function(){
+	//alert('ok');
 	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var directEdit = $(this).data('dedit'); // 21-06-2025
 	   var cat_id = $(this).data('cat');
@@ -2137,8 +2138,9 @@ $(document ).ready(function() {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
 								dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
@@ -2152,10 +2154,30 @@ $(document ).ready(function() {
 									response.existingSubChecklistFiles
 									.filter(file => file.subchecklist_id == subchecklistId)
 									.forEach(function (file) {
+										//alert(file.name)
 										let mockFile = { name: file.name, size: file.size, accepted: true };
 
 										dz.emit("addedfile", mockFile);
-										dz.emit("thumbnail", mockFile, file.url);
+										
+										// Show thumbnail only if image
+										if (file.mime_type && file.mime_type.startsWith('image/'))
+										{
+											dz.emit("thumbnail", mockFile, file.url);
+										}
+										else if (file.mime_type && file.mime_type.startsWith('video/')) {
+										  // Inject video preview manually
+										  console.log(file.url);
+										  setTimeout(() => {
+											const videoElement = document.createElement('video');
+											videoElement.setAttribute('src', file.url);
+											videoElement.setAttribute('controls', 'true');
+											videoElement.style.maxWidth = '100%';
+											videoElement.style.maxHeight = '100px';
+											mockFile.previewElement.querySelector(".dz-image").innerHTML = '';
+											mockFile.previewElement.querySelector(".dz-image").appendChild(videoElement);
+										  }, 0);
+										}
+										
 										dz.emit("complete", mockFile);
 
 										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
@@ -2194,6 +2216,7 @@ $(document ).ready(function() {
 						});
 						
 						//--- upload new files ------- 
+						// 04-07-2025 block today
 						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
@@ -2209,7 +2232,7 @@ $(document ).ready(function() {
 								init: function () {
 									this.on("success", function (file, response) {
 										console.log('Uploaded:', response);
-
+										//alert(response.filename);
 										// Attach filename to file object so we can use it on removal
 										file.uploadedFilename = response.filename;
 										//alert(response.filename);
