@@ -1928,6 +1928,7 @@ class DashboardInspectorController extends Controller
 				$fileModel = new Task_list_corrective_action_file();
 				$fileModel->task_list_corrective_actions_id = $id;
 				$fileModel->file = $filename;
+				$fileModel->status = 1;
 				$fileModel->save();
 			}
 		}
@@ -2213,6 +2214,7 @@ class DashboardInspectorController extends Controller
 				$fileModel = new Task_list_corrective_action_file();
 				$fileModel->task_list_corrective_actions_id = $id;
 				$fileModel->file = $filename;
+				$fileModel->status = 2;
 				$fileModel->save();
 			}
 		}
