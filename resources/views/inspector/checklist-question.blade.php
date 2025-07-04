@@ -314,8 +314,6 @@ $(document).ready(function() {
 	//---------end----------
 	if(skip_order_no != 0 && isFinalEdit == 'no')
 	{
-		//alert("skiporderno "+ skip_order_no);alert("isFinalEdit->" + isFinalEdit);
-		
 		//get_save_exist_checklist(task_id,category_id);
 		$('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var directEdit = ''; // 21-06-2025
@@ -437,8 +435,9 @@ $(document).ready(function() {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
 								dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
@@ -455,7 +454,28 @@ $(document).ready(function() {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
 
 										dz.emit("addedfile", mockFile);
-										dz.emit("thumbnail", mockFile, file.url);
+										//dz.emit("thumbnail", mockFile, file.url);
+										let fileUrl = file.url;
+										let extension = fileUrl.split('.').pop().toLowerCase();
+										//alert(extension);
+										if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension))
+										{
+											dz.emit("thumbnail", mockFile, file.url);
+										}
+										else if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+										  // Inject video preview manually
+										  console.log(file.url);
+										  setTimeout(() => {
+											const videoElement = document.createElement('video');
+											videoElement.setAttribute('src', file.url);
+											videoElement.setAttribute('controls', 'true');
+											videoElement.style.maxWidth = '100%';
+											videoElement.style.maxHeight = '100px';
+											mockFile.previewElement.querySelector(".dz-image").innerHTML = '';
+											mockFile.previewElement.querySelector(".dz-image").appendChild(videoElement);
+										  }, 0);
+										}
+										
 										dz.emit("complete", mockFile);
 
 										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
@@ -600,8 +620,9 @@ $(document).ready(function() {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
 								dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
@@ -616,7 +637,29 @@ $(document).ready(function() {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
 
 										dz.emit("addedfile", mockFile);
-										dz.emit("thumbnail", mockFile, file.url);
+										//dz.emit("thumbnail", mockFile, file.url);
+										
+										let fileUrl = file.url;
+										let extension = fileUrl.split('.').pop().toLowerCase();
+										//alert(extension);
+										if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension))
+										{
+											dz.emit("thumbnail", mockFile, file.url);
+										}
+										else if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+										  // Inject video preview manually
+										  console.log(file.url);
+										  setTimeout(() => {
+											const videoElement = document.createElement('video');
+											videoElement.setAttribute('src', file.url);
+											videoElement.setAttribute('controls', 'true');
+											videoElement.style.maxWidth = '100%';
+											videoElement.style.maxHeight = '100px';
+											mockFile.previewElement.querySelector(".dz-image").innerHTML = '';
+											mockFile.previewElement.querySelector(".dz-image").appendChild(videoElement);
+										  }, 0);
+										}
+										
 										dz.emit("complete", mockFile);
 
 										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
@@ -780,7 +823,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				.filter(file => file.subchecklist_id == subchecklistId)
 				.forEach(function (file) {
 					let mockFile = { name: file.name, size: file.size, accepted: true };
-
+                    alert("ok1"+ file.url);
 					dz.emit("addedfile", mockFile);
 					dz.emit("thumbnail", mockFile, file.url);
 					dz.emit("complete", mockFile);
@@ -850,7 +893,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
             // Add existing files (preloaded from server)
             existingFiles.forEach(function (file) {
                 let mockFile = { name: file.name, size: file.size, accepted: true };
-
+                alert("ok2"+ file.url);
                 dz.emit("addedfile", mockFile);
                 dz.emit("thumbnail", mockFile, file.url);
                 dz.emit("complete", mockFile);
@@ -934,7 +977,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
         init: function () {
             this.on("success", function (file, response) {
                 console.log('Uploaded:', response);
-                //alert('response.filename');
+                alert("ok3"+ response.filename);
                 // Attach filename to file object so we can use it on removal
                 file.uploadedFilename = response.filename;
 
@@ -1358,8 +1401,9 @@ $(document ).ready(function() {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
 								dictRemoveFile: 'Delete file',
@@ -1376,7 +1420,29 @@ $(document ).ready(function() {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
 
 										dz.emit("addedfile", mockFile);
-										dz.emit("thumbnail", mockFile, file.url);
+										//dz.emit("thumbnail", mockFile, file.url);
+										
+										let fileUrl = file.url;
+										let extension = fileUrl.split('.').pop().toLowerCase();
+										//alert(extension);
+										if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension))
+										{
+											dz.emit("thumbnail", mockFile, file.url);
+										}
+										else if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+										  // Inject video preview manually
+										  console.log(file.url);
+										  setTimeout(() => {
+											const videoElement = document.createElement('video');
+											videoElement.setAttribute('src', file.url);
+											videoElement.setAttribute('controls', 'true');
+											videoElement.style.maxWidth = '100%';
+											videoElement.style.maxHeight = '100px';
+											mockFile.previewElement.querySelector(".dz-image").innerHTML = '';
+											mockFile.previewElement.querySelector(".dz-image").appendChild(videoElement);
+										  }, 0);
+										}
+										
 										dz.emit("complete", mockFile);
 
 										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
@@ -1419,8 +1485,9 @@ $(document ).ready(function() {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
@@ -1521,8 +1588,9 @@ $(document ).ready(function() {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
 								dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
@@ -1537,7 +1605,28 @@ $(document ).ready(function() {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
 
 										dz.emit("addedfile", mockFile);
-										dz.emit("thumbnail", mockFile, file.url);
+										//dz.emit("thumbnail", mockFile, file.url);
+										let fileUrl = file.url;
+										let extension = fileUrl.split('.').pop().toLowerCase();
+										//alert(extension);
+										if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension))
+										{
+											dz.emit("thumbnail", mockFile, file.url);
+										}
+										else if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+										  // Inject video preview manually
+										  console.log(file.url);
+										  setTimeout(() => {
+											const videoElement = document.createElement('video');
+											videoElement.setAttribute('src', file.url);
+											videoElement.setAttribute('controls', 'true');
+											videoElement.style.maxWidth = '100%';
+											videoElement.style.maxHeight = '100px';
+											mockFile.previewElement.querySelector(".dz-image").innerHTML = '';
+											mockFile.previewElement.querySelector(".dz-image").appendChild(videoElement);
+										  }, 0);
+										}
+										
 										dz.emit("complete", mockFile);
 
 										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
@@ -1583,8 +1672,9 @@ $(document ).ready(function() {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
@@ -1748,8 +1838,9 @@ $(document ).ready(function() {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
 								dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
@@ -1760,13 +1851,38 @@ $(document ).ready(function() {
 									let dz = this;
 									let subchecklistId = dropzoneElement.querySelector('[name="subchecklist_id"]').value;
 									// Add existing files (preloaded from server)
+									//alert(response.existingSubChecklistFiles);
 									response.existingSubChecklistFiles
 									.filter(file => file.subchecklist_id == subchecklistId)
 									.forEach(function (file) {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
 
 										dz.emit("addedfile", mockFile);
-										dz.emit("thumbnail", mockFile, file.url);
+										//dz.emit("thumbnail", mockFile, file.url);
+										//alert(file.url);
+										let fileUrl = file.url;
+										let extension = fileUrl.split('.').pop().toLowerCase();
+										//alert(extension);
+										if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension))
+										{
+											dz.emit("thumbnail", mockFile, file.url);
+										}
+										else if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+										  // Inject video preview manually
+										  console.log(file.url);
+										  setTimeout(() => {
+											const videoElement = document.createElement('video');
+											videoElement.setAttribute('src', file.url);
+											videoElement.setAttribute('controls', 'true');
+											videoElement.style.maxWidth = '100%';
+											videoElement.style.maxHeight = '100px';
+											mockFile.previewElement.querySelector(".dz-image").innerHTML = '';
+											mockFile.previewElement.querySelector(".dz-image").appendChild(videoElement);
+										  }, 0);
+										}
+										
+										
+										
 										dz.emit("complete", mockFile);
 
 										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
@@ -1808,8 +1924,9 @@ $(document ).ready(function() {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
@@ -1908,8 +2025,9 @@ $(document ).ready(function() {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
 								dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
@@ -1924,7 +2042,30 @@ $(document ).ready(function() {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
 
 										dz.emit("addedfile", mockFile);
-										dz.emit("thumbnail", mockFile, file.url);
+										//dz.emit("thumbnail", mockFile, file.url);
+										
+										let fileUrl = file.url;
+										let extension = fileUrl.split('.').pop().toLowerCase();
+										//alert(extension);
+										if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension))
+										{
+											dz.emit("thumbnail", mockFile, file.url);
+										}
+										else if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+										  // Inject video preview manually
+										  console.log(file.url);
+										  setTimeout(() => {
+											const videoElement = document.createElement('video');
+											videoElement.setAttribute('src', file.url);
+											videoElement.setAttribute('controls', 'true');
+											videoElement.style.maxWidth = '100%';
+											videoElement.style.maxHeight = '100px';
+											mockFile.previewElement.querySelector(".dz-image").innerHTML = '';
+											mockFile.previewElement.querySelector(".dz-image").appendChild(videoElement);
+										  }, 0);
+										}
+										
+										
 										dz.emit("complete", mockFile);
 
 										mockFile.previewElement.classList.add('dz-success', 'dz-complete');
@@ -2018,7 +2159,6 @@ $(document ).ready(function() {
 	});
 	
 	$(document).on('click','.get_checklist', function(){
-	//alert('ok');
 	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var directEdit = $(this).data('dedit'); // 21-06-2025
 	   var cat_id = $(this).data('cat');
@@ -2159,12 +2299,16 @@ $(document ).ready(function() {
 
 										dz.emit("addedfile", mockFile);
 										
+										//dz.emit("thumbnail", mockFile, file.url);
 										// Show thumbnail only if image
-										if (file.mime_type && file.mime_type.startsWith('image/'))
+										let fileUrl = file.url;
+										let extension = fileUrl.split('.').pop().toLowerCase();
+										//alert(extension);
+										if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension))
 										{
 											dz.emit("thumbnail", mockFile, file.url);
 										}
-										else if (file.mime_type && file.mime_type.startsWith('video/')) {
+										else if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
 										  // Inject video preview manually
 										  console.log(file.url);
 										  setTimeout(() => {
@@ -2184,7 +2328,7 @@ $(document ).ready(function() {
 										mockFile.uploadedFilename = file.name;
 										$('#hasEditMultipleFile' + subchecklistId).val(1);
 									});
-
+									
 									this.on("removedfile", function (file) {
 										if (file.uploadedFilename) {
 											$.ajax({
@@ -2323,8 +2467,9 @@ $(document ).ready(function() {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								dictRemoveFile: 'Delete file',
 								dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
@@ -2339,7 +2484,29 @@ $(document ).ready(function() {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
 
 										dz.emit("addedfile", mockFile);
-										dz.emit("thumbnail", mockFile, file.url);
+										//dz.emit("thumbnail", mockFile, file.url);
+										
+										let fileUrl = file.url;
+										let extension = fileUrl.split('.').pop().toLowerCase();
+										//alert(extension);
+										if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension))
+										{
+											dz.emit("thumbnail", mockFile, file.url);
+										}
+										else if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+										  // Inject video preview manually
+										  console.log(file.url);
+										  setTimeout(() => {
+											const videoElement = document.createElement('video');
+											videoElement.setAttribute('src', file.url);
+											videoElement.setAttribute('controls', 'true');
+											videoElement.style.maxWidth = '100%';
+											videoElement.style.maxHeight = '100px';
+											mockFile.previewElement.querySelector(".dz-image").innerHTML = '';
+											mockFile.previewElement.querySelector(".dz-image").appendChild(videoElement);
+										  }, 0);
+										}
+										
 										dz.emit("complete", mockFile);
 
 										mockFile.previewElement.classList.add('dz-success', 'dz-complete');

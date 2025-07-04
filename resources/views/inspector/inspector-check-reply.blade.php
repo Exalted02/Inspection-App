@@ -98,6 +98,7 @@
 	 }
  }
  //echo auth()->user()->user_type;die;
+ //echo "<pre>";print_r($image_arr);die;
  //echo "<pre>";print_r($corrective_action_files);die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
@@ -133,8 +134,17 @@
 							<div class="col-md-12">
 								@if(!empty($image_arr))
 									@foreach($image_arr as $url)
+										@php 
+											$urls = $url['url'] ?? '';
+											$extension = pathinfo($urls, PATHINFO_EXTENSION);
+											$extension = strtolower($extension);
+										@endphp
 									<div class="cheklist-reply-images">
+										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 										<img src="{{ $url['url'] ?? '' }}">
+										@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+										<video controls src="{{ $url['url'] ?? '' }}"width="90" height="90"></video>
+										@endif
 									</div>
 									@endforeach
 								@endif

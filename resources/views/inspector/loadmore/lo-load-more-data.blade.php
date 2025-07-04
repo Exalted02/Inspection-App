@@ -248,9 +248,18 @@ if($mode == 'corrective_appr')
 		@endphp
 		@if(!empty($arrSubchecklist))
 			@foreach($arrSubchecklist as $val)
+				@php 
+					$url = $val['image'] ?? '';
+					$extension = pathinfo($url, PATHINFO_EXTENSION);
+					$extension = strtolower($extension);
+				@endphp
 		<div class="d-flex mb-3 task">
 			<div class="date-box">
+				@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 				<img src="{{ $val['image'] }}" width="50" height="50">
+				@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+					<video controls src="{{ $val['image'] }}"></video>
+				@endif
 			</div>
 			<div class="flex-grow-1">
 			{{--<a href="{{ route('location-owner-subchecklist-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">--}}
@@ -279,9 +288,18 @@ if($mode == 'corrective_appr')
 		@endforeach
 		
 		@else 
+			@php 
+				$url = $images ?? '';
+				$extension = pathinfo($url, PATHINFO_EXTENSION);
+				$extension = strtolower($extension);
+			@endphp
 			<div class="d-flex mb-3 task">
 			<div class="date-box">
-				<img src="{{ $images }}" width="50" height="50">
+				@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+					<img src="{{ $images }}" width="50" height="50">
+				@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+					<video controls src="{{ $images }}"></video>
+				@endif
 			</div>
 			<div class="flex-grow-1">
 			{{--<a href="{{ route('location-owner-checklist-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">--}}
@@ -363,9 +381,18 @@ if($mode == 'corrective_appr')
 	@endphp
 	@if(!empty($arrSubchecklist))
 		@foreach($arrSubchecklist as $val)
+		@php 
+			$url = $val['image'] ?? '';
+			$extension = pathinfo($url, PATHINFO_EXTENSION);
+			$extension = strtolower($extension);
+		@endphp
 	<div class="d-flex mb-3 task">
 		<div class="date-box">
+			@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 			<img src="{{ $val['image'] }}" width="50" height="50">
+			@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+			<video controls src="{{ $val['image'] }}"></video>
+			@endif
 		</div>
 		<div class="flex-grow-1">
 			@if($result['second_checked'] == '')
@@ -411,9 +438,18 @@ if($mode == 'corrective_appr')
 	@endforeach
 	
 	@else 
+		@php 
+			$url = $images ?? '';
+			$extension = pathinfo($url, PATHINFO_EXTENSION);
+			$extension = strtolower($extension);
+		@endphp
 		<div class="d-flex mb-3 task">
 		<div class="date-box">
+			@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 			<img src="{{ $images }}" width="50" height="50">
+			@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+			<video controls src="{{ $images }}"></video>
+			@endif
 		</div>
 		<div class="flex-grow-1">
 			@if($result['second_checked'] == '')
@@ -509,9 +545,18 @@ if($mode == 'corrective_appr')
 	@endphp
 	@if(!empty($arrSubchecklist))
 		@foreach($arrSubchecklist as $val)
+		@php 
+			$url = $val['image'] ?? '';
+			$extension = pathinfo($url, PATHINFO_EXTENSION);
+			$extension = strtolower($extension);
+		@endphp
 	<div class="d-flex mb-3 task">
 		<div class="date-box">
-			<img src="{{ $val['image'] }}" width="50" height="50">
+			@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+				<img src="{{ $val['image'] }}" width="50" height="50">
+			@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+				<video controls src="{{ $val['image'] }}"></video>
+			@endif
 		</div>
 		<div class="flex-grow-1">
 			@if($result['second_checked'] == '')
@@ -557,9 +602,18 @@ if($mode == 'corrective_appr')
 	@endforeach
 	
 	@else 
+		@php 
+			$url = $images ?? '';
+			$extension = pathinfo($url, PATHINFO_EXTENSION);
+			$extension = strtolower($extension);
+		@endphp
 		<div class="d-flex mb-3 task">
 		<div class="date-box">
+			@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 			<img src="{{ $images }}" width="50" height="50">
+			@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+				<video controls src="{{ $images }}"></video>
+			@endif
 		</div>
 		<div class="flex-grow-1">
 			@if($result['second_checked'] == '')
@@ -658,9 +712,18 @@ if($mode == 'corrective_appr')
 	@endphp
 	@if(!empty($arrSubchecklist))
 		@foreach($arrSubchecklist as $val)
+			@php 
+				$url = $val['image'] ?? '';
+				$extension = pathinfo($url, PATHINFO_EXTENSION);
+				$extension = strtolower($extension);
+			@endphp
 	<div class="d-flex mb-3 task">
 		<div class="date-box">
-			<img src="{{ $val['image'] }}" width="50" height="50">
+			@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+				<img src="{{ $val['image'] }}" width="50" height="50">
+			@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+				<video controls src="{{ $val['image'] }}"></video>
+			@endif
 		</div>
 		<div class="flex-grow-1">
 			<a href="javascript:void(0);">
@@ -686,10 +749,19 @@ if($mode == 'corrective_appr')
 	</div>
 	@endforeach
 
-	@else 
+	@else
+		@php 
+			$url = $images ?? '';
+			$extension = pathinfo($url, PATHINFO_EXTENSION);
+			$extension = strtolower($extension);
+		@endphp		
 		<div class="d-flex mb-3 task">
 		<div class="date-box">
+			@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 			<img src="{{ $images }}" width="50" height="50">
+			@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+			<video controls src="{{ $images }}"></video>
+			@endif
 		</div>
 		<div class="flex-grow-1">
 			<a href="javascript:void(0);">

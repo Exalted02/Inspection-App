@@ -161,9 +161,20 @@ $totalapprcompleted = $countCompleted;
 									@endphp
 									@if(!empty($arrSubchecklist))
 										@foreach($arrSubchecklist as $val)
+									
+										@php 
+											$url = $val['image'] ?? '';
+											$extension = pathinfo($url, PATHINFO_EXTENSION);
+											$extension = strtolower($extension);
+										@endphp
+									
 									<div class="d-flex mb-3 task">
 										<div class="date-box">
-											<img src="{{ $val['image'] }}">
+										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+										<img src="{{ $val['image'] }}">
+									    @elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<video controls src="{{ $val['image'] }}"></video>
+										@endif
 										</div>
 										<div class="flex-grow-1">
 										{{--<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">--}}
@@ -206,9 +217,18 @@ $totalapprcompleted = $countCompleted;
 									@endforeach
 									
 									@else 
+										@php 
+											$url = $images ?? '';
+											$extension = pathinfo($url, PATHINFO_EXTENSION);
+											$extension = strtolower($extension);
+										@endphp
 										<div class="d-flex mb-3 task">
 										<div class="date-box">
+										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<img src="{{ $images }}">
+										@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<video controls src="{{ $images }}"></video>
+										@endif
 										</div>
 										<div class="flex-grow-1">
 											<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
@@ -304,9 +324,18 @@ $totalapprcompleted = $countCompleted;
 									@endphp
 									@if(!empty($arrSubchecklist))
 										@foreach($arrSubchecklist as $val)
+											@php 
+												$url = $val['image'] ?? '';
+												$extension = pathinfo($url, PATHINFO_EXTENSION);
+												$extension = strtolower($extension);
+											@endphp
 									<div class="d-flex mb-3 task">
 										<div class="date-box">
+											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<img src="{{ $val['image'] }}" width="50" height="50">
+											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<video controls src="{{ $val['image'] }}" width="50" height="50"></video>
+											@endif
 										</div>
 										<div class="flex-grow-1">
 											@if($result['second_checked'] == '')
@@ -352,9 +381,18 @@ $totalapprcompleted = $countCompleted;
 									@endforeach
 									
 									@else 
+											@php 
+												$url = $images ?? '';
+												$extension = pathinfo($url, PATHINFO_EXTENSION);
+												$extension = strtolower($extension);
+											@endphp
 										<div class="d-flex mb-3 task">
 										<div class="date-box">
-											<img src="{{ $images }}" width="50" height="50">
+											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+											 <img src="{{ $images }}" width="50" height="50">
+											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											 <video controls src="{{ $images }}" width="50" height="50"></video>
+											@endif
 										</div>
 										<div class="flex-grow-1">
 											@if($result['second_checked'] == '')
@@ -455,9 +493,19 @@ $totalapprcompleted = $countCompleted;
 								@endphp
 								@if(!empty($arrSubchecklist))
 									@foreach($arrSubchecklist as $val)
+								
+								    @php 
+										$url = $val['image'] ?? '';
+										$extension = pathinfo($url, PATHINFO_EXTENSION);
+										$extension = strtolower($extension);
+									@endphp
 								<div class="d-flex mb-3 task">
 									<div class="date-box">
-										<img src="{{ $val['image'] }}" width="50" height="50">
+										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+											<img src="{{ $val['image'] }}" width="50" height="50">
+										@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<video controls src="{{ $val['image'] }}" width="50" height="50"></video>
+										@endif
 									</div>
 									<div class="flex-grow-1">
 										@if($result['second_checked'] == '')
@@ -502,10 +550,21 @@ $totalapprcompleted = $countCompleted;
 								</div>
 								@endforeach
 								
-								@else 
+								@else
+									
+									@php 
+										$url = $images ?? '';
+										$extension = pathinfo($url, PATHINFO_EXTENSION);
+										$extension = strtolower($extension);
+									@endphp
+								
 									<div class="d-flex mb-3 task">
 									<div class="date-box">
+										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 										<img src="{{ $images }}" width="50" height="50">
+										@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+										<video controls src="{{ $images }}" width="50" height="50"></video>
+										@endif
 									</div>
 									<div class="flex-grow-1">
 										@if($result['second_checked'] == '')
@@ -607,9 +666,19 @@ $totalapprcompleted = $countCompleted;
 									@endphp
 									@if(!empty($arrSubchecklist))
 										@foreach($arrSubchecklist as $val)
+										@php 
+											$url = $val['image'] ?? '';
+											$extension = pathinfo($url, PATHINFO_EXTENSION);
+											$extension = strtolower($extension);
+										@endphp
+									
 									<div class="d-flex mb-3 task">
 										<div class="date-box">
+										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<img src="{{ $val['image'] }}" width="50" height="50">
+										@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<video controls src="{{ $val['image'] }}" width="50" height="50"><video>
+										@endif
 										</div>
 										<div class="flex-grow-1">
 											<a href="javascript:void(0);">
@@ -636,9 +705,18 @@ $totalapprcompleted = $countCompleted;
 									@endforeach
 									
 									@else 
+										@php 
+											$url = $images ?? '';
+											$extension = pathinfo($url, PATHINFO_EXTENSION);
+											$extension = strtolower($extension);
+										@endphp
 										<div class="d-flex mb-3 task">
 										<div class="date-box">
+										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<img src="{{ $images }}" width="50" height="50">
+										@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<video controls src="{{ $images }}" width="50" height="50"></video>
+										@endif
 										</div>
 										<div class="flex-grow-1">
 											<a href="javascript:void(0);">
