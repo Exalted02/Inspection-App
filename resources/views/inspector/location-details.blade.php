@@ -477,14 +477,17 @@ $(document ).ready(function() {
 });
 function deletetask(id)
 {
+	var location_id = $('#location_id').val();
 	$.ajax({
 		url: "{{ route('delete-task')}}",
 		type: "POST",
 		data: {id:id, '_token':csrfToken},
 		dataType: 'json',
 		success: function(response) {
-			
-		},
+			var baseUrl = "{{ url('/location-details') }}";
+			var redirectUrl = baseUrl + '/'+ location_id;
+			window.location.href = redirectUrl;
+			},
 	});
 }
 function readURL(input) {

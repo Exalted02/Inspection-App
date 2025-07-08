@@ -5279,22 +5279,23 @@ class DashboardInspectorController extends Controller
 		Task_list_subchecklists::where('task_list_id', $id)->delete();
 		
 		// delete from corrective action  table
-		$correctiveFiles = Task_list_corrective_action_file::where('task_id', $id)->get();
+		$correctiveFiles = Task_list_corrective_action::where('task_list_id', $id)->get();
 		if($correctiveFiles->isNotEmpty())
 		{
 			foreach($correctiveFiles as $files)
 			{
-				$corrsctive_files = Task_list_corrective_action_file::where('task_id', $files->task_id)->first();
+				$corrsctive_files = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $files->id)->first();
 				$file_name = $corrsctive_files ? $corrsctive_files->file : '';
 				$filePath = public_path('uploads/corrective_action/' . $file_name);
 				if (file_exists($filePath)) {
 					unlink($filePath);
 				}
 				
-				Task_list_corrective_action_file::where('task_id', $files->task_id)->delete();
+				Task_list_corrective_action_file::where('task_list_corrective_actions_id', $files->id)->delete();
 			}
 		}
 		Task_list_corrective_action::where('task_list_id', $id)->delete();
+		return response()->json(['success', 'success']);
 		
 	}
 }
