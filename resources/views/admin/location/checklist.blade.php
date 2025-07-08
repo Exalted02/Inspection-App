@@ -7,6 +7,19 @@ $subcategory_name = '';
 $categoryData = App\Models\Category::where('id',$category_id)->first();
 $category_name = $categoryData ? $categoryData->name : '';
 
+$company_id = '';
+$location_name = '';
+$company_name = '';
+if($categoryData)
+{
+	$manageLocation = App\Models\Manage_location::where('id', $categoryData->location_id)->first();
+	$company_id  = $manageLocation ? $manageLocation->company_id : '';
+	$location_name   = $manageLocation ? $manageLocation->location_name : '';
+	
+	$companyData = App\Models\Manage_company::where('id', $company_id)->first();
+	$company_name = $companyData ? $companyData->company_name : '';
+	
+}
 /*$subcategoryData = App\Models\Subcategory::where('id',$subcategory_id)->where('category_id', $category_id)->first();
 $subcategory_name = $subcategoryData ? $subcategoryData->name : '';*/
 @endphp
@@ -22,6 +35,9 @@ $subcategory_name = $subcategoryData ? $subcategoryData->name : '';*/
 					<h3 class="page-title">{{ __('checklist') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
+						<li class="breadcrumb-item"><a href="{{ route('admin.manage-company') }}">{{ __('Manage conpany') }}</a></li>
+						<li class="breadcrumb-item"><a href="{{ route('admin.manage-company') }}">{{ $company_name }}</a></li>
+						<li class="breadcrumb-item"><a class="breadcrumb-item" href="{{ route('admin.manage-company-location', ['id'=>$company_id]) }}">{{ $location_name ?? '' }}</a></li>
 						<li class="breadcrumb-item active"><a class="breadcrumb-item active" href="javascript:history.back()">{{ $category_name .''.$subcategory_name }}</a></li>
 					</ul>
 				</div>
