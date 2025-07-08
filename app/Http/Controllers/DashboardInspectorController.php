@@ -1946,6 +1946,7 @@ class DashboardInspectorController extends Controller
 			return redirect('inspector-dashboard');
 		}
 		
+		$data['task_id']  = '';
 		$data['location_id']  = $lid;
 		$locationWisecategory = [];
 		$categories = Category::where('location_id', $lid)->get();
@@ -1967,10 +1968,21 @@ class DashboardInspectorController extends Controller
 	
 	public function save_task_data(Request $request)
 	{
-		//echo "<pre>";print_r($request->all());
+		//echo "<pre>";print_r($request->all());die;
 		
-		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('category_id', $request->post('category_id'))->where('task_title', $request->post('task_title'))->where('status', '!=', 2)
-        ->first();
+		/*$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('category_id', $request->post('category_id'))->where('task_title', $request->post('task_title'))->where('status', '!=', 2)
+        ->first();*/
+		/*$existingStage = Subchecklist::where('checklist_id', $request->post('checklist'))->where('name', $request->post('name'))->where('status', '!=', 2)
+        ->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+        ->first();*/
+		
+		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('category_id', $request->post('category_id'))->where('task_title', $request->post('task_title'))
+		->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+		->first();
 		
 		if ($existingTask) {
 			return response()->json([
@@ -1987,23 +1999,40 @@ class DashboardInspectorController extends Controller
 		$datetime  = $date.' '.$time;
 		$created_at = date('Y-m-d H:i:s', strtotime($datetime));
 		
-		$model=new Task_lists();
-		$model->inspector_id	=	auth()->user()->id;
-		$model->location_id		=	$request->post('location_id');
-		//$model->category_id		=	$request->post('category_id');
-		//$model->lo_id			=	;
-		$model->los_id			=	$los_id ?? null;
-		$model->task_title		=	$request->post('task_title');
-		$model->status		=	0;
-		$model->created_at	=	$created_at ?? '';
-		$model->save();
-		$id = $model->id;
+		$id = $request->id ?? '';
+		if(empty($request->id))
+		{
+			$model=new Task_lists();
+			$model->inspector_id	=	auth()->user()->id;
+			$model->location_id		=	$request->post('location_id');
+			//$model->category_id		=	$request->post('category_id');
+			//$model->lo_id			=	;
+			$model->los_id			=	$los_id ?? null;
+			$model->task_title		=	$request->post('task_title');
+			$model->status		=	0;
+			$model->created_at	=	$created_at ?? '';
+			$model->save();
+			$id = $model->id;
+		}
+		else{
+			$model = Task_lists::find($id);
+			$model->inspector_id	=	auth()->user()->id;
+			$model->location_id		=	$request->post('location_id');
+			//$model->category_id		=	$request->post('category_id');
+			//$model->lo_id			=	;
+			$model->los_id			=	$los_id ?? null;
+			$model->task_title		=	$request->post('task_title');
+			$model->status		=	0;
+			$model->created_at	=	$created_at ?? '';
+			$model->save();
+		}
 		
 		// add task_location_category
 		$location_category = $request->location_category;
 		
 		if(!empty($location_category))
 		{
+			Task_location_categories::where('task_list_id', $id)->delete();
 			foreach($location_category as $category)
 			{
 				$locModel = new Task_location_categories();
@@ -2024,13 +2053,28 @@ class DashboardInspectorController extends Controller
 			$fileName = time() . '_' . $file->getClientOriginalName();
 			$file->move($destinationPath, $fileName);
 			
+			//-- unlink---
+			if($request->hid_task_image)
+			{
+				$f_name = $request->hid_task_image;
+				if($f_name != 'default-task-pic.jpg')
+				{
+					$filePath = public_path('uploads/task/' . $f_name);
+					if (file_exists($filePath)) {
+						unlink($filePath);
+					}
+				}
+			}
+			//-----------
+			
 			$updtmodel= Task_lists::find($id);
 			$updtmodel->image = $fileName;
 			$updtmodel->save();
 		}
 		else{
 			$updtmodel= Task_lists::find($id);
-			$updtmodel->image = 'default-task-pic.jpg';
+			$updtmodel->image = $request->hid_task_image;
+			//$updtmodel->image = 'default-task-pic.jpg';
 			$updtmodel->save();
 		}
 		
@@ -5155,5 +5199,34 @@ class DashboardInspectorController extends Controller
 		$remain = $totalRecord - $count;
 		
 		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
+	}
+	public function task_list_edit($lid='', $id='')
+	{
+		$data = [];
+		$taskData = Task_lists::where('id', $id)->first();
+		if($taskData)
+		{
+			$data['location_id']  = $lid;
+			$data['task_id']  = $id;
+			$locationWisecategory = [];
+			$categories = Category::where('location_id', $lid)->get();
+			foreach($categories as $category)
+			{
+				$exists = Checklist::where('category_id', $category->id)->exists();
+				if($exists)
+				{
+					$locationWisecategory[] = [
+						'id'  => $category->id,
+						'name'  => $category->name,
+					];
+				}
+			}
+			
+			$data['locationWisecategory']= $locationWisecategory;
+			return view('inspector.add-new-task', $data);
+		}
+		else{
+			return redirect('inspector-dashboard');
+		}
 	}
 }

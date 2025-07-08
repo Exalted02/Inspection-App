@@ -97,7 +97,13 @@ $getCategotyArr = [];
 											<div class="dow">{{ $day ?? '' }}</div>
 											<div class="dod"> {{ $week ?? '' }}</div>
 										</div>
+										<div class="task-action">
+											<a href="{{ route('task-list-edit', ['lid'=> $tasks->location_id,'id'=> $tasks->id])}}"><i class="edit-button fa-solid fa-pencil"></i></a>
+											<a><i class="fa-regular fa-trash-can m-r-5"></i></a>
+										</div>
 									</div>
+									
+									
 									<div class="flex-grow-1">
 									@if(auth()->user()->user_type == 1 || auth()->user()->user_type == 3)
 										<a href="{{ route('category', ['location_id'=>$tasks->location_id,'task_id'=>$tasks->id, 'active'=>1]) }}">

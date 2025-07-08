@@ -1738,4 +1738,11 @@ body {
 		height: auto;
 	}
 }
+.task-action {
+	padding: 2px 0px ;
+	justify-content: space-between !important;
+}
+.task-action .edit-button {
+   color:#232326
+}
 

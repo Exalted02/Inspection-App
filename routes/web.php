@@ -98,6 +98,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('add-new-task/{location_id}', [DashboardInspectorController::class, 'add_new_task'])->name('add-new-task');
 	
 	Route::post('save-task-data', [DashboardInspectorController::class, 'save_task_data'])->name('save-task-data');
+	Route::get('task-list-edit/{lid}/{id}', [DashboardInspectorController::class, 'task_list_edit'])->name('task-list-edit');
 	
 	
 	Route::get('inspector-checklist-question-reply/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_checklist_question_reply'])->name('inspector-checklist-question-reply');

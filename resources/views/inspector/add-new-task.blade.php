@@ -4,8 +4,30 @@
  //echo "<pre>";print_r($locationWisecategory );die;
  
  $rejected_region = '';
- 
- 
+
+$task_title = '';
+$selected_date = '';
+$task_image = '';
+$categotyArr = [];
+if(!empty($task_id))
+{
+	$taskData = App\Models\Task_lists::where('id', $task_id)->first();
+	$task_title = $taskData ? $taskData->task_title : '';
+	$timeline = $taskData ? $taskData->created_at : '';
+	$selected_date = date('d M Y', strtotime($timeline));
+	$task_image = $taskData ? $taskData->image : '';
+	
+	$getAllCatgory = App\Models\Task_location_categories::where('task_list_id', $task_id)->get();
+	
+	if($getAllCatgory->isNotEmpty())
+	{
+		foreach($getAllCatgory as $catVal)
+		{
+			$categotyArr[] = $catVal->category_id;
+		}
+		
+	}
+}
  
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
@@ -24,11 +46,13 @@
 						
 						  <form id="frmcategory" action="{{ route('save-task-data') }}" enctype="multipart/form-data">
 							<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
+							<input type="hidden" name="id" value="{{ $task_id ?? ''}}">
+							<input type="text" name="hid_task_image" value="{{ $task_image ?? ''}}">
 							@csrf	
 								<div class="row form-group">
 									<div class="col-md-12">
 										<label>{{ __('Task Title') }}</label>
-										<input class="form-control" placeholder="Add task title" type="text" name="task_title" id="task_title">
+										<input class="form-control" placeholder="Add task title" type="text" name="task_title" id="task_title" value="{{ $task_title ?? ''}}">
 										<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
 									</div>
 								</div>
@@ -39,10 +63,10 @@
 										<div class="split-placeholder-wrapper">
 											<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time" readonly>
 											<span class="custom-left-placeholder" id="selected_time">Settime</span>
-											<span class="custom-right-placeholder" id="selected_date">Setdate</span>
+											<span class="custom-right-placeholder" id="selected_date">{{ $selected_date ? $selected_date : 'Setdate'}}</span>
 										</div>
 										<span id="settimeline_id_error" style="display:none;  color: red;"></span>
-										<input type="hidden" id="hidden_set_date" name="hidden_set_date">
+										<input type="hidden" id="hidden_set_date" name="hidden_set_date" value="{{ $selected_date ?? ''}}">
 										<input type="hidden" id="hidden_set_time" name="hidden_set_time">
 									</div>
 								</div>
@@ -62,7 +86,7 @@
 								</div>
 								<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;margin-left: -10px;">
 									<div class="task-preview-wrapper position-relative d-inline-block">
-										<img id="" class="img-responsive task-img-upload" src="{{ url('images/noimages/default-task-pic.jpg') }}" alt=""/>
+										<img id="" class="img-responsive task-img-upload" src="{{ $task_image ? url('uploads/task/' . $task_image) : url('images/noimages/default-task-pic.jpg') }}" alt=""/>
 										<button type="button" class="task-img-delete" id="delete-image">×</button>
 									</div>
 								</div>
@@ -72,9 +96,16 @@
 										<label><strong>Select Category</strong></label>
 										<div class="subcategory-box mt-2">
 											@foreach($locationWisecategory as $category)
+											@php 
+												$chk = '';
+												if(in_array($category['id'], $categotyArr))
+												{
+													$chk=1;
+												}
+											@endphp
 												<div class="subcategory-item">
 													<div class="subcategory-checkbox">
-														<input type="checkbox" name="location_category[]" value="{{ $category['id'] }}">
+														<input type="checkbox" name="location_category[]" value="{{ $category['id'] }}" {{ $chk==1 ? 'checked' : '' }}>
 													</div>
 													<div class="subcategory-name"><strong>{{ $category['name'] }}</strong></div>
 													
@@ -87,7 +118,7 @@
 								@else
 									<span class="category-message">Category not present for this location, please add from admin</span>
 								@endif
-								
+							
 							<div class="sticky-footer save-task">
 								<button type="button">Add Task</button>
 							</div>
