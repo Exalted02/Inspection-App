@@ -719,7 +719,7 @@ $(document).ready(function() {
 
 										// Attach filename to file object so we can use it on removal
 										file.uploadedFilename = response.filename;
-										alert(response.filename);
+										//alert(response.filename);
 										// Replace default preview with file name
 										file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
 									});
@@ -823,7 +823,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				.filter(file => file.subchecklist_id == subchecklistId)
 				.forEach(function (file) {
 					let mockFile = { name: file.name, size: file.size, accepted: true };
-                    alert("ok1"+ file.url);
+                    //alert("ok1"+ file.url);
 					dz.emit("addedfile", mockFile);
 					dz.emit("thumbnail", mockFile, file.url);
 					dz.emit("complete", mockFile);
@@ -879,8 +879,9 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     let myDropzone = new Dropzone(dropzoneElement, {
         url: dropzoneElement.getAttribute('action'), 
         maxFiles: 5,
-        maxFilesize: 2, // MB
-        acceptedFiles: 'image/*',
+        maxFilesize: 10, // MB
+		acceptedFiles: 'image/*,video/*',
+        //acceptedFiles: 'image/*',
         addRemoveLinks: true,
 		dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
         dictRemoveFile: 'Delete file',
@@ -889,11 +890,43 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
         },
         init: function () {
             let dz = this;
+			
+			//--------upload new file-----------
+			this.on("success", function(file, response) {
+				if(response.new == 1)
+				{
+					 alert('ok');
+					const extension = response.filename.split('.').pop().toLowerCase();
+					const fileUrl = response.url;
 
+					// Add uploaded filename for later removal
+					file.uploadedFilename = response.filename;
+
+					// For videos, manually insert preview
+					if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+						setTimeout(() => {
+							const videoElement = document.createElement('video');
+							videoElement.setAttribute('src', fileUrl);
+							videoElement.setAttribute('controls', 'true');
+							videoElement.style.maxWidth = '100%';
+							videoElement.style.maxHeight = '100px';
+
+							if (file.previewElement) {
+								const dzImage = file.previewElement.querySelector('.dz-image');
+								if (dzImage) {
+									dzImage.innerHTML = '';
+									dzImage.appendChild(videoElement);
+								}
+							}
+						}, 0);
+					}
+				}
+			});
+			//--------------------
             // Add existing files (preloaded from server)
             existingFiles.forEach(function (file) {
                 let mockFile = { name: file.name, size: file.size, accepted: true };
-                alert("ok2"+ file.url);
+                //alert("ok2"+ file.url);
                 dz.emit("addedfile", mockFile);
                 dz.emit("thumbnail", mockFile, file.url);
                 dz.emit("complete", mockFile);
@@ -977,7 +1010,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
         init: function () {
             this.on("success", function (file, response) {
                 console.log('Uploaded:', response);
-                alert("ok3"+ response.filename);
+                //alert("ok3"+ response.filename);
                 // Attach filename to file object so we can use it on removal
                 file.uploadedFilename = response.filename;
 
@@ -1599,7 +1632,38 @@ $(document ).ready(function() {
 								},
 								init: function () {
 									let dz = this;
+									
+									//--------upload new file-----------
+									this.on("success", function(file, response) {
+										if(response.new == 1)
+										{
+											const extension = response.filename.split('.').pop().toLowerCase();
+											const fileUrl = response.url;
 
+											// Add uploaded filename for later removal
+											file.uploadedFilename = response.filename;
+
+											// For videos, manually insert preview
+											if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+												setTimeout(() => {
+													const videoElement = document.createElement('video');
+													videoElement.setAttribute('src', fileUrl);
+													videoElement.setAttribute('controls', 'true');
+													videoElement.style.maxWidth = '100%';
+													videoElement.style.maxHeight = '100px';
+
+													if (file.previewElement) {
+														const dzImage = file.previewElement.querySelector('.dz-image');
+														if (dzImage) {
+															dzImage.innerHTML = '';
+															dzImage.appendChild(videoElement);
+														}
+													}
+												}, 0);
+											}
+										}
+									});
+									//--------------------
 									// Add existing files (preloaded from server)
 									response.existingNextFiles.forEach(function (file) {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
@@ -1687,7 +1751,7 @@ $(document ).ready(function() {
 
 										// Attach filename to file object so we can use it on removal
 										file.uploadedFilename = response.filename;
-										alert(response.filename);
+										//alert(response.filename);
 										// Replace default preview with file name
 										file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
 									});
@@ -2036,7 +2100,38 @@ $(document ).ready(function() {
 								},
 								init: function () {
 									let dz = this;
+									
+									//--------upload new file-----------
+									this.on("success", function(file, response) {
+										if(response.new == 1)
+										{
+											const extension = response.filename.split('.').pop().toLowerCase();
+											const fileUrl = response.url;
 
+											// Add uploaded filename for later removal
+											file.uploadedFilename = response.filename;
+
+											// For videos, manually insert preview
+											if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+												setTimeout(() => {
+													const videoElement = document.createElement('video');
+													videoElement.setAttribute('src', fileUrl);
+													videoElement.setAttribute('controls', 'true');
+													videoElement.style.maxWidth = '100%';
+													videoElement.style.maxHeight = '100px';
+
+													if (file.previewElement) {
+														const dzImage = file.previewElement.querySelector('.dz-image');
+														if (dzImage) {
+															dzImage.innerHTML = '';
+															dzImage.appendChild(videoElement);
+														}
+													}
+												}, 0);
+											}
+										}
+									});
+									//--------------------
 									// Add existing files (preloaded from server)
 									response.existingPreviousFiles.forEach(function (file) {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
@@ -2159,6 +2254,7 @@ $(document ).ready(function() {
 	});
 	
 	$(document).on('click','.get_checklist', function(){
+	//alert('ok');
 	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var directEdit = $(this).data('dedit'); // 21-06-2025
 	   var cat_id = $(this).data('cat');
@@ -2290,6 +2386,38 @@ $(document ).ready(function() {
 								init: function () {
 									let dz = this;
 									let subchecklistId = dropzoneElement.querySelector('[name="subchecklist_id"]').value;
+									
+									//--------upload new file-----------
+									this.on("success", function(file, response) {
+										if(response.new == 1)
+										{
+											const extension = response.filename.split('.').pop().toLowerCase();
+											const fileUrl = response.url;
+
+											// Add uploaded filename for later removal
+											file.uploadedFilename = response.filename;
+
+											// For videos, manually insert preview
+											if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+												setTimeout(() => {
+													const videoElement = document.createElement('video');
+													videoElement.setAttribute('src', fileUrl);
+													videoElement.setAttribute('controls', 'true');
+													videoElement.style.maxWidth = '100%';
+													videoElement.style.maxHeight = '100px';
+
+													if (file.previewElement) {
+														const dzImage = file.previewElement.querySelector('.dz-image');
+														if (dzImage) {
+															dzImage.innerHTML = '';
+															dzImage.appendChild(videoElement);
+														}
+													}
+												}, 0);
+											}
+										}
+									});
+									//--------------------
 									// Add existing files (preloaded from server)
 									response.existingSubChecklistFiles
 									.filter(file => file.subchecklist_id == subchecklistId)
@@ -2365,8 +2493,9 @@ $(document ).ready(function() {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
-								maxFilesize: 2, // MB
-								acceptedFiles: 'image/*',
+								maxFilesize: 10, // MB
+								acceptedFiles: 'image/*,video/*',
+								//acceptedFiles: 'image/*',
 								addRemoveLinks: true,
 								headers: {
 									'X-CSRF-TOKEN': csrfToken
@@ -2374,6 +2503,7 @@ $(document ).ready(function() {
 								dictDefaultMessage: '<span><i class="fa-solid fa-arrow-up-from-bracket"></i><br>Upload File</span>',
 								dictRemoveFile: 'Delete file',
 								init: function () {
+									//alert(response.new);
 									this.on("success", function (file, response) {
 										console.log('Uploaded:', response);
 										//alert(response.filename);
@@ -2382,6 +2512,7 @@ $(document ).ready(function() {
 										//alert(response.filename);
 										// Replace default preview with file name
 										file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
+										
 									});
 
 									this.on("removedfile", function (file) {
@@ -2478,7 +2609,38 @@ $(document ).ready(function() {
 								},
 								init: function () {
 									let dz = this;
+									
+									//--------upload new file-----------
+									this.on("success", function(file, response) {
+										if(response.new == 1)
+										{
+											const extension = response.filename.split('.').pop().toLowerCase();
+											const fileUrl = response.url;
 
+											// Add uploaded filename for later removal
+											file.uploadedFilename = response.filename;
+
+											// For videos, manually insert preview
+											if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+												setTimeout(() => {
+													const videoElement = document.createElement('video');
+													videoElement.setAttribute('src', fileUrl);
+													videoElement.setAttribute('controls', 'true');
+													videoElement.style.maxWidth = '100%';
+													videoElement.style.maxHeight = '100px';
+
+													if (file.previewElement) {
+														const dzImage = file.previewElement.querySelector('.dz-image');
+														if (dzImage) {
+															dzImage.innerHTML = '';
+															dzImage.appendChild(videoElement);
+														}
+													}
+												}, 0);
+											}
+										}
+									});
+									//--------------------
 									// Add existing files (preloaded from server)
 									response.existingNextFiles.forEach(function (file) {
 										let mockFile = { name: file.name, size: file.size, accepted: true };
@@ -2566,7 +2728,7 @@ $(document ).ready(function() {
 
 										// Attach filename to file object so we can use it on removal
 										file.uploadedFilename = response.filename;
-										alert(response.filename);
+										//alert(response.filename);
 										// Replace default preview with file name
 										file.previewElement.querySelector("[data-dz-name]").textContent = response.filename;
 									});

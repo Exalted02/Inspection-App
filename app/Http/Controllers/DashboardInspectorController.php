@@ -1126,8 +1126,9 @@ class DashboardInspectorController extends Controller
 			$tempmodel->file = $filename;
 			$tempmodel->save();
 			//-------
+			$url = url('uploads/temp-reject-files/' . $filename);
 			
-			return response()->json(['success' => true, 'filename' => $filename, 'checklist_id' =>$current_checklist_id, 'subcategory_id' =>$subcategory_id, 'task_id' =>$task_id]);
+			return response()->json(['success' => true, 'filename' => $filename, 'checklist_id' =>$current_checklist_id, 'subcategory_id' =>$subcategory_id, 'task_id' =>$task_id, 'new'=>1 , 'url'=>$url]);
 		}
 
       return response()->json(['success' => false, 'message' => 'No file uploaded.'], 400);
@@ -1204,8 +1205,9 @@ class DashboardInspectorController extends Controller
 			$tempmodel->file = $filename;
 			$tempmodel->save();
 			//-------
+			$url = url('uploads/temp-reject-files/' . $filename);
 			
-			return response()->json(['success' => true, 'filename' => $filename, 'checklist_id' =>$current_checklist_id, 'subchecklist_id' =>$subchecklist_id, 'task_id' =>$task_id]);
+			return response()->json(['success' => true, 'filename' => $filename, 'checklist_id' =>$current_checklist_id, 'subchecklist_id' =>$subchecklist_id, 'task_id' =>$task_id, 'new'=>1, 'url'=>$url]);
 		}
 
       return response()->json(['success' => false, 'message' => 'No file uploaded.'], 400);
