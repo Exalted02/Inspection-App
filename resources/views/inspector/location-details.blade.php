@@ -72,7 +72,7 @@ $getCategotyArr = [];
 								   $day =   Carbon::parse($tasks->created_at)->format('d');
 								   $week= strtoupper(Carbon::parse($tasks->created_at)->format('D'));
 								   
-								   $img = $tasks->image !='' ? url('uploads/task/' . $tasks->image) : url('images/noimages/noimage_task.png');
+								   $img = $tasks->image !='' ? url('uploads/task/' . $tasks->image) : url('uploads/task/default-task-pic.jpg');
 								   
 								   $taskLocationCat = App\Models\Task_location_categories::where('task_list_id', $tasks->id)->get();
 								   foreach($taskLocationCat as $categories)
@@ -99,7 +99,7 @@ $getCategotyArr = [];
 										</div>
 										<div class="task-action">
 											<a href="{{ route('task-list-edit', ['lid'=> $tasks->location_id,'id'=> $tasks->id])}}"><i class="edit-button fa-solid fa-pencil"></i></a>
-											<a><i class="fa-regular fa-trash-can m-r-5"></i></a>
+											<a class="delete-task" data-id="{{ $tasks->id}}" href="javascript:void(0);"><i class="fa-regular fa-trash-can m-r-5"></i></a>
 										</div>
 									</div>
 									
@@ -239,6 +239,7 @@ $getCategotyArr = [];
 {{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>--}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document ).ready(function() {
 	localStorage.removeItem('selectedTab');
@@ -450,7 +451,42 @@ $(document ).ready(function() {
 		var redirectUrl = baseUrl + '/'+ location_id + '/' + active;
 		window.location.href = redirectUrl;
 	});
+	
+	$(document).on('click', '.delete-task', function() {
+		var id = $(this).data('id');
+		Swal.fire({
+			  title: '<div class="swal-title-class">Are you sure you want to delete ?</div>',
+			  //html: '<div class="swal-message-class">You can continue your saved attempt from the task list labeled as "incomplete".</div>',
+			  icon: "warning",
+			  showCancelButton: true,
+			  cancelButtonText: "Cancel",
+			  confirmButtonText: "Yes",
+			  confirmButtonColor: "#0b2b57", 
+			  cancelButtonColor: "#e0e0e0",
+			  customClass: {
+				cancelButton: 'swal-cancel-black',
+				confirmButton : 'swal-save-exist-black'
+			  }
+			}).then((result) => {
+			  if (result.isConfirmed) {
+				deletetask(id); // your function
+			  }
+			});
+		
+	})
 });
+function deletetask(id)
+{
+	$.ajax({
+		url: "{{ route('delete-task')}}",
+		type: "POST",
+		data: {id:id, '_token':csrfToken},
+		dataType: 'json',
+		success: function(response) {
+			
+		},
+	});
+}
 function readURL(input) {
 	if (input.files && input.files[0]) {
 		var reader = new FileReader();

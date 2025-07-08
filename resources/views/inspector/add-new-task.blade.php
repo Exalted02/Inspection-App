@@ -47,7 +47,7 @@ if(!empty($task_id))
 						  <form id="frmcategory" action="{{ route('save-task-data') }}" enctype="multipart/form-data">
 							<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
 							<input type="hidden" name="id" value="{{ $task_id ?? ''}}">
-							<input type="text" name="hid_task_image" value="{{ $task_image ?? ''}}">
+							<input type="hidden" name="hid_task_image" value="{{ $task_image ?? ''}}">
 							@csrf	
 								<div class="row form-group">
 									<div class="col-md-12">
