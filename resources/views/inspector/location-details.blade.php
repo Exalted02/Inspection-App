@@ -116,7 +116,7 @@ $getCategotyArr = [];
 											<h6>{{ $tasks->task_title ?? '' }}</h6>
 											@if(!empty($taskStatus))
 											<p class="text-muted mb-0" style="color:red"><i class="fa fa-clock"></i> {{ $taskStatus }}</p>
-										@endif
+											@endif
 												{{--<p class="text-muted mb-0">{{ get_task_status(auth()->user()->id, $tasks->id, $tasks->location_id) }}</p>--}}
 										</a>
 									</div>

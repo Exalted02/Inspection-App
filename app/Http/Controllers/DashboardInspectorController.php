@@ -5233,10 +5233,6 @@ class DashboardInspectorController extends Controller
 	{
 		$id = $request->id;
 		
-		/*Task_lists, Task_location_categories, Task_list_checklists
-		Task_list_subchecklists,Task_list_subcategories,
-		Task_list_checklist_rejected_files , Task_list_subchecklist_rejected_files	*/	
-		
 		Task_lists::where('id', $id)->delete();
 		Task_location_categories::where('task_list_id', $id)->delete();
 		
@@ -5246,12 +5242,17 @@ class DashboardInspectorController extends Controller
 		{
 			foreach($checklistData as $checklist)
 			{
-				$fileData = Task_list_checklist_rejected_files::where('task_list_checklist_id', $checklist->id)->first();
-				$file_name = $fileData ? $fileData->file : '';
-				
-				$filePath = public_path('uploads/reject-files/' . $file_name);
-				if (file_exists($filePath)) {
-					unlink($filePath);
+				$fileDataArr = Task_list_checklist_rejected_files::where('task_list_checklist_id', $checklist->id)->get();
+				//echo "<pre>";print_r($fileDataArr);die;
+				if($fileDataArr->isNotEmpty())
+				{
+					foreach($fileDataArr as $files)
+						$file_name = $files->file ? $files->file : '';
+						
+						$filePath = public_path('uploads/reject-files/' . $file_name);
+						if (file_exists($filePath)) {
+							unlink($filePath);
+						}
 				}
 				
 				Task_list_checklist_rejected_files::where('task_list_checklist_id', $checklist->id)->delete();
@@ -5260,17 +5261,25 @@ class DashboardInspectorController extends Controller
 		Task_list_checklists::where('task_list_id', $id)->delete();
 		
 		// delete from subchecklist and subchecklist files table
+		$filePath = '';
 		$subchecklistData = Task_list_subchecklists::where('task_list_id', $id)->where('approve', 0)->get();
+		//echo "<pre>";print_r($subchecklistData);die;
 		if($subchecklistData->isNotEmpty())
 		{
 			foreach($subchecklistData as $subchecklist)
 			{
-				$fileData = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $subchecklist->task_list_checklist_id)->where('task_list_subchecklist_id', $subchecklist->id)->first();
-				$file_name = $fileData ? $fileData->file : '';
-				
-				$filePath = public_path('uploads/reject-files/subchecklist/' . $file_name);
-				if (file_exists($filePath)) {
-					unlink($filePath);
+				$fileDataArr = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $subchecklist->task_list_checklist_id)->where('task_list_subchecklist_id', $subchecklist->id)->get();
+				if($fileDataArr->isNotEmpty())
+				{
+					foreach($fileDataArr as $files)
+					{
+						$file_name = $files->file ? $files->file : '';
+						
+						$filePath = public_path('uploads/reject-files/subchecklist/' . $file_name);
+						if (file_exists($filePath)) {
+							unlink($filePath);
+						}
+					}
 				}
 				
 				Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $subchecklist->task_list_checklist_id)->where('task_list_subchecklist_id', $subchecklist->id)->delete();

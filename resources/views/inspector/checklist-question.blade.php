@@ -158,6 +158,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	<input type="hidden" id="isFinalEdit" value="{{ $isFinalEdit }}">
 	<input type="hidden" id="direct_edit">
 	<input type="hidden" id="skip_order_no" value="{{ $skip_order_no ?? ''}}">
+	<input type="hidden" id="pending-count">
 	
 	<div class="checklist-question-sticky-footer" style="display : {{ $isFinalEdit== 'no' ? 'block' : 'none' }}">
 	
@@ -1254,6 +1255,7 @@ $(document ).ready(function() {
 				//alert(response.currentid);
 				if(response.currentid=='')
 				{
+					$('#pending-count').val(0);
 					//$(".question-navigation").hide();
 					//$('.question-navigation').css('display', 'none');
 					$('.checklist-question-sticky-footer').addClass('d-none');
@@ -1270,6 +1272,7 @@ $(document ).ready(function() {
 					//const redirectUrl = checkoutUrlTemplate.replace('TASK_ID', task_id).replace('CAT_ID', category_id).replace('SUBCAT_ID', subcategory_id);
 					//window.location.href = redirectUrl; hidden
 					//return;
+					let pendingCount = 0;
 					let htmlCompleted = '<div class="container checklist">';
 						htmlCompleted += '<h2 class="checklist-title">Review your checklist</h2>'; 
 						htmlCompleted += '<h4>Review and check before moving on to next section. Checmical bonding & stor</h4>';
@@ -1302,6 +1305,9 @@ $(document ).ready(function() {
 								else
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #000000; color: #000000;">Pending</button>';
+									
+									pendingCount++;
+									$('#pending-count').val(pendingCount);
 								}
 								
 								htmlCompleted += '<div class="checklist-item">';
@@ -2798,13 +2804,31 @@ $(document ).ready(function() {
 		var category_id = $('#completed_category_id').val();
 		var subcategory_id = $('#completed_subcategory_id').val();
 		var URL = "{{ route('submit-completed-task') }}";
-		//alert(completed_task_id);alert(completed_category_id);alert(completed_subcategory_id);
+		var pendingcount = $('#pending-count').val();
+		//alert(pendingcount)
+		if(pendingcount > 0)
+		{
+			Swal.fire({
+					  icon: "warning",
+					  title: "Task is pending. Please complete your task",
+					  //html: '<div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;"></div>',
+					  confirmButtonColor: "#0b2b57",
+					  customClass: {
+						confirmButton : 'swal-save-exist-black'
+					  }
+					  
+					});
+					
+				return false;
+		}
+		
 		$.ajax({
 			url: URL,
 			type: "POST",
 			data: {task_id:task_id, category_id:category_id, subcategory_id:subcategory_id, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
+				$('#pending-count').val(0);
 				const thankyouUrlTemplate = "{{ url('thank-you/TASK_ID') }}";
 				const redirectUrl = thankyouUrlTemplate.replace('TASK_ID', task_id);
 				window.location.href = redirectUrl;
