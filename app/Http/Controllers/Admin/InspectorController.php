@@ -116,13 +116,13 @@ class InspectorController extends Controller
         })
         ->first();
 		
-		if ($existingInsp) {
+		/*if ($existingInsp) {
 			return response()->json([
 				'success' => false,
 				'label' => 'name',
 				'message' => 'Name already exists.'
 			]);
-		}
+		}*/
 		
 		$duplemail = User::where('email', $request->post('email'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
