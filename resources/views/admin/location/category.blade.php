@@ -4,6 +4,13 @@
 //echo "<pre>";print_r($category);die;
 $locationData = App\Models\Manage_location::where('id',$location_id)->first();
 $location_name = $locationData ? $locationData->location_name : '';
+
+$company_name = '';
+if($locationData)
+{
+	$companyData = App\Models\Manage_company::where('id', $locationData->company_id)->first();
+	$company_name = $companyData ? $companyData->company_name : '';
+}
 @endphp
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -17,6 +24,8 @@ $location_name = $locationData ? $locationData->location_name : '';
 					<h3 class="page-title">{{ __('category') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
+						<li class="breadcrumb-item"><a href="{{ route('admin.manage-company') }}">{{ __('Manage conpany') }}</a></li>
+						<li class="breadcrumb-item"><a href="{{ route('admin.manage-company') }}">{{ $company_name }}</a></li>
 						<li class="breadcrumb-item active"><a class="breadcrumb-item active" href="javascript:history.back()">{{ $location_name ?? '' }}</a></li>
 					</ul>
 				</div>

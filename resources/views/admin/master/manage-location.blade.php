@@ -17,6 +17,7 @@ $company_name = $companyData ? $companyData->company_name : '';
 					<h3 class="page-title">{{ __('manage_location') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('dashboard') }}</a></li>
+						<li class="breadcrumb-item"><a href="{{ route('admin.manage-company') }}">{{ __('Manage conpany') }}</a></li>
 						<li class="breadcrumb-item active"><a class="breadcrumb-item active" href="javascript:history.back()">{{ $company_name ?? '' }}</a></li>
 					</ul>
 				</div>
