@@ -141,6 +141,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::post('lo-load-more-data', [DashboardInspectorController::class, 'lo_load_more_data'])->name('lo-load-more-data');
 	
+	Route::get('lo-checklist-first-reply-view/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'lo_checklist_first_reply_view'])->name('lo-checklist-first-reply-view');
+	
+	Route::get('lo-subchecklist-first-reply-view/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'lo_subchecklist_first_reply_view'])->name('lo-subchecklist-first-reply-view');
+	
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
 	Route::get('/management-location/{id}', [ManagementController::class, 'management_location'])->name('management-location');

@@ -491,7 +491,7 @@ $totalapprcompleted = $countCompleted;
 										@endif
 									</div>
 									<div class="flex-grow-1">
-										<a href="javascript:void(0);">
+										<a href="{{ route('lo-subchecklist-first-reply-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 										<h6>{{ $checklistName ?? '' }} 
 										@if($val!='')
 											-> {{$val['name'] ?? ''}}
@@ -535,7 +535,7 @@ $totalapprcompleted = $countCompleted;
 										@endif
 									</div>
 									<div class="flex-grow-1">
-										<a href="javascript:void(0);">
+										<a href="{{ route('lo-checklist-first-reply-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 										<h6>{{ $checklistName ?? '' }} 
 										</h6>
 											<p class="text-muted mb-0">
@@ -633,7 +633,7 @@ $totalapprcompleted = $countCompleted;
 											</div>
 											<div class="flex-grow-1">
 											{{--<a href="{{ route('location-owner-subchecklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$result['subchecklist_id'],'type' => $result['type'] ]) }}">--}}
-												<a href="javascript:void(0);">
+												<a href="{{ route('lo-subchecklist-first-reply-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 												<h6>{{ $checklistName ?? '' }} 
 												@if($val!='')
 													-> {{$val['name'] ?? ''}}
@@ -676,7 +676,7 @@ $totalapprcompleted = $countCompleted;
 										</div>
 										<div class="flex-grow-1">
 										{{--<a href="{{ route('location-owner-checklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'] ]) }}">--}}
-											<a href="javascript:void();">
+											<a href="{{ route('lo-checklist-first-reply-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 											<h6>{{ $checklistName ?? '' }} 
 											</h6>
 												<p class="text-muted mb-0">

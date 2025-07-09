@@ -250,25 +250,7 @@
 			</section>
 		</div>
     </div>
-	@if(auth()->user()->user_type == 1 && $inspector_action == 0)
-	<div class="checklist-question-sticky-footer">
-		<div class="clearfix"></div>
-		<div class="footer-content question-navigation d-flex justify-content-between">
-			<button class="reject-class-button inspector-rejected">Reject</button>
-			<button class="ms-auto inspector-agree">Agree</button>
-		</div>
-	</div>
-	@endif
 	
-	@if(auth()->user()->user_type == 3 && $los_action == 0)
-	<div class="checklist-question-sticky-footer">
-		<div class="clearfix"></div>
-		<div class="footer-content question-navigation d-flex justify-content-between">
-			<button class="reject-class-button inspector-rejected">Reject</button>
-			<button class="ms-auto inspector-agree">Agree</button>
-		</div>
-	</div>
-	@endif
 	
 @endsection 
 @section('scripts')
@@ -282,113 +264,7 @@ $(document).ready(function() {
 		format: 'YYYY-MM-DD HH:mm' // Adjust format as needed
 	});*/
    
-   $(document).on('click','.inspector-agree', function(){
-	   var task_id = $('#task_id').val();
-	   var checklist_id = $('#checklist_id').val();
-	   var subchecklist_id = $('#subchecklist_id').val();
-	   var location_id = $('#location_id').val();
-	   var inspector_action = 1;
-	   var tab = $('#tab').val();
-	   //alert(lo_direct_approve);
-	   var URL = "{{ route('submit-inspector-status') }}";
-	   $.ajax({
-			url: URL,
-			type: "POST",
-			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id, inspector_action:inspector_action,_token: csrfToken},
-			dataType: 'json',
-			success: function(response) {
-				//alert(response.message);
-				if(response.message=='success')
-				{
-					if(tab == 'corrective-action')
-					{
-						localStorage.setItem('insActionApproved', 1);
-					}
-					
-					if(tab == 'corrective-plan')
-					{
-						localStorage.setItem('insPlanApproved', 1);
-					}
-					
-					var active = 1;
-					@if(auth()->user()->user_type == 1)
-					{
-						//var baseUrl = "{{ url('/location-details') }}";
-						//var redirectUrl = baseUrl + '/'+ location_id;
-						var baseUrl = "{{ url('/inspector-filter') }}";
-						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
-					}
-					@endif
-					
-					@if(auth()->user()->user_type == 3)
-					{
-						var baseUrl = "{{ url('/los-task-status') }}";
-						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
-					}
-					@endif
-					
-					window.location.href = redirectUrl;
-				}
-				/*let location_id = response.location_id;
-				let category_id = response.category_id;
-				
-				var baseUrl = "{{ url('/location-owner') }}";
-				var redirectUrl = baseUrl + '/'+ location_id + '/' + category_id;
-				window.location.href = redirectUrl;*/
-				
-			},
-		});
-	});
-	
-	$(document).on('click','.inspector-rejected', function(){
-	   var task_id = $('#task_id').val();
-	   var checklist_id = $('#checklist_id').val();
-	   var subchecklist_id = $('#subchecklist_id').val();
-	   var location_id = $('#location_id').val();
-	   var inspector_action = 2;
-	   var tab = $('#tab').val();
-	   
-	   //alert(lo_direct_approve);
-	   var URL = "{{ route('submit-inspector-status') }}";
-	   $.ajax({
-			url: URL,
-			type: "POST",
-			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,inspector_action:inspector_action, _token: csrfToken},
-			dataType: 'json',
-			success: function(response) {
-				if(response.message=='success')
-				{
-					if(tab == 'corrective-action')
-					{
-						localStorage.setItem('insActionRejected', 1);
-					}
-					if(tab == 'corrective-plan')
-					{
-						localStorage.setItem('insPlanRejected', 1);
-					}
-					
-					var active = 1;
-					@if(auth()->user()->user_type == 1)
-					{
-						//var baseUrl = "{{ url('/location-details') }}";
-						//var redirectUrl = baseUrl + '/'+ location_id ;
-						var baseUrl = "{{ url('/inspector-filter') }}";
-						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
-					}
-					@endif
-					
-					@if(auth()->user()->user_type == 3)
-					{
-						var baseUrl = "{{ url('/los-task-status') }}";
-						var redirectUrl = baseUrl + '/'+ location_id + '/' +active  ;
-					}
-					@endif
-					
-					window.location.href = redirectUrl;
-				}
-			},
-		});
-	});
+   
 });
 </script>
 @endsection
