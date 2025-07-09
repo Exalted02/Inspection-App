@@ -210,11 +210,21 @@
 							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ Carbon::parse($corrective_action->created_at)->format('Y M d h:i:s')}}</span></div>
 						</div>
 						<div class="row" style="margin-top:10px;">
+							<div class="col-md-12">
+							@if($corrective_action->approved_status == 1)
+								<span class="show-agree-status">Approved by (IA)	{{$corrective_action->get_inspector->name ?? ''}}</span>
+							@elseif($corrective_action->approved_status == 2)
+								<span class="show-agree-status">Approved by (LOS) {{$corrective_action->get_los->name ?? ''}}</span>
+							@endif
+							</div>
+							<div class="col-md-12">
 							@if($corrective_action->rejected_status == 1)
 								<span class="show-reject-status">Rejected by (IA)	{{$corrective_action->get_inspector->name ?? ''}}</span>
-							@elseif($corrective_action->los_action == 2)
+							@elseif($corrective_action->rejected_status == 2)
 								<span class="show-reject-status">Rejected by (LOS) {{$corrective_action->get_los->name ?? ''}}</span>
 							@endif
+							</div>
+							
 						</div>
 						<hr class="horizontal-line">
 						{{--<form id="frmreply" action="{{ route('save-lo-reply-rejected-question') }}" enctype="multipart/form-data" method="post">--}}

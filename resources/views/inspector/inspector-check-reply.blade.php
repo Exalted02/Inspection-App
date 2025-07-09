@@ -231,17 +231,20 @@
 						
 						@if($corrective_action_data)
 						<div class="row">
-							@if($corrective_action_data->inspector_action == 1)
+							<div class="col-md-12">
+							@if($corrective_action_data->approved_status == 1)
 								<span class="show-agree-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
-							@elseif($corrective_action_data->los_action == 1)
+							@elseif($corrective_action_data->approved_status == 2)
 								<span class="show-agree-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span>
 							@endif
-							
+							</div>
+							<div class="col-md-12">
 							@if($corrective_action_data->rejected_status == 1)
 								<span class="show-reject-status">Rejected by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
 							@elseif($corrective_action_data->los_action == 2)
 								<span class="show-reject-status">Rejected by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span>
 							@endif
+							</div>
 						</div>
 						@endif
 						

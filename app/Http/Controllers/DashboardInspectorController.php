@@ -2147,6 +2147,7 @@ class DashboardInspectorController extends Controller
 				$model->inspector_action_date = date('Y-m-d h:i:s');
 				$model->inspector_action = $inspector_action;
 				$model->inspector_id = $user_id;
+				$model->approved_status = 1;
 			}
 			
 			if(auth()->user()->user_type == 3)
@@ -2154,6 +2155,7 @@ class DashboardInspectorController extends Controller
 				$model->los_action_date = date('Y-m-d h:i:s');
 				$model->los_action = $inspector_action;
 				$model->los_id = $user_id;
+				$model->approved_status = 2;
 			}
 		}
 		else if($inspector_action == 2)
@@ -2235,6 +2237,8 @@ class DashboardInspectorController extends Controller
 		$model->inspector_action = 0;
 		//$model->los_action = $request->los_action;
 		$model->los_action = 0;
+		$model->approved_status = 0;
+		$model->rejected_status = 0;
 		$model->save();
 		
 		$lo_files = $request->file('lo_file');

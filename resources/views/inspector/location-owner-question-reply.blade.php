@@ -106,7 +106,7 @@ use Carbon\Carbon;
 									@endforeach
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los">By (IA) {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('d M, Y h:i A')}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 

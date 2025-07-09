@@ -1758,11 +1758,11 @@ body {
 }
 .show-agree-status {
 	color:green;
-	padding: 12px;
+	/*padding: 12px;*/
 }
 .show-reject-status {
 	color:red;
-	padding: 12px;
+	/*padding: 12px;*/
 }
 .text-ia-lo-los {
     font-size: 14px;
