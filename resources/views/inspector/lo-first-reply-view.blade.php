@@ -39,6 +39,8 @@
 	 
 	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
 	 
+	 $lo_corrective_action_plan_second_check = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan_second_check : '';
+	 
 	 $corrective_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 1)->get();
 	 
 	 $corrective_action_files = [];
@@ -47,6 +49,19 @@
 		 foreach($corrective_action_file_data as $corrective_files)
 		 {
 			$corrective_action_files[] = [
+				'url' => url('uploads/corrective_action/' .$corrective_files->file),
+			];
+		 }
+	 }
+	 
+	 $corrective_action_second_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 2)->get();
+	 
+	 $corrective_action_second_files = [];
+	 if($corrective_action_second_file_data->isNotEmpty())
+	 {
+		 foreach($corrective_action_second_file_data as $corrective_files)
+		 {
+			$corrective_action_second_files[] = [
 				'url' => url('uploads/corrective_action/' .$corrective_files->file),
 			];
 		 }
@@ -87,6 +102,7 @@
 	 
 	$lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
 	
+	$lo_corrective_action_plan_second_check = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan_second_check : '';
 	
 	$corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
 	
@@ -98,6 +114,19 @@
 		 foreach($corrective_action_file_data as $corrective_files)
 		 {
 			$corrective_action_files[] = [
+				'url' => url('uploads/corrective_action/' .$corrective_files->file),
+			];
+		 }
+	 }
+	 
+	 $corrective_action_second_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 2)->get();
+	 
+	 $corrective_action_second_files = [];
+	 if($corrective_action_second_file_data->isNotEmpty())
+	 {
+		 foreach($corrective_action_second_file_data as $corrective_files)
+		 {
+			$corrective_action_second_files[] = [
 				'url' => url('uploads/corrective_action/' .$corrective_files->file),
 			];
 		 }
@@ -219,6 +248,44 @@
 							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ Carbon::parse($corrective_action_data->created_at)->format('Y M d')}}</span></div>
 						</div>
 						<hr class="horizontal-line">
+						
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12"><label>Final checks</label></div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">{{ $lo_corrective_action_plan_second_check ?? '' }}</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								@if(!empty($corrective_action_second_files))
+									<div class="d-flex flex-wrap gap-3">
+										@foreach($corrective_action_second_files as $fileurl)
+											@php 
+												$url = $fileurl['url'] ?? '';
+												$extension = pathinfo($url, PATHINFO_EXTENSION);
+												$extension = strtolower($extension);
+											@endphp
+											
+											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+											<div class="cheklist-reply-images">
+												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+											</div>
+											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<div class="cheklist-reply-images">
+											
+											<video src="{{ $fileurl['url'] ?? '' }}" controls style="max-width: 100px; height: auto; border: 1px solid #ccc; padding: 5px;" target="_blank"></video>
+											</div>
+											@endif
+										@endforeach
+									</div>
+								@endif
+							</div>
+						</div>
+						<div class="row" style="margin-top:10px;">
+							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('Y M d h:i:s') : ''}}</span></div>
+						</div>
+						<hr class="horizontal-line">
+						
 						<div class="row">
 							@if($corrective_action_data->inspector_action == 1)
 								<span class="show-agree-reject-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
