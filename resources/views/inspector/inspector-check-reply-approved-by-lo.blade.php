@@ -10,6 +10,8 @@
  $lo_corrective_action_plan = '';
  $lo_corrective_completed_by = '';
  
+ $userData = App\Models\Task_lists::with('get_user')->where('id', $task_id)->first();
+ 
  $checklist = App\Models\Checklist::where('id', $checklist_id)->first();
  if($type == 'checklist')
  {
@@ -25,16 +27,19 @@
 	 }
 	 
 	 $rejected_region = $taskChecklist->rejected_region;
+	 $created_at = $taskChecklist->created_at;
 	 
 	 /*$corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('inspector_id', auth()->user()->id)->first();*/
 	 
-	 $corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+	 $corrective_action_data = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 	 
 	 $lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
 	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
 	 
 	 $corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
+	 
+	 $lo_corrective_action_plan_second_check = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan_second_check : '';
 	 //---------------------------------------------
 	 
 		 $corrective_first_action_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status', 1)->get();
@@ -83,6 +88,7 @@
 		$subChecklistName = App\Models\Subchecklist::where('id', $taskSubChecklist->subchecklist_id)->first()->name;
 		
 		$rejected_region = $taskSubChecklist->rejected_region;
+		$created_at = $taskSubChecklist->created_at;
 		
 		foreach($subImages as $image)
 		{
@@ -94,7 +100,7 @@
 	
 	/*$corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('inspector_id', auth()->user()->id)->first();*/
 	
-	$corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
+	$corrective_action_data = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
 	 
 	$lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
@@ -134,6 +140,7 @@
 	 }
  }
  
+ $loopCnt = 0;
  //echo "<pre>";print_r($corrective_action_files);die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
@@ -172,6 +179,7 @@
 											$urls = $url['url'] ?? '';
 											$extension = pathinfo($urls, PATHINFO_EXTENSION);
 											$extension = strtolower($extension);
+											$loopCnt++;
 										@endphp
 									<div class="cheklist-reply-images">
 									@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
@@ -183,7 +191,10 @@
 									@endforeach
 								@endif
 							</div>
+							<div class="col-md-6 text-ia-lo-los">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d h:i:s')}}</span></div>
 						</div>
+						<hr class="horizontal-line">
+						
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 								<label>What you need to do</label>
@@ -227,6 +238,10 @@
 								</div>
 							</div>
 						</div>
+						<div class="row" style="margin-top:10px;">
+							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('Y M d h:i:s') : ''}}</span></div>
+						</div>
+						<hr class="horizontal-line">
 						
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12"><label>Final checks</label></div>
@@ -261,6 +276,10 @@
 								@endif
 							</div>
 						</div>
+						<div class="row" style="margin-top:10px;">
+							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('Y M d h:i:s') : ''}}</span></div>
+						</div>
+						<hr class="horizontal-line">
 						
 						{{--<div class="row">
 							<div class="col-md-12">

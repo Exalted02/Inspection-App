@@ -12,6 +12,7 @@
  
  $userData = App\Models\Task_lists::with('get_user')->where('id', $task_id)->first();
  //echo "<pre>";print_r($userData);die;
+ $created_at = '';
  
  $checklist = App\Models\Checklist::where('id', $checklist_id)->first();
  if($type == 'checklist')
@@ -32,6 +33,7 @@
 	 
 	 $corrective_action_data = App\Models\Task_list_corrective_action::with('get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 	 //echo "<pre>";print_r($corrective_action_data);die;
+	 //echo $corrective_action_data->created_at; die;
 	 
 	 $lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
@@ -160,7 +162,7 @@
 								
 								@endif
 							</div>
-							<div class="col-md-6 text-muted">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d h:i:s')}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						
@@ -178,6 +180,8 @@
 						@php 
 						$loopCnt = 0;
 						@endphp
+						
+						@if(!empty($corrective_action_files))
 						<div class="row">
 							<div class="col-md-12">
 								@if(!empty($corrective_action_files))
@@ -203,9 +207,8 @@
 									</div>
 								@endif
 							</div>
-							<div class="col-md-6 text-muted">By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ Carbon::parse($corrective_action_data->created_at)->format('Y M d')}}</span></div>
 						</div>
-						<hr class="horizontal-line">
+						@endif
 						
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
@@ -214,6 +217,17 @@
 									{{ Carbon::parse($lo_corrective_completed_by)->format('d M Y')}}
 								</div>
 							</div>
+						</div>
+						<div class="row" style="margin-top:10px;">
+							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('Y M d h:i:s') : ''}}</span></div>
+						</div>
+						<hr class="horizontal-line">
+						<div class="row">
+							@if($corrective_action_data->inspector_action == 1)
+								<span class="show-agree-reject-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
+							@elseif($corrective_action_data->los_action == 1)
+								<span class="show-agree-reject-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span>
+							@endif
 						</div>
 						
 						{{--<div class="row">
