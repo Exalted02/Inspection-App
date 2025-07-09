@@ -28,6 +28,7 @@
 	 }
 	 
 	 $rejected_region = $taskChecklist->rejected_region;
+	 $created_at = $taskChecklist->created_at;
 	 
 	 $corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 	 
@@ -69,6 +70,7 @@
 		$subChecklistName = App\Models\Subchecklist::where('id', $taskSubChecklist->subchecklist_id)->first()->name;
 		
 		$rejected_region = $taskSubChecklist->rejected_region;
+		$created_at = $taskSubChecklist->created_at;
 		
 		foreach($subImages as $image)
 		{
@@ -103,6 +105,8 @@
  //echo auth()->user()->user_type;die;
  //echo "<pre>";print_r($image_arr);die;
  //echo "<pre>";print_r($corrective_action_files);die;
+ 
+ $loopCnt = 0;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -142,6 +146,7 @@
 											$urls = $url['url'] ?? '';
 											$extension = pathinfo($urls, PATHINFO_EXTENSION);
 											$extension = strtolower($extension);
+											$loopCnt++;
 										@endphp
 									<div class="cheklist-reply-images">
 										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
@@ -154,7 +159,7 @@
 								
 								@endif
 							</div>
-							<div class="col-md-6">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: 20px;">2005,25 July</span></div>
+							<div class="col-md-6 text-muted">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d')}}</span></div>
 						</div>
 						@if(!empty($lo_corrective_action_plan))
 						<div class="row IA-IOS-get-reply">

@@ -1747,11 +1747,11 @@ body {
 .task-action .edit-button {
    color:#232326
 }
-/*.text-muted {
+.text-muted {
     font-size: 14px;
     color: #666;
 }
-.media-wrapper {
+/*.media-wrapper {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
