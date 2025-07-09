@@ -161,6 +161,8 @@
 							</div>
 							<div class="col-md-6 text-muted">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d')}}</span></div>
 						</div>
+						<hr class="horizontal-line">
+						
 						@if(!empty($lo_corrective_action_plan))
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">

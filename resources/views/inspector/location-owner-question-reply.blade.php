@@ -1,8 +1,11 @@
 @extends('layouts.app')
 @section('content')
 @php 
+use Carbon\Carbon;
  //echo "<pre>";print_r($categoryData);die;
  //echo $task_id; die;
+ $userData = App\Models\Task_lists::with('get_user')->where('id', $task_id)->first();
+ 
  $rejected_region = '';
  $image_arr = [];
  
@@ -21,6 +24,7 @@
 	 }
 	 
 	 $rejected_region = $taskChecklist->rejected_region;
+	 $created_at = $taskChecklist->created_at;
 	 
  }
  
@@ -41,6 +45,7 @@
 		$subChecklistName = App\Models\Subchecklist::where('id', $taskSubChecklist->subchecklist_id)->first()->name;
 		
 		$rejected_region = $taskSubChecklist->rejected_region;
+		$created_at = $taskSubChecklist->created_at;
 		
 		foreach($subImages as $image)
 		{
@@ -51,7 +56,7 @@
 	}
  }
  
- 
+ $loopCnt = 0;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -81,7 +86,7 @@
 						</div>
 						
 						
-						<div class="row" style="margin-top:17px;">
+						<div class="row">
 							<div class="col-md-12">
 								@if(!empty($image_arr))
 									@foreach($image_arr as $url)
@@ -89,6 +94,7 @@
 										$urls = $url['url'] ?? '';
 										$extension = pathinfo($urls, PATHINFO_EXTENSION);
 										$extension = strtolower($extension);
+										$loopCnt++;
 									@endphp
 									<div class="cheklist-reply-images">
 										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
@@ -100,8 +106,11 @@
 									@endforeach
 								@endif
 							</div>
+							<div class="col-md-6 text-muted">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d')}}</span></div>
 						</div>
-						<div class="row">
+						<hr class="horizontal-line">
+
+						<div class="row mt-2">
 							<div class="col-md-12">
 								<label>How to solve the issue ?</label>
 								<textarea name="lo_corrective_action_plan" id="lo_corrective_action_plan" placeholder="Input corrective action plan" class="form-control"></textarea>

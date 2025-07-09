@@ -1751,6 +1751,11 @@ body {
     font-size: 14px;
     color: #666;
 }
+.horizontal-line {
+	margin-top: 20px; 
+	margin-bottom: 30px; 
+	border-top: 1px solid #ccc;
+}
 /*.media-wrapper {
     display: flex;
     flex-wrap: wrap;
