@@ -6,6 +6,8 @@
  $rejected_region = '';
  $image_arr = [];
  
+ $userData = App\Models\Task_lists::with('get_user')->where('id', $task_id)->first();
+ 
  $checklist = App\Models\Checklist::where('id', $checklist_id)->first();
  if($type == 'checklist')
  {
@@ -21,8 +23,9 @@
 	 }
 	 
 	 $rejected_region = $taskChecklist->rejected_region;
+	 $created_at = $taskChecklist->created_at;
 	 
-	$corrective_action = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+	$corrective_action = App\Models\Task_list_corrective_action::with('get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 	$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 	
 	$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
@@ -63,6 +66,7 @@
 		$subChecklistName = App\Models\Subchecklist::where('id', $taskSubChecklist->subchecklist_id)->first()->name;
 		
 		$rejected_region = $taskSubChecklist->rejected_region;
+		$created_at = $taskSubChecklist->created_at;
 		
 		foreach($subImages as $image)
 		{
@@ -71,7 +75,7 @@
 			 ];
 		}
 		
-		$corrective_action = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		$corrective_action = App\Models\Task_list_corrective_action::with('get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 		$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 		
 		$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
@@ -100,6 +104,7 @@
 	$task_category_id = $taskData ? $taskData->category_id : '';
 	
 	//echo "<pre>";print_r($corrective_first_action_files);die;
+	$loopCnt = 0;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -138,6 +143,7 @@
 										$urls = $url['url'] ?? '';
 										$extension = pathinfo($urls, PATHINFO_EXTENSION);
 										$extension = strtolower($extension);
+										$loopCnt++;
 									@endphp
 									<div class="cheklist-reply-images">
 									@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
@@ -149,7 +155,9 @@
 									@endforeach
 								@endif
 							</div>
+							<div class="col-md-6 text-muted">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d')}}</span></div>
 						</div>
+						<hr class="horizontal-line">
 						<div class="row mt" style="margin-top: 1rem !important;">
 							<div class="col-md-12">
 								<label>Requirement to solve it</label>
@@ -158,6 +166,9 @@
 								</div>
 							</div>
 						</div>
+						@php 
+						$loopCnt = 0;
+						@endphp
 						<div class="row">
 							<div class="col-md-12">
 								@if(!empty($corrective_first_action_files))
@@ -167,6 +178,7 @@
 												$url = $fileurl['url'] ?? '';
 												$extension = pathinfo($url, PATHINFO_EXTENSION);
 												$extension = strtolower($extension);
+												$loopCnt++;
 											@endphp
 											
 											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
@@ -183,6 +195,7 @@
 									</div>
 								@endif
 							</div>
+							<div class="col-md-6 text-muted">By (LO) {{ $corrective_action->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ Carbon::parse($corrective_action->created_at)->format('Y M d')}}</span></div>
 						</div>
 						
 						<div class="row" style="margin-top: 1rem !important;">
