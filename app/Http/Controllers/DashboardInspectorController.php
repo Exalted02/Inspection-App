@@ -2163,6 +2163,16 @@ class DashboardInspectorController extends Controller
 			//$model->inspector_id = $user_id;
 			$model->los_action_date = date('Y-m-d h:i:s');
 			$model->los_action = $inspector_action;
+			
+			if(auth()->user()->user_type == 1)
+			{
+				$model->rejected_status = 1;
+			}
+			
+			if(auth()->user()->user_type == 3)
+			{
+				$model->rejected_status = 2;
+			}
 			//$model->los_id = $user_id;
 		}
 		
@@ -2374,6 +2384,16 @@ class DashboardInspectorController extends Controller
 		if($inspector_action == 2 || $los_action == 2)
 		{
 			$model->lo_corrective_action_plan_second_check = null;
+			
+			if(auth()->user()->id == 1)
+			{
+				$model->rejected_status = 1;
+			}
+			
+			if(auth()->user()->id == 3)
+			{
+				$model->rejected_status = 2;
+			}
 		}
 		
 		if($inspector_action != '')
@@ -2386,6 +2406,7 @@ class DashboardInspectorController extends Controller
 			$model->los_action = $los_action;
 		}
 		$model->inspector_id = $inspector_id;
+		
 		$model->save();
 		
 		// update the status of Task lists after final approve by inspector or los 

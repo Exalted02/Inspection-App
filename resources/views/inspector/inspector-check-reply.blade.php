@@ -54,6 +54,8 @@
 		 }
 	 }
 	 
+	 $lo_corrective_action_plan_second_check = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan_second_check : '';
+	 
  }
  
  $taskSubChecklist = null;
@@ -162,7 +164,7 @@
 								
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d h:i:s')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los">By (IA) {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('d M, Y h:i A')}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						
@@ -218,17 +220,32 @@
 								</div>
 							</div>
 						</div>
+						@if($corrective_action_data)
 						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('Y M d h:i:s') : ''}}</span></div>
+							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('d M, Y h:i A') : ''}}</span></div>
 						</div>
 						<hr class="horizontal-line">
+						@endif
+						
+						
+						
+						@if($corrective_action_data)
 						<div class="row">
 							@if($corrective_action_data->inspector_action == 1)
-								<span class="show-agree-reject-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
+								<span class="show-agree-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
 							@elseif($corrective_action_data->los_action == 1)
-								<span class="show-agree-reject-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span>
+								<span class="show-agree-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span>
+							@endif
+							
+							@if($corrective_action_data->rejected_status == 1)
+								<span class="show-reject-status">Rejected by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
+							@elseif($corrective_action_data->los_action == 2)
+								<span class="show-reject-status">Rejected by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span>
 							@endif
 						</div>
+						@endif
+						
+						
 						
 						{{--<div class="row">
 							<div class="col-12 col-md-12">

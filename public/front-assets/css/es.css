@@ -1756,8 +1756,12 @@ body {
 	margin-bottom: 3px; 
 	border-top: 1px solid #ccc;
 }
-.show-agree-reject-status {
+.show-agree-status {
 	color:green;
+	padding: 12px;
+}
+.show-reject-status {
+	color:red;
 	padding: 12px;
 }
 .text-ia-lo-los {

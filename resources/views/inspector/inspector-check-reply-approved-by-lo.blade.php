@@ -280,6 +280,13 @@
 							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('Y M d h:i:s') : ''}}</span></div>
 						</div>
 						<hr class="horizontal-line">
+						<div class="row">
+							@if($corrective_action_data->inspector_action == 1)
+								<span class="show-agree-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
+							@elseif($corrective_action_data->los_action == 1)
+								<span class="show-agree-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span>
+							@endif
+						</div>
 						
 						{{--<div class="row">
 							<div class="col-md-12">

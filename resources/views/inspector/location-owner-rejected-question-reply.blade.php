@@ -25,7 +25,7 @@
 	 $rejected_region = $taskChecklist->rejected_region;
 	 $created_at = $taskChecklist->created_at;
 	 
-	$corrective_action = App\Models\Task_list_corrective_action::with('get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+	$corrective_action = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 	$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 	
 	$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
@@ -75,7 +75,7 @@
 			 ];
 		}
 		
-		$corrective_action = App\Models\Task_list_corrective_action::with('get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		$corrective_action = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 		$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 		
 		$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
@@ -155,7 +155,7 @@
 									@endforeach
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 70 }}px;">{{ Carbon::parse($created_at)->format('Y M d h:i:s')}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						<div class="row mt" style="margin-top: 1rem !important;">
@@ -195,7 +195,6 @@
 									</div>
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ Carbon::parse($corrective_action->created_at)->format('Y M d')}}</span></div>
 						</div>
 						
 						<div class="row" style="margin-top: 1rem !important;">
@@ -206,6 +205,18 @@
 								</div>
 							</div>
 						</div>
+						
+						<div class="row" style="margin-top:10px;">
+							<div class="col-md-6 text-ia-lo-los">By (LO) {{ $corrective_action->get_lo->name ?? ''}} <span style="margin-left: {{ ($loopCnt-2) * 60 }}px;">{{ Carbon::parse($corrective_action->created_at)->format('Y M d h:i:s')}}</span></div>
+						</div>
+						<div class="row" style="margin-top:10px;">
+							@if($corrective_action->rejected_status == 1)
+								<span class="show-reject-status">Rejected by (IA)	{{$corrective_action->get_inspector->name ?? ''}}</span>
+							@elseif($corrective_action->los_action == 2)
+								<span class="show-reject-status">Rejected by (LOS) {{$corrective_action->get_los->name ?? ''}}</span>
+							@endif
+						</div>
+						<hr class="horizontal-line">
 						{{--<form id="frmreply" action="{{ route('save-lo-reply-rejected-question') }}" enctype="multipart/form-data" method="post">--}}
 							<div class="row" style="margin-top: 1rem !important;">
 								<div class="col-md-12">
