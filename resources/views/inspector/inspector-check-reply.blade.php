@@ -10,6 +10,9 @@
  $lo_corrective_action_plan = '';
  $lo_corrective_completed_by = '';
  
+ $userData = App\Models\Task_lists::with('get_user')->where('id', $task_id)->first();
+ //echo "<pre>";print_r($userData);die;
+ 
  $checklist = App\Models\Checklist::where('id', $checklist_id)->first();
  if($type == 'checklist')
  {
@@ -133,7 +136,8 @@
 						<div class="row">
 							<div class="col-md-12">
 								@if(!empty($image_arr))
-									@foreach($image_arr as $url)
+								
+									@foreach($image_arr as $key => $url)
 										@php 
 											$urls = $url['url'] ?? '';
 											$extension = pathinfo($urls, PATHINFO_EXTENSION);
@@ -147,8 +151,10 @@
 										@endif
 									</div>
 									@endforeach
+								
 								@endif
 							</div>
+							<div class="col-md-6">By {{ $userData->get_user->name ?? ''}} <span style="margin-left: 20px;">2005,25 July</span></div>
 						</div>
 						@if(!empty($lo_corrective_action_plan))
 						<div class="row IA-IOS-get-reply">

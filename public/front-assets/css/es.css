@@ -760,6 +760,8 @@ body {
 	color: #000000;
 	margin-left: 19px;
 }
+
+
 .cheklist-reply-images{
 	display: inline-block !important;
     margin-right: 4px;
@@ -1745,4 +1747,17 @@ body {
 .task-action .edit-button {
    color:#232326
 }
+/*.text-muted {
+    font-size: 14px;
+    color: #666;
+}
+.media-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.media-wrapper > .text-muted {
+    margin-left: 4px;
+}*/
 
