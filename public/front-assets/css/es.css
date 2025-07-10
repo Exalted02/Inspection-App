@@ -1776,6 +1776,11 @@ body {
 .text-ia-lo-los {
     font-size: 14px;
     color: #8c420b !important;
+	/*margin-top: 5px;*/
+	gap: 20px;
+}
+.list-approved-filter {
+	background-color: #ece9e9 !important;
 }
 
 

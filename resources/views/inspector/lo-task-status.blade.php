@@ -679,7 +679,7 @@ $totalapprcompleted = $countCompleted;
 										</div>
 										<div class="flex-grow-1">
 										{{--<a href="{{ route('location-owner-checklist-rejected-question-reply',['task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'] ]) }}">--}}
-											<a href="{{ route('lo-checklist-first-reply-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<a href="{{ route('lo-checklist-first-reply-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 											<h6>{{ $checklistName ?? '' }} 
 											</h6>
 												<p class="text-muted mb-0">
@@ -739,6 +739,8 @@ $totalapprcompleted = $countCompleted;
 										
 										//$images = url('images/noimages/noimage_region.png');
 										
+										$userData = App\Models\Task_lists::with('get_user')->where('id', $result['task_id'])->first();
+										
 										if($result['type'] == 'subchecklist')
 										{
 											$subchecklistData = App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id',$result['checklist_id'])->where('subchecklist_id',$result['subchecklist_id'])->first();
@@ -780,11 +782,13 @@ $totalapprcompleted = $countCompleted;
 														'type' => $result['type'],
 														'tab' => 'corrective-action'
 													]);
+													$class = '';
 												} else {
 													$route = "javascript:void(0)";
+													$class = 'list-approved-filter';
 												}
 											@endphp
-										<div class="d-flex mb-3 task">
+										<div class="d-flex mb-3 task {{ $class }}">
 											<div class="date-box">
 												@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 												<img src="{{ $val['image'] }}">
@@ -804,7 +808,8 @@ $totalapprcompleted = $countCompleted;
 													{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 													</p>
 													<p class="text-muted mb-0">
-													<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+													<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
+														  <button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button></i>
 													</p>
 													<p class="text-muted mb-0">
 													<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -822,11 +827,13 @@ $totalapprcompleted = $countCompleted;
 											
 											if (!empty($result['image'])) {
 													$route = route('lo-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+													$class = '';
 												} else {
 													$route = "javascript:void(0)";
+													$class = 'list-approved-filter';
 												}
 										@endphp
-										<div class="d-flex mb-3 task">
+										<div class="d-flex mb-3 task {{ $class }}">
 										<div class="date-box">
 											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<img src="{{ $images }}">
@@ -842,7 +849,7 @@ $totalapprcompleted = $countCompleted;
 												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 												</p>
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}  <button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1; margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button></i>
 												</p>
 												<p class="text-muted mb-0">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}

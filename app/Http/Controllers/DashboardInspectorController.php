@@ -4874,7 +4874,13 @@ class DashboardInspectorController extends Controller
 					if($ifTaskRxists)
 					{
 						// checklist and  respective files approve=0 
+						
+						/*$categoriesChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+						
+						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->where('approve', 0)->get();*/
+						
 						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->where('approve', 0)->get();
+						
 						if($taskChklist->isNotEmpty())
 						{
 							foreach($taskChklist as $task)
