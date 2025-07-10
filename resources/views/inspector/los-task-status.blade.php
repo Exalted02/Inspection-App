@@ -819,6 +819,12 @@ $totalapprcompleted = $countCompleted;
 											$url = $val['image'] ?? '';
 											$extension = pathinfo($url, PATHINFO_EXTENSION);
 											$extension = strtolower($extension);
+											
+											if (!empty($result['image'])) {
+													$route = route('ia-los-subchecklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+												} else {
+													$route = "javascript:void(0)";
+												}
 										@endphp
 									<div class="d-flex mb-3 task">
 										<div class="date-box">
@@ -829,7 +835,7 @@ $totalapprcompleted = $countCompleted;
 										@endif
 										</div>
 										<div class="flex-grow-1">
-											<a href="javascript:void(0);">
+											<a href="{{ $route }}">
 											<h6>{{ $checklistName ?? '' }} 
 											@if($val['name']!='')
 												-> {{$val['name'] ?? ''}}
@@ -857,6 +863,12 @@ $totalapprcompleted = $countCompleted;
 											$url = $images ?? '';
 											$extension = pathinfo($url, PATHINFO_EXTENSION);
 											$extension = strtolower($extension);
+											
+											if (!empty($result['image'])) {
+													$route = route('ia-los-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+												} else {
+													$route = "javascript:void(0)";
+												}
 										@endphp
 										<div class="d-flex mb-3 task">
 										<div class="date-box">
@@ -867,7 +879,7 @@ $totalapprcompleted = $countCompleted;
 											@endif
 										</div>
 										<div class="flex-grow-1">
-											<a href="javascript:void(0);">
+											<a href="{{ $route }}">
 											<h6>{{ $checklistName ?? '' }} 
 											</h6>
 												<p class="text-muted mb-0">

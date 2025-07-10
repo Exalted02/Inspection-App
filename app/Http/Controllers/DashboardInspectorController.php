@@ -5405,4 +5405,46 @@ class DashboardInspectorController extends Controller
 		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
 		return view('inspector.lo-completed-approved-view.blade', $data);
 	}
+	
+	//----
+	public function ia_los_checklist_completed_approved_view($location_id='',$task_id='',$checklist_id='',$type='', $tab='')
+	{
+		if (auth()->user()->user_type == 2) {
+			return redirect('inspector-dashboard');
+		}
+		
+		$data = [];
+		$data['task_id'] = $task_id ?? '';
+		$data['location_id'] = $location_id ?? '';
+		$data['checklist_id'] = $checklist_id ?? '';
+		$data['type'] = $type ?? '';
+		$data['tab'] = $tab ?? '';
+		
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
+		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
+		$data['lo_corrective_action_plan_second_check']  		= $corrective_actions_data ? $corrective_actions_data->lo_corrective_action_plan_second_check : '';
+		
+		return view('inspector.ia-los-completed-approved-view', $data);
+	}
+	public function ia_los_subchecklist_completed_approved_view($location_id='',$task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
+	{
+		if (auth()->user()->user_type == 2) {
+			return redirect('inspector-dashboard');
+		}
+		
+		$data = [];
+		$data['task_id'] = $task_id ?? '';
+		$data['location_id'] = $location_id ?? '';
+		$data['checklist_id'] = $checklist_id ?? '';
+		$data['subchecklist_id'] = $subchecklist_id ?? '';
+		$data['type'] = $type ?? '';
+		$data['tab'] = $tab ?? '';
+		
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
+		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
+		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
+		
+		return view('inspector.ia-los-completed-approved-view', $data);
+	}
 }
