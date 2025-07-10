@@ -139,6 +139,7 @@ $(document).ready(function() {
 	flatpickr("#set_time", {
     enableTime: false,
     dateFormat: "d M Y H:i",
+	//allowInput: true,
     onChange: function(selectedDates, dateStr, instance) {
 			if (selectedDates.length == 1) {
 				const date = selectedDates[0];
@@ -153,36 +154,12 @@ $(document).ready(function() {
 				
 				// Responsive fix for mobile view
 				if (window.innerWidth <= 576) {
-					//instance.input.value = '';
-					//instance.input.blur();
-					//$('.custom-left-placeholder').hide();
-					//alert(timeOnly);
-					//document.getElementById('selected_time').innerText = 'Settime';
-					//$('.split-placeholder-wrapper').hide();
-					//$('#set_time').val('');
-					//$('#selected_time').val('');
-					
-					// Stack vertically in mobile view
-					/*$('.custom-left-placeholder').css({
-						'font-size': '12px',
-						'top': '35%',
-						'transform': 'none',
-						'left': '10px',
-						'display': 'block'
-					});
-					
-					$('.custom-right-placeholder').css({
-						'font-size': '12px',
-						'top': '35%',
-						'transform': 'none',
-						'right': '10px'
-					});*/
-					
-					
-					//setTimeout(() => {
+					//$('#selected_time').hide();
+					$('.set-timeline-input').val('');
+					setTimeout(() => {
 							instance.input.value = '';
 							instance.input.blur();
-						//}, 0);
+						}, 0);
 					
 					
 				} else {
@@ -205,11 +182,6 @@ $(document).ready(function() {
 					}, 0);
 				}
 				
-				// Delay clearing input to prevent recursion
-				/*setTimeout(() => {
-					instance.input.value = '';
-					instance.input.blur();
-				}, 0);*/
 			} else {
 				document.getElementById('selected_date').innerText = "Setdate";
 			}
@@ -220,6 +192,12 @@ $(document).ready(function() {
 					instance.input.value = '';
 				//}
 		}
+	});
+	
+	$("#set_time").on("change", function(e) {
+		 //alert('ok');
+		 instance.input.value = '';
+	  //e.preventDefault();
 	});
 	
 	$("#task_image").change(function() {

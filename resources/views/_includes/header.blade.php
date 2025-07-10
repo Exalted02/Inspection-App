@@ -23,7 +23,11 @@
 							</div>
 							<div class="corrective-message" style="display:none;"></div>
 							<div class="header-icon">
+							@if(auth()->user()->user_type == 4)
+								<a href="{{ route('management-dashboard')}}"><i class="fa-solid fa-house"></i></a>
+							@else
 								<a href="{{ route('inspector-dashboard')}}"><i class="fa-solid fa-house"></i></a>
+							@endif
 								<a href="{{ route('logout')}}"><i class="fa-solid fa-right-from-bracket"></i></a>
 							</div>
 					   </li>

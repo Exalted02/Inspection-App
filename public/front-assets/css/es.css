@@ -1323,6 +1323,7 @@ body {
 
 .custom-left-placeholder {
     left: 12px;
+	color: #aaa;
 }
 
 .custom-right-placeholder {
@@ -1334,6 +1335,14 @@ body {
     text-shadow: 0 0 0 #000;
   }
 }
+
+/*@media (max-width: 576px) {
+  .custom-left-placeholder,
+  .custom-right-placeholder {
+    font-size: 12px;
+    left: 8px;
+  }
+}*/
 
 /*@media (max-width: 576px) {
 	.custom-left-placeholder,

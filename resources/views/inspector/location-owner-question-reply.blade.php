@@ -193,10 +193,35 @@ $(document).ready(function() {
 				$('#hidden_set_date').val(dateOnly);
 				$('#hidden_set_time').val(timeOnly);
 				// Delay clearing input to prevent recursion
-				setTimeout(() => {
-					instance.input.value = '';
-					instance.input.blur();
-				}, 0);
+				// Responsive fix for mobile view
+				if (window.innerWidth <= 576) {
+					//$('#selected_time').hide();
+					$('.set-timeline-input').val('');
+					setTimeout(() => {
+							instance.input.value = '';
+							instance.input.blur();
+						}, 0);
+					
+					
+				} else {
+					// Reset for desktop
+					$('#selected_time').css({
+						'display': '',
+						'position': '',
+						'text-align': '',
+						'margin-bottom': ''
+					});
+					$('#selected_date').css({
+						'display': '',
+						'position': '',
+						'text-align': ''
+					});
+					
+					setTimeout(() => {
+						instance.input.value = '';
+						instance.input.blur();
+					}, 0);
+				}
 			} else {
 				document.getElementById('selected_date').innerText = "Setdate";
 			}
