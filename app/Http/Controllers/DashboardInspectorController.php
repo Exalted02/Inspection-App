@@ -5409,7 +5409,7 @@ class DashboardInspectorController extends Controller
 		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
 		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
 		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
-		return view('inspector.lo-completed-approved-view.blade', $data);
+		return view('inspector.lo-completed-approved-view', $data);
 	}
 	
 	//----

@@ -677,6 +677,7 @@ if($mode == 'corrective_appr')
 			$images = url('images/noimages/noimage_region.png');
 		}
 		
+		$userData = App\Models\Task_lists::with('get_user')->where('id', $result['task_id'])->first();
 		
 		if($result['type'] == 'subchecklist')
 		{
@@ -710,8 +711,23 @@ if($mode == 'corrective_appr')
 				$url = $val['image'] ?? '';
 				$extension = pathinfo($url, PATHINFO_EXTENSION);
 				$extension = strtolower($extension);
+				
+				if (!empty($result['image'])) {
+					$route = route('lo-subchecklist-completed-approved-view', [
+						'location_id' => $location_id,
+						'task_id' => $result['task_id'],
+						'checklist_id' => $result['checklist_id'],
+						'subchecklist_id' => $val['subchecklist_id'],
+						'type' => $result['type'],
+						'tab' => 'corrective-action'
+					]);
+					$class = '';
+				} else {
+					$route = "javascript:void(0)";
+					$class = 'list-approved-filter';
+				}
 			@endphp
-	<div class="d-flex mb-3 task">
+	<div class="d-flex mb-3 task {{ $class }}">
 		<div class="date-box">
 			@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 				<img src="{{ $val['image'] }}" width="50" height="50">
@@ -720,7 +736,7 @@ if($mode == 'corrective_appr')
 			@endif
 		</div>
 		<div class="flex-grow-1">
-			<a href="javascript:void(0);">
+			<a href="{{ $route }}">
 			<h6>{{ $checklistName ?? '' }} 
 			@if($val['name']!='')
 				-> {{$val['name'] ?? ''}}
@@ -732,7 +748,7 @@ if($mode == 'corrective_appr')
 				@if($rejectedRegionData)	
 				<p class="text-muted mb-0">
 				<i class="fa fa-clock">
-				{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+				{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}<button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button></i>
 				</p>
 				@endif
 				<p class="text-muted mb-0">
@@ -748,8 +764,16 @@ if($mode == 'corrective_appr')
 			$url = $images ?? '';
 			$extension = pathinfo($url, PATHINFO_EXTENSION);
 			$extension = strtolower($extension);
+			
+			if (!empty($result['image'])) {
+				$route = route('lo-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+				$class = '';
+			} else {
+				$route = "javascript:void(0)";
+				$class = 'list-approved-filter';
+			}
 		@endphp		
-		<div class="d-flex mb-3 task">
+		<div class="d-flex mb-3 task {{ $class}}">
 		<div class="date-box">
 			@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 			<img src="{{ $images }}" width="50" height="50">
@@ -758,7 +782,7 @@ if($mode == 'corrective_appr')
 			@endif
 		</div>
 		<div class="flex-grow-1">
-			<a href="javascript:void(0);">
+			<a href="{{ $route }}">
 			<h6>{{ $checklistName ?? '' }} 
 			</h6>
 				<p class="text-muted mb-0">
@@ -766,7 +790,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+				<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}<button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button></i>
 				</p>
 				@endif
 				<p class="text-muted mb-0">
