@@ -3943,6 +3943,7 @@ class DashboardInspectorController extends Controller
 		$interval = config('custom.LOAD_MORE_INTERVAL');
 		$lower = empty($request->moreload) ? 0 : $request->moreload;
 		$upper = empty($request->moreload) ? config('custom.LOAD_MORE_LIST_SHOW') : config('custom.LOAD_MORE_INTERVAL');
+		
 		//-----------------------------------------------
 		$correctiveNeddedChecklistArray = [];
 		$correctiveNeddedSubchecklistArray = [];
@@ -4062,7 +4063,7 @@ class DashboardInspectorController extends Controller
 		$correctiveNeddedArray = [];
 		foreach($correctiveNeeded as $needed)
 		{
-			if(($needed['inspector_action']=='' && $needed['inspector_action']=='') || ($needed['inspector_action']== 2 && $needed['inspector_action']==2))
+			if(($needed['inspector_action']=='' && $needed['los_action']=='') || ($needed['inspector_action']== 2 && $needed['los_action']==2))
 			{
 				if(isset($needed['subchecklist_id']))
 				{
@@ -4093,6 +4094,7 @@ class DashboardInspectorController extends Controller
 		}
 		
 		$totalRecord = $correctiveNeddedArray;
+		//echo "<pre>";print_r($totalRecord);die;
 		$correctiveNeddedArray = array_slice($correctiveNeddedArray, $lower, $upper);
 		//echo "<pre>";print_r($correctiveNeddedArray);die;
 		$data['location_id'] = $location_id;
@@ -4102,6 +4104,7 @@ class DashboardInspectorController extends Controller
 		//---------------------------------------------
 		
 		$count  = $request->moreload =='' ? config('custom.LOAD_MORE_LIST_SHOW') : $request->moreload + $interval;
+		//echo count($totalRecord) .' '.$count; die;
 		$remain = count($totalRecord) - $count;
 		
 		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
@@ -4546,7 +4549,12 @@ class DashboardInspectorController extends Controller
 				{
 					//$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->where('inspector_id', auth()->user()->id)->get();
 					
-					$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();
+					//-- 10-07-2025--
+					///$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->get();
+					//----------
+					$categoriesArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+					
+					$correctiveActions = Task_list_corrective_action::where('task_list_id', $val->id)->whereIn('category_id', $categoriesArr)->get();
 					
 					if($correctiveActions->isNotEmpty())
 					{
@@ -4589,9 +4597,17 @@ class DashboardInspectorController extends Controller
 						}
 					}
 					
-					//----------------------12-05-2025----------------------------
+					//-------------12-05-2025------------
 					// checklist and  respective files approve=1 
-					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
+					
+					//---- 10-07-2025---
+					//$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
+					//-------------------
+					$categoriesChecklistArr = [];
+					$categoriesChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+					
+					$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->get();
+					
 					if($taskChklist->isNotEmpty())
 					{
 						foreach($taskChklist as $task)
@@ -4669,7 +4685,15 @@ class DashboardInspectorController extends Controller
 					}
 					
 					// subchecklist and respective files
-					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
+					//--------10-07-2025----
+					//$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
+					//---------------
+					
+					$categoriesSubChecklistArr = [];
+					$categoriesSubChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+					
+					$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesSubChecklistArr)->get();
+					
 					if($taskSubChklist->isNotEmpty())
 					{
 						foreach($taskSubChklist as $subtask)
@@ -4875,11 +4899,11 @@ class DashboardInspectorController extends Controller
 					{
 						// checklist and  respective files approve=0 
 						
-						/*$categoriesChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+						$categoriesChecklistArr = Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
 						
-						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->where('approve', 0)->get();*/
+						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->where('approve', 0)->get();
 						
-						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->where('approve', 0)->get();
+						//$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->where('approve', 0)->get();
 						
 						if($taskChklist->isNotEmpty())
 						{
@@ -4929,7 +4953,12 @@ class DashboardInspectorController extends Controller
 						}
 						
 						// subchecklist and respective files
-						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->where('approve', 0)->get();
+						//---10-07-2025 
+						/*$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->where('approve', 0)->get();*/
+						//-----
+						
+						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->where('approve', 0)->get();
+						
 						if($taskSubChklist->isNotEmpty())
 						{
 							foreach($taskSubChklist as $subtask)
@@ -4979,9 +5008,12 @@ class DashboardInspectorController extends Controller
 							}
 							
 						}
-						//----------------------12-06-2025----------------------------
+						//------------12-06-2025------------
 						// checklist and  respective files approve=1 
-						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();
+						/*$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->get();*/
+						
+						$taskChklist = Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->get();
+						
 						if($taskChklist->isNotEmpty())
 						{
 							foreach($taskChklist as $task)
@@ -5056,7 +5088,10 @@ class DashboardInspectorController extends Controller
 						}
 						
 						// subchecklist and respective files
-						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();
+						/*$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->get();*/
+						
+						$taskSubChklist = Task_list_subchecklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->get();
+						
 						if($taskSubChklist->isNotEmpty())
 						{
 							foreach($taskSubChklist as $subtask)
@@ -5192,9 +5227,12 @@ class DashboardInspectorController extends Controller
 		if($request->tab == 'correctiveplan')
 		{
 			$data['correctivePlan'] = array_merge($correctiveCheckChecklistArray, $correctiveCheckSubcheckListArray);
+			
+			$correctivePlan = array_merge($correctiveCheckChecklistArray, $correctiveCheckSubcheckListArray);
 			$data['mode'] = 'corrective_plan';
 			
-			foreach($correctiveActionChecklistArray as $result)
+			//foreach($correctiveActionChecklistArray as $result)
+			foreach($correctivePlan as $result)
 			{
 				
 				if($result['lo_direct_approve'] == 0 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))

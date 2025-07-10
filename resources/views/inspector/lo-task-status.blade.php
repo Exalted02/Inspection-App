@@ -235,7 +235,7 @@ $totalPlan = $countPlan;
 $totalapprcompleted = $countCompleted;
 
 //echo "<pre>";print_r($correctiveActionArray);die;
-//echo "<pre>";print_r($approvedCompletedArray);die;
+//echo "<pre>";print_r($correctiveNeededArray);die;
 
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->

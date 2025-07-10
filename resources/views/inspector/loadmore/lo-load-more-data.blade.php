@@ -17,7 +17,7 @@ if($mode == 'corrective_needed')
 	//echo '<pre>';print_r($correctiveNeeded);die;
 	foreach($correctiveNeeded as $needed)
 	{
-		if(($needed['inspector_action']=='' && $needed['inspector_action']=='') || ($needed['inspector_action']== 2 && $needed['inspector_action']==2))
+		if(($needed['inspector_action']=='' && $needed['los_action']=='') || ($needed['inspector_action']== 2 && $needed['los_action']==2))
 		{
 			if($needed['type'] == 'checklist')
 			{
@@ -45,6 +45,8 @@ if($mode == 'corrective_needed')
 			}
 		}
 	}
+	//echo $lower.' '.$upper;
+	//echo "<pre>";print_r($correctiveNeddedArray);die;
 	$correctiveNeddedArray = array_slice($correctiveNeddedArray, $lower, $upper);
 }
 
@@ -193,7 +195,7 @@ if($mode == 'corrective_appr')
 	$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
 }
 
-
+//echo "<pre>";print_r($correctiveNeddedArray);die;
 @endphp
 @if($mode == 'corrective_needed')					
 	@foreach($correctiveNeddedArray as $result)
@@ -553,11 +555,9 @@ if($mode == 'corrective_appr')
 			@endif
 		</div>
 		<div class="flex-grow-1">
-			@if($result['second_checked'] == '')
-			<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-			@else
-			<a href="{{ route('inspector-subchecklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-			@endif
+			
+			<a href="{{ route('lo-subchecklist-first-reply-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			
 			<h6>{{ $checklistName ?? '' }} 
 			@if($val!='')
 				-> {{$val['name'] ?? ''}}
@@ -610,11 +610,8 @@ if($mode == 'corrective_appr')
 			@endif
 		</div>
 		<div class="flex-grow-1">
-			@if($result['second_checked'] == '')
-			<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-			@else
-			<a href="{{ route('inspector-checklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
-			@endif
+			<a href="{{ route('lo-checklist-first-reply-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			
 			<h6>{{ $checklistName ?? '' }} 
 			</h6>
 				<p class="text-muted mb-0">
