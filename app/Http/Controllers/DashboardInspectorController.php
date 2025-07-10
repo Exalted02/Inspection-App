@@ -5368,4 +5368,41 @@ class DashboardInspectorController extends Controller
 		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
 		return view('inspector.lo-first-reply-view', $data);
 	}
+	//-------------
+	public function lo_checklist_completed_approved_view($location_id='',$task_id='',$checklist_id='',$type='', $tab='')
+	{
+		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 3) {
+			return redirect('inspector-dashboard');
+		}
+		
+		$data = [];
+		$data['task_id'] = $task_id ?? '';
+		$data['location_id'] = $location_id ?? '';
+		$data['checklist_id'] = $checklist_id ?? '';
+		$data['type'] = $type ?? '';
+		$data['tab'] = $tab ?? '';
+		
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
+		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
+		return view('inspector.lo-completed-approved-view', $data);
+	}
+	public function lo_subchecklist_completed_approved_view($location_id='',$task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='')
+	{
+		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 3) {
+			return redirect('inspector-dashboard');
+		}
+		
+		$data = [];
+		$data['task_id'] = $task_id ?? '';
+		$data['location_id'] = $location_id ?? '';
+		$data['checklist_id'] = $checklist_id ?? '';
+		$data['subchecklist_id'] = $subchecklist_id ?? '';
+		$data['type'] = $type ?? '';
+		$data['tab'] = $tab ?? '';
+		$corrective_actions_data  	= Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
+		$data['inspector_action'] 	= $corrective_actions_data ? $corrective_actions_data->inspector_action : '';
+		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
+		return view('inspector.lo-completed-approved-view.blade', $data);
+	}
 }

@@ -145,6 +145,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::get('lo-subchecklist-first-reply-view/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'lo_subchecklist_first_reply_view'])->name('lo-subchecklist-first-reply-view');
 	
+	// lo completed/approved 
+	Route::get('lo-checklist-completed-approved-view/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'lo_checklist_completed_approved_view'])->name('lo-checklist-completed-approved-view');
+	
+	Route::get('lo-subchecklist-completed-approved-view/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'lo_subchecklist_completed_approved_view'])->name('lo-subchecklist-completed-approved-view');
+	
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
 	Route::get('/management-location/{id}', [ManagementController::class, 'management_location'])->name('management-location');
