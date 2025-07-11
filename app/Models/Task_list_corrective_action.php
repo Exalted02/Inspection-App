@@ -26,6 +26,7 @@ class Task_list_corrective_action extends Model
         'los_action_date', 
         'approved_status', 
 		'rejected_status',
+		'rejected_repeated',
     ];
 	
 	public function get_inspector()

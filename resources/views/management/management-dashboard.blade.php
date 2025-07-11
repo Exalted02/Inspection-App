@@ -18,6 +18,7 @@
  //$allTaskId = App\Models\Task_list_subcategories::whereIn('task_list_id', $allTaskLocationWise)->pluck('task_list_id')->toArray();
  //echo "<pre>";print_r($allTaskId);die;
  
+ $loc_tot_no_of_obs = 0;
 @endphp
     <div class="container">
 		<h2 class="page-title">Welcome to your overview</h2>
@@ -34,7 +35,7 @@
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
 					<div class="bg small-card">
 						<div class="small-card-title">No. of observations</div>
-						<div class="small-card-counter">8</div>
+						<div class="small-card-counter"><span id="tot_no_of_obs">0</span></div>
 						<div class="small-card-counter-title">WEEKLY</div>
 					</div>
 				</div>
@@ -50,18 +51,132 @@
     </div>
 	@foreach($locations as $location)
 	@php 
-		$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
+		//$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
 		
-		$allTaskCompleted = App\Models\Task_list_subcategories::whereIn('task_list_id', $taskLocation)->pluck('task_list_id')->toArray();
+		$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->get();
+		
+		//$allTaskCompleted = App\Models\Task_list_subcategories::whereIn('task_list_id', $taskLocation)->pluck('task_list_id')->toArray();
 		//echo "<pre>";print_r($allTaskCompleted);
-		$totalRejectChecklistCount = App\Models\Task_list_checklists::whereIn('task_list_id', $allTaskCompleted)->where('approve', 0)->whereBetween('created_at', [$startDate, $endDate])->count();
 		
-		$totalRejectSubChecklistCount = App\Models\Task_list_subchecklists::whereIn('task_list_id', $allTaskCompleted)->where('approve', 0)->whereBetween('created_at', [$startDate, $endDate])->count();
+		$correctiveNeddedChecklistArray = [];
+		$correctiveNeddedSubchecklistArray = [];
 		
-		$total_needed = $totalRejectChecklistCount + $totalRejectSubChecklistCount;
 		
-		$no_of_obs = ceil($total_needed / 4);
-		//$no_of_obs = $total_needed;
+		foreach($taskLocation as $val)
+		{
+			$ifTaskRxists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->exists();
+			if($ifTaskRxists)
+			{
+				// checklist and  respective files approve=0 
+				
+				
+				$categoriesChecklistArr = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+				
+				//----------------------12-06-2025----------------------------
+				// checklist and  respective files approve=1 
+				$taskChklist = App\Models\Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->whereBetween('created_at', [$startDate, $endDate])->get();
+				if($taskChklist->isNotEmpty())
+				{
+					foreach($taskChklist as $task)
+					{
+						
+						$task_list_checklist_corrective_needed = App\Models\Task_list_corrective_action::where('task_list_id', $val->id)
+						->where('checklist_id', $task->checklist_id)
+						->first();
+						if($task->approve == 0)
+						{
+							if(!$task_list_checklist_corrective_needed)
+							{								
+								
+								
+								
+								$correctiveNeddedChecklistArray[] = [
+										'type' => 'checklist',
+										'task_id' => $val->id,
+										'checklist_id' => $task->checklist_id,
+										'rejected_region' => $task->rejected_region,
+										'inspector_action' => '',
+										'los_action' => '',
+									];
+							}
+							else
+							{
+								$correctiveNeddedChecklistArray[] = [
+										'type' => 'checklist',
+										'task_id' => $val->id,
+										'checklist_id' => $task->checklist_id,
+										'rejected_region' => $task->rejected_region,
+										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+										'los_action'=> $task_list_checklist_corrective_needed->los_action,
+									];
+								//------
+							}
+							
+						}
+					}
+				}
+				
+				// subchecklist and respective files
+				$taskSubChklist = App\Models\Task_list_subchecklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->whereBetween('created_at', [$startDate, $endDate])->get();
+				if($taskSubChklist->isNotEmpty())
+				{
+					foreach($taskSubChklist as $subtask)
+					{
+						$task_list_subchecklist_corrective_needed = App\Models\Task_list_corrective_action::where('task_list_id', $val->id)
+						->where('checklist_id', $subtask->task_list_checklist_id)
+						->where('subchecklist_id', $subtask->subchecklist_id)
+						->first();
+						
+						if($subtask->approve == 0)
+						{
+							if(!$task_list_subchecklist_corrective_needed)
+							{
+								
+								$correctiveNeddedSubchecklistArray[] = [
+											'type' => 'subchecklist',
+											'task_id' => $val->id,
+											'checklist_id' => $subtask->task_list_checklist_id,
+											'subchecklist_id'=>$subtask->subchecklist_id,
+											'rejected_region' => $subtask->rejected_region,
+											'inspector_action' => '',
+											'los_action' => '',
+										];
+							}
+							else
+							{
+								// new implement 
+								$correctiveNeddedSubchecklistArray[] = [
+										'type' => 'subchecklist',
+										'task_id' => $val->id,
+										'checklist_id' => $subtask->task_list_checklist_id,
+										'subchecklist_id'=>$subtask->subchecklist_id,
+										'rejected_region' => $subtask->rejected_region,
+										'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
+										'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+									];
+							}
+						}
+						
+					}
+					
+				}
+			}
+		}
+		
+		$countNedded = 0;
+		$correctiveNeeded = array_merge($correctiveNeddedChecklistArray, $correctiveNeddedSubchecklistArray);
+		foreach($correctiveNeeded as $result)
+		{
+			if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
+			{
+				$countNedded++;
+			}
+		}
+		
+		
+		$no_of_obs = ceil($countNedded / 4);
+		//$no_of_obs = $countNedded;
+		$loc_tot_no_of_obs = $loc_tot_no_of_obs + $no_of_obs;
 	@endphp
 	<div class="management-location-card pt-2 pb-2">
 		<div class="container">
@@ -99,6 +214,7 @@
 		</div>
 	</div>
 	@endforeach
+	<input type="text" id="loc_tot_no_of_obs" value="{{ $loc_tot_no_of_obs ?? ''}}">
 	{{--<div class="management-location-card pt-2 pb-2">
 		<div class="container">
 			<div class="d-flex align-items-center location-header mb-3">
@@ -135,6 +251,11 @@
 	</div>--}}
 @endsection 
 @section('scripts')
-
+<script>
+$(document).ready(function() {
+	var tot_obs = $('#loc_tot_no_of_obs').val();
+	$('#tot_no_of_obs').text(tot_obs);
+});
+</script>
 @endsection
 
