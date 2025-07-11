@@ -13,6 +13,8 @@ class Manage_location extends Model
         'company_id', 
         'location_name', 
         'image', 
+        'unit_floor', 
+        'street', 
         'address', 
         'zipcode', 
         'country_id', 

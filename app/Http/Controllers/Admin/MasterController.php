@@ -244,7 +244,7 @@ class MasterController extends Controller
 	
 	public function save_location(Request $request)
 	{
-		
+		echo "<pre>";print_r($request->all());die;
 		$existingName = Manage_location::where('location_name', $request->post('location_name'))->where('company_id', $request->post('company_id'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
@@ -268,11 +268,11 @@ class MasterController extends Controller
 			$model= Manage_location::find($request->post('id'));
 			$model->company_id 		=	$request->post('company_id');
 			$model->location_name 	=	$request->post('location_name');
-			$model->address 		=	$request->post('address');
+			//$model->address 		=	$request->post('address');
 			$model->zipcode 		=	$request->post('zipcode');
-			$model->country_id 		=	$request->post('country_id');
-			$model->state_id 		=	$request->post('state_id');
-			$model->city_id 		=	$request->post('city_id');
+			//$model->country_id 		=	$request->post('country_id');
+			//$model->state_id 		=	$request->post('state_id');
+			//$model->city_id 		=	$request->post('city_id');
 			$model->categories 		=	$request->post('categories');
 			$model->updated_at		=	date('Y-m-d');
 			$model->save();

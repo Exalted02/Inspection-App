@@ -10,6 +10,7 @@ $(document).ready(function() {
 		let location_name = $('#location_name').val().trim();
 		//let address = $('#address').val().trim();
 		let zipcode = $('#zipcode').val().trim();
+		let unit_floor = $('#unit_floor').val().trim();
 		let street = $('#street').val().trim();
 		//let country = $('#country').val();
 		let company_id = $('#company_id').val();
