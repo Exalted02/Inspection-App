@@ -5,6 +5,11 @@
  $startDate = Carbon::now()->subWeeks(4)->startOfDay(); // 4 weeks ago
  $endDate = Carbon::now()->endOfDay(); //upto today
  
+ $today = Carbon::today(); //today date
+ $futureDate = Carbon::today()->addWeeks(4); // next 4 weeks
+ 
+ //$futureDate = Carbon::now()->endOfDay();
+ 
  //echo "<pre>";print_r($locations);die;
  //echo "<pre>";print_r($userLocationArr);die;
  $allTaskLocationWise  = App\Models\Task_lists::whereIn('location_id', $userLocationArr)->pluck('id')->toArray();
@@ -179,7 +184,16 @@
 		$loc_tot_no_of_obs = $loc_tot_no_of_obs + $no_of_obs;
 		
 		//------- for rejected repeated count ---
-		$repeated_obs_count = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('rejected_repeated', 1)->count();
+		$repeated_obs_count = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('rejected_repeated', 1)->whereBetween('created_at', [$startDate, $endDate])->count();
+		$no_of_repeated_obs = ceil($repeated_obs_count / 4);
+		
+		//------- for time to close observation count ---
+		 
+		$lo_direct_approve = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('lo_direct_approve', 1)->whereBetween('lo_completed_by', [$today, $futureDate])->count();
+		
+		$lo_no_direct_approve = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('lo_direct_approve', 0)->whereBetween('lo_completed_by', [$today, $futureDate])->count();
+		$close_obs = $lo_direct_approve + $lo_no_direct_approve;
+		
 		
 	@endphp
 	<div class="management-location-card pt-2 pb-2">
@@ -203,14 +217,14 @@
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
 					<div class="small-card">
 						<div class="small-card-title">Repeat observations</div>
-						<div class="small-card-counter">{{ $repeated_obs_count }}</div>
+						<div class="small-card-counter">{{ $no_of_repeated_obs }}</div>
 						<div class="small-card-counter-title">WEEKLY</div>
 					</div>
 				</div>
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-third">
 					<div class="small-card">
 						<div class="small-card-title">Time to close observations</div>
-						<div class="small-card-counter">6</div>
+						<div class="small-card-counter">{{ $close_obs }}</div>
 						<div class="small-card-counter-title">DAYS</div>
 					</div>
 				</div>
@@ -218,7 +232,7 @@
 		</div>
 	</div>
 	@endforeach
-	<input type="text" id="loc_tot_no_of_obs" value="{{ $loc_tot_no_of_obs ?? ''}}">
+	<input type="hidden" id="loc_tot_no_of_obs" value="{{ $loc_tot_no_of_obs ?? ''}}">
 	{{--<div class="management-location-card pt-2 pb-2">
 		<div class="container">
 			<div class="d-flex align-items-center location-header mb-3">
