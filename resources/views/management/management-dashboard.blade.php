@@ -8,7 +8,6 @@
  $today = Carbon::today(); //today date
  $futureDate = Carbon::today()->addWeeks(4); // next 4 weeks
  
- //$futureDate = Carbon::now()->endOfDay();
  
  //echo "<pre>";print_r($locations);die;
  //echo "<pre>";print_r($userLocationArr);die;
