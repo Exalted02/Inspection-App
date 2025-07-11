@@ -51,9 +51,9 @@
     </div>
 	@foreach($locations as $location)
 	@php 
-		//$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
+		$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
 		
-		$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->get();
+		//$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->get();
 		
 		//$allTaskCompleted = App\Models\Task_list_subcategories::whereIn('task_list_id', $taskLocation)->pluck('task_list_id')->toArray();
 		//echo "<pre>";print_r($allTaskCompleted);
@@ -64,23 +64,23 @@
 		
 		foreach($taskLocation as $val)
 		{
-			$ifTaskRxists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->exists();
+			$ifTaskRxists = App\Models\Task_list_subcategories::where('task_list_id', $val)->exists();
 			if($ifTaskRxists)
 			{
 				// checklist and  respective files approve=0 
 				
 				
-				$categoriesChecklistArr = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->pluck('task_list_category_id')->toArray();
+				$categoriesChecklistArr = App\Models\Task_list_subcategories::where('task_list_id', $val)->pluck('task_list_category_id')->toArray();
 				
 				//----------------------12-06-2025----------------------------
 				// checklist and  respective files approve=1 
-				$taskChklist = App\Models\Task_list_checklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->whereBetween('created_at', [$startDate, $endDate])->get();
+				$taskChklist = App\Models\Task_list_checklists::where('task_list_id', $val)->whereIn('category_id', $categoriesChecklistArr)->whereBetween('created_at', [$startDate, $endDate])->get();
 				if($taskChklist->isNotEmpty())
 				{
 					foreach($taskChklist as $task)
 					{
 						
-						$task_list_checklist_corrective_needed = App\Models\Task_list_corrective_action::where('task_list_id', $val->id)
+						$task_list_checklist_corrective_needed = App\Models\Task_list_corrective_action::where('task_list_id', $val)
 						->where('checklist_id', $task->checklist_id)
 						->first();
 						if($task->approve == 0)
@@ -92,7 +92,7 @@
 								
 								$correctiveNeddedChecklistArray[] = [
 										'type' => 'checklist',
-										'task_id' => $val->id,
+										'task_id' => $val,
 										'checklist_id' => $task->checklist_id,
 										'rejected_region' => $task->rejected_region,
 										'inspector_action' => '',
@@ -103,7 +103,7 @@
 							{
 								$correctiveNeddedChecklistArray[] = [
 										'type' => 'checklist',
-										'task_id' => $val->id,
+										'task_id' => $val,
 										'checklist_id' => $task->checklist_id,
 										'rejected_region' => $task->rejected_region,
 										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
@@ -117,12 +117,12 @@
 				}
 				
 				// subchecklist and respective files
-				$taskSubChklist = App\Models\Task_list_subchecklists::where('task_list_id', $val->id)->whereIn('category_id', $categoriesChecklistArr)->whereBetween('created_at', [$startDate, $endDate])->get();
+				$taskSubChklist = App\Models\Task_list_subchecklists::where('task_list_id', $val)->whereIn('category_id', $categoriesChecklistArr)->whereBetween('created_at', [$startDate, $endDate])->get();
 				if($taskSubChklist->isNotEmpty())
 				{
 					foreach($taskSubChklist as $subtask)
 					{
-						$task_list_subchecklist_corrective_needed = App\Models\Task_list_corrective_action::where('task_list_id', $val->id)
+						$task_list_subchecklist_corrective_needed = App\Models\Task_list_corrective_action::where('task_list_id', $val)
 						->where('checklist_id', $subtask->task_list_checklist_id)
 						->where('subchecklist_id', $subtask->subchecklist_id)
 						->first();
@@ -134,7 +134,7 @@
 								
 								$correctiveNeddedSubchecklistArray[] = [
 											'type' => 'subchecklist',
-											'task_id' => $val->id,
+											'task_id' => $val,
 											'checklist_id' => $subtask->task_list_checklist_id,
 											'subchecklist_id'=>$subtask->subchecklist_id,
 											'rejected_region' => $subtask->rejected_region,
@@ -147,7 +147,7 @@
 								// new implement 
 								$correctiveNeddedSubchecklistArray[] = [
 										'type' => 'subchecklist',
-										'task_id' => $val->id,
+										'task_id' => $val,
 										'checklist_id' => $subtask->task_list_checklist_id,
 										'subchecklist_id'=>$subtask->subchecklist_id,
 										'rejected_region' => $subtask->rejected_region,
@@ -174,9 +174,13 @@
 		}
 		
 		
-		$no_of_obs = ceil($countNedded / 4);
-		//$no_of_obs = $countNedded;
+		//$no_of_obs = ceil($countNedded / 4);
+		$no_of_obs = $countNedded;
 		$loc_tot_no_of_obs = $loc_tot_no_of_obs + $no_of_obs;
+		
+		//------- for rejected repeated count ---
+		$repeated_obs_count = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('rejected_repeated', 1)->count();
+		
 	@endphp
 	<div class="management-location-card pt-2 pb-2">
 		<div class="container">
@@ -199,7 +203,7 @@
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
 					<div class="small-card">
 						<div class="small-card-title">Repeat observations</div>
-						<div class="small-card-counter">8</div>
+						<div class="small-card-counter">{{ $repeated_obs_count }}</div>
 						<div class="small-card-counter-title">WEEKLY</div>
 					</div>
 				</div>
