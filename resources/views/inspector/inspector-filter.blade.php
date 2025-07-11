@@ -1096,7 +1096,7 @@ $(document ).ready(function() {
 			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
-				alert(response.remain);
+				//alert(response.remain);
 				if(response.remain>0)
 				{
 					$('#showloadneeded').show();

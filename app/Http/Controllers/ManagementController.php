@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Manage_location;
 use App\Models\Task_lists;
+use App\Models\Users_location;
 
 class ManagementController extends Controller
 {
@@ -13,8 +14,15 @@ class ManagementController extends Controller
     {
 		$data = [];
 		
-		$locations = Manage_location::where('company_id', auth()->user()->company_name)->get();
+		//$locations = Manage_location::where('company_id', auth()->user()->company_name)->get();
+		//----------------------
+		$userLocationArr = [];
+		$userLocationArr = Users_location::where('user_id', auth()->user()->id)->pluck('location_id')->toArray();
+		
+		$locations = Manage_location::whereIn('id', $userLocationArr)->get();
+		//----------------------
 		$data['locations'] = $locations;
+		$data['userLocationArr'] =$userLocationArr;
         return view('management.management-dashboard', $data);
     }
     public function management_location($id='')
@@ -40,8 +48,6 @@ class ManagementController extends Controller
 		$data['subchecklist_id'] = $subchecklist_id ?? '';
 		$data['type'] = $type ?? '';
 		$data['tab'] = 'corrective-action';
-		
-		
 		
 		return view('management.management-task-reply-details', $data);
 	}

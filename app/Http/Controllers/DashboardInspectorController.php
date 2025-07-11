@@ -1894,7 +1894,7 @@ class DashboardInspectorController extends Controller
 		$id = $model->id;
 		
 		// update the status Task lists table
-		$taskData  = Task_lists::where('id', $task_list_id)->update(['status'=>2]);
+		//$taskData  = Task_lists::where('id', $task_list_id)->update(['status'=>2]); // 11-07-2025
 		
 		//---------03-07-2025-----------
 		$lo_files = $request->file('lo_file');
