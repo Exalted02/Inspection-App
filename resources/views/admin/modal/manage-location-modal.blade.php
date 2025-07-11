@@ -42,7 +42,14 @@
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('location_name')}}.</div>
 											</div>
 										</div>
+										
 										<div class="col-sm-6">
+											<div class="input-block mb-3">
+												<label class="col-form-label">{{ __('Unit/Floor') }}<span class="text-danger"></span></label>
+												<input class="form-control" type="text" name="unit_floor" id="unit_floor">
+											</div>
+										</div>
+										{{--<div class="col-sm-6">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('country') }}<span class="text-danger">*</span></label>
 												<select class="select select_country" id="country" name="country_id" data-url="{{ route('admin.getstatebycountry') }}">
@@ -53,10 +60,10 @@
 												</select>
 												<div class="invalid-feedback">{{ __('please_select') }} {{ __('country')}}.</div>
 											</div>
-										</div>
+										</div>--}}
 										
 									</div>
-									<div class="row">
+									{{--<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
 												<label class="col-form-label">{{ __('state') }}<span class="text-danger">*</span></label>
@@ -75,18 +82,25 @@
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('city')}}.</div>
 											</div>
 										</div>
-									</div>
+									</div>--}}
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="input-block mb-3">
-												<label class="col-form-label">{{ __('zipcode') }}<span class="text-danger">*</span></label>
+												<label class="col-form-label">{{ __('Street') }}<span class="text-danger">*</span></label>
+												<input class="form-control" type="text" name="street" id="street">
+												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('street')}}.</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="input-block mb-3">
+												<label class="col-form-label">{{ __('Postal code') }}<span class="text-danger">*</span></label>
 												<input class="form-control" type="text" name="zipcode" id="zipcode">
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('zipcode')}}.</div>
 											</div>
 										</div>
 										
 									</div>
-									<div class="row">
+									{{--<div class="row">
 										<div class="col-12">
 											<div class="input-block mb-3">
 												<label class="col-form-label d-block">{{ __('address') }}<span class="text-danger">*</span></label>
@@ -94,7 +108,7 @@
 												<div class="invalid-feedback">{{ __('please_enter') }} {{ __('address') }}.</div>
 											</div>
 										</div>
-									</div>
+									</div>--}}
 									
 									{{--<div class="row">
 										<div class="tab-content" id="pills-tabContent">

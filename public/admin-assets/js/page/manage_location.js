@@ -8,14 +8,15 @@ $(document).ready(function() {
 	
 	$(document).on('click','.save-location', function(){
 		let location_name = $('#location_name').val().trim();
-		let address = $('#address').val().trim();
+		//let address = $('#address').val().trim();
 		let zipcode = $('#zipcode').val().trim();
-		let country = $('#country').val();
+		let street = $('#street').val().trim();
+		//let country = $('#country').val();
 		let company_id = $('#company_id').val();
 		let location_image = $('#location_image')[0].files.length;
 		//alert(country);
-		let state = $('#state').val();
-		let city = $('#city').val();
+		//let state = $('#state').val();
+		//let city = $('#city').val();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
@@ -26,19 +27,27 @@ $(document).ready(function() {
 			$('#location_name').next('.invalid-feedback').show();
 			isValid = false;
 		}
-		if (address === '')
+		if (street === '')
+		{
+			$('#street').addClass('is-invalid');
+			$('#street').next('.invalid-feedback').show();
+			isValid = false;
+		}
+		/*if (address === '')
 		{
 			$('#address').addClass('is-invalid');
 			$('#address').next('.invalid-feedback').show();
 			isValid = false;
-		}
+		}*/
+		
 		if (zipcode === '')
 		{
 			$('#zipcode').addClass('is-invalid');
 			$('#zipcode').next('.invalid-feedback').show();
 			isValid = false;
 		}
-		if (country === '')
+		
+		/*if (country === '')
 		{
 			$('#country').addClass('is-invalid');
 			$('#country').siblings('.invalid-feedback').show();
@@ -55,7 +64,7 @@ $(document).ready(function() {
 			$('#city').addClass('is-invalid');
 			$('#city').siblings('.invalid-feedback').show();
 			isValid = false;
-		}
+		}*/
 		
 		if (location_image === 0) {
 			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();

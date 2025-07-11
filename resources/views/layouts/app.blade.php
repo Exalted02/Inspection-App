@@ -358,6 +358,12 @@
 					}
 				}
 		        @endif
+				
+				@if(auth()->check() && auth()->user()->user_type == 4)
+				{
+					history.back();
+				}
+				@endif
 			}
 		</script>
 		@yield('scripts')
