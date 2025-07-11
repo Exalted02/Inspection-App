@@ -277,6 +277,7 @@ $(document).ready(function() {
 	$(document).on('click','.add_location', function(){
 		$('#frmlocation')[0].reset();
 		$('#id').val('');
+		$('#hid_image').val('');
 		$('#preview').attr('src', '').show();
 		$('#country').val('').trigger('change');
 		$('#state').val('').trigger('change');

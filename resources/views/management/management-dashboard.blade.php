@@ -206,7 +206,7 @@
 				<img src="{{url('uploads/location/' . $location->image ?? '')}}" alt="Location">
 				<div>
 					<div class="title">{{ $location->location_name ?? '' }}</div>
-					<small class="text-muted">{{ $location->address ?? ''}}, {{ $location->zipcode ?? ''}}</small>
+					<small class="text-muted">{{ !empty($location->street) ?  $location->street.' ,':''}}  {{ $location->zipcode ?? ''}}</small>
 				</div>
 			</div></a>
 			<div class="row ">

@@ -15,16 +15,16 @@ $(document).ready(function() {
 		//let country = $('#country').val();
 		let company_id = $('#company_id').val();
 		let location_image = $('#location_image')[0].files.length;
-		//alert(country);
+		//alert(location_image);
 		//let state = $('#state').val();
 		//let city = $('#city').val();
+		let hid_image = $('#hid_image').val();
 		
 		let isValid = true;
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
 		if (location_name === '')
 		{
-			alert(location_name);
 			$('#location_name').addClass('is-invalid');
 			$('#location_name').next('.invalid-feedback').show();
 			isValid = false;
@@ -68,9 +68,12 @@ $(document).ready(function() {
 			isValid = false;
 		}*/
 		
-		if (location_image === 0) {
-			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
-			isValid = false;
+		if(hid_image == '')
+		{
+			if (location_image === 0) {
+				$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
+				isValid = false;
+			}
 		}
 
 		
