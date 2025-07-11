@@ -244,7 +244,7 @@ class MasterController extends Controller
 	
 	public function save_location(Request $request)
 	{
-		echo "<pre>";print_r($request->all());die;
+		//echo "<pre>";print_r($request->all());die;
 		$existingName = Manage_location::where('location_name', $request->post('location_name'))->where('company_id', $request->post('company_id'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
@@ -268,6 +268,8 @@ class MasterController extends Controller
 			$model= Manage_location::find($request->post('id'));
 			$model->company_id 		=	$request->post('company_id');
 			$model->location_name 	=	$request->post('location_name');
+			$model->unit_floor 		=	$request->post('unit_floor');
+			$model->street 			=	$request->post('street');
 			//$model->address 		=	$request->post('address');
 			$model->zipcode 		=	$request->post('zipcode');
 			//$model->country_id 		=	$request->post('country_id');
@@ -294,11 +296,13 @@ class MasterController extends Controller
 			$model=new Manage_location();
 			$model->company_id 		=	$request->post('company_id');
 			$model->location_name 	=	$request->post('location_name');
-			$model->address 		=	$request->post('address');
+			$model->unit_floor 		=	$request->post('unit_floor');
+			$model->street 			=	$request->post('street');
+			//$model->address 		=	$request->post('address');
 			$model->zipcode 		=	$request->post('zipcode');
-			$model->country_id 		=	$request->post('country_id');
-			$model->state_id 		=	$request->post('state_id');
-			$model->city_id 		=	$request->post('city_id');
+			//$model->country_id 		=	$request->post('country_id');
+			//$model->state_id 		=	$request->post('state_id');
+			//$model->city_id 		=	$request->post('city_id');
 			$model->categories 		=	$request->post('categories');
 			$model->status			=	1;
 			$model->created_at		=	date('Y-m-d');
@@ -362,6 +366,8 @@ class MasterController extends Controller
 		$data['id']  = $location->id ;
 		$data['company_id']  = $location->company_id ;
 		$data['location_name']  = $location->location_name;
+		$data['unit_floor']  = $location->unit_floor;
+		$data['street']  	= $location->street;
 		$data['address']  = $location->address;
 		$data['zipcode']  = $location->zipcode;
 		$data['country_id']  = $location->country_id;

@@ -172,10 +172,12 @@ $company_name = $companyData ? $companyData->company_name : '';
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
 								<th>{{ __('location_name') }}</th>
+								<th>{{ __('Unit/Floor') }}</th>
+								<th>{{ __('Street') }}</th>
 								<th>{{ __('image') }}</th>
-								<th>{{ __('country') }}</th>
+								{{--<th>{{ __('country') }}</th>
 								<th>{{ __('state') }}</th>
-								<th>{{ __('city') }}</th>
+								<th>{{ __('city') }}</th>--}}
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
 								<th class="text-end">Action</th>
@@ -192,10 +194,12 @@ $company_name = $companyData ? $companyData->company_name : '';
 								</td>
 								@endif
 								<td class="contact-details">{{ $val->location_name ?? ''}}</td>
+								<td>{{ $val->unit_floor ?? 'N/A'}}</td>
+								<td>{{ $val->street ?? 'N/A'}}</td>
 								<td><img src="{{ $val->image != null ? url('uploads/location/' . $val->image) :  url('images/noimages/noimage_region.png')  }}" width="50" height="50"></td>
-								<td>{{ $val->get_country->name }}</td>
+								{{--<td>{{ $val->get_country->name }}</td>
 								<td>{{ $val->get_state->name }}</td>
-								<td>{{ $val->get_city->name }}</td>
+								<td>{{ $val->get_city->name }}</td>--}}
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)

@@ -24,6 +24,7 @@ $(document).ready(function() {
 		$('.form-control').removeClass('is-invalid');
 		if (location_name === '')
 		{
+			alert(location_name);
 			$('#location_name').addClass('is-invalid');
 			$('#location_name').next('.invalid-feedback').show();
 			isValid = false;
@@ -125,6 +126,8 @@ $(document).on('click','.edit-location', function(){
 			$('#id').val(response.id);
 			$('#company_id').val(response.company_id);
 			$('#location_name').val(response.location_name);
+			$('#unit_floor').val(response.unit_floor);
+			$('#street').val(response.street);
 			$('#address').val(response.address);
 			$('#zipcode').val(response.zipcode);
 			$('#hid_image').val(response.location_image);
