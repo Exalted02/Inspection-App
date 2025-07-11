@@ -155,7 +155,7 @@
 									@endforeach
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By {{ $userData->get_user->name ?? ''}} </span><span>{{ Carbon::parse($created_at)->format('Y M d h:i:s')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}} </span><span>{{ Carbon::parse($created_at)->format('Y M d h:i:s')}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						<div class="row mt" style="margin-top: 1rem !important;">

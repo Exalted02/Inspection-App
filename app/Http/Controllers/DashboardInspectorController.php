@@ -2175,7 +2175,8 @@ class DashboardInspectorController extends Controller
 			{
 				$model->rejected_status = 2;
 			}
-			//$model->los_id = $user_id;
+			
+			$model->rejected_repeated = 1;
 		}
 		
 		$model->save();
