@@ -61,7 +61,7 @@
             <i class="fas fa-check"></i>
         </div>
         <h1>Thank {{ auth()->user()->name ?? '' }}!</h1>
-        <p><h3>Thanks for your hardwork ! Your safety</br>inspection has been submitted</h3></p>
+        <p><h3>Thanks for your hardwork ! Your </br>inspection has been submitted</h3></p>
 		<p><h3>{{ Carbon::parse($datetime)->format('d M Y, H:i'); }}</h3></p>
 		<div class="thank-you-home">
 			<span id="inspector-dashboard"><h3>Home</h3></span>

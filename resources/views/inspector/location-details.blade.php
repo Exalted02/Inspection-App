@@ -26,7 +26,7 @@ $getCategotyArr = [];
 				@if(!empty($location_categories[0]->unit_floor))
 				{{ $location_categories[0]->unit_floor ?? ''}}</br>
 				@endif
-				{{ $location_categories[0]->address ?? ''}}</br>
+				{{ $location_categories[0]->street ?? ''}}</br>
 				{{ $location_categories[0]->zipcode ?? ''}}
 				</small>
 			</div>
