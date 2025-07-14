@@ -36,6 +36,10 @@ if(!empty($userdata->profile_image))
 	$profile_img = url('uploads/profile/' .$userdata->id .'/'. $path  . '/'. $userdata->profile_image);
 }
 
+$city = '';
+$state = '';
+$country = '';
+
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
@@ -85,9 +89,17 @@ if(!empty($userdata->profile_image))
 						@foreach($userdata->get_user_location as $locations)
 						@php
 							$lacationData = App\Models\Manage_location::where('id',$locations->location_id)->first();
-							$city = App\Models\Cities::where('id', $lacationData->city_id)->first()->name;
-							$state = App\Models\States::where('id', $lacationData->state_id)->first()->name;
-							$country = App\Models\Countries::where('id', $lacationData->country_id)->first()->name;
+							$cityData = App\Models\Cities::where('id', $lacationData->city_id)->first();
+							$city = $cityData ? $cityData->name : '';
+							
+							$stateData = App\Models\States::where('id', $lacationData->state_id)->first();
+							
+							$state = $stateData ? $stateData->name : '';
+							
+							$countryData = App\Models\Countries::where('id', $lacationData->country_id)->first();
+							
+							$country = $countryData ? $countryData->name : '';
+							
 							$loc_image = $lacationData && $lacationData->image != null ? url('uploads/location/' .$lacationData->image) : url('images/noimages/noimage_region.png');
 							
 							$total_task = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->count();
