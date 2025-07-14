@@ -278,7 +278,8 @@ $(document).ready(function() {
 		$('#head-label').html(translations.addlocation);
 		$('.invalid-feedback').hide();
 		$('.form-control').removeClass('is-invalid');
-		
+
+		$('#user_type').prop('disabled', false);
 		$('#user_type').val('').trigger('change'); 
 	});
 	
