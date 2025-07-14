@@ -16,6 +16,8 @@ class Task_list_corrective_action extends Model
         'lo_id', 
         'lo_corrective_action_plan', 
         'lo_corrective_action_plan_second_check', 
+        'ia_los_first_rejected_reason', 
+        'ia_los_second_rejected_reason', 
         'lo_completed_by', 
         'lo_direct_approve', 
         'inspector_id', 
