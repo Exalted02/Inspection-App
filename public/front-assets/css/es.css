@@ -1785,5 +1785,8 @@ body {
 .list-approved-filter {
 	background-color: #ece9e9 !important;
 }
+.vertical-gap {
+	margin-top:5px;
+}
 
 

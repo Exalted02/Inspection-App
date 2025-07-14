@@ -2126,6 +2126,7 @@ class DashboardInspectorController extends Controller
 		$subchecklist_id = $request->subchecklist_id ?? null;
 		$user_id = auth()->user()->id;
 		$inspector_action = $request->inspector_action;
+		$first_rejected_reason = $request->first_rejected_reason;
 		
 		//$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;
 		
@@ -2163,6 +2164,7 @@ class DashboardInspectorController extends Controller
 			$model->inspector_action_date = date('Y-m-d h:i:s');
 			$model->inspector_action = $inspector_action;
 			//$model->inspector_id = $user_id;
+			$model->ia_los_first_rejected_reason = $first_rejected_reason ?? '';
 			$model->los_action_date = date('Y-m-d h:i:s');
 			$model->los_action = $inspector_action;
 			

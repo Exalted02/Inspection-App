@@ -30,6 +30,8 @@
 	
 	$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
 	
+	$lo_corrective_completed_by = $corrective_action ? $corrective_action->lo_completed_by : '';
+	
 	//---------------------------------------------
 	$corrective_action_primary_id = $corrective_action ? $corrective_action->id : '';
 	 
@@ -79,6 +81,8 @@
 		$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 		
 		$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
+		
+		$lo_corrective_completed_by = $corrective_action ? $corrective_action->lo_completed_by : '';
 		
 		//---------------------------------------------
 		$corrective_action_primary_id = $corrective_action ? $corrective_action->id : '';
@@ -197,31 +201,62 @@
 							</div>
 						</div>
 						
-						<div class="row" style="margin-top: 1rem !important;">
+						{{--<div class="row" style="margin-top: 1rem !important;">
 							<div class="col-md-12">
 								<label>Completed By</label>
 								<div class="mt-1">
 								{{ Carbon::parse($inspector_action_date)->format('d M Y') }}
 								</div>
 							</div>
-						</div>
+						</div>--}}
 						
 						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action->get_lo->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->created_at)->format('Y M d h:i:s')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action->get_lo->name ?? ''}}</span><span>{{ Carbon::parse($lo_corrective_completed_by)->format('Y M d h:i:s')}}</span></div>
 						</div>
-						<div class="row" style="margin-top:10px;">
+						
+						@if($corrective_action)
+							<hr class="horizontal-line">
+							
+							@if($corrective_action->approved_status == 1 || $corrective_action->approved_status == 2 || $corrective_action->rejected_status == 1 || $corrective_action->rejected_status == 2)
+								<div class="row">
+									<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
+								</div>
+							@endif
+						@endif
+						
+						<div class="row">
 							<div class="col-md-12">
 							@if($corrective_action->approved_status == 1)
-								<span class="show-agree-status">Approved by (IA)	{{$corrective_action->get_inspector->name ?? ''}}</span>
+								<div class="col-md-12">
+								<span class="show-agree-status">Approved</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+							
+							{{--<span class="show-agree-status">Approved by (IA)	{{$corrective_action->get_inspector->name ?? ''}}</span>--}}
 							@elseif($corrective_action->approved_status == 2)
-								<span class="show-agree-status">Approved by (LOS) {{$corrective_action->get_los->name ?? ''}}</span>
+								<div class="col-md-12">
+								<span class="show-agree-status">Approved</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+								
+								{{--<span class="show-agree-status">Approved by (LOS) {{$corrective_action->get_los->name ?? ''}}</span>--}}
 							@endif
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-12 vertical-gap">
 							@if($corrective_action->rejected_status == 1)
-								<span class="show-reject-status">Rejected by (IA)	{{$corrective_action->get_inspector->name ?? ''}}</span>
+								<div class="col-md-12">
+								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_action->ia_los_first_rejected_reason ?? ''  }}</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+							
+							{{--<span class="show-reject-status">Rejected by (IA)	{{$corrective_action->get_inspector->name ?? ''}}</span>--}}
 							@elseif($corrective_action->rejected_status == 2)
-								<span class="show-reject-status">Rejected by (LOS) {{$corrective_action->get_los->name ?? ''}}</span>
+							<div class="col-md-12">
+								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_action->ia_los_first_rejected_reason ?? ''  }}</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+							
+							{{--<span class="show-reject-status">Rejected by (LOS) {{$corrective_action->get_los->name ?? ''}}</span>--}}
 							@endif
 							</div>
 							

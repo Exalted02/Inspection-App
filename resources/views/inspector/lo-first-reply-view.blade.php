@@ -297,11 +297,28 @@
 						<hr class="horizontal-line">
 						@endif
 						
+						@if($corrective_action_data)
+							@if((isset($corrective_action_data->inspector_action) && $corrective_action_data->inspector_action == 1) || (isset($corrective_action_data->los_action) && $corrective_action_data->los_action == 1))
+								<div class="row">
+									<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
+								</div>
+							@endif
+						@endif
+						
 						<div class="row">
 							@if(isset($corrective_action_data->inspector_action) && $corrective_action_data->inspector_action == 1)
-								<span class="show-agree-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
+								<div class="col-md-12">
+								<span class="show-agree-status">Approved</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
 							@elseif(isset($corrective_action_data->los_action) && $corrective_action_data->los_action == 1)
-								<span class="show-agree-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span>
+							
+								<div class="col-md-12">
+								<span class="show-agree-status">Approved</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+							
+							
 							@endif
 						</div>
 						{{--<div class="row">
