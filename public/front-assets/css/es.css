@@ -863,7 +863,7 @@ body {
     align-items: center;
     /*margin: 0 auto;*/
     /*cursor: pointer;*/
-    border-radius: 8px;
+    border-radius: 0px;
     transition: all 0.3s ease;
 	margin-left:-12px;
 }
@@ -1718,7 +1718,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-style: italic;
   font-family: initial;*/
-  font-size: 20px;
+  font-size: 14px;
   color: #333;
 }
 
