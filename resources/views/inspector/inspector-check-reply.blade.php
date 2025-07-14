@@ -107,7 +107,7 @@
 		 }
 	 }
  }
- //echo auth()->user()->user_type;die;
+ //echo $lo_corrective_completed_by;die;
  //echo "<pre>";print_r($image_arr);die;
  //echo "<pre>";print_r($corrective_action_files);die;
  
@@ -166,12 +166,15 @@
 							</div>
 							<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}}</span><span>{{ Carbon::parse($created_at)->format('d M, Y h:i A')}}</span></div>
 						</div>
+						
+						@if(!empty($lo_corrective_action_plan))
 						<hr class="horizontal-line">
+						@endif
 						
 						@if(!empty($lo_corrective_action_plan))
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
-								<label>What you need to do</label>
+								<label>Corrective</label>
 								<div class="mt-1">
 									{{ $lo_corrective_action_plan ?? '' }}
 								</div>
@@ -212,6 +215,7 @@
 						</div>
 						@endif
 						
+						@if(!empty($lo_corrective_completed_by))
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 							<label>Completed By</label>
@@ -220,6 +224,8 @@
 								</div>
 							</div>
 						</div>
+						@endif
+						
 						@if($corrective_action_data)
 						<div class="row" style="margin-top:10px;">
 							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('d M, Y h:i A') : ''}}</span></div>
