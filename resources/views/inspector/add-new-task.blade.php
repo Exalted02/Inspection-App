@@ -62,8 +62,8 @@ if(!empty($task_id))
 										<label>{{ __('Timeline') }}</label>
 										<div class="split-placeholder-wrapper">
 											<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time" readonly>
-											<span class="custom-left-placeholder" id="selected_time">Settime</span>
-											<span class="custom-right-placeholder" id="selected_date">{{ $selected_date ? $selected_date : 'Setdate'}}</span>
+											<span class="custom-left-placeholder" id="selected_time">Set Time</span>
+											<span class="custom-right-placeholder" id="selected_date">{{ $selected_date ? $selected_date : 'Set Date'}}</span>
 										</div>
 										<span id="settimeline_id_error" style="display:none;  color: red;"></span>
 										<input type="hidden" id="hidden_set_date" name="hidden_set_date" value="{{ $selected_date ?? ''}}">
@@ -147,7 +147,7 @@ $(document).ready(function() {
 				const dateOnly = flatpickr.formatDate(date, "d M Y");
 				const timeOnly = flatpickr.formatDate(date, "H:i");
                 //alert(date);alert(dateOnly);alert(timeOnly);
-				document.getElementById('selected_time').innerText = 'Settime';
+				document.getElementById('selected_time').innerText = 'Set Time';
 				document.getElementById('selected_date').innerText = dateOnly;
 				$('#hidden_set_date').val(dateOnly);
 				$('#hidden_set_time').val(timeOnly);
