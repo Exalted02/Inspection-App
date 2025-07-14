@@ -2240,8 +2240,8 @@ class DashboardInspectorController extends Controller
 		$model->inspector_action = 0;
 		//$model->los_action = $request->los_action;
 		$model->los_action = 0;
-		$model->approved_status = 0;
-		$model->rejected_status = 0;
+		//$model->approved_status = 0;
+		//$model->rejected_status = 0;
 		$model->save();
 		
 		$lo_files = $request->file('lo_file');
@@ -2382,6 +2382,7 @@ class DashboardInspectorController extends Controller
 		$inspector_id = auth()->user()->id;
 		$inspector_action = $request->inspector_action;
 		$los_action = $request->los_action;
+		$first_rejected_reason = $request->first_rejected_reason;
 		
 		/*$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;*/
 		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first()->id;
@@ -2391,6 +2392,7 @@ class DashboardInspectorController extends Controller
 		if($inspector_action == 2 || $los_action == 2)
 		{
 			$model->lo_corrective_action_plan_second_check = null;
+			$model->ia_los_first_rejected_reason = $first_rejected_reason ?? '';
 			
 			if(auth()->user()->id == 1)
 			{
@@ -2401,6 +2403,8 @@ class DashboardInspectorController extends Controller
 			{
 				$model->rejected_status = 2;
 			}
+			
+			$model->rejected_repeated = 1;
 		}
 		
 		if($inspector_action != '')

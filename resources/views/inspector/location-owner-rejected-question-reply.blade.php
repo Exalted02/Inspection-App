@@ -237,9 +237,8 @@
 								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->los_action_date)->format('d M, Y h:i A')}}</span></div>
 								
-								{{--<span class="show-agree-status">Approved by (LOS) {{$corrective_action->get_los->name ?? ''}}</span>--}}
 							@endif
 							</div>
 							<div class="col-md-12 vertical-gap">
@@ -248,15 +247,11 @@
 								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_action->ia_los_first_rejected_reason ?? ''  }}</span>
 								</div>
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
-							
-							{{--<span class="show-reject-status">Rejected by (IA)	{{$corrective_action->get_inspector->name ?? ''}}</span>--}}
 							@elseif($corrective_action->rejected_status == 2)
 							<div class="col-md-12">
 								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_action->ia_los_first_rejected_reason ?? ''  }}</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
-							
-							{{--<span class="show-reject-status">Rejected by (LOS) {{$corrective_action->get_los->name ?? ''}}</span>--}}
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->los_action_date)->format('d M, Y h:i A')}}</span></div>
 							@endif
 							</div>
 							

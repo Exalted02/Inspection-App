@@ -191,7 +191,7 @@
 									@endforeach
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By {{ $userData->get_user->name ?? ''}} </span><span>{{ Carbon::parse($created_at)->format('Y M d h:i:s')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By {{ $userData->get_user->name ?? ''}} </span><span>{{ Carbon::parse($created_at)->format('d M, Y h:i A')}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						
@@ -230,16 +230,16 @@
 							</div>
 						</div>
 						
-						<div class="row IA-IOS-get-reply">
+						{{--<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 							<label>Completed By</label>
 								<div class="mt-1">
 									{{ Carbon::parse($lo_corrective_completed_by)->format('d M Y')}}
 								</div>
 							</div>
-						</div>
+						</div>--}}
 						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('Y M d h:i:s') : ''}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($lo_corrective_completed_by) ? Carbon::parse($lo_corrective_completed_by)->format('d M, Y h:i A') : ''}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						
@@ -277,14 +277,31 @@
 							</div>
 						</div>
 						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('Y M d h:i:s') : ''}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('d M, Y h:i A') : ''}}</span></div>
 						</div>
-						<hr class="horizontal-line">
+						
+						
+						@if($corrective_action_data)
+							<hr class="horizontal-line">
+							
+							@if($corrective_action_data->inspector_action == 1 || $corrective_action_data->los_action == 1)
+								<div class="row">
+									<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
+								</div>
+							@endif
+						@endif
+						
 						<div class="row">
 							@if($corrective_action_data->inspector_action == 1)
-								<span class="show-agree-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span>
+								<div class="col-md-12">
+								<span class="show-agree-status">Approved</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}
 							@elseif($corrective_action_data->los_action == 1)
-								<span class="show-agree-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span>
+								<div class="col-md-12">
+								<span class="show-agree-status">Approved</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
 							@endif
 						</div>
 						
@@ -343,6 +360,37 @@
 	</div>
 	@endif
 	
+	<!-- =-=-=-=-=-=-= Rejected reason =-=-=-=-=-=-= -->
+      <div class="modal fade" id="rejected_reason" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                  <h3 class="modal-title" id="lineModalLabel">{{ __('Rejected reason') }}</h3>
+               </div>
+               <div class="modal-body">
+                  
+                  <!-- content goes here -->
+                  <form>
+					<input type="hidden" id="id" name="id">
+					<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
+					@csrf
+                    
+                    <div class="form-group  col-md-12  col-sm-12">
+                        <label>{{ __('Reason') }}</label>
+                        <textarea name="ia_los_first_rejected_reason" id="ia_los_first_rejected_reason" class="form-control"></textarea>
+						<span id="reason_error" style="display:none;  color: red;"></span>
+                    </div>
+					<div class="clearfix"></div>
+                    <div class="col-md-12  col-sm-12 form-group">
+                        <button type="button" class="btn btn-theme btn-block inspector-rejected-submit button-color">Submit</button>
+                    </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+	
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
@@ -378,6 +426,8 @@ $(document).ready(function() {
 					{
 						var baseUrl = "{{ url('/location-details') }}";
 						var redirectUrl = baseUrl + '/'+ location_id ;
+						/*var baseUrl = "{{ url('/inspector-filter') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;*/
 					}
 					@endif
 					
@@ -399,6 +449,8 @@ $(document).ready(function() {
 			},
 		});
 	});
+	
+	
 	
 	$(document).on('click','.inspector-approve', function(){
 	   var task_id = $('#task_id').val();
@@ -430,6 +482,9 @@ $(document).ready(function() {
 					{
 						var baseUrl = "{{ url('/location-details') }}";
 						var redirectUrl = baseUrl + '/'+ location_id ;
+						
+						/*var baseUrl = "{{ url('/inspector-filter') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;*/
 					}
 					@endif
 					
@@ -447,11 +502,21 @@ $(document).ready(function() {
 	});
 	
 	$(document).on('click','.inspector-rejected', function(){
+		$('#rejected_reason').modal('show');
+	});
+	
+	$(document).on('click','.inspector-rejected-submit', function(){
 	   var task_id = $('#task_id').val();
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var location_id = $('#location_id').val();
 	   //var inspector_action = 2;
+	   var first_rejected_reason = $('#ia_los_first_rejected_reason').val();
+	   
+	   if (first_rejected_reason === '') {
+			$('#reason_error').text('Please enter reason').fadeIn().delay(2000).fadeOut();
+			return false;
+		}
 	   
 	    @if(auth()->user()->user_type == 1)
 			var inspector_action = 2;
@@ -460,13 +525,15 @@ $(document).ready(function() {
 			var los_action = 2;
 			var inspector_action = 2;
 		@endif	
+		
+		
 	   
 	   //alert(lo_direct_approve);
 	   var URL = "{{ route('submit-inspector-approved') }}";
 	   $.ajax({
 			url: URL,
 			type: "POST",
-			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,inspector_action:inspector_action,los_action:los_action, _token: csrfToken},
+			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,inspector_action:inspector_action,los_action:los_action,first_rejected_reason:first_rejected_reason, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				if(response.message=='success')
