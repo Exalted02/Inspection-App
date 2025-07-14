@@ -110,7 +110,17 @@ $country = '';
 							
 							$correctiveActionChecklistArray = [];
 							
-							$taskData = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
+							if(auth()->user()->user_type == 1)
+							{
+								$taskData = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
+							}
+							
+							if(auth()->user()->user_type == 3)
+							{
+								$taskData = App\Models\Task_lists::where('location_id', $locations->location_id)->get();
+							}
+							
+							
 							$tasksArr = [];
 							$locCatArr = [];
 							$taskCnt = 0;
@@ -377,7 +387,9 @@ $country = '';
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-										<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>
+										{{--<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>
+										</div>--}}
+										<div class="price"><span>{{ $countNedded }}  pending tasks</span></div>
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">
