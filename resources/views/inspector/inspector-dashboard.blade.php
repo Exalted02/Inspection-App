@@ -115,6 +115,11 @@ $country = '';
 								$taskData = App\Models\Task_lists::where('inspector_id',  auth()->user()->id)->where('location_id', $locations->location_id)->get();
 							}
 							
+							if(auth()->user()->user_type == 2)
+							{
+								$taskData = App\Models\Task_lists::where('location_id', $locations->location_id)->get();
+							}
+							
 							if(auth()->user()->user_type == 3)
 							{
 								$taskData = App\Models\Task_lists::where('location_id', $locations->location_id)->get();
@@ -356,7 +361,7 @@ $country = '';
 							{
 								foreach($correctiveNeeded as $result)
 								{
-									if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
+									if(($result['inspector_action']=='' && $result['los_action']=='') || ($result['inspector_action']== 2 && $result['los_action']==2))
 									{
 										$countNedded++;
 									}
@@ -402,7 +407,7 @@ $country = '';
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-											<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>
+											<div class="price"><span>{{ $countNedded }}  pending tasks</span></div>
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">
