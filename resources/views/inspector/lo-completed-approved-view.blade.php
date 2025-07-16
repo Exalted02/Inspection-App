@@ -196,7 +196,7 @@
 						@if(!empty($lo_corrective_action_plan))
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
-								<label>What you need to do</label>
+								<label>Corrective</label>
 								<div class="mt-1">
 									{{ $lo_corrective_action_plan ?? '' }}
 								</div>
