@@ -197,7 +197,7 @@
 						
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
-								<label>What you need to do</label>
+								<label>Corrective</label>
 								<div>
 									{{ $lo_corrective_action_plan ?? '' }}
 								</div>
