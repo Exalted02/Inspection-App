@@ -5,6 +5,7 @@
 //echo "<pre>";print_r($correctiveAction);die;
 //echo "<pre>";print_r($correctiveNeeded);die;
 //echo "<pre>";print_r($approvedCompleted);die;
+//echo "<pre>";print_r($approvedCompletedArray);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
 $taskData  = App\Models\Task_lists::where('id', $task_id)->first();
@@ -663,10 +664,11 @@ $totalapprcompleted = $countCompleted;
 												//}
 											}
 										}
-										//echo "<pre>";print_r($arrSubchecklist);
+										//echo "<pre>";print_r($arrSubchecklist);die;
 									@endphp
 									@if(!empty($arrSubchecklist))
 										@foreach($arrSubchecklist as $val)
+									
 										@php 
 											$url = $val['image'] ?? '';
 											$extension = pathinfo($url, PATHINFO_EXTENSION);
@@ -720,7 +722,7 @@ $totalapprcompleted = $countCompleted;
 											$extension = strtolower($extension);
 											
 											if (!empty($result['image'])) {
-													$route = route('ia-los-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+													$route = route('ia-los-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
 													$class = '';
 												} else {
 													$route = "javascript:void(0)";

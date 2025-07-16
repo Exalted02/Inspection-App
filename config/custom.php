@@ -25,6 +25,6 @@ return [
 // Api wishlist interval
 	'API_WISHLIST_INTERVAL' => 6,
 	
-	'LOAD_MORE_LIST_SHOW' => 10,
-    'LOAD_MORE_INTERVAL' => 10,	
+	'LOAD_MORE_LIST_SHOW' =>1,
+    'LOAD_MORE_INTERVAL' => 1,	
 ];
