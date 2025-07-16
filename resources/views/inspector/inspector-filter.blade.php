@@ -674,7 +674,10 @@ $totalapprcompleted = $countCompleted;
 											$extension = pathinfo($url, PATHINFO_EXTENSION);
 											$extension = strtolower($extension);
 											
-											if (!empty($result['image'])) {
+											//if (!empty($result['image']))
+												
+											if(array_key_exists('image', $result))
+												{
 													$route = route('ia-los-subchecklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
 													$class = '';
 												} else {
@@ -721,7 +724,10 @@ $totalapprcompleted = $countCompleted;
 											$extension = pathinfo($url, PATHINFO_EXTENSION);
 											$extension = strtolower($extension);
 											
-											if (!empty($result['image'])) {
+											//if (!empty($result['image']))
+												
+											if(array_key_exists('image', $result))
+												{
 													$route = route('ia-los-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
 													$class = '';
 												} else {

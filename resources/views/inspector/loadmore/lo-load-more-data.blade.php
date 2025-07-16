@@ -416,21 +416,21 @@ if($mode == 'corrective_appr')
 				@endif
 				<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
 				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-				@if(auth()->user()->user_type == 1)
+				
 					@if($result['inspector_action'] == 1)
 						<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
 					@elseif($result['inspector_action'] == 0)
 						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 					@endif
-				@endif
 				
-				@if(auth()->user()->user_type == 3)
+				
+				
 					@if($result['los_action'] == 1)
 						<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
 					@elseif($result['los_action'] == 0)
 						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 					@endif
-				@endif
+				
 				</p>
 			</a>
 		</div>
@@ -465,21 +465,21 @@ if($mode == 'corrective_appr')
 				@endif
 				<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
 				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-				@if(auth()->user()->user_type == 1)
+				
 					@if($result['inspector_action'] == 1)
 						<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
 					@elseif($result['inspector_action'] == 0)
 						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 					@endif
-				@endif
 				
-				@if(auth()->user()->user_type == 3)
+				
+				
 					@if($result['los_action'] == 1)
 						<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
 					@elseif($result['los_action'] == 0)
 						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 					@endif
-				@endif
+				
 				</p>
 			</a>
 		</div>
@@ -574,20 +574,12 @@ if($mode == 'corrective_appr')
 				@endif
 				<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
 				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-				@if(auth()->user()->user_type == 1)
-					@if($result['inspector_action'] == 1)
-						<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-					@elseif($result['inspector_action'] == 0)
-						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-					@endif
-				@endif
-				
-				@if(auth()->user()->user_type == 3)
-					@if($result['los_action'] == 1)
-						<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-					@elseif($result['los_action'] == 0)
-						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-					@endif
+				@if($result['inspector_action']==1)
+					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+				@elseif($result['los_action']==1)
+				<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+				@else
+					<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 				@endif
 				</p>
 			</a>
@@ -624,20 +616,12 @@ if($mode == 'corrective_appr')
 				@endif
 				<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
 				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-				@if(auth()->user()->user_type == 1)
-					@if($result['inspector_action'] == 1)
-						<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-					@elseif($result['inspector_action'] == 0)
-						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-					@endif
-				@endif
-				
-				@if(auth()->user()->user_type == 3)
-					@if($result['los_action'] == 1)
-						<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-					@elseif($result['los_action'] == 0)
-						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-					@endif
+				@if($result['inspector_action']==1)
+				<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+				@elseif($result['los_action']==1)
+				<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+				@else
+					<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 				@endif
 				</p>
 			</a>
@@ -709,7 +693,10 @@ if($mode == 'corrective_appr')
 				$extension = pathinfo($url, PATHINFO_EXTENSION);
 				$extension = strtolower($extension);
 				
-				if (!empty($result['image'])) {
+				//if (!empty($result['image']))
+					
+				if(array_key_exists('image', $result))
+				{
 					$route = route('lo-subchecklist-completed-approved-view', [
 						'location_id' => $location_id,
 						'task_id' => $result['task_id'],
@@ -762,7 +749,10 @@ if($mode == 'corrective_appr')
 			$extension = pathinfo($url, PATHINFO_EXTENSION);
 			$extension = strtolower($extension);
 			
-			if (!empty($result['image'])) {
+			//if (!empty($result['image']))
+				
+			if(array_key_exists('image', $result))
+			{
 				$route = route('lo-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
 				$class = '';
 			} else {
