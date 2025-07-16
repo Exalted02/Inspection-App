@@ -601,7 +601,7 @@ $location_name = App\Models\Manage_location::where('id', $location_id)->first()-
 				$extension = strtolower($extension);
 				
 				if (!empty($result['image'])) {
-					$route = route('ia-los-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+					$route = route('ia-los-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
 					$class = '';
 				} else {
 					$route = "javascript:void(0)";
