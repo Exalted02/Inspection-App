@@ -480,11 +480,11 @@ $(document).ready(function() {
 					var active = 1;
 					@if(auth()->user()->user_type == 1)
 					{
-						var baseUrl = "{{ url('/location-details') }}";
-						var redirectUrl = baseUrl + '/'+ location_id ;
+						/*var baseUrl = "{{ url('/location-details') }}";
+						var redirectUrl = baseUrl + '/'+ location_id ;*/
 						
-						/*var baseUrl = "{{ url('/inspector-filter') }}";
-						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;*/
+						var baseUrl = "{{ url('/inspector-filter') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;
 					}
 					@endif
 					
@@ -542,8 +542,11 @@ $(document).ready(function() {
 					var active = 1;
 					@if(auth()->user()->user_type == 1)
 					{
-						var baseUrl = "{{ url('/location-details') }}";
-						var redirectUrl = baseUrl + '/'+ location_id ;
+						/*var baseUrl = "{{ url('/location-details') }}";
+						var redirectUrl = baseUrl + '/'+ location_id ;*/
+						
+						var baseUrl = "{{ url('/inspector-filter') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;
 					}
 					@endif
 					

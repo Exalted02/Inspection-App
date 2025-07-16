@@ -159,7 +159,7 @@
 									@endforeach
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}} </span><span>{{ Carbon::parse($created_at)->format('Y M d h:i:s')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}} </span><span>{{ Carbon::parse($created_at)->format('d M Y, h:i A')}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						<div class="row mt" style="margin-top: 1rem !important;">
@@ -211,7 +211,7 @@
 						</div>--}}
 						
 						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action->get_lo->name ?? ''}}</span><span>{{ Carbon::parse($lo_corrective_completed_by)->format('Y M d h:i:s')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action->get_lo->name ?? ''}}</span><span>{{ Carbon::parse($lo_corrective_completed_by)->format('d M Y, h:i A')}}</span></div>
 						</div>
 						
 						@if($corrective_action)

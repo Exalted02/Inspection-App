@@ -2240,8 +2240,8 @@ class DashboardInspectorController extends Controller
 		$model->inspector_action = 0;
 		//$model->los_action = $request->los_action;
 		$model->los_action = 0;
-		//$model->approved_status = 0;
-		//$model->rejected_status = 0;
+		$model->approved_status = 0;
+		$model->rejected_status = 0;
 		$model->save();
 		
 		$lo_files = $request->file('lo_file');
@@ -2394,18 +2394,35 @@ class DashboardInspectorController extends Controller
 			$model->lo_corrective_action_plan_second_check = null;
 			$model->ia_los_first_rejected_reason = $first_rejected_reason ?? '';
 			
-			if(auth()->user()->id == 1)
+			if(auth()->user()->user_type == 1)
 			{
 				$model->rejected_status = 1;
+				$model->approved_status = 2;
 			}
 			
-			if(auth()->user()->id == 3)
+			if(auth()->user()->user_type == 3)
 			{
 				$model->rejected_status = 2;
+				$model->approved_status = 1;
 			}
 			
 			$model->rejected_repeated = 1;
 		}
+		
+		if($inspector_action == 1 || $los_action == 1)
+		{
+			if(auth()->user()->user_type == 1)
+			{
+				$model->approved_status = 1;
+			}
+			
+			if(auth()->user()->user_type == 3)
+			{
+				$model->approved_status = 2;
+			}
+		}
+		
+		
 		
 		if($inspector_action != '')
 		{
