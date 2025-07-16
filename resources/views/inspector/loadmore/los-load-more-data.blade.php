@@ -16,29 +16,32 @@ if($mode == 'corrective_needed')
 {
 	foreach($correctiveNeeded as $needed)
 	{
-		if($needed['type'] == 'checklist')
+		if(($needed['inspector_action']=='' && $needed['los_action']=='') || ($needed['inspector_action']== 2 && $needed['los_action']==2))
 		{
-			$correctiveNeddedArray[] = [
-				'type' => $needed['type'],
-				'task_id' => $needed['task_id'],
-				'checklist_id' => $needed['checklist_id'],
-				'rejected_region' => $needed['rejected_region'],
-				'image' => $needed['image'],
-				'inspector_action' => $needed['inspector_action'],
-				'los_action' => $needed['los_action']
-			];
-		}
-		else{
-			$correctiveNeddedArray[] = [
-				'type' => $needed['type'],
-				'task_id' => $needed['task_id'],
-				'checklist_id' => $needed['checklist_id'],
-				'subchecklist_id' => $needed['subchecklist_id'],
-				'rejected_region' => $needed['rejected_region'],
-				'image' => $needed['image'],
-				'inspector_action' => $needed['inspector_action'],
-				'los_action' => $needed['los_action']
-			];
+			if($needed['type'] == 'checklist')
+			{
+				$correctiveNeddedArray[] = [
+					'type' => $needed['type'],
+					'task_id' => $needed['task_id'],
+					'checklist_id' => $needed['checklist_id'],
+					'rejected_region' => $needed['rejected_region'],
+					'image' => $needed['image'],
+					'inspector_action' => $needed['inspector_action'],
+					'los_action' => $needed['los_action']
+				];
+			}
+			else{
+				$correctiveNeddedArray[] = [
+					'type' => $needed['type'],
+					'task_id' => $needed['task_id'],
+					'checklist_id' => $needed['checklist_id'],
+					'subchecklist_id' => $needed['subchecklist_id'],
+					'rejected_region' => $needed['rejected_region'],
+					'image' => $needed['image'],
+					'inspector_action' => $needed['inspector_action'],
+					'los_action' => $needed['los_action']
+				];
+			}
 		}
 	}
 	$correctiveNeddedArray = array_slice($correctiveNeddedArray, $lower, $upper);
