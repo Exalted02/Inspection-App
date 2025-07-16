@@ -27,7 +27,8 @@ if($mode == 'corrective_needed')
 					'rejected_region' => $needed['rejected_region'],
 					'image' => $needed['image'],
 					'inspector_action' => $needed['inspector_action'],
-					'los_action' => $needed['los_action']
+					'los_action' => $needed['los_action'],
+					'rejected_status' => $needed['rejected_status']
 				];
 			}
 			else{
@@ -39,7 +40,8 @@ if($mode == 'corrective_needed')
 					'rejected_region' => $needed['rejected_region'],
 					'image' => $needed['image'],
 					'inspector_action' => $needed['inspector_action'],
-					'los_action' => $needed['los_action']
+					'los_action' => $needed['los_action'],
+					'rejected_status' => $needed['rejected_status']
 				];
 			}
 		}
@@ -246,20 +248,12 @@ if($mode == 'corrective_appr')
 					@endif
 					<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
 					<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-					@if(auth()->user()->user_type == 1)
-						@if($result['inspector_action'] == 1)
-							<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-						@elseif($result['inspector_action'] == 0)
-							<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-						@endif
-					@endif
-					
-					@if(auth()->user()->user_type == 3)
-						@if($result['los_action'] == 1)
-							<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-						@elseif($result['los_action'] == 0)
-							<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-						@endif
+					@if($result['rejected_status']==1)
+					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: red; color: red; padding: 2px 6px; font-size: 12px; line-height: 1;">Rejected Inspector</button>
+					@elseif($result['rejected_status']==2)
+					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: red; color: red; padding: 2px 6px; font-size: 12px; line-height: 1;">Rejected LOS</button>
+					@else
+						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 					@endif
 					</p>
 				</a>
@@ -295,20 +289,12 @@ if($mode == 'corrective_appr')
 					@endif
 					<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
 					<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-					@if(auth()->user()->user_type == 1)
-						@if($result['inspector_action'] == 1)
-							<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-						@elseif($result['inspector_action'] == 0)
-							<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-						@endif
-					@endif
-					
-					@if(auth()->user()->user_type == 3)
-						@if($result['los_action'] == 1)
-							<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Agree</button>
-						@elseif($result['los_action'] == 0)
-							<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
-						@endif
+					@if($result['rejected_status']==1)
+					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: red; color: red; padding: 2px 6px; font-size: 12px; line-height: 1;">Rejected Inspector</button>
+					@elseif($result['rejected_status']==2)
+					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: red; color: red; padding: 2px 6px; font-size: 12px; line-height: 1;">Rejected LOS</button>
+					@else
+						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
 					@endif
 					</p>
 				</a>

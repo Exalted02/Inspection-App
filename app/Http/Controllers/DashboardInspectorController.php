@@ -2608,6 +2608,7 @@ class DashboardInspectorController extends Controller
 												'image' => $images,
 												'inspector_action' => '',
 												'los_action' => '',
+												'rejected_status' => '',
 											];
 								}
 								else
@@ -2625,6 +2626,7 @@ class DashboardInspectorController extends Controller
 										'image' => $images,
 										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 										'los_action'=> $task_list_checklist_corrective_needed->los_action,
+										'rejected_status'=> $task_list_checklist_corrective_needed->rejected_status,
 									];
 									//--------
 									
@@ -2692,6 +2694,7 @@ class DashboardInspectorController extends Controller
 												'image' => $subChecklistimages,
 												'inspector_action' => '',
 												'los_action' => '',
+												'rejected_status' => '',
 											];
 								}
 								else
@@ -2712,6 +2715,7 @@ class DashboardInspectorController extends Controller
 											'image' => $subChecklistimages,
 											'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 											'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+											'rejected_status'=> $task_list_subchecklist_corrective_needed->rejected_status,
 										];
 									//----
 									
@@ -2773,6 +2777,7 @@ class DashboardInspectorController extends Controller
 						'image' => $needed['image'],
 						'inspector_action'=> $needed['inspector_action'],
 						'los_action'=> $needed['los_action'],
+						'rejected_status'=> $needed['rejected_status'],
 					];
 				}
 				else
@@ -2785,6 +2790,7 @@ class DashboardInspectorController extends Controller
 						'image' => $needed['image'],
 						'inspector_action'=> $needed['inspector_action'],
 						'los_action'=> $needed['los_action'],
+						'rejected_status'=> $needed['rejected_status'],
 					];
 				}
 			}
@@ -3041,6 +3047,7 @@ class DashboardInspectorController extends Controller
 												'image' => $images,
 												'inspector_action' => '',
 												'los_action' => '',
+												'rejected_status' => '',
 											];
 								}
 								else
@@ -3058,6 +3065,7 @@ class DashboardInspectorController extends Controller
 										'image' => $images,
 										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 										'los_action'=> $task_list_checklist_corrective_needed->los_action,
+										'rejected_status'=> $task_list_checklist_corrective_needed->rejected_status,
 									];
 									//--------
 									
@@ -3124,6 +3132,7 @@ class DashboardInspectorController extends Controller
 												'image' => $subChecklistimages,
 												'inspector_action' => '',
 												'los_action' => '',
+												'rejected_status' => '',
 											];
 								}
 								else
@@ -3144,6 +3153,7 @@ class DashboardInspectorController extends Controller
 											'image' => $subChecklistimages,
 											'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 											'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+											'rejected_status'=> $task_list_subchecklist_corrective_needed->rejected_status,
 										];
 									//----
 									
@@ -3210,6 +3220,7 @@ class DashboardInspectorController extends Controller
 						'image' => $needed['image'],
 						'inspector_action'=> $needed['inspector_action'],
 						'los_action'=> $needed['los_action'],
+						'rejected_status'=> $needed['rejected_status'],
 					];
 				}
 				else
@@ -3222,6 +3233,7 @@ class DashboardInspectorController extends Controller
 						'image' => $needed['image'],
 						'inspector_action'=> $needed['inspector_action'],
 						'los_action'=> $needed['los_action'],
+						'rejected_status'=> $needed['rejected_status'],
 					];
 				}
 			}
@@ -3987,6 +3999,7 @@ class DashboardInspectorController extends Controller
 											'image' => $images,
 											'inspector_action' => '',
 											'los_action' => '',
+											'rejected_status' => '',
 										];
 							}
 							else
@@ -4004,6 +4017,7 @@ class DashboardInspectorController extends Controller
 									'image' => $images,
 									'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 									'los_action'=> $task_list_checklist_corrective_needed->los_action,
+									'rejected_status'=> $task_list_checklist_corrective_needed->rejected_status,
 								];
 								//--------
 							}
@@ -4040,6 +4054,7 @@ class DashboardInspectorController extends Controller
 											'image' => $subChecklistimages,
 											'inspector_action' => '',
 											'los_action' => '',
+											'rejected_status' => '',
 										];
 							}
 							else
@@ -4060,6 +4075,7 @@ class DashboardInspectorController extends Controller
 										'image' => $subChecklistimages,
 										'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 										'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+										'rejected_status'=> $task_list_subchecklist_corrective_needed->rejected_status,
 									];
 							}
 						}
@@ -4087,6 +4103,7 @@ class DashboardInspectorController extends Controller
 						'image' => $needed['image'],
 						'inspector_action'=> $needed['inspector_action'],
 						'los_action'=> $needed['los_action'],
+						'rejected_status'=> $needed['rejected_status'],
 					];
 				}
 				else
@@ -4099,6 +4116,7 @@ class DashboardInspectorController extends Controller
 						'image' => $needed['image'],
 						'inspector_action'=> $needed['inspector_action'],
 						'los_action'=> $needed['los_action'],
+						'rejected_status'=> $needed['rejected_status'],
 					];
 				}
 			}
@@ -4644,6 +4662,7 @@ class DashboardInspectorController extends Controller
 												'image' => $images,
 												'inspector_action' => '',
 												'los_action' => '',
+												'rejected_status' => '',
 											];
 								}
 								else
@@ -4661,6 +4680,7 @@ class DashboardInspectorController extends Controller
 										'image' => $images,
 										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 										'los_action'=> $task_list_checklist_corrective_needed->los_action,
+										'rejected_status'=> $task_list_checklist_corrective_needed->rejected_status,
 									];
 									//--------
 									
@@ -4732,6 +4752,7 @@ class DashboardInspectorController extends Controller
 												'image' => $subChecklistimages,
 												'inspector_action' => '',
 												'los_action' => '',
+												'rejected_status' => '',
 											];
 								}
 								else
@@ -4752,6 +4773,7 @@ class DashboardInspectorController extends Controller
 											'image' => $subChecklistimages,
 											'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 											'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+											'rejected_status'=> $task_list_subchecklist_corrective_needed->rejected_status,
 										];
 									//----
 									
