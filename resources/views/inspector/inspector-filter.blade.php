@@ -1081,7 +1081,7 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadneeded").val();
 		
-		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-needed-data') }}";
 		$.ajax({
@@ -1113,7 +1113,7 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadaction").val();
 		//alert(moreload);
-		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		
 		var URL = "{{ route('ins-load-more-action-data') }}";
 		$.ajax({
@@ -1145,7 +1145,7 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadplan").val();
 		
-		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-plan-data') }}";
 		$.ajax({
@@ -1177,7 +1177,7 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadappr").val();
 		
-		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading...');
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-appr-data') }}";
 		$.ajax({

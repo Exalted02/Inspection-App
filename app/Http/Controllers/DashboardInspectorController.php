@@ -2939,6 +2939,7 @@ class DashboardInspectorController extends Controller
 		$data['approvedCompletedArray'] = array_slice($approvedCompletedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 		$data['moreloadappr'] = config('custom.LOAD_MORE_LIST_SHOW');
 		//=====================================================
+		
 		return view('inspector.inspector-filter', $data);
     }
 	public function los_task_status($lid='',$active='')
@@ -5545,4 +5546,5 @@ class DashboardInspectorController extends Controller
 		
 		return view('inspector.ia-los-completed-approved-view', $data);
 	}
+	
 }

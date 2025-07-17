@@ -1070,7 +1070,7 @@ $(document).ready(function() {
 		var moreload = $("#moreloadneeded").val();
 		var tab = 'correctiveneeded';
 		
-		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
 		var URL = "{{ route('lo-load-more-data') }}";
 		$.ajax({
@@ -1103,7 +1103,7 @@ $(document).ready(function() {
 		var moreload = $("#moreloadaction").val();
 		var tab = 'correctiveaction';
 		
-		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
 		var URL = "{{ route('lo-load-more-data') }}";
 		$.ajax({
@@ -1136,7 +1136,7 @@ $(document).ready(function() {
 		var moreload = $("#moreloadplan").val();
 		var tab = 'correctiveplan';
 		
-		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
 		var URL = "{{ route('lo-load-more-data') }}";
 		$.ajax({
@@ -1169,7 +1169,7 @@ $(document).ready(function() {
 		var moreload = $("#moreloadappr").val();
 		var tab = 'correctiveapproved';
 		
-		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
 		var URL = "{{ route('lo-load-more-data') }}";
 		$.ajax({

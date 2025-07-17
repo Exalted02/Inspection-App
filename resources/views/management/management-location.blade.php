@@ -52,9 +52,6 @@ use Carbon\Carbon;
 						{
 							if(!$task_list_checklist_corrective_needed)
 							{								
-								
-								
-								
 								$correctiveNeddedChecklistArray[] = [
 										'type' => 'checklist',
 										'task_id' => $val,
@@ -211,6 +208,9 @@ use Carbon\Carbon;
 							
 							$inspector = App\Models\Task_lists::with('get_user')->where('id', $tasks->id)->first();
 							//echo "<pre>";print_r($inspector);die;
+							
+							$img = $tasks->image !='' ? url('uploads/task/' . $tasks->image) : url('uploads/task/default-task-pic.jpg');
+							
 						@endphp
 							<div class="d-flex mb-3 task">
 								<div class="date-box">
@@ -221,8 +221,8 @@ use Carbon\Carbon;
 									</div>
 								</div>
 								<div class="flex-grow-1">
-									<a href="{{ route('management-location-task-details', ['task_id'=> $tasks->id ]) }}">
-										<img src="{{url('uploads/task/' . $tasks->image  )}}" alt="Task" />
+									<a href="{{ route('management-location-task-details', ['task_id'=> $tasks->id,'active'=>1 ]) }}">
+										<img src="{{ $img}}" alt="Task" />
 										<h6 class="location-observation-title">{{ $tasks->task_title ?? '' }}</h6>
 										<p class="text-muted location-observation-title mb-0">Pending LOS to approve <img src="{{url('uploads/profile/' .$inspector->get_user->id .'/inspector/'. $inspector->get_user->profile_image)}}" class="rounded-profile-img" alt="Profile image">{{ $inspector->get_user->name ?? ''}}</p>
 									</a>

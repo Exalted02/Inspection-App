@@ -160,7 +160,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');
 	Route::get('/management-location/{id}', [ManagementController::class, 'management_location'])->name('management-location');
-	Route::get('/management-location-task-details/{task_id}', [ManagementController::class, 'management_location_task_details'])->name('management-location-task-details');
+	Route::get('/management-location-task-details/{task_id}/{active}', [ManagementController::class, 'management_location_task_details'])->name('management-location-task-details');
+	
+	Route::get('management-checklist-question-reply/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [ManagementController::class, 'management_checklist_question_reply'])->name('management-checklist-question-reply');
+	Route::get('management-subchecklist-question-reply/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [ManagementController::class, 'management_subchecklist_question_reply'])->name('management-subchecklist-question-reply');
+	
+	Route::get('management-checklist-second-approve-by-lo/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [ManagementController::class, 'management_checklist_second_approve_by_lo'])->name('management-checklist-second-approve-by-lo');  
+	Route::get('management-subchecklist-second-approve-by-lo/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [ManagementController::class, 'management_subchecklist_second_approve_by_lo'])->name('management-subchecklist-second-approve-by-lo');
+	
+	Route::get('management-checklist-completed-approved-view/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [ManagementController::class, 'management_checklist_completed_approved_view'])->name('management-checklist-completed-approved-view');  
+	
+	Route::get('management-subchecklist-completed-approved-view/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [ManagementController::class, 'management_subchecklist_completed_approved_view'])->name('management-subchecklist-completed-approved-view');
+	
 	
 	//User-Accounts  
 	Route::get('/users', [UserController::class, 'index'])->name('users');
