@@ -1187,8 +1187,8 @@ body {
     width: 36px !important;
     border-radius: 50% !important;
     object-fit: cover  !important;
-    margin-left: 22px  !important;
-	margin-right: 10px  !important;
+    /*margin-left: 22px  !important;*/
+	/*margin-right: 10px  !important;*/
 }
 
 .management-back-image {
@@ -1813,5 +1813,6 @@ body {
 .vertical-gap {
 	margin-top:8px !important;
 }
+
 
 

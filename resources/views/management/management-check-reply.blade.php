@@ -164,7 +164,9 @@
 								
 								@endif
 							</div>
-							<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}}</span><span>{{ Carbon::parse($created_at)->format('d M, Y h:i A')}}</span></div>
+							<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+							<img src="{{ url('uploads/profile/'. $userData->get_user->id .'/inspector/' . $userData->get_user->profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
+							<span style="margin-top:6px;">By (IA) {{ $userData->get_user->name ?? ''}}</span><span style="margin-top:6px;">{{ Carbon::parse($created_at)->format('d M, Y h:i A')}}</span></div>
 						</div>
 						
 						@if(!empty($lo_corrective_action_plan))
@@ -228,7 +230,9 @@
 						
 						@if($corrective_action_data)
 						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($lo_corrective_completed_by)->format('d M, Y h:i A') : ''}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap">
+							<img src="{{ url('uploads/profile/'. $corrective_action_data->get_lo->id .'/locationowner/' . $corrective_action_data->get_lo->profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
+							<span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($lo_corrective_completed_by)->format('d M, Y h:i A') : ''}}</span></div>
 						</div>
 						@endif
 						
@@ -251,13 +255,17 @@
 								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+								<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id .'/inspector/' . $corrective_action_data->get_inspector->profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
+								<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
 								
 							@elseif($corrective_action_data->approved_status == 2)
 								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+								<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id .'/locationownersupervisor/' . $corrective_action_data->get_los->profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
+								<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
 							
 							@endif
 							
@@ -266,13 +274,17 @@
 								<div class="col-md-12 vertical-gap">
 								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_action_data->ia_los_first_rejected_reason ?? ''  }}</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+								<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id .'/inspector/' . $corrective_action_data->get_inspector->profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
+								<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
 							
 							@elseif($corrective_action_data->los_action == 2)
 								<div class="col-md-12 vertical-gap">
 								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_action_data->ia_los_first_rejected_reason ?? ''  }}</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+								<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id .'/locationownersupervisor/' . $corrective_action_data->get_los->profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
+								<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
 							@endif
 							
 						</div>
