@@ -1753,11 +1753,36 @@ body {
 	}
 }
 .task-action {
-	padding: 2px 0px ;
-	justify-content: space-between !important;
+	/*padding: 2px 0px ;*/
+	/*justify-content: space-between !important;*/
+	/*justify-content: flex-start !important;
+	display: flex;
+	margin-top:16px;*/
+	display: flex;
+    gap: 5px; /* space between the two boxes */
+    margin-top: 16px;
 }
-.task-action .edit-button {
-   color:#232326
+
+.action-box {
+    background-color: #E6E5E5;;
+    padding: 5px 6px;
+    border-radius: 6px;
+    display: flex;
+    /*gap: 12px;  space between icons */
+    align-items: center;
+	justify-content: center;
+}
+
+.task-action .edit-button i {
+    color: #000000 !important;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.task-action .delete-task i{
+    color: #FF0000;
+   cursor: pointer;
+   font-size: 16px;
 }
 .text-muted {
     font-size: 14px;

@@ -104,8 +104,12 @@ $getCategotyArr = [];
 											<div class="dod"> {{ $week ?? '' }}</div>
 										</div>
 										<div class="task-action">
-											<a href="{{ route('task-list-edit', ['lid'=> $tasks->location_id,'id'=> $tasks->id])}}"><i class="edit-button fa-solid fa-pencil"></i></a>
-											<a class="delete-task" data-id="{{ $tasks->id}}" href="javascript:void(0);"><i class="fa-regular fa-trash-can m-r-5"></i></a>
+											<div class="action-box">
+												<a class="edit-button" href="{{ route('task-list-edit', ['lid'=> $tasks->location_id,'id'=> $tasks->id])}}"><i class="fa-solid fa-pencil"></i></a>
+											</div>
+											<div class="action-box">
+												<a class="delete-task" data-id="{{ $tasks->id}}" href="javascript:void(0);"><i class="fa-regular fa-trash-can m-r-5"></i></a>
+											</div>
 										</div>
 									</div>
 									
@@ -461,7 +465,7 @@ $(document ).ready(function() {
 	$(document).on('click', '.delete-task', function() {
 		var id = $(this).data('id');
 		Swal.fire({
-			  title: '<div class="swal-title-class">Are you sure you want to delete ?</div>',
+			  title: '<div class="swal-title-class">Are you sure want to delete task?</div>',
 			  //html: '<div class="swal-message-class">You can continue your saved attempt from the task list labeled as "incomplete".</div>',
 			  icon: "warning",
 			  showCancelButton: true,
