@@ -1270,6 +1270,8 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadneeded").val();
 		var tab = 'correctiveneeded';
+		
+		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
 		//alert(moreload);
 		var URL = "{{ route('los-load-more-data') }}";
 		$.ajax({
@@ -1289,8 +1291,10 @@ $(document ).ready(function() {
 				}
 				$("#moreloadneeded").val(response.loadmore)
 				$("#neddedDiv").append(response.html);
-				
 			},
+			complete: function() {
+				$('.load-more-needed').html('Load more');
+			}
 		});
 		
 	});
@@ -1299,6 +1303,8 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadaction").val();
 		var tab = 'correctiveaction';
+		
+		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
 		//alert(moreload);
 		var URL = "{{ route('los-load-more-data') }}";
 		$.ajax({
@@ -1318,16 +1324,19 @@ $(document ).ready(function() {
 				}
 				$("#moreloadaction").val(response.loadmore)
 				$("#actionDiv").append(response.html);
-				
 			},
+			complete: function() {
+				$('.load-more-action').html('Load more');
+			}
 		});
-		
 	});
 	
 	$(document).on('click', '.load-more-plan', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadplan").val();
 		var tab = 'correctiveplan';
+		
+		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
 		//alert(moreload);
 		var URL = "{{ route('los-load-more-data') }}";
 		$.ajax({
@@ -1347,8 +1356,10 @@ $(document ).ready(function() {
 				}
 				$("#moreloadplan").val(response.loadmore)
 				$("#planDiv").append(response.html);
-				
 			},
+			complete: function() {
+				$('.load-more-plan').html('Load more');
+			}
 		});
 		
 	});
@@ -1357,6 +1368,8 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadappr").val();
 		var tab = 'correctiveapproved';
+		
+		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
 		//alert(moreload);
 		var URL = "{{ route('los-load-more-data') }}";
 		$.ajax({
@@ -1376,8 +1389,10 @@ $(document ).ready(function() {
 				}
 				$("#moreloadappr").val(response.loadmore)
 				$("#appCompletedDiv").append(response.html);
-				
 			},
+			complete: function() {
+				$('.load-more-appr').html('Load more');
+			}
 		});
 		
 	});
