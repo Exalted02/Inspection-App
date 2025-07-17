@@ -526,7 +526,7 @@ $(document).ready(function() {
 			var inspector_action = 2;
 		@endif	
 		
-		
+		$('.inspector-rejected-submit').html('<i class="fas fa-spinner fa-spin"></i> Submitting...').prop('disabled', true);
 	   
 	   //alert(lo_direct_approve);
 	   var URL = "{{ route('submit-inspector-approved') }}";
@@ -560,6 +560,9 @@ $(document).ready(function() {
 					window.location.href = redirectUrl;
 				}
 			},
+			complete: function() {
+				$('.inspector-rejected-submit').prop('disabled', false);
+			}
 		});
 	});
 	

@@ -1080,6 +1080,8 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-needed', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadneeded").val();
+		
+		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-needed-data') }}";
 		$.ajax({
@@ -1099,8 +1101,10 @@ $(document ).ready(function() {
 				}
 				$("#moreloadneeded").val(response.loadmore)
 				$("#neddedDiv").append(response.html);
-				
 			},
+			complete: function() {
+				$('.load-more-needed').html('Load more');
+			}
 		});
 		
 	});
@@ -1109,6 +1113,8 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadaction").val();
 		//alert(moreload);
+		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+		
 		var URL = "{{ route('ins-load-more-action-data') }}";
 		$.ajax({
 			url: URL,
@@ -1127,8 +1133,10 @@ $(document ).ready(function() {
 				}
 				$("#moreloadaction").val(response.loadmore)
 				$("#actionDiv").append(response.html);
-				
 			},
+			complete: function() {
+				$('.load-more-action').html('Load more');
+			}
 		});
 		
 	});
@@ -1136,6 +1144,8 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-plan', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadplan").val();
+		
+		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-plan-data') }}";
 		$.ajax({
@@ -1155,8 +1165,10 @@ $(document ).ready(function() {
 				}
 				$("#moreloadplan").val(response.loadmore)
 				$("#planDiv").append(response.html);
-				
 			},
+			complete: function() {
+				$('.load-more-plan').html('Load more');
+			}
 		});
 		
 	});
@@ -1164,6 +1176,8 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-appr', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadappr").val();
+		
+		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i> Loading...');
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-appr-data') }}";
 		$.ajax({
@@ -1183,8 +1197,10 @@ $(document ).ready(function() {
 				}
 				$("#moreloadappr").val(response.loadmore)
 				$("#appCompletedDiv").append(response.html);
-				
 			},
+			complete: function() {
+				$('.load-more-appr').html('Load more');
+			}
 		});
 		
 	});

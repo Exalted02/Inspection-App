@@ -273,7 +273,7 @@ $(document).ready(function() {
 								}
 								else
 								{
-									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #000000; color: #000000;">Pending</button>';
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107;">Pending</button>';
 								}
 								
 								htmlCompleted += '<div class="checklist-item">';
@@ -1304,7 +1304,7 @@ $(document ).ready(function() {
 								}
 								else
 								{
-									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #000000; color: #000000;">Pending</button>';
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107;">Pending</button>';
 									
 									pendingCount++;
 									$('#pending-count').val(pendingCount);

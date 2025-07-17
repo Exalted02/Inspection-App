@@ -165,7 +165,7 @@ use Carbon\Carbon;
 						
 					</div>
 					<div class="sticky-footer submitChecklist">
-						<button class="submitChecklist_s">Submit checklist</button>
+						<button class="submit-loding">Submit checklist</button>
 					</div>
 				</div>
 			</section>
@@ -251,10 +251,14 @@ $(document).ready(function() {
 		   return false;
 	   }
 	   
-	   /*if(hidden_set_date === '') {
+	   if(lo_direct_approve == false)
+	   {
+	    if(hidden_set_date === '') {
 			$('#settimeline_id_error').text('Please enter date').fadeIn().delay(2000).fadeOut();
 			return false;
-		}*/
+		}
+	   }
+		
 		let files = $('#lo_file')[0].files;
 		
 		let form = document.getElementById('myForm');
@@ -276,8 +280,10 @@ $(document).ready(function() {
 		formData.append('_token', csrfToken);
 		
 		//data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,hidden_set_date:hidden_set_date,hidden_set_time:hidden_set_time, _token: csrfToken},
-	  
-		   var URL = "{{ route('submit-lo-corrective-action') }}";
+		
+		$('.submit-loding').html('<i class="fas fa-spinner fa-spin"></i> Submitting...').prop('disabled', true);
+
+		var URL = "{{ route('submit-lo-corrective-action') }}";
 		   $.ajax({
 				url: URL,
 				type: "POST",
@@ -305,6 +311,9 @@ $(document).ready(function() {
 					window.location.href = redirectUrl;
 					
 				},
+				complete: function() {
+					$('.submit-loding').prop('disabled', false);
+				}
 			});
 	});
 	

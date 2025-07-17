@@ -426,6 +426,8 @@ $('#lo_file').on('change', function (e) {
 			formData.append('lo_file[]', file);
 		});
 		
+		$('.submitChecklist').html('<i class="fas fa-spinner fa-spin"></i> Submitting...').prop('disabled', true);
+		
 		//alert(csrfToken) // show ok 
 		// Optional: Add other data
 		formData.append('task_id', task_id);
@@ -457,6 +459,9 @@ $('#lo_file').on('change', function (e) {
 				}
 				
 			},
+			complete: function() {
+				$('.submitChecklist').prop('disabled', false);
+			}
 		});
 	});
 	
