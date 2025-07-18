@@ -2680,6 +2680,7 @@ class DashboardInspectorController extends Controller
 												'image' => $images,
 												'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 												'los_action'=> $task_list_checklist_corrective_needed->los_action,
+												'updated_at'=> $task_list_checklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 												//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 											];
 								}
@@ -2694,6 +2695,7 @@ class DashboardInspectorController extends Controller
 												'rejected_region' => $task->rejected_region,
 												'inspector_action' => 1,
 												'los_action' => 1,
+												'updated_at'=> $task->updated_at->format('Y-m-d H:i:s'),
 											];
 							}
 						}
@@ -2767,6 +2769,7 @@ class DashboardInspectorController extends Controller
 												'image' => $subChecklistimages,
 												'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 												'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+												'updated_at'=>$task_list_subchecklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 												//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 											];
 									
@@ -2782,7 +2785,7 @@ class DashboardInspectorController extends Controller
 										'rejected_region' => $subtask->rejected_region,
 										'inspector_action' => 1,
 										'los_action' => 1,
-										
+										'updated_at'=>$subtask->updated_at->format('Y-m-d H:i:s'),
 									];
 								
 							}
@@ -2798,6 +2801,7 @@ class DashboardInspectorController extends Controller
 		$correctiveNeeded = array_merge($correctiveNeddedChecklistArray,$correctiveNeddedSubchecklistArray);
 		$data['correctiveNeeded'] = $correctiveNeeded; // for count tab
 		$data['approvedCompleted'] = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
+		//echo "<pre>";print_r($completedApprChecklistArray);die;
 		//------------------------------------------
 		$correctiveNeddedArray = [];
 		foreach($correctiveNeeded as $needed)
@@ -2894,7 +2898,12 @@ class DashboardInspectorController extends Controller
 		
 		$approvedCompletedArray = [];
 		$approvedCompleted = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
-		echo "<pre>";print_r($approvedCompleted);die;
+		
+		usort($approvedCompleted, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
+
+		//echo "<pre>";print_r($approvedCompleted);die;
 		//$data['approvedCompleted'] = $approvedCompleted;
 		foreach($approvedCompleted as $appr)
 		{
@@ -2913,6 +2922,7 @@ class DashboardInspectorController extends Controller
 							'image' => $appr['image'],
 							'inspector_action' => $appr['inspector_action'],
 							'los_action' => $appr['los_action'],
+							'updated_at' => $appr['updated_at'],
 						];
 					}
 					else{
@@ -2924,6 +2934,7 @@ class DashboardInspectorController extends Controller
 							'rejected_region' => $appr['rejected_region'],
 							'inspector_action' => $appr['inspector_action'],
 							'los_action' => $appr['los_action'],
+							'updated_at' => $appr['updated_at'],
 						];
 					}
 					
@@ -2940,6 +2951,7 @@ class DashboardInspectorController extends Controller
 							'image' => $appr['image'],
 							'inspector_action' => $appr['inspector_action'],
 							'los_action' => $appr['los_action'],
+							'updated_at' => $appr['updated_at'],
 						];
 					}
 					else{
@@ -2950,6 +2962,7 @@ class DashboardInspectorController extends Controller
 							'rejected_region' => $appr['rejected_region'],
 							'inspector_action' => $appr['inspector_action'],
 							'los_action' => $appr['los_action'],
+							'updated_at' => $appr['updated_at'],
 						];
 					}
 					
@@ -3120,6 +3133,7 @@ class DashboardInspectorController extends Controller
 												'image' => $images,
 												'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 												'los_action'=> $task_list_checklist_corrective_needed->los_action,
+												'updated_at'=> $task_list_checklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 												//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 											];
 								}
@@ -3134,6 +3148,7 @@ class DashboardInspectorController extends Controller
 												'rejected_region' => $task->rejected_region,
 												'inspector_action' => 1,
 												'los_action' => 1,
+												'updated_at'=> $task->updated_at->format('Y-m-d H:i:s'),
 											];
 							}
 						}
@@ -3206,6 +3221,7 @@ class DashboardInspectorController extends Controller
 												'image' => $subChecklistimages,
 												'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 												'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+												'updated_at'=> $task_list_subchecklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 												//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 											];
 									
@@ -3221,7 +3237,7 @@ class DashboardInspectorController extends Controller
 										'rejected_region' => $subtask->rejected_region,
 										'inspector_action' => 1,
 										'los_action' => 1,
-										
+										'updated_at'=> $subtask->updated_at->format('Y-m-d H:i:s'),
 									];
 								
 							}
@@ -3486,6 +3502,7 @@ class DashboardInspectorController extends Controller
 													'image' => $images,
 													'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 													'los_action'=> $task_list_checklist_corrective_needed->los_action,
+													'updated_at'=> $task_list_checklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 													//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 												];
 									}
@@ -3500,6 +3517,7 @@ class DashboardInspectorController extends Controller
 													'rejected_region' => $task->rejected_region,
 													'inspector_action'=> 1,
 													'los_action'=> 1,
+													'updated_at'=> $task->updated_at->format('Y-m-d H:i:s'),
 												];
 								}
 							}
@@ -3568,6 +3586,7 @@ class DashboardInspectorController extends Controller
 													'image' => $subChecklistimages,
 													'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 													'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+													'updated_at'=> $task_list_subchecklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 													//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 												];
 										
@@ -3583,6 +3602,7 @@ class DashboardInspectorController extends Controller
 											'rejected_region' => $subtask->rejected_region,
 											'inspector_action' => 1,
 											'los_action' => 1,
+											'updated_at'=> $subtask->updated_at->format('Y-m-d H:i:s'),
 										];
 									
 								}
@@ -4425,6 +4445,7 @@ class DashboardInspectorController extends Controller
 										'image' => $images,
 										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 										'los_action'=> $task_list_checklist_corrective_needed->los_action,
+										'updated_at'=> $task_list_checklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 										//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 									];
 								
@@ -4439,6 +4460,7 @@ class DashboardInspectorController extends Controller
 									'rejected_region' => $task->rejected_region,
 									'inspector_action' => 1,
 									'los_action' => 1,
+									'updated_at'=> $task->updated_at->format('Y-m-d H:i:s'),
 								];
 							}
 					
@@ -4473,6 +4495,7 @@ class DashboardInspectorController extends Controller
 										'image' => $subChecklistimages,
 										'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 										'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+										'updated_at'=> $task_list_subchecklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 										//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 									];
 								
@@ -4490,7 +4513,7 @@ class DashboardInspectorController extends Controller
 										'rejected_region' => $subtask->rejected_region,
 										'inspector_action' => 1,
 										'los_action' => 1,
-										
+										'updated_at'=> $subtask->updated_at->format('Y-m-d H:i:s'),
 									];
 								
 							}	
@@ -4527,6 +4550,7 @@ class DashboardInspectorController extends Controller
 							'image' => $appr['image'],
 							'inspector_action' => $appr['inspector_action'],
 							'los_action' => $appr['los_action'],
+							'updated_at' => $appr['updated_at'],
 						];
 					}
 					else{
@@ -4538,6 +4562,7 @@ class DashboardInspectorController extends Controller
 							'rejected_region' => $appr['rejected_region'],
 							'inspector_action' => $appr['inspector_action'],
 							'los_action' => $appr['los_action'],
+							'updated_at' => $appr['updated_at'],
 						];
 					}
 				}
@@ -4552,6 +4577,7 @@ class DashboardInspectorController extends Controller
 							'image' => $appr['image'],
 							'inspector_action' => $appr['inspector_action'],
 							'los_action' => $appr['los_action'],
+							'updated_at' => $appr['updated_at'],
 						];
 					}
 					else{
@@ -4561,12 +4587,18 @@ class DashboardInspectorController extends Controller
 							'checklist_id' => $appr['checklist_id'],
 							'inspector_action' => $appr['inspector_action'],
 							'los_action' => $appr['los_action'],
+							'updated_at' => $appr['updated_at'],
 						];
 					}
 				}
 			}
 		}
 		//echo "<pre>";print_r($approvedCompletedArray);die;
+		
+		usort($approvedCompletedArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
+		
 		$totalRecord = $approvedCompletedArray;
 		$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
 		$data['approvedCompletedArray'] = $approvedCompletedArray;
@@ -4735,6 +4767,7 @@ class DashboardInspectorController extends Controller
 												'image' => $images,
 												'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 												'los_action'=> $task_list_checklist_corrective_needed->los_action,
+												'updated_at'=> $task_list_checklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 												//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 											];
 								}
@@ -4749,6 +4782,7 @@ class DashboardInspectorController extends Controller
 												'rejected_region' => $task->rejected_region,
 												'inspector_action' => 1,
 												'los_action' => 1,
+												'updated_at'=> $task->updated_at->format('Y-m-d H:i:s'),
 											];
 							}
 						}
@@ -4826,6 +4860,7 @@ class DashboardInspectorController extends Controller
 												'image' => $subChecklistimages,
 												'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 												'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+												'updated_at'=> $task_list_subchecklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 												//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 											];
 									
@@ -4841,7 +4876,7 @@ class DashboardInspectorController extends Controller
 										'rejected_region' => $subtask->rejected_region,
 										'inspector_action' => 1,
 										'los_action' => 1,
-										
+										'updated_at'=> $subtask->updated_at->format('Y-m-d H:i:s'),
 									];
 								
 							}
@@ -5142,6 +5177,7 @@ class DashboardInspectorController extends Controller
 													'image' => $images,
 													'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 													'los_action'=> $task_list_checklist_corrective_needed->los_action,
+													'updated_at'=> $task_list_checklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 													//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 												];
 									}
@@ -5156,6 +5192,7 @@ class DashboardInspectorController extends Controller
 													'rejected_region' => $task->rejected_region,
 													'inspector_action'=> 1,
 													'los_action'=> 1,
+													'updated_at'=> $task->updated_at->format('Y-m-d H:i:s'),
 												];
 								}
 							}
@@ -5227,6 +5264,7 @@ class DashboardInspectorController extends Controller
 													'image' => $subChecklistimages,
 													'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 													'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+													'updated_at'=> $task_list_subchecklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
 													//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 												];
 										
@@ -5242,6 +5280,7 @@ class DashboardInspectorController extends Controller
 											'rejected_region' => $subtask->rejected_region,
 											'inspector_action' => 1,
 											'los_action' => 1,
+											'updated_at'=> $subtask->updated_at->format('Y-m-d H:i:s'),
 										];
 									
 								}

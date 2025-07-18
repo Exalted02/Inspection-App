@@ -163,6 +163,9 @@ $correctiveActionArray = array_slice($correctiveActionArray, 0, config('custom.L
 $correctivePlanArray = array_slice($correctivePlanArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 
 //echo "<pre>";print_r($approvedCompleted);die;
+usort($approvedCompleted, function ($a, $b) {
+	return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+});
 foreach($approvedCompleted as $result)
 {
 	if($result['inspector_action'] == 1 && $result['los_action'] == 1)

@@ -134,6 +134,10 @@ if($mode == 'corrective_plan')
 	$correctivePlanArray = array_slice($correctivePlanArray, $lower, $upper);
 }
 
+usort($approvedCompleted, function ($a, $b) {
+	return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+});
+
 if($mode == 'corrective_appr')
 {
 	foreach($approvedCompleted as $appr)
