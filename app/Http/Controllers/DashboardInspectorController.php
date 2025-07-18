@@ -2210,7 +2210,17 @@ class DashboardInspectorController extends Controller
 			Task_lists ::where('id',$task_list_id)->update(['status'=>3]);
 		}
 		
-		return response()->json(['message'=>'success']);
+		$result = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id);
+		
+		if (!empty($subchecklist_id)) {
+			$result->where('subchecklist_id', $subchecklist_id);
+		}
+		
+		$actionData = $result->first();
+		$ins_action = $actionData ? $actionData->inspector_action : null;
+		$los_action = $actionData ? $actionData->los_action : null;
+		
+		return response()->json(['message'=>'success', 'ins_action'=>$ins_action, 'los_action'=>$los_action]);
 	}
 	
 	public function location_owner_checklist_rejected_question_reply($task_id='',$checklist_id='',$type='')

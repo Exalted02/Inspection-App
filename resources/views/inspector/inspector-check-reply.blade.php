@@ -384,6 +384,7 @@ $(document).ready(function() {
 	   var location_id = $('#location_id').val();
 	   var inspector_action = 1;
 	   var tab = $('#tab').val();
+	   //alert(tab);
 	   //alert(lo_direct_approve);
 	   var URL = "{{ route('submit-inspector-status') }}";
 	   $.ajax({
@@ -392,7 +393,8 @@ $(document).ready(function() {
 			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id, inspector_action:inspector_action,_token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
-				//alert(response.message);
+				alert(response.ins_action);
+				alert(response.los_action);
 				if(response.message=='success')
 				{
 					if(tab == 'corrective-action')
