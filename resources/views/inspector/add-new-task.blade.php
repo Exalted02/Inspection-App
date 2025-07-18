@@ -90,7 +90,7 @@ if(!empty($task_id))
 								</div>
 								<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;margin-left: -10px;">
 									<div class="task-preview-wrapper position-relative d-inline-block">
-										<img id="" class="img-responsive task-img-upload" src="{{ $task_image ? url('uploads/task/' . $task_image) : url('images/noimages/default-task-pic.jpg') }}" alt=""/>
+										<img id="" class="img-responsive task-img-upload" src="{{ $task_image ? url('uploads/task/' . $task_image) : url('images/noimages/default-task-pic.png') }}" alt=""/>
 										<button type="button" class="task-img-delete" id="delete-image">×</button>
 									</div>
 								</div>
@@ -125,9 +125,9 @@ if(!empty($task_id))
 							
 							<div class="sticky-footer save-task">
 							@if(empty($task_id))
-								<button class="task-load" type="button">Add Task</button>
+								<button class="task-load-add" type="button">Add Task</button>
 							@else
-								<button class="task-load" type="button">Edit Task</button>
+								<button class="task-load-edit" type="button">Edit Task</button>
 							@endif
 							</div>
 						</form>
@@ -226,6 +226,7 @@ $(document).ready(function() {
 		//let category_id = $('#category_id').val().trim();
 		let task_title = $('#task_title').val().trim();
 		let hid_task_id = $('#hid_task_id').val();
+		//alert(hid_task_id);
 		let set_time = $('#set_time').val().trim();
 		let task_image = $('#task_image')[0].files.length;
 		let hidden_set_date = $('#hidden_set_date').val();
@@ -281,7 +282,16 @@ $(document).ready(function() {
 		var URL = $('#frmcategory').attr('action');
 		var id = $('#id').val();
 		
-		$('.task-load').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
+		if(hid_task_id == '')
+		{
+			$('.task-load-add').prop('disabled', true);
+			$('.task-load-add').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
+		}
+		else{
+			$('.task-load-edit').prop('disabled', true);
+			$('.task-load-edit').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
+		}
+		
 		
 		let formData = new FormData($('#frmcategory')[0]);
 		formData.append('_token', csrfToken);
@@ -300,9 +310,11 @@ $(document).ready(function() {
 					//$('#task_title').addClass('is-invalid');
 					//$('#task_title').next('.invalid-feedback').text(response.message).show();
 				} else {
+				
 					$('#category_id').val('').trigger('change');
-					$('#task_title').val('');
-					if(hid_task_id=='')
+					//$('#task_title').val('');
+					let hid_task_id = $('#hid_task_id').val();
+					if(hid_task_id == '')
 					{
 						localStorage.setItem('taskcreated', 1);
 					}
@@ -312,7 +324,6 @@ $(document).ready(function() {
 					
 					var baseUrl = "{{ url('/location-details') }}";
 					var location_id = $('#location_id').val();
-					//alert(location_id);
 					var redirectUrl = baseUrl + '/'+ location_id;
 					window.location.href = redirectUrl;
 					/*setTimeout(() => {
@@ -321,7 +332,15 @@ $(document).ready(function() {
 				}
 			},
 			complete: function() {
-				$('.task-load').prop('disabled', false);
+				
+				let hid_task_id = $('#hid_task_id').val();
+				if(hid_task_id == '')
+				{
+					$('.task-load-add').prop('disabled', false);
+				}
+				else{
+					$('.task-load-edit').prop('disabled', false);
+				}
 			}
 		});
 		
@@ -329,7 +348,7 @@ $(document).ready(function() {
 	
 	$('#delete-image').on('click', function() {
 		//$('#img-upload').attr('src', '');
-		var defaultImg = "{{ url('images/noimages/default-task-pic.jpg') }}";
+		var defaultImg = "{{ url('images/noimages/default-task-pic.png') }}";
 		$('.task-img-upload').attr('src', defaultImg);
 		$('#task_image').val('');
 		$('#delete-image').hide();

@@ -305,7 +305,7 @@ $totalapprcompleted = $countCompleted;
 										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
 									}
 									else{
-										$images = url('images/noimages/noimage_region.png');
+										$images = url('images/noimages/corrective-needed.png');
 									}
 									
 									if($result['type'] == 'subchecklist')
@@ -320,7 +320,7 @@ $totalapprcompleted = $countCompleted;
 												
 												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 												
-												$images = $filedata && $filedata->file != ''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png') ;
+												$images = $filedata && $filedata->file != ''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-needed.png') ;
 												
 												$arrSubchecklist[] = [
 													'id' => $subchecklistData->id,
@@ -455,7 +455,7 @@ $totalapprcompleted = $countCompleted;
 										$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
 									}
 									else{
-										$images = url('images/noimages/noimage_region.png');
+										$images = url('images/noimages/corrective-action.png');
 									}
 									
 									if($result['type'] == 'subchecklist')
@@ -469,7 +469,7 @@ $totalapprcompleted = $countCompleted;
 												
 												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 												
-												$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+												$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-action.png');
 												
 												$arrSubchecklist[] = [
 													'id' => $subchecklistData->id,
@@ -608,7 +608,7 @@ $totalapprcompleted = $countCompleted;
 											$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
 										}
 										else{
-											$images = url('images/noimages/noimage_region.png');
+											$images = url('images/noimages/corrective-plan.png');
 										}
 										
 										if($result['type'] == 'subchecklist')
@@ -622,7 +622,7 @@ $totalapprcompleted = $countCompleted;
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-plan.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
@@ -750,7 +750,7 @@ $totalapprcompleted = $countCompleted;
 												? url('uploads/reject-files/' . $result['image'])
 												: url('uploads/reject-files/subchecklist/' . $result['image']);
 										} else {
-											$images = url('images/noimages/noimage_region.png');
+											$images = url('images/noimages/corrective-completed.png');
 										}
 										
 										//$images = url('images/noimages/noimage_region.png');
@@ -768,7 +768,7 @@ $totalapprcompleted = $countCompleted;
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/noimage_region.png');
+													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-completed.png');
 													  
 													
 													$arrSubchecklist[] = [

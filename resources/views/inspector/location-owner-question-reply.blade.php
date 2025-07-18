@@ -232,6 +232,7 @@ $(document).ready(function() {
    let selectedFiles = [];
 
    $(document).on('click','.submitChecklist', function(){
+	   //e.preventDefault();
 	   var task_id = $('#task_id').val();
 	   //alert(task_id);
 	   var checklist_id = $('#checklist_id').val();
@@ -281,6 +282,11 @@ $(document).ready(function() {
 		
 		//data: {type:type,task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,tab:tab,lo_corrective_action_plan:lo_corrective_action_plan,lo_direct_approve:lo_direct_approve,hidden_set_date:hidden_set_date,hidden_set_time:hidden_set_time, _token: csrfToken},
 		
+		if ($(this).prop('disabled')) {
+			return;
+		}
+		
+		$('.submit-loding').prop('disabled', true);
 		$('.submit-loding').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
 
 		var URL = "{{ route('submit-lo-corrective-action') }}";

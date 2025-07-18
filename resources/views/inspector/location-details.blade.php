@@ -22,8 +22,7 @@ $getCategotyArr = [];
 			<img src="{{ $location_img }}" alt="Location" />
 			<div>
 				<div class="title">{{ ucfirst($location_categories[0]->location_name) ?? ''}}</div>
-				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>
-				@if(!empty($location_categories[0]->unit_floor))
+				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>@if(!empty($location_categories[0]->unit_floor))
 				{{ $location_categories[0]->unit_floor ?? ''}}</br>
 				@endif
 				{{ $location_categories[0]->street ?? ''}}</br>
@@ -78,7 +77,7 @@ $getCategotyArr = [];
 								   $day =   Carbon::parse($tasks->created_at)->format('d');
 								   $week= strtoupper(Carbon::parse($tasks->created_at)->format('D'));
 								   
-								   $img = $tasks->image !='' ? url('uploads/task/' . $tasks->image) : url('uploads/task/default-task-pic.jpg');
+								   $img = $tasks->image !='' ? url('uploads/task/' . $tasks->image) : url('uploads/task/default-task-pic.png');
 								   
 								   $taskLocationCat = App\Models\Task_location_categories::where('task_list_id', $tasks->id)->get();
 								   foreach($taskLocationCat as $categories)
