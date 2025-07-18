@@ -453,6 +453,11 @@ $(document).ready(function() {
 			return false;
 		}
 	   
+	   
+	    if ($(this).prop('disabled')) {
+			return;
+		}
+	   $('.inspector-rejected-submit').prop('disabled', true);
 	   $('.inspector-rejected-submit').html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Submitting...').prop('disabled', true);
 	   //alert(lo_direct_approve);
 	   var URL = "{{ route('submit-inspector-status') }}";

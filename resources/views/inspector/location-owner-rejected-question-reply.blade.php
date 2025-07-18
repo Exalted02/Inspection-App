@@ -426,6 +426,11 @@ $('#lo_file').on('change', function (e) {
 			formData.append('lo_file[]', file);
 		});
 		
+		if ($(this).prop('disabled')) {
+			return;
+		}
+		
+		$('.submitChecklist').prop('disabled', true);
 		$('.submitChecklist').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
 		
 		//alert(csrfToken) // show ok 

@@ -526,6 +526,11 @@ $(document).ready(function() {
 			var inspector_action = 2;
 		@endif	
 		
+		if ($(this).prop('disabled')) {
+			return;
+		}
+		
+		$('.inspector-rejected-submit').prop('disabled', true);
 		$('.inspector-rejected-submit').html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Submitting...').prop('disabled', true);
 	   
 	   //alert(lo_direct_approve);
