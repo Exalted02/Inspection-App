@@ -137,7 +137,7 @@
 							<div class="col-md-12">
 								<label>Reason</label>
 								<div class="mt-1">
-									{{ $rejected_region ?? '' }}
+									<p class="text-muted mb-0">{{ $rejected_region ?? '' }}</p>
 								</div>
 							</div>
 						</div>
@@ -176,7 +176,7 @@
 							<div class="col-md-12">
 								<label>Corrective</label>
 								<div class="mt-1">
-									{{ $lo_corrective_action_plan ?? '' }}
+									<p class="text-muted mb-0">{{ $lo_corrective_action_plan ?? '' }}</p>
 								</div>
 							</div>
 						</div>
@@ -499,7 +499,8 @@ $(document).ready(function() {
 				}
 			},
 			complete: function() {
-				$('.inspector-rejected-submit').prop('disabled', false);
+				$('.inspector-rejected-submit').html('Submit');
+				//$('.inspector-rejected-submit').prop('disabled', false);
 			}
 		});
 	});

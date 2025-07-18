@@ -1829,6 +1829,10 @@ body {
 .vertical-gap {
 	margin-top:8px !important;
 }
-
+.show-completed-status {
+	color:green;
+	padding: 0px;
+	font-size: 14px !important;
+}
 
 

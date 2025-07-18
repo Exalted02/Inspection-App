@@ -549,7 +549,7 @@ $location_name = App\Models\Manage_location::where('id', $location_id)->first()-
 					$class = 'list-approved-filter';
 				}
 			@endphp
-		<div class="d-flex mb-3 task {{ $class }}">
+		<div class="d-flex mb-3 task">
 			<div class="date-box">
 				@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 				<img src="{{ $val['image'] }}" width="50" height="50">
@@ -598,7 +598,7 @@ $location_name = App\Models\Manage_location::where('id', $location_id)->first()-
 					$class = 'list-approved-filter';
 				}
 			@endphp			
-			<div class="d-flex mb-3 task {{ $class }}">
+			<div class="d-flex mb-3 task">
 			<div class="date-box">
 				@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 				<img src="{{ $images }}" width="50" height="50">

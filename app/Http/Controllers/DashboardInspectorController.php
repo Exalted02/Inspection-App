@@ -36,7 +36,8 @@ class DashboardInspectorController extends Controller
 	}
 	public function location_details($id='')
     {
-		if (auth()->user()->user_type == 2) {
+		if (auth()->user()->user_type == 2 || auth()->user()->user_type == 3)
+		{
 			return redirect('inspector-dashboard');
 		}
 		
@@ -2453,7 +2454,7 @@ class DashboardInspectorController extends Controller
 		{
 			$model->los_action = $los_action;
 		}
-		$model->inspector_id = $inspector_id;
+		//$model->inspector_id = $inspector_id;
 		
 		$model->save();
 		
@@ -2893,7 +2894,7 @@ class DashboardInspectorController extends Controller
 		
 		$approvedCompletedArray = [];
 		$approvedCompleted = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
-		//echo "<pre>";print_r($approvedCompleted);die;
+		echo "<pre>";print_r($approvedCompleted);die;
 		//$data['approvedCompleted'] = $approvedCompleted;
 		foreach($approvedCompleted as $appr)
 		{

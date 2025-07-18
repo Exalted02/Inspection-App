@@ -162,7 +162,7 @@
 							<div class="col-md-12">
 								<label>Reason</label>
 								<div class="mt-1">
-									{{ $rejected_region ?? '' }}
+									<p class="text-muted mb-0">{{ $rejected_region ?? '' }}</p>
 								</div>
 							</div>
 						</div>
@@ -201,7 +201,7 @@
 							<div class="col-md-12">
 								<label>Corrective</label>
 								<div class="mt-1">
-									{{ $lo_corrective_action_plan ?? '' }}
+									<p class="text-muted mb-0">{{ $lo_corrective_action_plan ?? '' }}<p>
 								</div>
 							</div>
 						</div>
@@ -263,7 +263,7 @@
 							<div class="col-md-12"><label>Final checks</label></div>
 						</div>
 						<div class="row">
-							<div class="col-md-12">{{ $lo_corrective_action_plan_second_check ?? '' }}</div>
+							<div class="col-md-12"><p class="text-muted mb-0">{{ $lo_corrective_action_plan_second_check ?? '' }}</p></div>
 						</div>
 						<div class="row">
 							<div class="col-md-12">

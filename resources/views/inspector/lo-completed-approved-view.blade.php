@@ -162,7 +162,7 @@
 							<div class="col-md-12">
 								<label>Reason</label>
 								<div class="mt-1">
-									{{ $rejected_region ?? '' }}
+									<p class="text-muted mb-0">{{ $rejected_region ?? '' }}</p>
 								</div>
 							</div>
 						</div>
@@ -198,7 +198,7 @@
 							<div class="col-md-12">
 								<label>Corrective</label>
 								<div class="mt-1">
-									{{ $lo_corrective_action_plan ?? '' }}
+									<p class="text-muted mb-0">{{ $lo_corrective_action_plan ?? '' }}</p>
 								</div>
 							</div>
 						</div>
@@ -236,16 +236,16 @@
 							</div>
 						</div>
 						@endif
-						<div class="row IA-IOS-get-reply">
+						{{--<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 							<label>Completed By</label>
 								<div class="mt-1">
 									{{ Carbon::parse($lo_corrective_completed_by)->format('d M Y')}}
 								</div>
 							</div>
-						</div>
+						</div>--}}
 						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ $corrective_action_data ? Carbon::parse($corrective_action_data->created_at)->format('d M, Y h:i A') : '' }}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ $corrective_action_data ? Carbon::parse($lo_corrective_completed_by)->format('d M, Y h:i A') : '' }}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						
@@ -254,7 +254,7 @@
 							<div class="col-md-12"><label>Final checks</label></div>
 						</div>
 						<div class="row">
-							<div class="col-md-12">{{ $lo_corrective_action_plan_second_check ?? '' }}</div>
+							<div class="col-md-12"><p class="text-muted mb-0">{{ $lo_corrective_action_plan_second_check ?? '' }}</p></div>
 						</div>
 						<div class="row">
 							<div class="col-md-12">
@@ -283,10 +283,29 @@
 							</div>
 						</div>
 						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('Y M d h:i:s') : ''}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('d M, Y h:i A') : ''}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						@endif
+						
+						@if($corrective_action_data)
+							@if($corrective_action_data->inspector_action == 1 && $corrective_action_data->los_action == 1)
+							<div class="row">
+								<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
+							</div>
+							@endif
+						@endif
+						
+						<div class="row">
+							@if($corrective_action_data->inspector_action == 1 && $corrective_action_data->los_action == 1)
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+								<span class="show-completed-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span><span class="show-completed-status">{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span>
+								</div>
+								
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+								<span class="show-completed-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span><span class="show-completed-status">{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
+							@endif
+						</div>
 						
 						{{--<div class="row">
 							@if($corrective_action_data->inspector_action == 1)

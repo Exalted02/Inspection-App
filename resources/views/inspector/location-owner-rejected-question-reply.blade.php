@@ -289,7 +289,7 @@
 							
 					</div>
 					<div class="sticky-footer location-owner-submit">
-						<button class="submitChecklist">Submit</button>
+						<button class="location-owner-submit">Submit</button>
 					</div>
 				</div>
 			</section>
@@ -430,8 +430,8 @@ $('#lo_file').on('change', function (e) {
 			return;
 		}
 		
-		$('.submitChecklist').prop('disabled', true);
-		$('.submitChecklist').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
+		$('.location-owner-submit').prop('disabled', true);
+		$('.location-owner-submit').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
 		
 		//alert(csrfToken) // show ok 
 		// Optional: Add other data
@@ -465,7 +465,8 @@ $('#lo_file').on('change', function (e) {
 				
 			},
 			complete: function() {
-				$('.submitChecklist').prop('disabled', false);
+				$('.location-owner-submit').html('Submit');
+				//$('.location-owner-submit').prop('disabled', false);
 			}
 		});
 	});

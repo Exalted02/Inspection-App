@@ -807,7 +807,7 @@ $totalapprcompleted = $countCompleted;
 													$class = 'list-approved-filter';
 												}
 											@endphp
-										<div class="d-flex mb-3 task {{ $class }}">
+										<div class="d-flex mb-3 task">
 											<div class="date-box">
 												@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 												<img src="{{ $val['image'] }}">
@@ -855,7 +855,7 @@ $totalapprcompleted = $countCompleted;
 													$class = 'list-approved-filter';
 												}
 										@endphp
-										<div class="d-flex mb-3 task {{ $class }}">
+										<div class="d-flex mb-3 task">
 										<div class="date-box">
 											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<img src="{{ $images }}">

@@ -82,7 +82,7 @@ use Carbon\Carbon;
 							<div class="col-md-12"><label>Reason</label></div>
 						</div>
 						<div class="row">
-						<div class="col-md-12">{{ $rejected_region ?? '' }}</div>
+						<div class="col-md-12"><p class="text-muted mb-0">{{ $rejected_region ?? '' }}</p></div>
 						</div>
 						
 						
@@ -165,7 +165,7 @@ use Carbon\Carbon;
 						
 					</div>
 					<div class="sticky-footer submitChecklist">
-						<button class="submit-loding">Submit checklist</button>
+						<button class="submitChecklist">Submit checklist</button>
 					</div>
 				</div>
 			</section>
@@ -286,8 +286,8 @@ $(document).ready(function() {
 			return;
 		}
 		
-		$('.submit-loding').prop('disabled', true);
-		$('.submit-loding').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
+		$('.submitChecklist').prop('disabled', true);
+		$('.submitChecklist').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
 
 		var URL = "{{ route('submit-lo-corrective-action') }}";
 		   $.ajax({
@@ -298,7 +298,6 @@ $(document).ready(function() {
 				contentType: false,
 				processData: false, 
 				success: function(response) {
-					
 					if(lo_direct_approve)
 					{
 						localStorage.setItem('loActionSubmited', 1);
@@ -318,7 +317,8 @@ $(document).ready(function() {
 					
 				},
 				complete: function() {
-					$('.submit-loding').prop('disabled', false);
+					$('.submitChecklist').html('Submit checklist');
+					//$('.submit-loding').prop('disabled', false);
 				}
 			});
 	});

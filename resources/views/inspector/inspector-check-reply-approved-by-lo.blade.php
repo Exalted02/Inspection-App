@@ -566,7 +566,8 @@ $(document).ready(function() {
 				}
 			},
 			complete: function() {
-				$('.inspector-rejected-submit').prop('disabled', false);
+				$('.inspector-rejected-submit').html('Submit');
+				//$('.inspector-rejected-submit').prop('disabled', false);
 			}
 		});
 	});

@@ -670,7 +670,7 @@ $totalapprcompleted = $countCompleted;
 												}
 										@endphp
 									
-									<div class="d-flex mb-3 task {{ $class }}">
+									<div class="d-flex mb-3 task">
 										<div class="date-box">
 										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<img src="{{ $val['image'] }}" width="50" height="50">
@@ -709,7 +709,7 @@ $totalapprcompleted = $countCompleted;
 											$extension = strtolower($extension);
 											
 											//if (!empty($result['image']))
-												
+											
 											if(array_key_exists('image', $result))
 												{
 													$route = route('ia-los-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
@@ -719,7 +719,7 @@ $totalapprcompleted = $countCompleted;
 													$class = 'list-approved-filter';
 												}
 										@endphp
-										<div class="d-flex mb-3 task {{ $class }}">
+										<div class="d-flex mb-3 task">
 										<div class="date-box">
 										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<img src="{{ $images }}" width="50" height="50">
