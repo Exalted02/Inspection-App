@@ -36,6 +36,10 @@ class DashboardInspectorController extends Controller
 	}
 	public function location_details($id='')
     {
+		if (auth()->user()->user_type == 2) {
+			return redirect('inspector-dashboard');
+		}
+		
 		$data = [];
 		$data['location_categories'] = Manage_location::with('category_by_location')->where('id', $id)->get();
 		
@@ -2071,17 +2075,33 @@ class DashboardInspectorController extends Controller
 			$updtmodel->image = $fileName;
 			$updtmodel->save();
 		}
-		else{
+		/*else{
 			$updtmodel= Task_lists::find($id);
 			$updtmodel->image = $request->hid_task_image;
 			//$updtmodel->image = 'default-task-pic.jpg';
 			$updtmodel->save();
-		}
+		}*/
 		
 		return response()->json([
 			'success' => true
 		]);
 	}
+	
+	public function delete_task_image(Request $request)
+	{
+		$id = $request->task_id;
+		$task_image = $request->task_image;
+		$model = Task_lists::find($id);
+		$model->image = null;
+		$model->save();
+		
+		$f_name = $task_image;
+		$filePath = public_path('uploads/task/' . $f_name);
+		if (file_exists($filePath)) {
+			unlink($filePath);
+		}
+	}
+	
 	public function inspector_checklist_question_reply($location_id='',$task_id='',$checklist_id='',$type='', $tab='')
 	{
 		if (auth()->user()->user_type == 2) {

@@ -278,6 +278,7 @@ $(document ).ready(function() {
 	});
 
 	var taskcreated 		= localStorage.getItem('taskcreated');
+	var taskupdated 		= localStorage.getItem('taskupdated');
 	var insActionApproved 	= localStorage.getItem('insActionApproved');
 	var insPlanApproved 	= localStorage.getItem('insPlanApproved');
 	var insActionRejected 	= localStorage.getItem('insActionRejected');
@@ -289,6 +290,11 @@ $(document ).ready(function() {
 	{
 		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Task created&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 		localStorage.removeItem('taskcreated');
+	}
+	if(taskupdated == 1)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Task updated&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		localStorage.removeItem('taskupdated');
 	}
 	
 	if(insActionApproved == 1)

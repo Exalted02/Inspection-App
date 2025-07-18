@@ -1420,6 +1420,22 @@ body {
 	width: 200px;
 }
 /*-- --*/
+/*.task-img-delete {
+    position: absolute;
+    top: -3px;
+    right: -7px;
+    background: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+}*/
 
 .task-img-delete {
     position: absolute;
