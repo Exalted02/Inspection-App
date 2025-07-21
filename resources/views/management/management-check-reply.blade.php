@@ -124,11 +124,15 @@
 				<div class="container1">
 					<div class="custom-tab" style="margin-bottom: 80px;">
 						<div class="row">
-							<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
+							<div class="col-md-12">
+								<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
+							</div>
 						</div>
 						@if(!empty($subChecklistName))
 						<div class="row">
-							<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							<div class="col-md-12">
+								<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							</div>
 						</div>
 						@endif
 					
@@ -229,10 +233,10 @@
 						@endif
 						
 						@if($corrective_action_data)
-						<div class="row" style="margin-top:10px;">
+						<div class="row">
 							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap">
 							<img src="{{ url('uploads/profile/'. $corrective_action_data->get_lo->id .'/locationowner/' . $corrective_action_data->get_lo->profile_image) }}" class="rounded-profile-img me-2" alt="Profile image">
-							<span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($lo_corrective_completed_by)->format('d M, Y h:i A') : ''}}</span></div>
+							<span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
 						</div>
 						@endif
 						

@@ -730,11 +730,11 @@ if($mode == 'corrective_appr')
 				@if($rejectedRegionData)	
 				<p class="text-muted mb-0">
 				<i class="fa fa-clock">
-				{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}<button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button></i>
+				{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 				</p>
 				@endif
 				<p class="text-muted mb-0">
-				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}<button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button>
 				</p>
 			</a>
 		</div>
@@ -775,11 +775,11 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}<button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button></i>
+				<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 				</p>
 				@endif
 				<p class="text-muted mb-0">
-				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
+				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}<button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button>
 				</p>
 			</a>
 		</div>

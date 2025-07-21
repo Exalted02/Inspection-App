@@ -137,7 +137,7 @@ $getCategotyArr = [];
 								<div class="col-md-12 col-sm-12 d-grid">
 									<div class="form-group text-center">
 											<div class="add-task-box">
-												<div class="no-tasks-list-title">no on-going and </br>upcoming Task</div>
+												<div class="no-tasks-list-title">No On-going and </br>Upcoming Task</div>
 											</div>
 									</div>
 								</div>
@@ -201,10 +201,9 @@ $getCategotyArr = [];
 							<span id="tasktcategory_id_error" style="display:none;  color: red;">Please select category</span>
 						</div>
 					</div>
-					<div class="task-cover-image">Upload Cover</div>
 					<div class="row d-flex align-items-center">
 						<div class="col-md-4 mb-3">
-							<label for="task_image"></label>
+							<label for="task_image" class="task-cover-image">Upload Cover</label>
 							<div class="upload-wrapper">
 								<input type="file" name="task_image" id="task_image" style="display: none;">
 								<label for="task_image" class="task-upload-label">

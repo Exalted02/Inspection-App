@@ -12,7 +12,7 @@
 				 <div class="col-lg-12 col-md-12">
 					<!-- menu logo -->
 					<ul class="menu-logo">
-					   <li style="margin-top: 7px;" class="d-flex justify-between">
+					   <li class="d-flex justify-between">
 							{{--<a href="{{ route('inspector-dashboard')}}">
 								<span>Inspection</span>
 							</a>--}}

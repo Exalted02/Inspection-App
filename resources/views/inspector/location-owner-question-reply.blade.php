@@ -69,11 +69,15 @@ use Carbon\Carbon;
 				<div class="container1">
 					<div class="custom-tab" style="margin-bottom: 80px;">
 						<div class="row">
-							<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
+							<div class="col-md-12">
+								<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
+							</div>
 						</div>
 						@if(!empty($subChecklistName))
 						<div class="row">
-							<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							<div class="col-md-12">
+								<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							</div>
 						</div>
 						@endif
 					
@@ -106,7 +110,7 @@ use Carbon\Carbon;
 									@endforeach
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}}</span><span>{{ Carbon::parse($created_at)->format('d M, Y h:i A')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}}</span><span>{{ change_date_format($created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}</span></div>
 						</div>
 						<hr class="horizontal-line">
 
@@ -164,8 +168,8 @@ use Carbon\Carbon;
 					<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 						
 					</div>
-					<div class="sticky-footer submitChecklist">
-						<button class="submitChecklist">Submit checklist</button>
+					<div class="">
+						<button class="sticky-footer submitChecklist">Submit checklist</button>
 					</div>
 				</div>
 			</section>
@@ -317,7 +321,7 @@ $(document).ready(function() {
 					
 				},
 				complete: function() {
-					$('.submitChecklist').html('Submit checklist');
+					$('.submitChecklist').html('Submit checklist').prop('disabled', false);
 					//$('.submit-loding').prop('disabled', false);
 				}
 			});
@@ -351,9 +355,9 @@ $('#lo_file').on('change', function (e) {
 		  let previewHtml = '';
 
 		  if (file.type.startsWith('image/')) {
-			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><img src="' + e.target.result + '" class="preview-image" /><div class="remove-image" data-index="' + index + '">&times;</div></div>';
+			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><img src="' + e.target.result + '" class="preview-image" /><button type="button" class="remove-image" data-index="' + index + '">&times;</button></div>';
 		  }else if (file.type.startsWith('video/')) {
-			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><div class="remove-image" data-index="' + index + '">&times;</div></div>';
+			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="remove-image" data-index="' + index + '">&times;</button></div>';
 		  }
 		  previewContainer.append(previewHtml);
 		};
