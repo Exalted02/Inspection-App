@@ -21,6 +21,7 @@ return new class extends Migration
 			$table->tinyInteger('approved_status')->default(0)->comment('1=approved by IA, 2=approved by LOS');
 			$table->tinyInteger('rejected_status')->default(0)->comment('1=rejected by IA, 2=rejected by LOS');
 			$table->tinyInteger('rejected_repeated')->default(0)->comment('if any one rejected then 1');
+			$table->timestamps();
         });
     }
 

@@ -22,6 +22,7 @@ use App\Models\Subcategory;
 use App\Models\Task_list_corrective_action;
 use App\Models\Task_list_corrective_action_file;
 use App\Models\Task_location_categories;
+use App\Models\Task_list_corrective_action_details;
 use Illuminate\Support\Facades\DB;
 
 class DashboardInspectorController extends Controller
@@ -2255,6 +2256,7 @@ class DashboardInspectorController extends Controller
 	public function save_lo_reply_rejected_question(Request $request)
 	{
 		//echo "<pre>";print_r($request->all());die;
+		
 		$task_id = $request->task_id;
 		$checklist_id = $request->checklist_id;
 		$subchecklist_id = $request->subchecklist_id ?? null;
@@ -2280,7 +2282,7 @@ class DashboardInspectorController extends Controller
 		if ($lo_files && is_array($lo_files)) {
 			
 			// unlink previous file 
-			$correctiveFiles = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->where('status', 2)->get();
+			/*$correctiveFiles = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->where('status', 2)->get();
 			if($correctiveFiles->isNotEmpty()){
 				
 				foreach($correctiveFiles as $filemn)
@@ -2293,8 +2295,12 @@ class DashboardInspectorController extends Controller
 				}
 				
 				Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->where('status', 2)->delete();
-			}
+			}*/
 			
+			//-- 22-07-2025---
+			$status = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->orderBy('id', 'desc')
+            ->value('status');
+			$new_status = $status + 1;
 			// save new files
 			foreach ($lo_files as $file) {
 				
@@ -2309,10 +2315,16 @@ class DashboardInspectorController extends Controller
 				$fileModel = new Task_list_corrective_action_file();
 				$fileModel->task_list_corrective_actions_id = $id;
 				$fileModel->file = $filename;
-				$fileModel->status = 2;
+				$fileModel->status = $new_status;
 				$fileModel->save();
 			}
 		}
+		
+		// add to the table Task_list_corrective_action_details
+		$correctiveActionDtldModel = new Task_list_corrective_action_details();
+		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
+		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks = $content;
+		$correctiveActionDtldModel->save();
 		
 		// update the status of Task lists after approve by lo 
 		
