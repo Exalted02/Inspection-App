@@ -56,6 +56,8 @@
 	 
 	 $lo_corrective_action_plan_second_check = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan_second_check : '';
 	 
+	 $corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
+	 
  }
  
  $taskSubChecklist = null;
@@ -106,6 +108,8 @@
 			];
 		 }
 	 }
+	 
+	 $corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
  }
  //echo $lo_corrective_completed_by;die;
  //echo "<pre>";print_r($image_arr);die;
@@ -236,15 +240,16 @@
 						</div>
 						@endif
 						
-						@if($corrective_action_data)
-							@if($corrective_action_data->approved_status == 1 || $corrective_action_data->approved_status == 2 || $corrective_action_data->rejected_status == 1 || $corrective_action_data->los_action == 2)
+						@if($corrective_dtls_data)
+						
+						@if($corrective_dtls_data->approved_status == 1 || $corrective_dtls_data->approved_status == 2 || $corrective_dtls_data->rejected_status == 1 || $corrective_dtls_data->rejected_status == 2)
 							{{--<hr class="horizontal-line">--}}
 							@endif
 						@endif
 						
 						@if($corrective_action_data)
 						
-						@if($corrective_action_data->approved_status == 1 || $corrective_action_data->approved_status == 2 || $corrective_action_data->rejected_status == 1 || $corrective_action_data->los_action == 2)
+						@if($corrective_dtls_data->approved_status == 1 || $corrective_dtls_data->approved_status == 2 || $corrective_dtls_data->rejected_status == 1 || $corrective_dtls_data->rejected_status == 2)
 							<div class="row">
 								<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
 							</div>
