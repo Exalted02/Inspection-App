@@ -1943,6 +1943,11 @@ class DashboardInspectorController extends Controller
 		}
 		//---------------------------
 		
+		$correctiveActionDtldModel = new Task_list_corrective_action_details();
+		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
+		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks =$request->lo_corrective_action_plan;
+		$correctiveActionDtldModel->save();
+		
 		return response()->json(['location_id'=>$location_id, 'task_id'=>$task_list_id]);
 	}
 	
@@ -2221,6 +2226,55 @@ class DashboardInspectorController extends Controller
 		$ins_action = $actionData ? $actionData->inspector_action : null;
 		$los_action = $actionData ? $actionData->los_action : null;
 		
+		//----- add to table corrective details
+		
+		$lastRecord = Task_list_corrective_action_details::where('task_list_corrective_action_id', $id)->orderBy('id', 'desc')->first();
+		$last_id = $lastRecord ? $lastRecord->id : null;
+		if($last_id)
+		{
+		
+			$correctiveActionDtldModel = Task_list_corrective_action_details::find($last_id);
+			
+			if($inspector_action == 1)
+			{
+				if(auth()->user()->user_type == 1)
+				{
+					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
+					
+					$correctiveActionDtldModel->approved_status = 1;
+				}
+				
+				if(auth()->user()->user_type == 3)
+				{
+					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
+					$correctiveActionDtldModel->approved_status = 2;
+				}
+			}
+			else if($inspector_action == 2)
+			{
+				$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
+				
+				//$model->inspector_id = $user_id;
+				$correctiveActionDtldModel->ia_los_rejected_reason = $first_rejected_reason ?? '';
+				$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
+				
+				
+				if(auth()->user()->user_type == 1)
+				{
+					$correctiveActionDtldModel->rejected_status = 1;
+				}
+				
+				if(auth()->user()->user_type == 3)
+				{
+					$correctiveActionDtldModel->rejected_status = 2;
+				}
+				
+				$correctiveActionDtldModel->rejected_repeated = 1;
+			}
+			
+			$correctiveActionDtldModel->save();
+		}
+		
 		return response()->json(['message'=>'success', 'ins_action'=>$ins_action, 'los_action'=>$los_action]);
 	}
 	
@@ -2479,6 +2533,55 @@ class DashboardInspectorController extends Controller
 		//$model->inspector_id = $inspector_id;
 		
 		$model->save();
+		
+		//----- add to table corrective details
+		$lastRecord = Task_list_corrective_action_details::where('task_list_corrective_action_id', $id)->orderBy('id', 'desc')->first();
+		$last_id = $lastRecord ? $lastRecord->id : null;
+		if($last_id)
+		{
+			$correctiveActionDtldModel = Task_list_corrective_action_details::find($last_id);
+			if($inspector_action == 2 || $los_action == 2)
+			{
+				
+				$correctiveActionDtldModel->ia_los_rejected_reason = $first_rejected_reason ?? '';
+				
+				if(auth()->user()->user_type == 1)
+				{
+					$correctiveActionDtldModel->rejected_status = 1;
+					$correctiveActionDtldModel->approved_status = 2;
+					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
+				}
+				
+				if(auth()->user()->user_type == 3)
+				{
+					$correctiveActionDtldModel->rejected_status = 2;
+					$correctiveActionDtldModel->approved_status = 1;
+					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
+				}
+				
+				$correctiveActionDtldModel->rejected_repeated = 1;
+			}
+			
+			if($inspector_action == 1 || $los_action == 1)
+			{
+				if(auth()->user()->user_type == 1)
+				{
+					$correctiveActionDtldModel->approved_status = 1;
+					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
+				}
+				
+				if(auth()->user()->user_type == 3)
+				{
+					$correctiveActionDtldModel->approved_status = 2;
+					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
+				}
+				
+			}
+			
+			$correctiveActionDtldModel->rejected_repeated = 1;
+			
+			$correctiveActionDtldModel->save();
+		}
 		
 		// update the status of Task lists after final approve by inspector or los 
 		Task_lists ::where('id',$task_list_id)->update(['status'=>5]);
