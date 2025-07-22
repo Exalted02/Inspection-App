@@ -95,7 +95,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 			<div class="action-buttons-without-text">
 				<button class="rejected" id="question-reject-1" onclick="handleReject(1)"><i class="fa-solid fa-xmark"></i></button>
 				<button class="approved" id="question-approve-1" onclick="handleApprove(1)"><i class="fa-solid fa-check"></i></button>
-				<button class="notavailable" id="question-na-1" onclick="handleNotavailable(1)"><span style="font-size:15px;">NA</span></button>
+				<button class="notavailable" id="question-na-1" onclick="handleNotavailable(1)"><span class="button-na">NA</span></button>
 			</div>
 		</div>
 	@else
@@ -120,7 +120,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 						<div class="btn-div">
 							<button class="rejected" id="question-reject-{{ $subchecklists->id }}" onclick="handleReject({{ $subchecklists->id }})"><i class="fa-solid fa-xmark"></i></button>
 							<button class="approved" id="question-approve-{{ $subchecklists->id }}" onclick="handleApprove({{ $subchecklists->id }})"><i class="fa-solid fa-check"></i></button>
-							<button class="notavailable" id="question-na-{{ $subchecklists->id }}" onclick="handleNotavailable({{ $subchecklists->id }})"><span style="font-size:15px;">NA</span></button>
+							<button class="notavailable" id="question-na-{{ $subchecklists->id }}" onclick="handleNotavailable({{ $subchecklists->id }})"><span class="button-na">NA</span></button>
 						</div>
 					</div>
 					<span id="errorMulmsg{{ $subchecklists->id }}"  class="question-error-message">
@@ -375,7 +375,7 @@ $(document).ready(function() {
 						html += '<div class="btn-div">';
 						html += '<button class="rejected" id="question-reject-' + item.id + '" onclick="handleReject(' + item.id + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
-						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span style="font-size:15px;">NA</span></button>';
+						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span class="button-na">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>';
 						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
@@ -590,7 +590,7 @@ $(document).ready(function() {
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + response.currentid + '" onclick="handleApprove(' + response.currentid + ')"><i class="fa-solid fa-check"></i></button>';
-						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span style="font-size:15px;">NA</span></button>';
+						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span class="button-na">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>'; 
 
@@ -1376,7 +1376,7 @@ $(document ).ready(function() {
 						html += '<div class="btn-div">';
 						html += '<button class="rejected" id="question-reject-' + item.id + '" onclick="handleReject(' + item.id + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
-						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span style="font-size:15px;">NA</span></button>';
+						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span class="button-na">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>';
 						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
@@ -1628,7 +1628,7 @@ $(document ).ready(function() {
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + response.currentid + '" onclick="handleApprove(' + response.currentid + ')"><i class="fa-solid fa-check"></i></button>';
-						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span style="font-size:15px;">NA</span></button>';
+						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span class="button-na">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>'; 
 
@@ -1878,7 +1878,7 @@ $(document ).ready(function() {
 						html += '<div class="btn-div">';
 						html += '<button class="rejected" id="question-reject-' + item.id + '" onclick="handleReject(' + item.id + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
-						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span style="font-size:15px;">NA</span></button>';
+						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span class="button-na">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>'; 
 						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
@@ -2096,7 +2096,7 @@ $(document ).ready(function() {
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + response.currentid + '" onclick="handleApprove(' + response.currentid + ')"><i class="fa-solid fa-check"></i></button>';
-						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span style="font-size:15px;">NA</span></button>';
+						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span class="button-na">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>'; 
 
@@ -2351,7 +2351,7 @@ $(document ).ready(function() {
 						html += '<div class="btn-div">';
 						html += '<button class="rejected" id="question-reject-' + item.id + '" onclick="handleReject(' + item.id + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + item.id + '" onclick="handleApprove(' + item.id + ')"><i class="fa-solid fa-check"></i></button>';
-						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span style="font-size:15px;">NA</span></button>';
+						html += '<button class="notavailable" id="question-na-' + item.id + '" onclick="handleNotavailable(' + item.id + ')"><span class="button-na">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>';
 						html += '<span id="errorMulmsg'+ item.id +'" class="question-error-message">Please enter text or file.</span>';
@@ -2605,7 +2605,7 @@ $(document ).ready(function() {
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
 						html += '<button class="approved" id="question-approve-' + response.currentid + '" onclick="handleApprove(' + response.currentid + ')"><i class="fa-solid fa-check"></i></button>';
-						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span style="font-size:15px;">NA</span></button>';
+						html += '<button class="notavailable" id="question-na-' + response.currentid + '" onclick="handleNotavailable(' + response.currentid + ')"><span class="button-na">NA</span></button>';
 						html += '</div>'; 
 						html += '</div>'; 
 
