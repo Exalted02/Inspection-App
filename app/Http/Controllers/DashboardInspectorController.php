@@ -57,7 +57,7 @@ class DashboardInspectorController extends Controller
 
 			if ($hasData) {
 				$data['task_list_data'] = Task_lists::where('location_id', $id)
-											->where('inspector_id', auth()->user()->id)->orderBy('created_at', 'DESC')
+											->where('inspector_id', auth()->user()->id)->orderBy('created_at', 'ASC')
 											->get();
 			}
 
@@ -65,7 +65,7 @@ class DashboardInspectorController extends Controller
 			$hasData = Task_lists::where('location_id', $id)->exists();
 
 			if ($hasData) {
-				$data['task_list_data'] = Task_lists::where('location_id', $id)->orderBy('id', 'DESC')->get();
+				$data['task_list_data'] = Task_lists::where('location_id', $id)->orderBy('id', 'ASC')->get();
 			}
 		}
 
