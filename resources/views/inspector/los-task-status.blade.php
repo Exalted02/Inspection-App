@@ -168,9 +168,24 @@ $totalPlan = $countPlan;
 $totalapprcompleted = $countCompleted;
 
 @endphp
-    <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
+	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
+	
+		<div class="profile-card">
+		<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/locationownersupervisor/'. $userdata->background_image )}} ')"></div>
+			<div class="profile-info">
+				<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/locationownersupervisor/'. $userdata->profile_image)}}" alt="Profile Picture">
+				<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
+				<p class="profile-description">
+					Location owner supervisor at {{ $userdata->get_company->company_name ?? '' }},<br>
+						{{ $location_name ?? '' }}
+						
+				</p>
+			</div>
+		</div>
+    <!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
+    <!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
 	<div class="container checklist">
-		<h2 class="checklist-title">{{ $task_name ?? '' }}</h2>
+		{{--<h2 class="checklist-title">{{ $task_name ?? '' }}</h2>--}}
 		@if(auth()->user()->user_type == 1)
 		{{--<div class="location-section">
 			<div class="location-label">Location details</div>
