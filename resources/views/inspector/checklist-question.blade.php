@@ -2292,7 +2292,8 @@ $(document ).ready(function() {
 	});
 	
 	$(document).on('click','.get_checklist', function(){
-	//alert('ok');
+	   //alert('ok');
+	//$('.previous_question').hide();
 	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var directEdit = $(this).data('dedit'); // 21-06-2025
 	   var cat_id = $(this).data('cat');
@@ -2309,8 +2310,13 @@ $(document ).ready(function() {
 				//alert(response.barHtml);
 				$('#direct_edit').val(response.directEdit);
 				// ------progress bar work ----------
-				
-					$('#progress-bar-section').append(response.barHtml);
+				 //alert(response.barHtml);
+					//$('#progress-bar-section').html(response.barHtml);
+					//$('#progress-bar-section').append(response.barHtml);
+					if(response.order_no == 1)
+					{
+						$('.previous_question').hide(); // 22-07-2025
+					}
 				// ----------------------------------
 				//--implement 08-05-2025
 				if (!document.querySelector('link[href*="bootstrap.min.css"]')) {
