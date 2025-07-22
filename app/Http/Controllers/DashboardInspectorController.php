@@ -1945,6 +1945,7 @@ class DashboardInspectorController extends Controller
 		
 		$correctiveActionDtldModel = new Task_list_corrective_action_details();
 		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
+		$correctiveActionDtldModel->order = 1;
 		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks =$request->lo_corrective_action_plan;
 		$correctiveActionDtldModel->save();
 		
@@ -2377,6 +2378,7 @@ class DashboardInspectorController extends Controller
 		// add to the table Task_list_corrective_action_details
 		$correctiveActionDtldModel = new Task_list_corrective_action_details();
 		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
+		$correctiveActionDtldModel->order = $new_status;
 		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks = $content;
 		$correctiveActionDtldModel->save();
 		

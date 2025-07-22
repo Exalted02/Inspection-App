@@ -69,6 +69,8 @@
 	 }
 	 
 	$corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
+	
+	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
 }
  
  
@@ -141,10 +143,12 @@
 	 }
 	 
 	 $corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
+	 
+	 $final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
  }
  
  $loopCnt = 0;
- //echo "<pre>";print_r($corrective_action_files);die;
+ //echo "<pre>";print_r($final_check_data);die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -293,27 +297,33 @@
 						
 						<hr class="horizontal-line">
 						
+					@if($final_check_data->isNotEmpty())
+						@foreach($final_check_data as $val)
+							@php 
+								$corrective_final_files = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $val->task_list_corrective_action_id)->where('status', $val->order)->get();
+								//echo "<pre>";print_r($corrective_final_files);die;
+							@endphp
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12"><label>Final checks</label></div>
 						</div>
 						<div class="row">
-							<div class="col-md-12"><p class="text-muted mb-0">{{ $lo_corrective_action_plan_second_check ?? '' }}</p></div>
+							<div class="col-md-12"><p class="text-muted mb-0">{{ $val->lo_corrective_action_plan_final_checks ?? '' }}</p></div>
 						</div>
 						
 						<div class="row">
 							<div class="col-md-12">
-								@if(!empty($corrective_action_files))
+								@if(!empty($corrective_final_files))
 									<div class="d-flex flex-wrap gap-3">
-										@foreach($corrective_action_files as $fileurl)
+										@foreach($corrective_final_files as $fileurl)
 											@php 
-												$url = $fileurl['url'] ?? '';
+												$url = url('uploads/corrective_action/' .$fileurl['file']) ?? '';
 												$extension = pathinfo($url, PATHINFO_EXTENSION);
 												$extension = strtolower($extension);
 											@endphp
 											
 											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<div class="cheklist-reply-images">
-												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+												<img src="{{ $url ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
 											</div>
 											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
 											<div class="cheklist-reply-images">
@@ -331,45 +341,64 @@
 						</div>
 						
 						
-						@if($corrective_action_data)
-						{{--<hr class="horizontal-line">--}}
-							
-							@if($corrective_action_data->inspector_action == 1 || $corrective_action_data->los_action == 1)
-								<div class="row">
-									<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
-								</div>
-							@endif
-						@endif
-						
-						<div class="row">
-							@if($corrective_action_data->inspector_action == 1)
-								<div class="col-md-12">
-								<span class="show-agree-status">Approved</span>
-								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}
-							@elseif($corrective_action_data->los_action == 1)
-								<div class="col-md-12">
-								<span class="show-agree-status">Approved</span>
-								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
-							@endif
-						</div>
-						
-						{{--<div class="row">
-							<div class="col-md-12">
-								<label class="d-block mb-2 fw-bold">Final checks</label>
-
-								@if(!empty($corrective_action_files))
-									<div class="d-flex flex-wrap gap-3">
-										@foreach($corrective_action_files as $fileurl)
-											<div class="cheklist-reply-images">
-												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
-											</div>
-										@endforeach
+							@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
+								<hr class="horizontal-line">
+								
+								@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
+									<div class="row">
+										<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
 									</div>
 								@endif
+							@endif
+						
+							<div class="row">
+							
+								@if($val->approved_status == 1)
+									<div class="col-md-12">
+									<span class="show-agree-status">Approved</span>
+									</div>
+									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($val->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+									
+								@elseif($val->approved_status == 2)
+									<div class="col-md-12">
+									<span class="show-agree-status">Approved</span>
+									</div>
+									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($val->los_action_date)->format('d M, Y h:i A')}}</span></div>
+								
+								@endif
+								
+								
+								@if($val->rejected_status == 1)
+									<div class="col-md-12 vertical-gap">
+									<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $val->ia_los_rejected_reason ?? ''  }}</span>
+									</div>
+									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($val->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+								
+								@elseif($val->rejected_status == 2)
+									<div class="col-md-12 vertical-gap">
+									<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $val->ia_los_rejected_reason ?? ''  }}</span>
+									</div>
+									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($val->los_action_date)->format('d M, Y h:i A')}}</span></div>
+								@endif
+							
 							</div>
-						</div>--}}
+						@endforeach
+					@endif
+									{{--<div class="row">
+										<div class="col-md-12">
+											<label class="d-block mb-2 fw-bold">Final checks</label>
+
+											@if(!empty($corrective_action_files))
+												<div class="d-flex flex-wrap gap-3">
+													@foreach($corrective_action_files as $fileurl)
+														<div class="cheklist-reply-images">
+															<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+														</div>
+													@endforeach
+												</div>
+											@endif
+										</div>
+									</div>--}}
 
 					
 					<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
@@ -379,7 +408,7 @@
 					<input type="hidden" id="type" value="{{ $type ?? ''}}">
 					<input type="hidden" id="tab" value="{{ $tab ?? ''}}">
 						
-					</div>
+					
 					
 					
 					
