@@ -80,7 +80,7 @@ if(!empty($task_id))
 									<div class="col-md-4 mb-3">
 										<label for="task_image" class="task-cover-image">Upload Cover</label>
 										<div class="upload-wrapper">
-											<input type="file" name="task_image" id="task_image" style="display: none;">
+											<input type="file" name="task_image" id="task_image" style="display: none;" accept="image/*">
 											<label for="task_image" class="task-upload-label">
 											<span class="task-upload-text">Update image</span>
 											<i class="fa fa-upload task-upload-icon"></i>

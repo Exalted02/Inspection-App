@@ -56,7 +56,7 @@ class DashboardInspectorController extends Controller
 
 			if ($hasData) {
 				$data['task_list_data'] = Task_lists::where('location_id', $id)
-											->where('inspector_id', auth()->user()->id)->orderBy('id', 'DESC')
+											->where('inspector_id', auth()->user()->id)->orderBy('created_at', 'DESC')
 											->get();
 			}
 
