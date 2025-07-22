@@ -22,7 +22,7 @@ $getCategotyArr = [];
 			<img src="{{ $location_img }}" alt="Location" />
 			<div>
 				<div class="title">{{ ucfirst($location_categories[0]->location_name) ?? ''}}</div>
-				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>@if(!empty($location_categories[0]->unit_floor))
+				<small class="text-muted"><i class="fa fa-location-dot"></i>@if(!empty($location_categories[0]->unit_floor))
 				{{ $location_categories[0]->unit_floor ?? ''}}</br>
 				@endif
 				{{ $location_categories[0]->street ?? ''}}</br>
