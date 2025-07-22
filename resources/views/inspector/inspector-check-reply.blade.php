@@ -124,11 +124,15 @@
 				<div class="container1">
 					<div class="custom-tab" style="margin-bottom: 80px;">
 						<div class="row">
-							<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
+							<div class="col-md-12">
+								<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
+							</div>
 						</div>
 						@if(!empty($subChecklistName))
 						<div class="row">
-							<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							<div class="col-md-12">
+								<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							</div>
 						</div>
 						@endif
 					
@@ -227,8 +231,8 @@
 						@endif
 						
 						@if($corrective_action_data)
-						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($lo_corrective_completed_by)->format('d M, Y h:i A') : ''}}</span></div>
+						<div class="row">
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
 						</div>
 						@endif
 						
@@ -357,7 +361,7 @@
                     </div>
 					<div class="clearfix"></div>
                     <div class="col-md-12  col-sm-12 form-group">
-                        <button type="button" class="btn btn-theme btn-block inspector-rejected-submit button-color">Submit</button>
+                        <button type="button" class="btn1 btn-block inspector-rejected-submit button-color popup-submit-btn">Submit</button>
                     </div>
                   </form>
                </div>
@@ -393,8 +397,8 @@ $(document).ready(function() {
 			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id, inspector_action:inspector_action,_token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
-				alert(response.ins_action);
-				alert(response.los_action);
+				// alert(response.ins_action);
+				// alert(response.los_action);
 				if(response.message=='success')
 				{
 					if(tab == 'corrective-action')

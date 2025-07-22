@@ -149,11 +149,15 @@
 				<div class="container1">
 					<div class="custom-tab" style="margin-bottom: 80px;">
 						<div class="row">
-							<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
+							<div class="col-md-12">
+								<h2 class="owner-checklist-title">{{ $checklist->name ?? ''}}</h2>
+							</div>
 						</div>
 						@if(!empty($subChecklistName))
 						<div class="row">
-							<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							<div class="col-md-12">
+								<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							</div>
 						</div>
 						@endif
 					
@@ -189,7 +193,7 @@
 								
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}} </span><span>{{ Carbon::parse($created_at)->format('d M, Y h:i A')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}} </span><span>{{ change_date_format($created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}</span></div>
 						</div>
 						
 						@if(!empty($lo_corrective_action_plan))
@@ -245,15 +249,15 @@
 							<div class="col-md-12">
 							<label>Completed By</label>
 								<div class="mt-1">
-									{{ Carbon::parse($lo_corrective_completed_by)->format('d M, Y h:i A')}}
+									{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
 								</div>
 							</div>
 						</div>--}}
 						@endif
 						
 						@if(!empty($lo_corrective_completed_by))
-						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ Carbon::parse($lo_corrective_completed_by)->format('d M, Y h:i A')}}</span></div>
+						<div class="row">
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A') }}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						@endif
@@ -291,8 +295,8 @@
 								@endif
 							</div>
 						</div>
-						<div class="row" style="margin-top:10px;">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? Carbon::parse($corrective_action_data->created_at)->format('d M, Y h:i A') : ''}}</span></div>
+						<div class="row">
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? change_date_format($corrective_action_data->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						@endif
@@ -310,13 +314,13 @@
 								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($corrective_action_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 							@elseif(isset($corrective_action_data->los_action) && $corrective_action_data->los_action == 1)
 							
 								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($corrective_action_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 							
 							
 							@endif

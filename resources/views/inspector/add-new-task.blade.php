@@ -41,11 +41,13 @@ if(!empty($task_id))
 				<div class="container1">
 					<div class="custom-tab" style="margin-bottom: 80px;">
 						<div class="row">
-							@if(empty($task_id))
-							<h2 class="owner-checklist-title">Add Task</h2>
-							@else
-							<h2 class="owner-checklist-title">Edit Task</h2>
-							@endif
+							<div class="col-md-12">
+								@if(empty($task_id))
+								<h2 class="owner-checklist-title">Add Task</h2>
+								@else
+								<h2 class="owner-checklist-title">Edit Task</h2>
+								@endif
+							</div>
 						</div>
 						
 						  <form id="frmcategory" action="{{ route('save-task-data') }}" enctype="multipart/form-data">
@@ -74,24 +76,25 @@ if(!empty($task_id))
 										<input type="hidden" id="hidden_set_time" name="hidden_set_time">
 									</div>
 								</div>
-								<div class="task-cover-image">Upload Cover</div>
-								<div class="row d-flex align-items-center update-image">
+								<div class="row d-flex1 align-items-center update-image">
 									<div class="col-md-4 mb-3">
-										<label for="task_image"></label>
+										<label for="task_image" class="task-cover-image">Upload Cover</label>
 										<div class="upload-wrapper">
 											<input type="file" name="task_image" id="task_image" style="display: none;">
 											<label for="task_image" class="task-upload-label">
-											<i class="fa fa-upload task-upload-icon"></i>
 											<span class="task-upload-text">Update image</span>
+											<i class="fa fa-upload task-upload-icon"></i>
 											</label>
 											<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
 										</div>
 									</div>
 								</div>
-								<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;margin-left: -10px;">
-									<div class="task-preview-wrapper position-relative d-inline-block">
-										<img id="" class="img-responsive task-img-upload" src="{{ $task_image ? url('uploads/task/' . $task_image) : url('images/noimages/default-task-pic.png') }}" alt=""/>
-										<button type="button" class="task-img-delete" id="delete-image">×</button>
+								<div class="row">
+									<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;">
+										<div class="task-preview-wrapper position-relative d-inline-block">
+											<img id="" class="img-responsive task-img-upload" src="{{ $task_image ? url('uploads/task/' . $task_image) : url('images/noimages/default-task-pic.png') }}" alt=""/>
+											<button type="button" class="task-img-delete" id="delete-image">×</button>
+										</div>
 									</div>
 								</div>
 								@if(!empty($locationWisecategory))
@@ -123,11 +126,11 @@ if(!empty($task_id))
 									<span class="category-message">Category not present for this location, please add from admin</span>
 								@endif
 							
-							<div class="sticky-footer save-task">
+							<div class="">
 							@if(empty($task_id))
-								<button class="task-load-add" type="button">Add Task</button>
+								<button class="sticky-footer save-task task-load-add" type="button">Add Task</button>
 							@else
-								<button class="task-load-edit" type="button">Edit Task</button>
+								<button class="sticky-footer save-task task-load-edit" type="button">Edit Task</button>
 							@endif
 							</div>
 						</form>

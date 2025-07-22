@@ -7,6 +7,7 @@
 vendor/
 node_modules/
 public/build
+public
 copy
 
 # Storage folder

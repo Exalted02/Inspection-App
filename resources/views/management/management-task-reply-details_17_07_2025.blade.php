@@ -135,11 +135,15 @@
 				<div class="container1">
 					<div class="custom-tab" style="margin-bottom: 80px;">
 						<div class="row">
-							<h2 class="owner-checklist-title">15 Feb 2025, Friday 2:32 PM</h2>
+							<div class="col-md-12">
+								<h2 class="owner-checklist-title">15 Feb 2025, Friday 2:32 PM</h2>
+							</div>
 						</div>
 						@if(!empty($subChecklistName))
 						{{--<div class="row">
-							<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							<div class="col-md-12">
+								<div class="owner-subchecklist-title">{{ $subChecklistName ?? ''}}</div>
+							</div>
 						</div>--}}
 						@endif
 					
