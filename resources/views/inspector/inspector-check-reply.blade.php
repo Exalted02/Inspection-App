@@ -238,7 +238,7 @@
 						
 						@if($corrective_action_data)
 							@if($corrective_action_data->approved_status == 1 || $corrective_action_data->approved_status == 2 || $corrective_action_data->rejected_status == 1 || $corrective_action_data->los_action == 2)
-							<hr class="horizontal-line">
+							{{--<hr class="horizontal-line">--}}
 							@endif
 						@endif
 						
@@ -282,6 +282,11 @@
 						</div>
 						@endif
 						
+						@if($corrective_action_data)
+							@if($corrective_action_data->approved_status == 1 || $corrective_action_data->approved_status == 2 || $corrective_action_data->rejected_status == 1 || $corrective_action_data->los_action == 2)
+							<hr class="horizontal-line">
+							@endif
+						@endif
 						
 						
 						{{--<div class="row">

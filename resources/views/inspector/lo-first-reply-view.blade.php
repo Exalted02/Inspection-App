@@ -259,7 +259,7 @@
 						<div class="row">
 							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A') }}</span></div>
 						</div>
-						<hr class="horizontal-line">
+						{{--<hr class="horizontal-line">--}}
 						@endif
 						
 						@if(!empty($lo_corrective_action_plan_second_check))
