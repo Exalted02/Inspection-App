@@ -501,6 +501,15 @@ body, h1, h2, h3, h4, h5, h6 {
 	color: #000000;
 	font-weight: 700;
 }
+.button-na {
+	font-size: 15px !important;
+	color: #a0a0a0 !important;
+	font-weight: 700;
+}
+.active .button-na {
+    color: #000000 !important;
+    border-color: #000000;
+}
 .action-buttons button.active, .action-buttons-without-text button.active {
 	border-color: #000000;
 	color: #000000;
