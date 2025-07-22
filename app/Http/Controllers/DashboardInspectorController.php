@@ -2992,6 +2992,7 @@ class DashboardInspectorController extends Controller
 			}
 		}
 		//echo "<pre>";print_r($approvedCompletedArray);die;
+		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 		$data['approvedCompletedArray'] = array_slice($approvedCompletedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 		$data['moreloadappr'] = config('custom.LOAD_MORE_LIST_SHOW');
 		//=====================================================
@@ -3318,7 +3319,7 @@ class DashboardInspectorController extends Controller
 		
 		//echo "<pre>";print_r($correctiveNeeded);
 		$data['correctiveNeddedArray'] = array_slice($correctiveNeddedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
-		
+		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 		
 		//=======================
 		
