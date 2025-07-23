@@ -563,6 +563,23 @@ use App\Models\Task_list_subchecklists;
 		};
 		return $text;
 	}
+	function getOrdinalTitle($number) {
+		$map = [
+			1 => 'First',
+			2 => 'Second',
+			3 => 'Third',
+			4 => 'Fourth',
+			5 => 'Fifth',
+			6 => 'Sixth',
+			7 => 'Seventh',
+			8 => 'Eighth',
+			9 => 'Ninth',
+			10 => 'Tenth',
+		];
+
+		return $map[$number] ?? ordinalSuffix($number);
+	}
+
 	/*function checklist_next_question($category_id='', $order_no='')
 	{
 		$checklistQuestion = Checklist::where('category_id', $category_id)
