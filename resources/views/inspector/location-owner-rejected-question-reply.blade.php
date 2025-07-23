@@ -124,7 +124,7 @@
 	$task_location_id = $taskData ? $taskData->location_id : '';
 	$task_category_id = $taskData ? $taskData->category_id : '';
 	
-	//echo $corrective_action_primary_id; die;
+	//echo "<pre>";print_r($final_check_data);die;
 	//echo "<pre>";print_r($corrective_first_action_files);die;
 	$loopCnt = 0;
 @endphp
@@ -236,9 +236,113 @@
 							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action->get_lo->name ?? ''}}</span><span>{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 						</div>
 						
-						@if($corrective_action)
-							<hr class="horizontal-line">
-							@if($corrective_action->approved_status == 1 || $corrective_action->approved_status == 2 || $corrective_action->rejected_status == 1 || $corrective_action->rejected_status == 2)
+						@if($lo_direct_approve == 0)
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
+							<label>Completed By</label>
+								<div class="mt-1">
+									{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
+								</div>
+							</div>
+						</div>
+						</br>
+						@endif
+						
+						@if($corrective_dtls_data)
+						
+						@if($corrective_dtls_data->approved_status == 1 || $corrective_dtls_data->approved_status == 2 || $corrective_dtls_data->rejected_status == 1 || $corrective_dtls_data->rejected_status == 2)
+							<div class="row">
+								<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
+							</div>
+						@endif
+						
+						<div class="row">
+							
+							@if($corrective_dtls_data->approved_status == 1)
+								<div class="col-md-12">
+								<span class="show-agree-status">Approved</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+								
+							@elseif($corrective_dtls_data->approved_status == 2)
+								<div class="col-md-12">
+								<span class="show-agree-status">Approved</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+							
+							@endif
+							
+							
+							@if($corrective_dtls_data->rejected_status == 1)
+								<div class="col-md-12 vertical-gap">
+								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+							
+							@elseif($corrective_dtls_data->rejected_status == 2)
+								<div class="col-md-12 vertical-gap">
+								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</span>
+								</div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+							@endif
+							
+						</div>
+						@endif
+						
+						@if($final_check_data->isNotEmpty())
+					@foreach($final_check_data as $val)
+						@php 
+							$corrective_final_files = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $val->task_list_corrective_action_id)->where('status', $val->order)->get();
+							//echo "<pre>";print_r($corrective_final_files);die;
+							
+							$final_title = '';
+							$final_title = getOrdinalTitle($val->order);
+							if($max_order == $val->order)
+							{
+								$final_title = 'Final';
+							}
+							
+						@endphp
+						
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12"><label>{{ $final_title }} checks</label></div>
+						</div>
+						<div class="row">
+							<div class="col-md-12"><p class="text-muted mb-0">{{ $val->lo_corrective_action_plan_final_checks ?? '' }}</p></div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								@if(!empty($corrective_final_files))
+									<div class="d-flex flex-wrap gap-3">
+										@foreach($corrective_final_files as $fileurl)
+											@php 
+												$url = url('uploads/corrective_action/' .$fileurl['file']) ?? '';
+												$extension = pathinfo($url, PATHINFO_EXTENSION);
+												$extension = strtolower($extension);
+											@endphp
+											
+											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+											<div class="cheklist-reply-images">
+												<img src="{{ $url ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+											</div>
+											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<div class="cheklist-reply-images">
+											
+											<video src="{{ $url ?? '' }}" controls style="max-width: 100px; height: auto; border: 1px solid #ccc; padding: 5px;" target="_blank"></video>
+											</div>
+											@endif
+										@endforeach
+									</div>
+								@endif
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? change_date_format($corrective_action_data->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
+						</div>
+						
+						@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
+							
+							@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
 								<div class="row">
 									<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
 								</div>
@@ -246,35 +350,37 @@
 						@endif
 						
 						<div class="row">
-							@if($corrective_action->approved_status == 1)
-								<div class="col-md-12 vertical-gap">
+							@if($val->approved_status == 1)
+								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+							@elseif($val->approved_status == 2)
 							
-							{{--<span class="show-agree-status">Approved by (IA)	{{$corrective_action->get_inspector->name ?? ''}}</span>--}}
-							@elseif($corrective_action->approved_status == 2)
-								<div class="col-md-12 vertical-gap">
+								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->los_action_date)->format('d M, Y h:i A')}}</span></div>
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+							@endif
+							
+							@if($val->rejected_status == 1)
+									<div class="col-md-12 vertical-gap">
+									<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $val->ia_los_rejected_reason ?? ''  }}</span>
+									</div>
+									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 								
-							@endif
-							
-							
-							@if($corrective_action->rejected_status == 1)
-								<div class="col-md-12 vertical-gap">
-								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_action->ia_los_first_rejected_reason ?? ''  }}</span>
-								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action->get_inspector->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->inspector_action_date)->format('d M, Y h:i A')}}</span></div>
-							@elseif($corrective_action->rejected_status == 2)
-							<div class="col-md-12 vertical-gap">
-								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_action->ia_los_first_rejected_reason ?? ''  }}</span>
-								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->los_action_date)->format('d M, Y h:i A')}}</span></div>
-							@endif
+								@elseif($val->rejected_status == 2)
+									<div class="col-md-12 vertical-gap">
+									<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $val->ia_los_rejected_reason ?? ''  }}</span>
+									</div>
+									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+								@endif
 						</div>
 						<hr class="horizontal-line">
+					@endforeach
+					@endif
+						
+						{{--<hr class="horizontal-line">--}}
 						{{--<form id="frmreply" action="{{ route('save-lo-reply-rejected-question') }}" enctype="multipart/form-data" method="post">--}}
 							<div class="row" style="margin-top: 1rem !important;">
 								<div class="col-md-12">
