@@ -30,8 +30,6 @@
 	
 	$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
 	
-	$lo_direct_approve = $corrective_action ? $corrective_action->lo_direct_approve : '';
-	
 	$lo_corrective_completed_by = $corrective_action ? $corrective_action->lo_completed_by : '';
 	
 	//---------------------------------------------
@@ -89,8 +87,6 @@
 		$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 		
 		$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
-		
-		$lo_direct_approve = $corrective_action ? $corrective_action->lo_direct_approve : '';
 		
 		$lo_corrective_completed_by = $corrective_action ? $corrective_action->lo_completed_by : '';
 		
