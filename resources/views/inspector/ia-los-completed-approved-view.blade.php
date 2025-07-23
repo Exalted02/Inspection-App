@@ -163,6 +163,7 @@
  }
  
  $loopCnt = 0;
+ //echo $corrective_action_primary_id; die;
  //echo "<pre>";print_r($corrective_action_files);die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
@@ -370,8 +371,7 @@
 						
 						
 							@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
-							{{--<hr class="horizontal-line">--}}
-								
+							
 								@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
 									<div class="row">
 										<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
@@ -380,7 +380,21 @@
 							@endif
 						
 							<div class="row">
-							
+							@if($max_order == $val->order)
+								@if($corrective_action_data->inspector_action == 1 && $corrective_action_data->los_action == 1)
+									
+								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+									<span class="show-completed-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span><span class="show-completed-status">{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span>
+									</div>
+									
+									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+									<span class="show-completed-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span><span class="show-completed-status">{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
+								@endif
+								@php
+									break;
+								@endphp
+							@endif	
+								
 								@if($val->approved_status == 1)
 									<div class="col-md-12">
 									<span class="show-agree-status">Approved</span>
