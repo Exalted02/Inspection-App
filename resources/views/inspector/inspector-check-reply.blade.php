@@ -72,6 +72,9 @@
 	 }*/
 	 
 	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+	
+	$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
+	$max_order = $corrective_detls_order->max('order');
 	 
  }
  
@@ -140,6 +143,9 @@
 	 }*/
 	 
 	 $final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+	 
+	 $corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
+	$max_order = $corrective_detls_order->max('order');
  }
  //echo $lo_corrective_completed_by;die;
  //echo "<pre>";print_r($final_check_data);die;
@@ -328,10 +334,17 @@
 							@foreach($final_check_data as $val)
 							
 							@php 
-								$corrective_final_files = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $val->task_list_corrective_actions_id)->where('status', $val->order)->get();
+								$corrective_final_files = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $val->task_list_corrective_action_id)->where('status', $val->order)->get();
+								
+								$final_title = '';
+								$final_title = getOrdinalTitle($val->order);
+								if($max_order == $val->order)
+								{
+									$final_title = 'Final';
+								}
 							@endphp
 							<div class="row IA-IOS-get-reply">
-								<div class="col-md-12"><label>Final checks</label></div>
+								<div class="col-md-12"><label>{{ $final_title }} checks</label></div>
 							</div>
 							
 							<div class="row">
@@ -344,19 +357,19 @@
 									<div class="d-flex flex-wrap gap-3">
 										@foreach($corrective_final_files as $fileurl)
 											@php 
-												$url = $fileurl['url'] ?? '';
+												$url = url('uploads/corrective_action/' .$fileurl['file']) ?? '';
 												$extension = pathinfo($url, PATHINFO_EXTENSION);
 												$extension = strtolower($extension);
 											@endphp
 											
 											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
 											<div class="cheklist-reply-images">
-												<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
+												<img src="{{ $url ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
 											</div>
 											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
 											<div class="cheklist-reply-images">
 											
-											<video src="{{ $fileurl['url'] ?? '' }}" controls style="max-width: 100px; height: auto; border: 1px solid #ccc; padding: 5px;" target="_blank"></video>
+											<video src="{{ $url ?? '' }}" controls style="max-width: 100px; height: auto; border: 1px solid #ccc; padding: 5px;" target="_blank"></video>
 											</div>
 											@endif
 										@endforeach
@@ -411,7 +424,7 @@
 							
 							</div>
 							
-							
+							<hr class="horizontal-line">
 							@endforeach
 						@endif
 					
