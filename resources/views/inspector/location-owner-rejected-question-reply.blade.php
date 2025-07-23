@@ -345,7 +345,7 @@
 						</div>
 						
 						@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
-							
+							</br>
 							@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
 								<div class="row">
 									<div class="col-md-12"><h4><strong>Approval</strong></h4></div>

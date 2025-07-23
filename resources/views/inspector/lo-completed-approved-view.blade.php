@@ -383,7 +383,7 @@
 							<div class="row">
 							@if($max_order == $val->order)
 								@if($corrective_action_data->inspector_action == 1 && $corrective_action_data->los_action == 1)
-									
+								
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
 									<span class="show-completed-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span><span class="show-completed-status">{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span>
 									</div>

@@ -365,7 +365,7 @@
 						
 						
 							@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
-							{{--<hr class="horizontal-line">--}}
+							</br>
 								
 								@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
 									<div class="row">

@@ -66,7 +66,7 @@ $totalapprcompleted = $countCompleted;
 				<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->profile_image)}}" alt="Profile Picture">
 				<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
 				<p class="profile-description">
-					Location owner supervisor at {{ $userdata->get_company->company_name ?? '' }},<br>
+					Inspector at {{ $userdata->get_company->company_name ?? '' }},<br>
 						{{ $location_name ?? '' }}
 						
 				</p>

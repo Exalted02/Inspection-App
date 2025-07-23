@@ -70,6 +70,7 @@ $getCategotyArr = [];
 								@foreach($task_list_data as $tasks)
 								
 								@php
+								
 									$getCategotyArr = [];
 								   /*$categoryData = App\Models\Category::where('id', $categories->category_id)->first();*/
 								   

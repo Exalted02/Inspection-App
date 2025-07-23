@@ -2214,7 +2214,7 @@ class DashboardInspectorController extends Controller
 		// update the status of Task lists 
 		if($inspector_action==1)
 		{
-			Task_lists ::where('id',$task_list_id)->update(['status'=>3]);
+			//Task_lists ::where('id',$task_list_id)->update(['status'=>3]);
 		}
 		
 		$result = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id);
@@ -2586,7 +2586,7 @@ class DashboardInspectorController extends Controller
 		}
 		
 		// update the status of Task lists after final approve by inspector or los 
-		Task_lists ::where('id',$task_list_id)->update(['status'=>5]);
+		//Task_lists ::where('id',$task_list_id)->update(['status'=>5]);
 		
 		return response()->json(['message'=>'success']);
 	}
