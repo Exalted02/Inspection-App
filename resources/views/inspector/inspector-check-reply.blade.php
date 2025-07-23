@@ -7,6 +7,7 @@
  $rejected_region = '';
  $image_arr = [];
  
+ $max_order = '';
  $lo_corrective_action_plan = '';
  $lo_corrective_completed_by = '';
  
