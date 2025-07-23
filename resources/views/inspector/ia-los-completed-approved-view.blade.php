@@ -274,7 +274,7 @@
 						</br>
 						@endif
 						
-					@if($corrective_dtls_data)
+					@if(isset($corrective_dtls_data) && $corrective_dtls_data)
 						
 						@if($corrective_dtls_data->approved_status == 1 || $corrective_dtls_data->approved_status == 2 || $corrective_dtls_data->rejected_status == 1 || $corrective_dtls_data->rejected_status == 2)
 							<div class="row">
@@ -285,13 +285,13 @@
 					
 						<div class="row">
 							
-							@if($corrective_dtls_data->approved_status == 1)
+							@if(isset($corrective_dtls_data) && $corrective_dtls_data->approved_status == 1)
 								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 								
-							@elseif($corrective_dtls_data->approved_status == 2)
+							@elseif(isset($corrective_dtls_data) && $corrective_dtls_data->approved_status == 2)
 								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
@@ -300,13 +300,13 @@
 							@endif
 							
 							
-							@if($corrective_dtls_data->rejected_status == 1)
+							@if(isset($corrective_dtls_data) && $corrective_dtls_data->rejected_status == 1)
 								<div class="col-md-12 vertical-gap">
 								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</span>
 								</div>
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 							
-							@elseif($corrective_dtls_data->rejected_status == 2)
+							@elseif(isset($corrective_dtls_data) && $corrective_dtls_data->rejected_status == 2)
 								<div class="col-md-12 vertical-gap">
 								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</span>
 								</div>
@@ -371,7 +371,7 @@
 						
 						
 							@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
-							
+							</br>
 								@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
 									<div class="row">
 										<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
