@@ -38,7 +38,7 @@
 	 
 	 $lo_direct_approve = $corrective_action_data ? $corrective_action_data->lo_direct_approve : '';
 	 
-	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
+	 $lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
 	 
 	 $corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
 	 
@@ -115,7 +115,7 @@
 	
 	$lo_direct_approve = $corrective_action_data ? $corrective_action_data->lo_direct_approve : '';
 	
-	$lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->created_at : '';
+	$lo_corrective_completed_by = $corrective_action_data ? $corrective_action_data->lo_completed_by : '';
 	
 	$corrective_action_primary_id = $corrective_action_data ? $corrective_action_data->id : '';
 	
@@ -252,6 +252,10 @@
 							</div>
 						</div>
 						
+						<div class="row">
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? change_date_format($corrective_action_data->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
+						</div>
+						
 						@if($lo_direct_approve == 0)
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
@@ -263,10 +267,6 @@
 						</div>
 						</br>
 						@endif
-						
-						<div class="row">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? change_date_format($corrective_action_data->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
-						</div>
 						
 						
 						@if($corrective_dtls_data)
