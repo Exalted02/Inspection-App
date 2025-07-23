@@ -48,6 +48,12 @@
 			 }
 		 }
 	 //---------------------------------------------
+	$corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
+	
+	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+	 
+	$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
+	$max_order = $corrective_detls_order->max('order');
 	
  }
  
@@ -100,6 +106,13 @@
 			 }
 		 }
 	 //---------------------------------------------
+	 
+		$corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
+		
+		$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+		 
+		$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
+		$max_order = $corrective_detls_order->max('order');
 	}
  }
  
@@ -107,6 +120,7 @@
 	$task_location_id = $taskData ? $taskData->location_id : '';
 	$task_category_id = $taskData ? $taskData->category_id : '';
 	
+	//echo $corrective_action_primary_id; die;
 	//echo "<pre>";print_r($corrective_first_action_files);die;
 	$loopCnt = 0;
 @endphp
@@ -229,7 +243,6 @@
 						@endif
 						
 						<div class="row">
-							
 							@if($corrective_action->approved_status == 1)
 								<div class="col-md-12 vertical-gap">
 								<span class="show-agree-status">Approved</span>
@@ -257,8 +270,6 @@
 								</div>
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action->get_los->name ?? ''}}</span><span>{{ Carbon::parse($corrective_action->los_action_date)->format('d M, Y h:i A')}}</span></div>
 							@endif
-							
-							
 						</div>
 						<hr class="horizontal-line">
 						{{--<form id="frmreply" action="{{ route('save-lo-reply-rejected-question') }}" enctype="multipart/form-data" method="post">--}}
