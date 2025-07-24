@@ -187,9 +187,7 @@
 						<div class="row mt" style="margin-top: 1rem !important;">
 							<div class="col-md-12">
 								<label>Requirement to solve it</label>
-								<div class="mt-1">
-								{{ $corrective_plan ?? ''}}
-								</div>
+								<p class="text-muted mb-0">{{ $corrective_plan ?? ''}}</p>
 							</div>
 						</div>
 						@php 
