@@ -16,6 +16,9 @@ body, h1, h2, h3, h4, h5, h6 {
 .mt-0 {
 	margin-top: 0 !important;
 }
+.mb-0 {
+	margin-bottom: 0 !important;
+}
 .mb-3 {
 	margin-bottom: 1rem !important;
 }
@@ -25,6 +28,9 @@ body, h1, h2, h3, h4, h5, h6 {
 .ml-10px {
 	margin-left: 10px !important;
 }
+.gap-10px {
+	gap: 10px;
+}
 .justify-between {
 	justify-content: space-between !important;
 }
@@ -33,9 +39,6 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 .align-items-center {
 	align-items: center !important;
-}
-.align-items-center {
-    align-items: center !important;
 }
 .flex-grow-1 {
     flex-grow: 1 !important;
@@ -707,12 +710,17 @@ body, h1, h2, h3, h4, h5, h6 {
 /**********************************FOR MANAGEMENT PAGE***********************************/
 /****************************FOR MANAGEMENT OBSERVATION PAGE*****************************/
 .location-observation-title {
-	font-size: 15px;
+	font-size: 14px;
     font-weight: 700;
     color: #000000;
 }
-.location-observation-title {
-	font-size: 13px;
+.location-observation-title-details {
+	font-size: 14px;
+	font-weight: 700;
+	color: #777;
+}
+.location-observation-title-details img {
+	border: 1px solid #777;
 }
 .small-card-odd {
     padding-left: 15px !important;
