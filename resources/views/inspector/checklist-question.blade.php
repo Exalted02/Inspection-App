@@ -1300,7 +1300,7 @@ $(document ).ready(function() {
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754;">Accepted</button>';
 								}
-								else if(approveStatus=='2')
+								else if(approveStatus.includes(2))
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Not available</button>';
 								}
