@@ -158,7 +158,12 @@ use Carbon\Carbon;
 			<img src="{{url('uploads/location/' . $location_details->image ?? '')}}" alt="Location" />
 			<div>
 				<div class="title">{{ $location_details->location_name ?? ''}}</div>
-				<small class="text-muted"><i class="fa fa-location-dot mr-5px"></i>{{ $location_details->street ?? ''}}, {{ $location_details->zipcode ?? ''}}</small>
+				<small class="text-muted"><i class="fa fa-location-dot"></i>@if(!empty($location_details->unit_floor))
+				{{ $location_details->unit_floor ?? ''}}</br>
+				@endif
+				{{ $location_details->street ?? ''}}</br>
+				{{ $location_details->zipcode ?? ''}}
+				</small>
 			</div>
 		</div>
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
@@ -224,7 +229,7 @@ use Carbon\Carbon;
 									<a href="{{ route('management-location-task-details', ['task_id'=> $tasks->id,'active'=>1 ]) }}">
 										<img src="{{ $img}}" alt="Task" />
 										<h6 class="location-observation-title">{{ $tasks->task_title ?? '' }}</h6>
-										<p class="text-muted location-observation-title mb-0">Pending LOS to approve <img src="{{url('uploads/profile/' .$inspector->get_user->id .'/inspector/'. $inspector->get_user->profile_image)}}" class="rounded-profile-img" alt="Profile image">{{ $inspector->get_user->name ?? ''}}</p>
+										<p class="location-observation-title-details d-flex gap-10px align-items-center mb-0">Pending LOS to approve <img src="{{url('uploads/profile/' .$inspector->get_user->id .'/inspector/'. $inspector->get_user->profile_image)}}" class="rounded-profile-img mb-0" alt="Profile image">{{ $inspector->get_user->name ?? ''}}</p>
 									</a>
 								</div>
 							</div>
