@@ -807,13 +807,14 @@ class DashboardInspectorController extends Controller
 									->where('status','!=', 2)->orderBy('order_no')->get();
 									
 			foreach ($checklists as $chklist) {
-				$status = '';
+				//$status = '';
+				$status = [];
 				$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
 							//->where('task_list_subcategory_id', $subcategory_id)//21-05-2025
 							->where('checklist_id', $chklist->id)->exists();
 				if($hasTaskChecklist)
 				{
-					$status = Task_list_checklists::where('task_list_id', $task_id)
+					$status[] = Task_list_checklists::where('task_list_id', $task_id)
 							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('checklist_id', $chklist->id)->first()->approve;
 					
@@ -833,12 +834,20 @@ class DashboardInspectorController extends Controller
 									->where('task_list_checklist_id', $chklist->id)->get();
 						if($getstatus->isNotEmpty())
 						{
-							$status = 1;
+							//$status = 1;
+							$status = [];
 							foreach($getstatus as $val)
 							{
 								if($val->approve == 0)
 								{
-									$status = 0;
+									$status[] = 0;
+								}
+								elseif($val->approve == 1)
+								{
+									$status[] = 1;
+								}
+								else{
+									$status[] = 2;
 								}
 							}
 						}
@@ -879,13 +888,14 @@ class DashboardInspectorController extends Controller
 									->where('status','!=', 2)->orderBy('order_no')->get();
 									
 			foreach ($checklists as $chklist) {
-				$status = '';
+				//$status = '';
+				$status = [];
 				$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)
 							//->where('task_list_subcategory_id', $subcategory_id)//21-05-2025
 							->where('checklist_id', $chklist->id)->exists();
 				if($hasTaskChecklist)
 				{
-					$status = Task_list_checklists::where('task_list_id', $task_id)
+					$status[] = Task_list_checklists::where('task_list_id', $task_id)
 							//->where('task_list_subcategory_id', $subcategory_id) // 21-05-2025
 							->where('checklist_id', $chklist->id)->first()->approve;
 					
@@ -905,12 +915,21 @@ class DashboardInspectorController extends Controller
 									->where('task_list_checklist_id', $chklist->id)->get();
 						if($getstatus->isNotEmpty())
 						{
-							$status = 1;
+							$status = [];
+							//$status = 1;
 							foreach($getstatus as $val)
 							{
+								
 								if($val->approve == 0)
 								{
-									$status = 0;
+									$status[] = 0;
+								}
+								elseif($val->approve == 1)
+								{
+									$status[] = 1;
+								}
+								else{
+									$status[] = 2;
 								}
 							}
 						}
