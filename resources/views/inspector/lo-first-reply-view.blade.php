@@ -281,7 +281,7 @@
 						@endif
 						
 						@if($corrective_dtls_data)
-						
+						</br>
 						@if($corrective_dtls_data->approved_status == 1 || $corrective_dtls_data->approved_status == 2 || $corrective_dtls_data->rejected_status == 1 || $corrective_dtls_data->rejected_status == 2)
 							<div class="row">
 								<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
