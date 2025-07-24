@@ -2332,6 +2332,11 @@ class DashboardInspectorController extends Controller
 		$model->rejected_status = 0;
 		$model->save();
 		
+		$status = Task_list_corrective_action_details::where('task_list_corrective_action_id', $id)->orderBy('id', 'desc')
+            ->value('order');
+			
+		$new_status = $status + 1;
+		
 		$lo_files = $request->file('lo_file');
 
 		if ($lo_files && is_array($lo_files)) {
@@ -2353,9 +2358,8 @@ class DashboardInspectorController extends Controller
 			}*/
 			
 			//-- 22-07-2025---
-			$status = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->orderBy('id', 'desc')
-            ->value('status');
-			$new_status = $status + 1;
+			/*$status = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $id)->orderBy('id', 'desc')
+            ->value('status');*/
 			// save new files
 			foreach ($lo_files as $file) {
 				
