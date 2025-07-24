@@ -2388,7 +2388,7 @@ class DashboardInspectorController extends Controller
 		
 		// update the status of Task lists after approve by lo 
 		
-		Task_lists ::where('id',$task_id)->update(['status'=>4]);
+		//Task_lists ::where('id',$task_id)->update(['status'=>4]);
 		
 
 		return response()->json(['message'=>'success']);
@@ -2556,6 +2556,7 @@ class DashboardInspectorController extends Controller
 					$correctiveActionDtldModel->rejected_status = 1;
 					$correctiveActionDtldModel->approved_status = 2;
 					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
+					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
 				}
 				
 				if(auth()->user()->user_type == 3)
@@ -2563,6 +2564,7 @@ class DashboardInspectorController extends Controller
 					$correctiveActionDtldModel->rejected_status = 2;
 					$correctiveActionDtldModel->approved_status = 1;
 					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
+					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
 				}
 				
 				$correctiveActionDtldModel->rejected_repeated = 1;
