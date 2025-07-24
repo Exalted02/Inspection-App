@@ -295,13 +295,13 @@
 							
 							@if($corrective_dtls_data->rejected_status == 1)
 								<div class="col-md-12 vertical-gap">
-								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</span>
+								<span class="show-reject-status">Rejected</span>:<span class="reject_reply_reason">{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</span>
 								</div>
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 							
 							@elseif($corrective_dtls_data->rejected_status == 2)
 								<div class="col-md-12 vertical-gap">
-								<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</span>
+								<span class="show-reject-status">Rejected</span>:<span class="reject_reply_reason">{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</span>
 								</div>
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 							@endif
@@ -392,13 +392,13 @@
 								
 								@if($val->rejected_status == 1)
 									<div class="col-md-12 vertical-gap">
-									<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $val->ia_los_rejected_reason ?? ''  }}</span>
+									<span class="show-reject-status">Rejected</span>:<span class="reject_reply_reason">{{ $val->ia_los_rejected_reason ?? ''  }}</span>
 									</div>
 									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 								
 								@elseif($val->rejected_status == 2)
 									<div class="col-md-12 vertical-gap">
-									<span class="show-reject-status">Rejected</span>:&nbsp;&nbsp;<span>{{ $val->ia_los_rejected_reason ?? ''  }}</span>
+									<span class="show-reject-status">Rejected</span>:<span class="reject_reply_reason">{{ $val->ia_los_rejected_reason ?? ''  }}</span>
 									</div>
 									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 								@endif
