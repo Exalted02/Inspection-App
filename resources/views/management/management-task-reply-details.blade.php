@@ -3,7 +3,7 @@
 @php 
 //echo "<pre>";print_r($categoryData);die;
 //echo "<pre>";print_r($correctiveAction);die;
-//echo "<pre>";print_r($correctiveNeeded);die;
+//echo "<pre>";print_r($correctiveNeddedArray);die;
 //echo "<pre>";print_r($approvedCompleted);die;
 //echo "<pre>";print_r($approvedCompletedArray);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
@@ -125,7 +125,7 @@ $totalapprcompleted = $countCompleted;
 										$rejectedRegionData = $result['type'] == 'checklist'
 										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
 										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
-
+										
 										if($result['image'] != '')
 										{
 											$images = $result['type'] == 'checklist' ?  url('uploads/reject-files/' . $result['image']) :  url('uploads/reject-files/subchecklist/' . $result['image']);
@@ -147,7 +147,7 @@ $totalapprcompleted = $countCompleted;
 													
 													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
 													
-													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-needed.png')
+													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-needed.png');
 													
 													$arrSubchecklist[] = [
 														'id' => $subchecklistData->id,
