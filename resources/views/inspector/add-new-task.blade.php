@@ -310,6 +310,14 @@ $(document).ready(function() {
 				if (!response.success) {
 					
 					$('#tasktitle_id_error').text('Task title already exists.').fadeIn().delay(2000).fadeOut(); 
+					
+					if(hid_task_id == '')
+					{
+						$('.task-load-add').html('Add Task').prop('disabled', false);
+					}
+					else{
+						$('.task-load-edit').html('Edit Task').prop('disabled', false);
+					}
 					//$('#task_title').addClass('is-invalid');
 					//$('#task_title').next('.invalid-feedback').text(response.message).show();
 				} else {
