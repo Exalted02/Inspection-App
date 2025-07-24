@@ -290,11 +290,11 @@ if($mode == 'corrective_appr')
 					<p class="text-muted mb-0">
 					<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 					@if($result['rejected_status']==1)
-					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: red; color: red; padding: 2px 6px; font-size: 12px; line-height: 1;">Rejected Inspector</button>
+					<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: red; color: red;">Rejected Inspector</button>
 					@elseif($result['rejected_status']==2)
-					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color:red; color: red; padding: 2px 6px; font-size: 12px; line-height: 1;">Rejected LOS</button>
+					<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color:red; color: red;">Rejected LOS</button>
 					@else
-						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+						<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 					@endif
 					</p>
 				</a>
@@ -334,11 +334,11 @@ if($mode == 'corrective_appr')
 					<p class="text-muted mb-0">
 					<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 					@if($result['rejected_status']==1)
-					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: red; color: red; padding: 2px 6px; font-size: 12px; line-height: 1;">Rejected Inspector</button>
+					<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: red; color: red;">Rejected Inspector</button>
 					@elseif($result['rejected_status']==2)
-					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: red; color: red; padding: 2px 6px; font-size: 12px; line-height: 1;">Rejected LOS</button>
+					<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: red; color: red;">Rejected LOS</button>
 					@else
-						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+						<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 					@endif
 					</p>
 				</a>
@@ -434,14 +434,14 @@ if($mode == 'corrective_appr')
 				{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 				</p>
 				@endif
-				<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
+				<p class="text-muted mb-0" >
 				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 					@if($result['inspector_action']==1)
-					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+					<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved Inspector</button>
 					@elseif($result['los_action']==1)
-					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+					<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved LOS</button>
 					@else
-						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+						<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 					@endif
 				</p>
 			</a>
@@ -475,14 +475,14 @@ if($mode == 'corrective_appr')
 				<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 				</p>
 				@endif
-				<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
+				<p class="text-muted mb-0">
 				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 					@if($result['inspector_action']==1)
-					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+					<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved Inspector</button>
 					@elseif($result['los_action']==1)
-					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+					<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved LOS</button>
 					@else
-						<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+						<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 					@endif
 				</p>
 			</a>
@@ -576,14 +576,14 @@ if($mode == 'corrective_appr')
 				{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 				</p>
 				@endif
-				<p class="text-muted mb-0"  style="display: flex; align-items: center; gap: 10px;">
+				<p class="text-muted mb-0" >
 				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 				@if($result['inspector_action']==1)
-					<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+					<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved Inspector</button>
 				@elseif($result['los_action']==1)
-				<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+				<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved LOS</button>
 				@else
-					<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+					<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 				@endif
 				</p>
 			</a>
@@ -618,14 +618,14 @@ if($mode == 'corrective_appr')
 				<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
 				</p>
 				@endif
-				<p class="text-muted mb-0" style="display: flex; align-items: center; gap: 10px;">
+				<p class="text-muted mb-0">
 				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 				@if($result['inspector_action']==1)
-				<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved Inspector</button>
+				<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved Inspector</button>
 				@elseif($result['los_action']==1)
-				<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;">Approved LOS</button>
+				<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved LOS</button>
 				@else
-					<button type="button" class="btn btn-warning" style="pointer-events: none; background-color: transparent; border-color: #ffc107; color: #ffc107; padding: 2px 6px; font-size: 12px; line-height: 1;">Pending</button>
+					<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 				@endif
 				</p>
 			</a>
@@ -740,7 +740,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@endif
 				<p class="text-muted mb-0">
-				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}<button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button>
+				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button>
 				</p>
 			</a>
 		</div>
@@ -785,7 +785,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@endif
 				<p class="text-muted mb-0">
-				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}<button type="button" class="btn btn-outline-success ms-2"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754; padding: 2px 6px; font-size: 12px; line-height: 1;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button>
+				<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button>
 				</p>
 			</a>
 		</div>
