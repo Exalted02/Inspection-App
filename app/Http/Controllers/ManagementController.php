@@ -351,7 +351,7 @@ class ManagementController extends Controller
 			}
 		}
 		
-		//echo "<pre>";print_r($correctiveNeeded);
+		//echo "<pre>";print_r($correctiveNeeded);die;
 		$data['correctiveNeddedArray'] = array_slice($correctiveNeddedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 		$data['moreloadneeded'] = config('custom.LOAD_MORE_LIST_SHOW');
 		
