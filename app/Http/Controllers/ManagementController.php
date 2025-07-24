@@ -83,9 +83,9 @@ class ManagementController extends Controller
 		// for corrective checked work 
 		$correctiveActionChecklistArray = [];
 		
-		$ifTaskRxists = Task_list_subcategories::where('task_list_id', $id)->exists();
+		$ifTaskExists = Task_list_subcategories::where('task_list_id', $id)->exists();
 		
-		if($ifTaskRxists)
+		if($ifTaskExists)
 		{
 			$categoriesArr = Task_list_subcategories::where('task_list_id', $id)->pluck('task_list_category_id')->toArray();
 			

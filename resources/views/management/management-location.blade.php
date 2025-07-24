@@ -209,7 +209,7 @@ use Carbon\Carbon;
 							$inspector = App\Models\Task_lists::with('get_user')->where('id', $tasks->id)->first();
 							//echo "<pre>";print_r($inspector);die;
 							
-							$img = $tasks->image !='' ? url('uploads/task/' . $tasks->image) : url('uploads/task/default-task-pic.jpg');
+							$img = $tasks->image !='' ? url('uploads/task/' . $tasks->image) : url('uploads/task/default-task-pic.png');
 							
 						@endphp
 							<div class="d-flex mb-3 task">
