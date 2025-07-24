@@ -205,7 +205,13 @@
 				<img src="{{url('uploads/location/' . $location->image ?? '')}}" alt="Location">
 				<div>
 					<div class="title">{{ $location->location_name ?? '' }}</div>
-					<small class="text-muted">{{ !empty($location->street) ?  $location->street.' ,':''}}  {{ $location->zipcode ?? ''}}</small>
+					{{--<small class="text-muted">{{ !empty($location->street) ?  $location->street.' ,':''}}  {{ $location->zipcode ?? ''}}</small>--}}
+					<small class="text-muted"><i class="fa fa-location-dot"></i>@if(!empty($location->unit_floor))
+					{{ $location->unit_floor ?? ''}}</br>
+					@endif
+					{{ $location->street ?? ''}}</br>
+					{{ $location->zipcode ?? ''}}
+					</small>
 				</div>
 			</div></a>
 			<div class="row ">
