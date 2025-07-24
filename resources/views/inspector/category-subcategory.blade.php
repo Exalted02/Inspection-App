@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 @php 
-//echo "<pre>";print_r($categoryData);die;
+echo "<pre>";print_r($categoryData);die;
 //echo "<pre>";print_r($correctiveAction);die;
 //echo "<pre>";print_r($correctiveNeeded);die;
 //echo "<pre>";print_r($approvedCompleted);die;
