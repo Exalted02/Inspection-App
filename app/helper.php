@@ -563,7 +563,7 @@ use App\Models\Task_list_subchecklists;
 		};
 		return $text;
 	}
-	function getOrdinalTitle($number) {
+	/*function getOrdinalTitle($number) {
 		$map = [
 			1 => 'First',
 			2 => 'Second',
@@ -583,6 +583,45 @@ use App\Models\Task_list_subchecklists;
 		];
 
 		return $map[$number] ?? ordinalSuffix($number);
+	}*/
+	function getOrdinalTitle($number) {
+		$map = [
+			1 => 'First',
+			2 => 'Second',
+			3 => 'Third',
+			4 => 'Fourth',
+			5 => 'Fifth',
+			6 => 'Sixth',
+			7 => 'Seventh',
+			8 => 'Eighth',
+			9 => 'Ninth',
+			10 => 'Tenth',
+			11 => 'Eleventh',
+			12 => 'Twelfth',
+			13 => 'Thirteenth',
+			14 => 'Fourteenth',
+			15 => 'Fifteenth',
+			16 => 'Sixteenth',
+			17 => 'Seventeenth',
+			18 => 'Eighteenth',
+			19 => 'Nineteenth',
+			20 => 'Twentieth'
+		];
+
+		// If defined in the map, return the word
+		if (isset($map[$number])) {
+			return $map[$number];
+		}
+
+		// Handle 21st, 22nd, 23rd, etc. dynamically
+		$suffixes = ['th','st','nd','rd','th','th','th','th','th','th'];
+		if (($number % 100) >= 11 && ($number % 100) <= 13) {
+			$suffix = 'th';
+		} else {
+			$suffix = $suffixes[$number % 10];
+		}
+
+		return $number . $suffix;
 	}
 
 	/*function checklist_next_question($category_id='', $order_no='')
