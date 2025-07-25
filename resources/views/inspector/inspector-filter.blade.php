@@ -626,6 +626,7 @@ $totalapprcompleted = $countCompleted;
 
 										
 										//$images =url('images/noimages/noimage_region.png');
+										
 										if (isset($result['image']) && $result['image'] != '') {
 											$images = $result['type'] == 'checklist'
 												? url('uploads/reject-files/' . $result['image'])

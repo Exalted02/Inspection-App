@@ -173,6 +173,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::get('management-subchecklist-completed-approved-view/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [ManagementController::class, 'management_subchecklist_completed_approved_view'])->name('management-subchecklist-completed-approved-view');
 	
+	// load more
+	Route::post('mgnt-load-more-data', [ManagementController::class, 'mgnt_load_more_data'])->name('mgnt-load-more-data');
+	
 	
 	//User-Accounts  
 	Route::get('/users', [UserController::class, 'index'])->name('users');

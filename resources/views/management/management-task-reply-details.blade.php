@@ -1092,15 +1092,16 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadneeded").val();
 		var task_id = $('#task_id').val();
+		var tab = 'correctiveneeded';
 		//alert(task_id);
 		
 		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload); 
-		var URL = "{{ route('ins-load-more-needed-data') }}";
+		var URL = "{{ route('mgnt-load-more-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {tab:tab, task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.remain);
@@ -1126,14 +1127,15 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadaction").val();
 		var task_id = $('#task_id').val();
+		var tab = 'correctiveaction';
 		//alert(moreload);
 		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		
-		var URL = "{{ route('ins-load-more-action-data') }}";
+		var URL = "{{ route('mgnt-load-more-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {tab:tab, task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
@@ -1159,14 +1161,15 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadplan").val();
 		var task_id = $('#task_id').val();
+		var tab = 'correctiveplan';
 		
 		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('ins-load-more-plan-data') }}";
+		var URL = "{{ route('mgnt-load-more-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {tab:tab, task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
@@ -1192,14 +1195,15 @@ $(document ).ready(function() {
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadappr").val();
 		var task_id = $('#task_id').val();
+		var tab = 'correctiveapproved';
 		
 		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('ins-load-more-appr-data') }}";
+		var URL = "{{ route('mgnt-load-more-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {tab:tab, task_id:task_id, location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
