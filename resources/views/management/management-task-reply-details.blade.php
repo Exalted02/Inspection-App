@@ -677,7 +677,7 @@ $totalapprcompleted = $countCompleted;
 												
 											if(array_key_exists('image', $result))
 												{
-													$route = route('ia-los-subchecklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+													$route = route('management-subchecklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
 													$class = '';
 												} else {
 													$route = "javascript:void(0)";
@@ -727,7 +727,7 @@ $totalapprcompleted = $countCompleted;
 											
 											if(array_key_exists('image', $result))
 												{
-													$route = route('ia-los-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+													$route = route('management-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
 													$class = '';
 												} else {
 													$route = "javascript:void(0)";

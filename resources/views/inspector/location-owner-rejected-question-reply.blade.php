@@ -243,7 +243,6 @@
 								</div>
 							</div>
 						</div>
-						</br>
 						@endif
 						
 						@if($corrective_dtls_data)
