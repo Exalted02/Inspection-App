@@ -1,7 +1,7 @@
 @if(request()->routeIs('inspector-dashboard'))
 
 @else
-<div class="colored-header {{ request()->routeIs('lo-task-status') || request()->routeIs('los-task-status') || request()->routeIs('inspector-filter') ? 'static-header' : '' }}">
+<div class="colored-header {{ request()->routeIs('lo-task-status') || request()->routeIs('los-task-status') || request()->routeIs('inspector-filter') || request()->routeIs('management-location-task-details') ? 'static-header' : '' }}">
 	<div class="clearfix"></div>
 	<!-- menu start -->
 	<nav id="menu-1" class="mega-menu">
