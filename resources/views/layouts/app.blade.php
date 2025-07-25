@@ -376,12 +376,6 @@
 					var page_url1 = app_url+'/management-location';
 					var page_url2 = app_url+'/management-location-task-details/';
 					
-					//var page_url3 = app_url + '/inspector-subchecklist-question-reply/';
-					//var page_url4 = app_url + '/inspector-checklist-second-approve-by-lo/';
-					//var page_url5 = app_url + '/inspector-subchecklist-second-approve-plan-by-lo/';
-					
-					//var page_url6 = app_url + '/ia-los-checklist-completed-approved-view/';
-					
 					var current_url = window.location.href;
 					var active = 1;
 					if(current_url.includes(page_url1))
