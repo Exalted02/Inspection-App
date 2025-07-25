@@ -372,7 +372,77 @@
 				
 				@if(auth()->check() && auth()->user()->user_type == 4)
 				{
-					history.back();
+					var app_url =  "{{ env('APP_URL') }}";
+					var page_url1 = app_url+'/management-location';
+					var page_url2 = app_url+'/management-location-task-details/';
+					
+					//var page_url3 = app_url + '/inspector-subchecklist-question-reply/';
+					//var page_url4 = app_url + '/inspector-checklist-second-approve-by-lo/';
+					//var page_url5 = app_url + '/inspector-subchecklist-second-approve-plan-by-lo/';
+					
+					//var page_url6 = app_url + '/ia-los-checklist-completed-approved-view/';
+					
+					var current_url = window.location.href;
+					var active = 1;
+					if(current_url.includes(page_url1))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/management-dashboard') }}";
+							var redirectUrl = baseUrl;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					
+					if(current_url.includes(page_url2))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/management-location') }}";
+							var redirectUrl = baseUrl + '/' + location_id;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					else{
+						history.back();
+					}
+					
+					/*if(current_url.includes(page_url3))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/los-task-status') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					if(current_url.includes(page_url4))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/los-task-status') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					if(current_url.includes(page_url5))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/los-task-status') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					if(current_url.includes(page_url6))
+					{
+						setTimeout(function() {
+							var location_id = $('#location_id').val();
+							var baseUrl = "{{ url('/los-task-status') }}";
+							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
+							window.location.href = redirectUrl;
+						}, 100);
+					}*/
 				}
 				@endif
 			}
