@@ -246,8 +246,7 @@ if($mode == 'corrective_appr')
 					</p>
 					@if($rejectedRegionData)	
 					<p class="text-muted mb-0">
-					<i class="fa fa-clock">
-					{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+					<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 					</p>
 					@endif
 					<p class="text-muted mb-0" >
@@ -288,7 +287,7 @@ if($mode == 'corrective_appr')
 					</p>
 					@if($rejectedRegionData)
 					<p class="text-muted mb-0">
-					<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+					<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 					</p>
 					@endif
 					<p class="text-muted mb-0">
@@ -390,8 +389,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)	
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock">
-				{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+				<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 				</p>
 				@endif
 				<p class="text-muted mb-0" >
@@ -444,7 +442,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+				<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 				</p>
 				@endif
 				<p class="text-muted mb-0">
@@ -554,8 +552,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)	
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock">
-				{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+				<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 				</p>
 				@endif
 				<p class="text-muted mb-0" >
@@ -608,7 +605,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+				<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 				</p>
 				@endif
 				<p class="text-muted mb-0">
@@ -729,8 +726,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)	
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock">
-				{{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+				<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 				</p>
 				@endif
 				<p class="text-muted mb-0">
@@ -775,7 +771,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+				<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 				</p>
 				@endif
 				<p class="text-muted mb-0">

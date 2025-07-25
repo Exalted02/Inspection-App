@@ -162,7 +162,7 @@ foreach($approvedCompleted as $result)
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+											<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -190,7 +190,7 @@ foreach($approvedCompleted as $result)
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+											<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -281,7 +281,7 @@ foreach($approvedCompleted as $result)
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+											<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
@@ -313,7 +313,7 @@ foreach($approvedCompleted as $result)
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+											<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
@@ -400,7 +400,7 @@ foreach($approvedCompleted as $result)
 													{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 													</p>
 													<p class="text-muted mb-0">
-													<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+													<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 													</p>
 													<p class="text-muted mb-0">
 													<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -431,7 +431,7 @@ foreach($approvedCompleted as $result)
 												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 												</p>
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 												</p>
 												<p class="text-muted mb-0">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -522,7 +522,7 @@ foreach($approvedCompleted as $result)
 													{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 													</p>
 													<p class="text-muted mb-0">
-													<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+													<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 													</p>
 													<p class="text-muted mb-0">
 													<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -545,7 +545,7 @@ foreach($approvedCompleted as $result)
 												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 												</p>
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 												</p>
 												<p class="text-muted mb-0">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -626,7 +626,7 @@ foreach($approvedCompleted as $result)
 													{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 													</p>
 													<p class="text-muted mb-0">
-													<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+													<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 													</p>
 													<p class="text-muted mb-0">
 													<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -649,7 +649,7 @@ foreach($approvedCompleted as $result)
 												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 												</p>
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock">  {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}</i>
+												<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 												</p>
 												<p class="text-muted mb-0">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
