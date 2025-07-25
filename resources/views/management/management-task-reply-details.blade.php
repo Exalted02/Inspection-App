@@ -1100,7 +1100,7 @@ $(document ).ready(function() {
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.remain);
