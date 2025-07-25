@@ -1091,6 +1091,8 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-needed', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadneeded").val();
+		var task_id = $('#task_id').val();
+		//alert(task_id);
 		
 		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
@@ -1098,7 +1100,7 @@ $(document ).ready(function() {
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.remain);
@@ -1123,6 +1125,7 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-action', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadaction").val();
+		var task_id = $('#task_id').val();
 		//alert(moreload);
 		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		
@@ -1130,7 +1133,7 @@ $(document ).ready(function() {
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
