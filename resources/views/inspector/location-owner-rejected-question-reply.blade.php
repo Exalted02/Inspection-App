@@ -157,7 +157,7 @@
 							<div class="col-md-12"><label>Reason</label></div>
 						</div>
 						<div class="row">
-						<div class="col-md-12">{{ $rejected_region ?? '' }}</div>
+						<div class="col-md-12"><p class="text-muted mb-0">{{ $rejected_region ?? '' }}</p></div>
 						</div>
 						
 						
