@@ -357,20 +357,12 @@ $totalapprcompleted = $countCompleted;
 												@endif
 												<p class="text-muted mb-0" >
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-												@if(auth()->user()->user_type == 1)
-													@if($result['inspector_action'] == 1)
-														<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-													@elseif($result['inspector_action'] == 0)
-														<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
-													@endif
-												@endif
-												
-												@if(auth()->user()->user_type == 3)
-													@if($result['los_action'] == 1)
-														<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-													@elseif($result['los_action'] == 0)
-														<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
-													@endif
+												@if($result['inspector_action']==1)
+												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved Inspector</button>
+												@elseif($result['los_action']==1)
+												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved LOS</button>
+												@else
+													<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 												@endif
 												</p>
 											</a>
@@ -410,20 +402,12 @@ $totalapprcompleted = $countCompleted;
 												@endif
 												<p class="text-muted mb-0">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-												@if(auth()->user()->user_type == 1)
-													@if($result['inspector_action'] == 1)
-														<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-													@elseif($result['inspector_action'] == 0)
-														<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
-													@endif
-												@endif
-												
-												@if(auth()->user()->user_type == 3)
-													@if($result['los_action'] == 1)
-														<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-													@elseif($result['los_action'] == 0)
-														<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
-													@endif
+												@if($result['inspector_action']==1)
+												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved Inspector</button>
+												@elseif($result['los_action']==1)
+												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved LOS</button>
+												@else
+													<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 												@endif
 												</p>
 											</a>
@@ -526,21 +510,13 @@ $totalapprcompleted = $countCompleted;
 											@endif
 											<p class="text-muted mb-0" >
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-											@if(auth()->user()->user_type == 1)
-												@if($result['inspector_action'] == 1)
-													<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-												@elseif($result['inspector_action'] == 0)
+												@if($result['inspector_action']==1)
+												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved Inspector</button>
+												@elseif($result['los_action']==1)
+												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved LOS</button>
+												@else
 													<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 												@endif
-											@endif
-											
-											@if(auth()->user()->user_type == 3)
-												@if($result['los_action'] == 1)
-													<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-												@elseif($result['los_action'] == 0)
-													<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
-												@endif
-											@endif
 											</p>
 										</a>
 									</div>
@@ -581,21 +557,13 @@ $totalapprcompleted = $countCompleted;
 											@endif
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-											@if(auth()->user()->user_type == 1)
-												@if($result['inspector_action'] == 1)
-													<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-												@elseif($result['inspector_action'] == 0)
+												@if($result['inspector_action']==1)
+												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved Inspector</button>
+												@elseif($result['los_action']==1)
+												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved LOS</button>
+												@else
 													<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 												@endif
-											@endif
-											
-											@if(auth()->user()->user_type == 3)
-												@if($result['los_action'] == 1)
-													<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-												@elseif($result['los_action'] == 0)
-													<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
-												@endif
-											@endif
 											</p>
 										</a>
 									</div>
