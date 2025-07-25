@@ -13,6 +13,7 @@ use App\Models\Task_list_subchecklists;
 use App\Models\Task_list_corrective_action;
 use App\Models\Task_list_checklist_rejected_files;
 use App\Models\Task_list_subchecklist_rejected_files;
+use App\Models\User;
 
 class ManagementController extends Controller
 {
@@ -474,6 +475,7 @@ class ManagementController extends Controller
 				}
 			}
 		}
+		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 		//echo "<pre>";print_r($approvedCompletedArray);die;
 		$data['approvedCompletedArray'] = array_slice($approvedCompletedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 		$data['moreloadappr'] = config('custom.LOAD_MORE_LIST_SHOW');
