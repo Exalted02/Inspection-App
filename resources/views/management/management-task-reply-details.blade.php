@@ -1095,12 +1095,12 @@ $(document ).ready(function() {
 		//alert(task_id);
 		
 		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
-		//alert(moreload);
+		//alert(moreload); 
 		var URL = "{{ route('ins-load-more-needed-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.remain);
