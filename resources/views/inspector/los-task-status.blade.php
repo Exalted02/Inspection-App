@@ -96,7 +96,7 @@ foreach($correctiveAction as $action)
 $correctiveActionArray = array_slice($correctiveActionArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 $correctivePlanArray = array_slice($correctivePlanArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 
-//echo "<pre>";print_r($approvedCompleted);die;
+echo "<pre>";print_r($approvedCompleted);die;
 usort($approvedCompleted, function ($a, $b) {
 	return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
 });
@@ -166,6 +166,8 @@ $totalNeeded = $countNedded;
 $totalAction = $countAction;
 $totalPlan = $countPlan;
 $totalapprcompleted = $countCompleted;
+
+echo "<pre>";print_r($approvedCompletedArray);
 
 @endphp
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->

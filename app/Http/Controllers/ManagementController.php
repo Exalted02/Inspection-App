@@ -190,7 +190,20 @@ class ManagementController extends Controller
 							$images = '';
 							$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task->id)->first();
 							$images = $isfiles ? $isfiles->file  : '';
+							
 							$completedApprChecklistArray[] = [
+								'type' => 'checklist',
+								'task_id' => $id,
+								'checklist_id' => $task->checklist_id,
+								'rejected_region' => $task->rejected_region,
+								'image' => $images,
+								'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+								'los_action'=> $task_list_checklist_corrective_needed->los_action,
+								'updated_at'=> $task_list_checklist_corrective_needed->updated_at->format('Y-m-d H:i:s'),
+								//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
+							];
+											
+							/*$completedApprChecklistArray[] = [
 										'type' => 'checklist',
 										'task_id' => $id,
 										'checklist_id' => $task->checklist_id,
@@ -199,20 +212,29 @@ class ManagementController extends Controller
 										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 										'los_action'=> $task_list_checklist_corrective_needed->los_action,
 										//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
-									];
+									];*/
 						}
 						
 					}
 					elseif($task->approve == 1)
 					{
 						$completedApprChecklistArray[] = [
+												'type' => 'checklist',
+												'task_id' => $id,
+												'checklist_id' => $task->checklist_id,
+												'rejected_region' => $task->rejected_region,
+												'inspector_action' => 1,
+												'los_action' => 1,
+												'updated_at'=> $task->updated_at->format('Y-m-d H:i:s'),
+											];
+						/*$completedApprChecklistArray[] = [
 										'type' => 'checklist',
 										'task_id' => $id,
 										'checklist_id' => $task->checklist_id,
 										'rejected_region' => $task->rejected_region,
 										'inspector_action' => 1,
 										'los_action' => 1,
-									];
+									];*/
 					}
 				}
 			}
@@ -414,6 +436,15 @@ class ManagementController extends Controller
 		
 		$approvedCompletedArray = [];
 		$approvedCompleted = array_merge($completedApprChecklistArray,$completedApprSubcheckListArray);
+		
+		usort($approvedCompleted, function ($a, $b) {
+			$a_time = isset($a['updated_at']) ? strtotime($a['updated_at']) : 0;
+			$b_time = isset($b['updated_at']) ? strtotime($b['updated_at']) : 0;
+			return $b_time <=> $a_time; // Descending
+		});
+		/*usort($approvedCompleted, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});*/
 		//echo "<pre>";print_r($approvedCompleted);die;
 		//$data['approvedCompleted'] = $approvedCompleted;
 		foreach($approvedCompleted as $appr)
