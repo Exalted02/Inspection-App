@@ -222,7 +222,7 @@
 							<div class="col-md-12">
 								<label>Corrective</label>
 								<div class="mt-1">
-									<p class="text-muted mb-0">{{ $lo_corrective_action_plan ?? '' }}<p>
+									<p class="text-muted mb-0">{{ $lo_corrective_action_plan ?? '' }}</p>
 								</div>
 							</div>
 						</div>
