@@ -406,43 +406,6 @@
 					else{
 						history.back();
 					}
-					
-					/*if(current_url.includes(page_url3))
-					{
-						setTimeout(function() {
-							var location_id = $('#location_id').val();
-							var baseUrl = "{{ url('/los-task-status') }}";
-							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
-							window.location.href = redirectUrl;
-						}, 100);
-					}
-					if(current_url.includes(page_url4))
-					{
-						setTimeout(function() {
-							var location_id = $('#location_id').val();
-							var baseUrl = "{{ url('/los-task-status') }}";
-							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
-							window.location.href = redirectUrl;
-						}, 100);
-					}
-					if(current_url.includes(page_url5))
-					{
-						setTimeout(function() {
-							var location_id = $('#location_id').val();
-							var baseUrl = "{{ url('/los-task-status') }}";
-							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
-							window.location.href = redirectUrl;
-						}, 100);
-					}
-					if(current_url.includes(page_url6))
-					{
-						setTimeout(function() {
-							var location_id = $('#location_id').val();
-							var baseUrl = "{{ url('/los-task-status') }}";
-							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
-							window.location.href = redirectUrl;
-						}, 100);
-					}*/
 				}
 				@endif
 			}
