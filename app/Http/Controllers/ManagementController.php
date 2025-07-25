@@ -28,6 +28,7 @@ class ManagementController extends Controller
 		
 		$locations = Manage_location::whereIn('id', $userLocationArr)->get();
 		//----------------------
+		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 		$data['locations'] = $locations;
 		$data['userLocationArr'] =$userLocationArr;
         return view('management.management-dashboard', $data);
