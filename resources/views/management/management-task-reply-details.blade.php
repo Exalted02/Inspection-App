@@ -1158,6 +1158,7 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-plan', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadplan").val();
+		var task_id = $('#task_id').val();
 		
 		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
@@ -1165,7 +1166,7 @@ $(document ).ready(function() {
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
@@ -1190,6 +1191,7 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-appr', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadappr").val();
+		var task_id = $('#task_id').val();
 		
 		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading...');
 		//alert(moreload);
@@ -1197,7 +1199,7 @@ $(document ).ready(function() {
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {location_id:location_id, moreload:moreload, _token: csrfToken},
+			data: {task_id:task_id,location_id:location_id, moreload:moreload, _token: csrfToken},
 			dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
