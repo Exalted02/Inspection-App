@@ -39,7 +39,7 @@ if(!empty($userdata->profile_image))
 $city = '';
 $state = '';
 $country = '';
-
+//$taskData = '';
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
