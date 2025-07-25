@@ -205,7 +205,7 @@ $totalapprcompleted = $countCompleted;
 												</p>
 												@if($rejectedRegionData)	
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
+												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
 												</p>
 												@endif
 												<p class="text-muted mb-0" >
@@ -246,7 +246,7 @@ $totalapprcompleted = $countCompleted;
 												</p>
 												@if($rejectedRegionData)
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
+												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
 												</p>
 												@endif
 												<p class="text-muted mb-0">
@@ -352,7 +352,7 @@ $totalapprcompleted = $countCompleted;
 												</p>
 												@if($rejectedRegionData)	
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
+												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
 												</p>
 												@endif
 												<p class="text-muted mb-0" >
@@ -397,7 +397,7 @@ $totalapprcompleted = $countCompleted;
 												</p>
 												@if($rejectedRegionData)
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
+												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
 												</p>
 												@endif
 												<p class="text-muted mb-0">
@@ -505,7 +505,7 @@ $totalapprcompleted = $countCompleted;
 											</p>
 											@if($rejectedRegionData)	
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
+											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
 											</p>
 											@endif
 											<p class="text-muted mb-0" >
@@ -552,12 +552,12 @@ $totalapprcompleted = $countCompleted;
 											</p>
 											@if($rejectedRegionData)
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
+											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
 											</p>
 											@endif
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
-												@if($result['inspector_action']==1)
+											@if($result['inspector_action']==1)
 												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved Inspector</button>
 												@elseif($result['los_action']==1)
 												<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Approved LOS</button>
@@ -670,7 +670,7 @@ $totalapprcompleted = $countCompleted;
 												</p>
 												@if($rejectedRegionData)	
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
+												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
 												</p>
 												@endif
 												<p class="text-muted mb-0">
@@ -715,7 +715,7 @@ $totalapprcompleted = $countCompleted;
 												</p>
 												@if($rejectedRegionData)
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
+												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
 												</p>
 												@endif
 												<p class="text-muted mb-0">
