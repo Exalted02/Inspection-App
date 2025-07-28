@@ -2580,7 +2580,7 @@ class DashboardInspectorController extends Controller
 				if(auth()->user()->user_type == 1)
 				{
 					$correctiveActionDtldModel->rejected_status = 1;
-					$correctiveActionDtldModel->approved_status = 2;
+					//$correctiveActionDtldModel->approved_status = 2;
 					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
 					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
 				}
@@ -2588,7 +2588,7 @@ class DashboardInspectorController extends Controller
 				if(auth()->user()->user_type == 3)
 				{
 					$correctiveActionDtldModel->rejected_status = 2;
-					$correctiveActionDtldModel->approved_status = 1;
+					//$correctiveActionDtldModel->approved_status = 1;
 					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
 					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
 				}
