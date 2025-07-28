@@ -670,11 +670,28 @@ $(document).ready(function() {
 					@if(auth()->user()->user_type == 1)
 					{
 						$('#reason_error').text('LOS already rejected').fadeIn().delay(2000).fadeOut();
+						
+						var active = 1;
+						var baseUrl = "{{ url('/inspector-filter') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;
+						setTimeout(function() {
+							window.location.href = redirectUrl;
+						}, 2000);
 					}
-					@elseif(auth()->user()->user_type == 3)
+					@endif
+					
+					@if(auth()->user()->user_type == 3)
 					{
 						$('#reason_error').text('Inspector already rejected').fadeIn().delay(2000).fadeOut();
+						
+						var active = 1;
+						var baseUrl = "{{ url('/los-task-status') }}";
+						var redirectUrl = baseUrl + '/'+ location_id + '/'+ active ;
+						setTimeout(function() {
+							window.location.href = redirectUrl;
+						}, 2000);
 					}
+					@endif
 				}
 			},
 			complete: function() {
