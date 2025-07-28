@@ -666,6 +666,16 @@ $(document).ready(function() {
 					
 					window.location.href = redirectUrl;
 				}
+				else if(response.message=='error'){
+					@if(auth()->user()->user_type == 1)
+					{
+						$('#reason_error').text('LOS already rejected').fadeIn().delay(2000).fadeOut();
+					}
+					@elseif(auth()->user()->user_type == 3)
+					{
+						$('#reason_error').text('Inspector already rejected').fadeIn().delay(2000).fadeOut();
+					}
+				}
 			},
 			complete: function() {
 				$('.inspector-rejected-submit').html('Submit');

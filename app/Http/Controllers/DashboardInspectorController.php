@@ -2209,11 +2209,6 @@ class DashboardInspectorController extends Controller
 		else if($inspector_action == 2)
 		{
 			$actionStatus = Task_list_corrective_action::where('id',$id)->first();
-			//echo "<pre>";print_r($actionStatus);die;
-			//$inspector_action = $actionStatus ? $actionStatus->inspector_action : '';
-			//$los_action = $actionStatus ? $actionStatus->los_action : '';
-			//echo $inspector_action.'----'.$los_action; die;
-			
 			
 			$model->inspector_action_date = date('Y-m-d h:i:s');
 			$model->inspector_action = $inspector_action;
@@ -2224,11 +2219,27 @@ class DashboardInspectorController extends Controller
 			
 			if(auth()->user()->user_type == 1)
 			{
+				//-------
+				$ins_action_test = Task_list_corrective_action::where('id', $id)->first()->inspector_action;
+				if($ins_action_test == 2)
+				{
+					return response()->json(['message'=>'error']);
+				}
+				//-----
+				
 				$model->rejected_status = 1;
 			}
 			
 			if(auth()->user()->user_type == 3)
 			{
+				//-------
+				$los_action_test = Task_list_corrective_action::where('id', $id)->first()->los_action;
+				if($los_action_test == 2)
+				{
+					return response()->json(['message'=>'error']);
+				}
+				//-----
+				
 				$model->rejected_status = 2;
 			}
 			
@@ -2525,12 +2536,27 @@ class DashboardInspectorController extends Controller
 			
 			if(auth()->user()->user_type == 1)
 			{
+				//-------
+				$ins_action_test = Task_list_corrective_action::where('id', $id)->first()->inspector_action;
+				if($ins_action_test == 2)
+				{
+					return response()->json(['message'=>'error']);
+				}
+				//-----
 				$model->rejected_status = 1;
 				$model->approved_status = 2;
 			}
 			
 			if(auth()->user()->user_type == 3)
 			{
+				//-------
+				$los_action_test = Task_list_corrective_action::where('id', $id)->first()->los_action;
+				if($los_action_test == 2)
+				{
+					return response()->json(['message'=>'error']);
+				}
+				//-----
+				
 				$model->rejected_status = 2;
 				$model->approved_status = 1;
 			}

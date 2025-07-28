@@ -639,20 +639,19 @@ $(document).ready(function() {
 					
 					window.location.href = redirectUrl;
 				}
-				/*else if(response.message == 'error')
-				{
-					alert(response.message);
-					$('#reason_error').text('');
-					if(response.usertype == 3)
-					{
-						$('#reason_error').text('IA already rejected').fadeIn().delay(2000).fadeOut();
-					}
-					
-					if(response.usertype == 1)
+				else if(response.message=='error'){
+					@if(auth()->user()->user_type == 1)
 					{
 						$('#reason_error').text('LOS already rejected').fadeIn().delay(2000).fadeOut();
 					}
-				}*/
+					@endif
+					
+					@if(auth()->user()->user_type == 3)
+					{
+						$('#reason_error').text('Inspector already rejected').fadeIn().delay(2000).fadeOut();
+					}
+					@endif
+				}
 			},
 			complete: function() {
 				$('.inspector-rejected-submit').html('Submit');
