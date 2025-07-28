@@ -271,7 +271,7 @@
 							<div class="col-md-12">
 							<label>Completed By</label>
 								<div class="mt-1">
-									{{ Carbon::parse($lo_corrective_completed_by)->format('d M Y')}}
+									{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
 								</div>
 							</div>
 						</div>
