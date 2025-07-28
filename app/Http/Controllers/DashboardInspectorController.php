@@ -2210,8 +2210,8 @@ class DashboardInspectorController extends Controller
 		{
 			$actionStatus = Task_list_corrective_action::where('id',$id)->first();
 			//echo "<pre>";print_r($actionStatus);die;
-			$inspector_action = $actionStatus ? $actionStatus->inspector_action : '';
-			$los_action = $actionStatus ? $actionStatus->los_action : '';
+			//$inspector_action = $actionStatus ? $actionStatus->inspector_action : '';
+			//$los_action = $actionStatus ? $actionStatus->los_action : '';
 			//echo $inspector_action.'----'.$los_action; die;
 			
 			
@@ -2224,23 +2224,11 @@ class DashboardInspectorController extends Controller
 			
 			if(auth()->user()->user_type == 1)
 			{
-				/*if($los_action == 2)
-				{
-					echo $los_action; die;
-					return response()->json(['message'=>'error', 'usertype'=>3]);
-				}*/
-				
 				$model->rejected_status = 1;
 			}
 			
 			if(auth()->user()->user_type == 3)
 			{
-				/*if($inspector_action == 2)
-				{
-					echo $inspector_action; die;
-					return response()->json(['message'=>'error', 'usertype'=>1]);
-				}*/
-				
 				$model->rejected_status = 2;
 			}
 			
