@@ -23,7 +23,7 @@ $countPlan = 0;
 $countCompleted = 0;
 foreach($correctiveNeeded as $result)
 {
-	if(($result['inspector_action']=='' && $result['los_action']=='') || ($result['inspector_action']== 2 && $result['los_action']==2))
+	if(($result['inspector_action']== '' && $result['los_action']== '') || ($result['inspector_action']== 2 && $result['los_action']==2))
 	{
 		$countNedded++;
 	}
