@@ -143,7 +143,7 @@ $location_name = App\Models\Manage_location::where('id', $location_id)->first()-
 			</div>
 		</div>
 		@endif
-	
+	<hr class="horizontal-line-list-page">
 	@endforeach
 @endif
 
@@ -307,6 +307,7 @@ $location_name = App\Models\Manage_location::where('id', $location_id)->first()-
 			</div>
 		</div>
 		@endif
+		<hr class="horizontal-line-list-page">
 	@endforeach
 @endif
 
@@ -470,6 +471,7 @@ $location_name = App\Models\Manage_location::where('id', $location_id)->first()-
 			</div>
 		</div>
 		@endif
+		<hr class="horizontal-line-list-page">
 	@endforeach
 @endif
 
@@ -621,6 +623,7 @@ $location_name = App\Models\Manage_location::where('id', $location_id)->first()-
 			</div>
 		</div>
 		@endif
+<hr class="horizontal-line-list-page">
 @endforeach
 
 @endif

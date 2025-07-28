@@ -346,7 +346,7 @@ if($mode == 'corrective_appr')
 		</div>
 		@endif
 	@endif
-		
+	<hr class="horizontal-line-list-page">	
 	@endforeach
 @endif
 
@@ -488,6 +488,7 @@ if($mode == 'corrective_appr')
 		</div>
 	</div>
 	@endif
+	<hr class="horizontal-line-list-page">
 	@endforeach
 @endif
 
@@ -630,6 +631,7 @@ if($mode == 'corrective_appr')
 		</div>
 	</div>
 	@endif
+	<hr class="horizontal-line-list-page">
 	@endforeach
 @endif
 
@@ -788,6 +790,7 @@ if($mode == 'corrective_appr')
 		</div>
 	</div>
 	@endif
+<hr class="horizontal-line-list-page">
 @endforeach
 
 @endif
