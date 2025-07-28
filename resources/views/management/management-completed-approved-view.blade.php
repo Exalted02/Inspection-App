@@ -271,7 +271,6 @@
 								</div>
 							</div>
 						</div>
-						</br>
 						@endif
 						
 					@if(isset($corrective_dtls_data) && $corrective_dtls_data)
