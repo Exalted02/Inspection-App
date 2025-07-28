@@ -421,6 +421,7 @@ $totalapprcompleted = $countCompleted;
 									</div>
 									@endif
 								@endif
+								<hr class="horizontal-line-list-page">
 								@endforeach
 							</span>
 							<div class="load-more-needed" id="showloadneeded">Load more</div>
@@ -588,7 +589,7 @@ $totalapprcompleted = $countCompleted;
 										</div>
 									</div>
 									@endif
-								
+								<hr class="horizontal-line-list-page">
 								@endforeach
 							</span>
 							<div class="load-more-action" id="showloadaction">Load more</div>
@@ -755,7 +756,7 @@ $totalapprcompleted = $countCompleted;
 										</div>
 									</div>
 									@endif
-								
+								<hr class="horizontal-line-list-page">
 								@endforeach
 								</span>
 							
@@ -910,8 +911,9 @@ $totalapprcompleted = $countCompleted;
 											</a>
 										</div>
 									</div>
+									
 									@endif
-								
+								<hr class="horizontal-line-list-page">
 							@endforeach
 							</span>
 							<div class="load-more-appr" id="showloadappr">Load more</div>

@@ -1929,5 +1929,11 @@ body, h1, h2, h3, h4, h5, h6 {
 	padding: 0px;
 	font-size: 14px !important;
 }
+.horizontal-line-list-page {
+	/* margin-top: 20px;  */
+	margin-top: 0px; 
+	margin-bottom: 11px; 
+	border-top: 1px solid #ccc;
+}
 
 

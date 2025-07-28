@@ -31,7 +31,6 @@
 	 
 	 $rejected_region = $taskChecklist->rejected_region;
 	 $created_at = $taskChecklist->created_at;
-	 
 	 $corrective_action_data = App\Models\Task_list_corrective_action::with('get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 	 //echo "<pre>";print_r($corrective_action_data);die;
 	 //echo $corrective_action_data->created_at; die;
@@ -59,7 +58,9 @@
 	 
 	 $lo_corrective_action_plan_second_check = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan_second_check : '';
 	 
-	 $corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
+	$corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
+	
+	 //echo $corrective_action_primary_id;
 	 
 	// work for final check
 	/*$corrective_action_final_file_data = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $corrective_action_primary_id)->where('status','!=', 1)->get();
@@ -152,9 +153,10 @@
 	 $corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
 	$max_order = $corrective_detls_order->max('order');
  }
- //echo $lo_corrective_completed_by;die;
+ //echo $corrective_action_primary_id;die;
  //echo "<pre>";print_r($final_check_data);die;
  //echo "<pre>";print_r($corrective_action_files);die;
+ //echo "<pre>";print_r($corrective_dtls_data);die;
  
  $loopCnt = 0;
 @endphp
@@ -637,6 +639,20 @@ $(document).ready(function() {
 					
 					window.location.href = redirectUrl;
 				}
+				/*else if(response.message == 'error')
+				{
+					alert(response.message);
+					$('#reason_error').text('');
+					if(response.usertype == 3)
+					{
+						$('#reason_error').text('IA already rejected').fadeIn().delay(2000).fadeOut();
+					}
+					
+					if(response.usertype == 1)
+					{
+						$('#reason_error').text('LOS already rejected').fadeIn().delay(2000).fadeOut();
+					}
+				}*/
 			},
 			complete: function() {
 				$('.inspector-rejected-submit').html('Submit');
