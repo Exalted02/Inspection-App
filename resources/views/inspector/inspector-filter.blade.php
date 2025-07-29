@@ -18,8 +18,8 @@ $m = 0;
 
 
 //$countNedded = 0;
-$countAction = 0;
-$countPlan = 0;
+//$countAction = 0;
+//$countPlan = 0;
 $countCompleted = 0;
 /*foreach($correctiveNeeded as $result)
 {
@@ -29,7 +29,7 @@ $countCompleted = 0;
 	}
 }*/
 
-foreach($correctiveAction as $result)
+/*foreach($correctiveAction as $result)
 {
 	if($result['lo_direct_approve'] == 1 && ($result['inspector_action'] == 0 || $result['los_action'] == 0))
 	{
@@ -40,7 +40,7 @@ foreach($correctiveAction as $result)
 	{
 		$countPlan++;
 	}
-}
+}*/
 
 foreach($approvedCompleted as $result)
 {
