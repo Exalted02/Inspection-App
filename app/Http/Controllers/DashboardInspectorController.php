@@ -3312,7 +3312,7 @@ class DashboardInspectorController extends Controller
 				{
 					$task_list_subchecklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $appr->task_list_id)->where('checklist_id', $appr->task_list_checklist_id)->where('subchecklist_id', $appr->subchecklist_id)->first();
 					{
-						if($task_list_checklist_corrective_needed)
+						if($task_list_subchecklist_corrective_needed)
 						{
 							$subchklstData  = task_list_subchecklists::where('task_list_checklist_id', $appr->checklist_id)->where('subchecklist_id',$appr->subchecklist_id)->first();
 							$id = $subchklstData ? $subchklstData->id : '';
@@ -5750,6 +5750,283 @@ class DashboardInspectorController extends Controller
 		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
 	}
 	public function ins_load_more_appr_data(Request $request)
+	{
+		$location_id = $request->location_id;
+		$data = array();
+		$interval = config('custom.LOAD_MORE_INTERVAL');
+		$lower = empty($request->moreload) ? 0 : $request->moreload;
+		$upper = empty($request->moreload) ? config('custom.LOAD_MORE_LIST_SHOW') : config('custom.LOAD_MORE_INTERVAL');
+		//---------------------------------------------------
+		$taskListIds = Task_lists::where('location_id', $location_id)
+			->where('inspector_id', auth()->user()->id)
+			->pluck('id');
+
+		$categoryIds = Task_list_subcategories::whereIn('task_list_id', $taskListIds)
+			->pluck('task_list_category_id');
+			
+		$approvedCompletedArray = [];
+		// Checklist IDs with existing corrective needed
+		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+			->where(function ($q) {
+				$q->where(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 1);
+				});
+			})
+			->whereNotNull('checklist_id')
+			->pluck('checklist_id')->toArray();
+			
+			//print_r($correctiveChecklistApprIds);die;
+		//------------------------------------
+		
+			$existingCorrectiveChecklistApprIds = DB::table('task_list_corrective_actions')
+			    ->whereIn('task_list_id', $taskListIds)
+				->whereNotNull('checklist_id')
+				->pluck('checklist_id')->toArray();
+
+			$checklistApprIds = DB::table('task_list_checklists')
+				->where('approve', 1)
+				->whereIn('task_list_id', $taskListIds)
+				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
+				->pluck('checklist_id')
+				->toArray();
+				
+		//print_r($checklistApprIds);die;
+		$correctiveApprChecklistIds = array_merge($correctiveChecklistApprIds,$checklistApprIds);
+		//print_r($correctiveApprChecklistIds);die;
+		//------------------------------------
+
+		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+			->where(function ($q) {
+				$q->where(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 1);
+				});
+			})
+			->whereNotNull('subchecklist_id')
+			->pluck('subchecklist_id')->toArray();
+			
+		//print_r($correctiveSubChecklist_Ids);die;
+			
+			$existingCorrectiveSubChecklistIds = DB::table('task_list_corrective_actions')
+			    ->whereIn('task_list_id', $taskListIds)
+				->whereNotNull('subchecklist_id')
+				->pluck('subchecklist_id')->toArray();
+
+			$subchecklistApprIds = DB::table('task_list_subchecklists')
+				->where('approve', 1)
+				->whereIn('task_list_id', $taskListIds)
+				//->whereNotIn('subchecklist_id', $existingCorrectiveSubChecklistIds)
+				->pluck('subchecklist_id')
+				->toArray();
+			
+			//print_r($subchecklistIds);die;
+			$correctiveApprSubChecklistIds = array_merge($correctiveSubChecklistApprIds,$subchecklistApprIds);	
+			//print_r($correctiveApprSubChecklistIds);die;
+
+		// Raw union query
+			$correctiveApproved = DB::table(function ($query) use (
+				$taskListIds,
+				$categoryIds,
+				$correctiveApprChecklistIds,
+				$correctiveApprSubChecklistIds
+			) {
+				$query->select(
+						'id',
+						'checklist_id',
+						DB::raw("'checklist' as type"),
+						'task_list_id',
+						'category_id',
+						'approve',
+						'rejected_region',
+						'updated_at',
+						DB::raw('NULL as subchecklist_id'),
+						DB::raw('NULL as task_list_checklist_id')
+					)
+					->from('task_list_checklists')
+					->whereIn('task_list_id', $taskListIds)
+					->whereIn('category_id', $categoryIds)
+					//->where('approve', 0)
+					->whereIn('checklist_id', $correctiveApprChecklistIds)
+				->unionAll(
+					DB::table('task_list_subchecklists')
+						->select(
+							'id',
+							'subchecklist_id as item_id',
+							DB::raw("'subchecklist' as type"),
+							'task_list_id',
+							'category_id',
+							'approve',
+							'rejected_region',
+							'updated_at',
+							'subchecklist_id',
+							'task_list_checklist_id'
+						)
+						->whereIn('task_list_id', $taskListIds)
+						->whereIn('category_id', $categoryIds)
+						//->where('approve', 0)
+						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
+				);
+			}, 'combined')
+			->offset($lower)
+			->limit($upper)
+			->get();
+			//echo "<pre>";print_r($correctiveApproved);die;
+			
+			$correctiveApprovedCount = DB::table(function ($query) use (
+				$taskListIds,
+				$categoryIds,
+				$correctiveApprChecklistIds,
+				$correctiveApprSubChecklistIds
+			) {
+				$query->select(
+						'id',
+						'checklist_id',
+						DB::raw("'checklist' as type"),
+						'task_list_id',
+						'category_id',
+						'approve',
+						'rejected_region',
+						'updated_at',
+						DB::raw('NULL as subchecklist_id'),
+						DB::raw('NULL as task_list_checklist_id')
+					)
+					->from('task_list_checklists')
+					->whereIn('task_list_id', $taskListIds)
+					->whereIn('category_id', $categoryIds)
+					//->where('approve', 0)
+					->whereIn('checklist_id', $correctiveApprChecklistIds)
+				->unionAll(
+					DB::table('task_list_subchecklists')
+						->select(
+							'id',
+							'subchecklist_id as item_id',
+							DB::raw("'subchecklist' as type"),
+							'task_list_id',
+							'category_id',
+							'approve',
+							'rejected_region',
+							'updated_at',
+							'subchecklist_id',
+							'task_list_checklist_id'
+						)
+						->whereIn('task_list_id', $taskListIds)
+						->whereIn('category_id', $categoryIds)
+						//->where('approve', 0)
+						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
+				);
+			}, 'combined')->count();
+		
+		//echo $correctiveApprovedCount;die;
+		
+		foreach($correctiveApproved as $appr)
+		{
+			
+			if($appr->approve == 0)
+			{
+				if($appr->type == 'checklist')
+				{
+					$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $appr->task_list_id)->where('checklist_id', $appr->checklist_id)->first();
+					if($task_list_checklist_corrective_needed)
+					{
+						$chklstData  = Task_list_checklists::where('checklist_id', $appr->checklist_id)->first();
+						$id = $chklstData ? $chklstData->id : '';
+						$isfiles = '';
+						$images = '';
+						$isfiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $id)->first();
+						$images = $isfiles ? $isfiles->file  : '';
+						$approvedCompletedArray[] = [
+							'type' => 'checklist',
+							'task_id' => $appr->task_list_id,
+							'checklist_id' => $appr->checklist_id,
+							'rejected_region' => $appr->rejected_region,
+							'image' => $images,
+							'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
+							'los_action'=> $task_list_checklist_corrective_needed->los_action,
+							'updated_at'=> change_date_format($task_list_checklist_corrective_needed->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
+							//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
+						];
+					}
+				}
+				else if($appr->type == 'subchecklist')
+				{
+					$task_list_subchecklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $appr->task_list_id)->where('checklist_id', $appr->task_list_checklist_id)->where('subchecklist_id', $appr->subchecklist_id)->first();
+					{
+						if($task_list_subchecklist_corrective_needed)
+						{
+							$subchklstData  = task_list_subchecklists::where('task_list_checklist_id', $appr->checklist_id)->where('subchecklist_id',$appr->subchecklist_id)->first();
+							$id = $subchklstData ? $subchklstData->id : '';
+						
+							$isSubChecklistfiles = '';
+							$subChecklistimages = '';
+							$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+									
+							$approvedCompletedArray[] = [
+								'type' => 'subchecklist',
+								'task_id' => $appr->task_list_id,
+								'checklist_id' => $appr->task_list_checklist_id,
+								'subchecklist_id'=>$appr->subchecklist_id,
+								'rejected_region' => $appr->rejected_region,
+								'image' => $subChecklistimages,
+								'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
+								'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+								'updated_at'=>change_date_format($task_list_subchecklist_corrective_needed->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
+								//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
+							];
+						}
+					}
+				}
+			}
+			elseif($appr->approve == 1)
+			{
+				if($appr->type == 'checklist')
+				{
+					$approvedCompletedArray[] = [
+						'type' => 'checklist',
+						'task_id' => $appr->task_list_id,
+						'checklist_id' => $appr->checklist_id,
+						'rejected_region' => $appr->rejected_region,
+						'inspector_action' => 1,
+						'los_action' => 1,
+						'updated_at'=> change_date_format($appr->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
+					];
+				}
+				else
+				{
+					$approvedCompletedArray[] = [
+						'type' => 'subchecklist',
+						'task_id' => $appr->task_list_id,
+						'checklist_id' => $appr->task_list_checklist_id,
+						'subchecklist_id'=>$appr->subchecklist_id,
+						'rejected_region' => $appr->rejected_region,
+						'inspector_action' => 1,
+						'los_action' => 1,
+						'updated_at'=>change_date_format($appr->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
+					];
+				}
+			}
+			
+		}
+		
+		//--------------------------------------------------
+		usort($approvedCompletedArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
+		
+		//$totalRecord = $approvedCompletedArray;
+		//$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
+		$data['approvedCompletedArray'] = $approvedCompletedArray;
+		
+		$data['location_id'] = $location_id;
+		$data['mode'] = 'corrective_appr';
+		
+		$html = view('inspector.loadmore.ins-filter-load-more-data', $data)->render();
+		
+		//--------------------------------------
+		$count  = $request->moreload =='' ? config('custom.LOAD_MORE_LIST_SHOW') : $request->moreload + $interval;
+		$remain = $correctiveApprovedCount - $count;
+		
+		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
+	}
+	public function ins_load_more_appr_data_old(Request $request)
 	{
 		$location_id = $request->location_id;
 		$data = array();
