@@ -3314,6 +3314,13 @@ class DashboardInspectorController extends Controller
 					{
 						if($task_list_checklist_corrective_needed)
 						{
+							$subchklstData  = task_list_subchecklists::where('task_list_checklist_id', $appr->checklist_id)->where('subchecklist_id',$appr->subchecklist_id)->first();
+							$id = $subchklstData ? $subchklstData->id : '';
+						
+							$isSubChecklistfiles = '';
+							$subChecklistimages = '';
+							$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+									
 							$approvedCompletedArray[] = [
 								'type' => 'subchecklist',
 								'task_id' => $appr->task_list_id,
