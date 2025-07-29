@@ -17,17 +17,17 @@ $l = 0;
 $m = 0;
 
 
-$countNedded = 0;
+//$countNedded = 0;
 $countAction = 0;
 $countPlan = 0;
 $countCompleted = 0;
-foreach($correctiveNeeded as $result)
+/*foreach($correctiveNeeded as $result)
 {
 	if(($result['inspector_action']== '' && $result['los_action']== '') || ($result['inspector_action']== 2 && $result['los_action']==2))
 	{
 		$countNedded++;
 	}
-}
+}*/
 
 foreach($correctiveAction as $result)
 {
