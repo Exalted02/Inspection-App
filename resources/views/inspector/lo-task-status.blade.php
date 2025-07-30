@@ -67,7 +67,9 @@ foreach($correctiveNeeded as $needed)
 				'image' => $needed['image'],
 				'inspector_action' => $needed['inspector_action'],
 				'los_action' => $needed['los_action'],
-				'rejected_status' => $needed['rejected_status']
+				'rejected_status' => $needed['rejected_status'],
+				'created_at' => $needed['created_at'],
+				'updated_at' => $needed['updated_at']
 			];
 		}
 		else{
@@ -80,13 +82,19 @@ foreach($correctiveNeeded as $needed)
 				'image' => $needed['image'],
 				'inspector_action' => $needed['inspector_action'],
 				'los_action' => $needed['los_action'],
-				'rejected_status' => $needed['rejected_status']
+				'rejected_status' => $needed['rejected_status'],
+				'created_at' => $needed['created_at'],
+				'updated_at' => $needed['updated_at']
 			];
 		}
 		
 	}
 }
 
+usort($correctiveNeededArray, function ($a, $b) {
+	return strtotime($b['created_at']) <=> strtotime($a['created_at']);
+});
+		
 $correctiveNeededArray = array_slice($correctiveNeededArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 
 //echo "<pre>"; print_r($correctiveCheck);die;
@@ -260,7 +268,7 @@ $totalapprcompleted = $countCompleted;
     <!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
     <!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
 	<div class="container location-owner-details">
-	<div class="main-content-area clearfix">
+	<div class="main-content-area clearfix corrective-checked">
 			<section class="custom-padding1">
 				<div class="container">
 					<div class="row custom-tab">

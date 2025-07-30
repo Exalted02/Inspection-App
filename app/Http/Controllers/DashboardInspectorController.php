@@ -3989,8 +3989,8 @@ class DashboardInspectorController extends Controller
 												'checklist_id' => $task->checklist_id,
 												'rejected_region' => $task->rejected_region,
 												'image' => $images,
-												'created_at' => $val->created_at->format('Y-m-d H:i:s'),
-												'updated_at' => $val->updated_at->format('Y-m-d H:i:s'),
+												'created_at' => $task->created_at->format('Y-m-d H:i:s'),
+												'updated_at' => $task->updated_at->format('Y-m-d H:i:s'),
 												'inspector_action' => '',
 												'los_action' => '',
 												'rejected_status' => '',
@@ -4012,8 +4012,8 @@ class DashboardInspectorController extends Controller
 										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 										'los_action'=> $task_list_checklist_corrective_needed->los_action,
 										'rejected_status'=> $task_list_checklist_corrective_needed->rejected_status,
-										'created_at' => $val->created_at->format('Y-m-d H:i:s'),
-										'updated_at' => $val->updated_at->format('Y-m-d H:i:s'),
+										'created_at' => $task->created_at->format('Y-m-d H:i:s'),
+										'updated_at' => $task->updated_at->format('Y-m-d H:i:s'),
 									];
 									//--------
 									
@@ -4377,6 +4377,8 @@ class DashboardInspectorController extends Controller
 												'checklist_id' => $task->checklist_id,
 												'rejected_region' => $task->rejected_region,
 												'image' => $images,
+												'created_at' => $task->created_at->format('Y-m-d H:i:s'),
+												'updated_at' => $task->updated_at->format('Y-m-d H:i:s'),
 												'inspector_action' => '',
 												'los_action' => '',
 												'rejected_status' => '',
@@ -4399,6 +4401,8 @@ class DashboardInspectorController extends Controller
 												'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 												'los_action'=> $task_list_checklist_corrective_needed->los_action,
 												'rejected_status'=> $task_list_checklist_corrective_needed->rejected_status,
+												'created_at' => $task->created_at->format('Y-m-d H:i:s'),
+												'updated_at' => $task->updated_at->format('Y-m-d H:i:s'),
 											];
 										//------
 										
@@ -4461,6 +4465,8 @@ class DashboardInspectorController extends Controller
 													'inspector_action' => '',
 													'los_action' => '',
 													'rejected_status' => '',
+													'created_at' => $subtask->created_at->format('Y-m-d H:i:s'),
+													'updated_at' => $subtask->updated_at->format('Y-m-d H:i:s'),
 												];
 									}
 									else
@@ -4482,6 +4488,8 @@ class DashboardInspectorController extends Controller
 												'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 												'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
 												'rejected_status'=> $task_list_subchecklist_corrective_needed->rejected_status,
+												'created_at' => $subtask->created_at->format('Y-m-d H:i:s'),
+												'updated_at' => $subtask->updated_at->format('Y-m-d H:i:s'),
 											];
 										//-------
 										
