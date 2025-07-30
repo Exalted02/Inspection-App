@@ -2809,6 +2809,8 @@ $(document ).ready(function() {
    
     $(document).on('click','.submit_task', function(){
 		var task_id  = $('#completed_task_id').val();
+		var location_id  = $('#location_id').val();
+		//alert(location_id);
 		var category_id = $('#completed_category_id').val();
 		var subcategory_id = $('#completed_subcategory_id').val();
 		var URL = "{{ route('submit-completed-task') }}";
@@ -2837,8 +2839,11 @@ $(document ).ready(function() {
 			dataType: 'json',
 			success: function(response) {
 				$('#pending-count').val(0);
-				const thankyouUrlTemplate = "{{ url('thank-you/TASK_ID') }}";
-				const redirectUrl = thankyouUrlTemplate.replace('TASK_ID', task_id);
+				//const thankyouUrlTemplate = "{{ url('thank-you/TASK_ID') }}";
+				//const redirectUrl = thankyouUrlTemplate.replace('TASK_ID', task_id);
+				
+				const categoryUrlTemplate = "{{ url('category/LOCATION_ID/TASK_ID/ACTIVE') }}";
+				const redirectUrl = categoryUrlTemplate.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ACTIVE', 1);
 				window.location.href = redirectUrl;
 			},
 		});

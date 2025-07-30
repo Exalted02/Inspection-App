@@ -88,6 +88,18 @@ class DashboardInspectorController extends Controller
 			return redirect('inspector-dashboard');
 		}
 		
+		// after all categories did submit checklist then redirect to location details 
+		$getCats = Task_location_categories::where('task_list_id', $task_id)->pluck('category_id')->toArray();
+		
+		$presentCategoryIds = Task_list_subcategories::where('task_list_id', $task_id)
+			->pluck('task_list_category_id')->unique()->toArray();
+		
+		$allCategoriesPresent = empty(array_diff($getCats, $presentCategoryIds));
+		if($allCategoriesPresent)
+		{
+			return redirect('location-details/' . $lid);
+		}
+		//--------
 		$data = [];
 		
 		$correctiveNeddedChecklistArray = [];
@@ -3220,6 +3232,7 @@ class DashboardInspectorController extends Controller
 					'category_id',
 					'approve',
 					'rejected_region',
+					'created_at',
 					'updated_at',
 					DB::raw('NULL as subchecklist_id'),
 					DB::raw('NULL as task_list_checklist_id')
@@ -3239,6 +3252,7 @@ class DashboardInspectorController extends Controller
 						'category_id',
 						'approve',
 						'rejected_region',
+						'created_at',
 						'updated_at',
 						'subchecklist_id',
 						'task_list_checklist_id'
@@ -3254,7 +3268,7 @@ class DashboardInspectorController extends Controller
 		->get();
 		//echo "<pre>";print_r($correctiveApproved);die;
 		
-		$correctiveApprovedCount = DB::table(function ($query) use (
+		/*$correctiveApprovedCount = DB::table(function ($query) use (
 			$taskListIds,
 			$categoryIds,
 			$correctiveApprChecklistIds,
@@ -3296,7 +3310,27 @@ class DashboardInspectorController extends Controller
 					//->where('approve', 0)
 					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 			);
-		}, 'combined')->count();
+		}, 'combined')->count();*/
+		$correctiveApprovedCount = DB::table(function ($query) use (
+										$taskListIds,
+										$categoryIds,
+										$correctiveApprChecklistIds,
+										$correctiveApprSubChecklistIds
+									) {
+										$query->select(DB::raw('1 as dummy'))
+											->from('task_list_checklists')
+											->whereIn('task_list_id', $taskListIds)
+											->whereIn('category_id', $categoryIds)
+											->whereIn('checklist_id', $correctiveApprChecklistIds)
+											->unionAll(
+												DB::table('task_list_subchecklists')
+													->select(DB::raw('1 as dummy'))
+													->whereIn('task_list_id', $taskListIds)
+													->whereIn('category_id', $categoryIds)
+													->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
+											);
+									}, 'combined')->count();
+
 		
 		//echo $correctiveApprovedCount;die;
 		
@@ -3324,6 +3358,7 @@ class DashboardInspectorController extends Controller
 							'image' => $images,
 							'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 							'los_action'=> $task_list_checklist_corrective_needed->los_action,
+							'created_at'=> change_date_format($task_list_checklist_corrective_needed->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 							'updated_at'=> change_date_format($task_list_checklist_corrective_needed->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 							//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 						];
@@ -3351,6 +3386,7 @@ class DashboardInspectorController extends Controller
 								'image' => $subChecklistimages,
 								'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 								'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
+								'created_at'=> change_date_format($task_list_subchecklist_corrective_needed->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 								'updated_at'=>change_date_format($task_list_subchecklist_corrective_needed->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 								//'second_checked'=> $task_list_subchecklist_corrective_action->lo_corrective_action_plan_second_check,
 							];
@@ -3369,6 +3405,7 @@ class DashboardInspectorController extends Controller
 						'rejected_region' => $appr->rejected_region,
 						'inspector_action' => 1,
 						'los_action' => 1,
+						'created_at'=> change_date_format($appr->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 						'updated_at'=> change_date_format($appr->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 					];
 				}
@@ -3382,6 +3419,7 @@ class DashboardInspectorController extends Controller
 						'rejected_region' => $appr->rejected_region,
 						'inspector_action' => 1,
 						'los_action' => 1,
+						'created_at'=>change_date_format($appr->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 						'updated_at'=>change_date_format($appr->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 					];
 				}
