@@ -222,6 +222,18 @@
 						<hr class="horizontal-line">
 						@endif
 						
+						@if($lo_direct_approve == 0)
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
+							<label>Completed By</label>
+								<div class="mt-1">
+									{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
+								</div>
+							</div>
+						</div>
+						
+						@endif
+						
 						@if(!empty($lo_corrective_action_plan))
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
@@ -272,17 +284,7 @@
 						</div>
 						@endif
 						
-						@if($lo_direct_approve == 0)
-						<div class="row IA-IOS-get-reply">
-							<div class="col-md-12">
-							<label>Completed By</label>
-								<div class="mt-1">
-									{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
-								</div>
-							</div>
-						</div>
 						
-						@endif
 							
 						
 						@if($corrective_dtls_data)
