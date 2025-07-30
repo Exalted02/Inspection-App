@@ -368,7 +368,7 @@ $totalapprcompleted = $countCompleted;
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
+											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -412,7 +412,7 @@ $totalapprcompleted = $countCompleted;
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
+											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -523,7 +523,7 @@ $totalapprcompleted = $countCompleted;
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
+											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
@@ -564,7 +564,7 @@ $totalapprcompleted = $countCompleted;
 											{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 											</p>
 											<p class="text-muted mb-0">
-											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
+											<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
 											</p>
 											<p class="text-muted mb-0">
 											<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}} 
@@ -666,7 +666,7 @@ $totalapprcompleted = $countCompleted;
 													{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 													</p>
 													<p class="text-muted mb-0">
-													<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
+													<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
 													</p>
 													<p class="text-muted mb-0">
 													<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -706,7 +706,7 @@ $totalapprcompleted = $countCompleted;
 												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 												</p>
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
+												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
 												</p>
 												<p class="text-muted mb-0">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
@@ -832,7 +832,7 @@ $totalapprcompleted = $countCompleted;
 													{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 													</p>
 													<p class="text-muted mb-0">
-													<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
+													<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
 													</p>
 													<p class="text-muted mb-0">
 													<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button>
@@ -875,7 +875,7 @@ $totalapprcompleted = $countCompleted;
 												{{ \Illuminate\Support\Str::words($rejectedRegionData->rejected_region ?? '', 30, '...') }}
 												</p>
 												<p class="text-muted mb-0">
-												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}
+												<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
 												</p>
 												<p class="text-muted mb-0">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754; margin-left: 8px;">By {{ $userData->get_user->name ?? ''}}</button>

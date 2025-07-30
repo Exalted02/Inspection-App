@@ -2375,6 +2375,7 @@ class DashboardInspectorController extends Controller
 		$model->lo_corrective_action_plan_second_check = $request->inspector_action == 2 ? $content : null;
 		//$model->inspector_action = $request->inspector_action;
 		$model->inspector_action = 0;
+		$model->lo_direct_approve = 1; // 30-07-2025
 		//$model->los_action = $request->los_action;
 		$model->los_action = 0;
 		$model->approved_status = 0;

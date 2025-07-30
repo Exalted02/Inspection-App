@@ -388,7 +388,7 @@
 						{{--<form id="frmreply" action="{{ route('save-lo-reply-rejected-question') }}" enctype="multipart/form-data" method="post">--}}
 							<div class="row" style="margin-top: 1rem !important;">
 								<div class="col-md-12">
-									<label>Final checks</label>
+									<label>How to solve the issue ?</label>
 									<textarea name="lo_corrective_action_plan" id="lo_corrective_action_plan" placeholder="Add some remarks (optional)" class="form-control"></textarea>
 									<span id="action_plan" style="display: none; color: red;">This field is require.</span>
 								</div>
