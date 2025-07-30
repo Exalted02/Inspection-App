@@ -1928,6 +1928,7 @@ body, h1, h2, h3, h4, h5, h6 {
 	color:green;
 	padding: 0px;
 	font-size: 14px !important;
+	gap: 20px;
 }
 .horizontal-line-list-page {
 	/* margin-top: 20px;  */

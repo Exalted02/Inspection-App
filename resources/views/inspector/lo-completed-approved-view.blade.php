@@ -218,6 +218,17 @@
 						</div>
 						<hr class="horizontal-line">
 						
+						@if($lo_direct_approve == 0)
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
+							<label>Completed By</label>
+								<div class="mt-1">
+									{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
+								</div>
+							</div>
+						</div>
+						@endif
+						
 						@if(!empty($lo_corrective_action_plan))
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
@@ -266,16 +277,7 @@
 							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ $corrective_action_data ? change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A') : '' }}</span></div>
 						</div>
 						
-						@if($lo_direct_approve == 0)
-						<div class="row IA-IOS-get-reply">
-							<div class="col-md-12">
-							<label>Completed By</label>
-								<div class="mt-1">
-									{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
-								</div>
-							</div>
-						</div>
-						@endif
+						
 						
 						@if(isset($corrective_dtls_data) && $corrective_dtls_data)
 						</br>
@@ -292,13 +294,22 @@
 								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+								<div class="col-md-12 show-completed-status d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>  {{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+								
+								@if($final_check_data->isEmpty())
+								<div class="col-md-12 show-completed-status d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+								@endif
 								
 							@elseif(isset($corrective_dtls_data) && $corrective_dtls_data->approved_status == 2)
 								<div class="col-md-12">
 								<span class="show-agree-status">Approved</span>
 								</div>
-								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+								
+								@if($final_check_data->isEmpty())
+								<div class="col-md-12 show-completed-status d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+								@endif
+								
+								<div class="col-md-12 show-completed-status d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 							
 							@endif
 							
