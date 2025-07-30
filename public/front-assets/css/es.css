@@ -1943,4 +1943,43 @@ body, h1, h2, h3, h4, h5, h6 {
 	object-fit: cover;
 }
 
+/*@media (max-width: 767px) {
+	
+	.corrective-checked .date-box img {
+		max-width: 100%;
+		height: 88px;
+		border-radius: 8px;
+		object-fit: cover;
+	}
+	
+	.corrective-checked .date-box video {
+		max-width: 100%;
+		height: 88px;
+		border-radius: 8px;
+		object-fit: cover;
+	}
+	
+}*/
+
+@media (max-width: 767px) {
+	
+	.corrective-checked .date-box img {
+		max-width: 100%;
+		height: 56%;
+		border-radius: 8px;
+		object-fit: cover;
+	}
+	
+    .corrective-checked .date-box video {
+        width: 100% !important;
+        height: 56%;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    /*.corrective-checked .date-box {
+        width: 100% !important;
+    }*/
+}
+
 
