@@ -2658,11 +2658,12 @@ class DashboardInspectorController extends Controller
 		$checklists = Checklist::where('category_id',$category_id)->where('status','!=', 2)->orderBy('order_no')->get();
 									
 			foreach ($checklists as $chklist) {
-				$status = '';
+				//$status = '';
+				$status = [];
 				$hasTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $chklist->id)->exists();
 				if($hasTaskChecklist)
 				{
-					$status = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $chklist->id)->first()->approve;
+					$status[] = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $chklist->id)->first()->approve;
 					
 				}
 				else
@@ -2674,12 +2675,20 @@ class DashboardInspectorController extends Controller
 									->where('task_list_checklist_id', $chklist->id)->get();
 						if($getstatus->isNotEmpty())
 						{
-							$status = 1;
+							//$status = 1;
+							$status = [];
 							foreach($getstatus as $val)
 							{
 								if($val->approve == 0)
 								{
-									$status = 0;
+									$status[] = 0;
+								}
+								elseif($val->approve == 1)
+								{
+									$status[] = 1;
+								}
+								else{
+									$status[] = 2;
 								}
 							}
 						}
@@ -2809,6 +2818,8 @@ class DashboardInspectorController extends Controller
 					'task_list_id',
 					'category_id',
 					'approve',
+					'created_at',
+					'updated_at',
 					DB::raw('NULL as subchecklist_id'),
 					DB::raw('NULL as task_list_checklist_id')
 				)
@@ -2826,6 +2837,8 @@ class DashboardInspectorController extends Controller
 						'task_list_id',
 						'category_id',
 						'approve',
+						'created_at',
+						'updated_at',
 						'subchecklist_id',
 						'task_list_checklist_id'
 					)
@@ -2880,7 +2893,7 @@ class DashboardInspectorController extends Controller
 			);
 		}, 'combined')->count();
 		
-		
+		//echo "<pre>";print_r($correctiveneeded);die;
 		$correctiveNeddedArray = [];
 		foreach($correctiveneeded as $needed)
 		{
@@ -2907,6 +2920,8 @@ class DashboardInspectorController extends Controller
 						'checklist_id' => $needed->checklist_id,
 						'rejected_region' => $checklistData->rejected_region,
 						'image' => $images,
+						'created_at' => $needed->created_at,
+						'updated_at' => $needed->updated_at,
 						'inspector_action' => '',
 						'los_action' => '',
 						'rejected_status' => '',
@@ -2925,6 +2940,8 @@ class DashboardInspectorController extends Controller
 						'checklist_id' => $needed->checklist_id,
 						'rejected_region' => $checklistData->rejected_region,
 						'image' => $images,
+						'created_at' => $needed->created_at,
+						'updated_at' => $needed->updated_at,
 						'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 						'los_action'=> $task_list_checklist_corrective_needed->los_action,
 						'rejected_status'=> $task_list_checklist_corrective_needed->rejected_status,
@@ -2952,6 +2969,8 @@ class DashboardInspectorController extends Controller
 						'subchecklist_id'=>$needed->subchecklist_id,
 						'rejected_region' => $subchecklistData->rejected_region,
 						'image' => $subChecklistimages,
+						'created_at' => $needed->created_at,
+						'updated_at' => $needed->updated_at,
 						'inspector_action' => '',
 						'los_action' => '',
 						'rejected_status' => '',
@@ -2971,6 +2990,8 @@ class DashboardInspectorController extends Controller
 						'subchecklist_id'=>$needed->subchecklist_id,
 						'rejected_region' => $subchecklistData->rejected_region,
 						'image' => $subChecklistimages,
+						'created_at' => $needed->created_at,
+						'updated_at' => $needed->updated_at,
 						'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 						'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
 						'rejected_status'=> $task_list_subchecklist_corrective_needed->rejected_status,
@@ -3372,8 +3393,11 @@ class DashboardInspectorController extends Controller
 			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
 		});
 		//echo "<pre>";print_r($approvedCompletedArray);die;
+		//echo "<pre>";print_r($correctiveNeddedArray);die;
 		//==========================================================
-		
+		usort($correctiveNeddedArray, function ($a, $b) {
+			return strtotime($b['created_at']) <=> strtotime($a['created_at']);
+		});
 		// Checklist corrective action
 		$data = [];
 		$data['correctiveNeddedArray'] = $correctiveNeddedArray;

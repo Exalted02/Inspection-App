@@ -259,17 +259,17 @@ $(document).ready(function() {
 								var aprvStatusHtml = '';
 								var approveStatus = chklist.approve;
 								//alert(approveStatus);
-								if(approveStatus=='0')
+								if(approveStatus.includes(0))
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-danger" style="pointer-events: none; background-color: transparent; border-color: #dc3545; color: #dc3545;">Rejected</button>';
 								}
-								else if(approveStatus=='1')
+								else if(approveStatus.includes(1))
 								{
 									aprvStatusHtml = '<button type="button" class="btn btn-outline-success"  style="pointer-events: none; background-color: transparent; border-color: #198754; color: #198754;">Accepted</button>';
 								}
-								else if(approveStatus=='2')
+								else if(approveStatus.includes(2))
 								{
-									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Not available</button>';
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Not Applicable</button>';
 								}
 								else
 								{
@@ -1302,7 +1302,7 @@ $(document ).ready(function() {
 								}
 								else if(approveStatus.includes(2))
 								{
-									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Not available</button>';
+									aprvStatusHtml = '<button type="button" class="btn btn-outline-info" style="pointer-events: none; background-color: transparent; border-color: #0dcaf0; color: #0dcaf0;">Not Applicable</button>';
 								}
 								else
 								{
