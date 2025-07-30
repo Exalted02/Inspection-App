@@ -3989,6 +3989,8 @@ class DashboardInspectorController extends Controller
 												'checklist_id' => $task->checklist_id,
 												'rejected_region' => $task->rejected_region,
 												'image' => $images,
+												'created_at' => $val->created_at->format('Y-m-d H:i:s'),
+												'updated_at' => $val->updated_at->format('Y-m-d H:i:s'),
 												'inspector_action' => '',
 												'los_action' => '',
 												'rejected_status' => '',
@@ -4010,6 +4012,8 @@ class DashboardInspectorController extends Controller
 										'inspector_action'=> $task_list_checklist_corrective_needed->inspector_action,
 										'los_action'=> $task_list_checklist_corrective_needed->los_action,
 										'rejected_status'=> $task_list_checklist_corrective_needed->rejected_status,
+										'created_at' => $val->created_at->format('Y-m-d H:i:s'),
+										'updated_at' => $val->updated_at->format('Y-m-d H:i:s'),
 									];
 									//--------
 									
@@ -4079,6 +4083,8 @@ class DashboardInspectorController extends Controller
 												'inspector_action' => '',
 												'los_action' => '',
 												'rejected_status' => '',
+												'created_at' => $subtask->created_at->format('Y-m-d H:i:s'),
+												'updated_at' => $subtask->updated_at->format('Y-m-d H:i:s'),
 											];
 								}
 								else
@@ -4100,6 +4106,8 @@ class DashboardInspectorController extends Controller
 											'inspector_action'=> $task_list_subchecklist_corrective_needed->inspector_action,
 											'los_action'=> $task_list_subchecklist_corrective_needed->los_action,
 											'rejected_status'=> $task_list_subchecklist_corrective_needed->rejected_status,
+											'created_at' => $subtask->created_at->format('Y-m-d H:i:s'),
+											'updated_at' => $subtask->updated_at->format('Y-m-d H:i:s'),
 										];
 									//----
 									
@@ -4168,6 +4176,8 @@ class DashboardInspectorController extends Controller
 						'inspector_action'=> $needed['inspector_action'],
 						'los_action'=> $needed['los_action'],
 						'rejected_status'=> $needed['rejected_status'],
+						'created_at'=> $needed['created_at'],
+						'updated_at'=> $needed['updated_at'],
 					];
 				}
 				else
@@ -4181,12 +4191,18 @@ class DashboardInspectorController extends Controller
 						'inspector_action'=> $needed['inspector_action'],
 						'los_action'=> $needed['los_action'],
 						'rejected_status'=> $needed['rejected_status'],
+						'created_at'=> $needed['created_at'],
+						'updated_at'=> $needed['updated_at'],
 					];
 				}
 			}
 		}
 		
-		//echo "<pre>";print_r($correctiveNeeded);
+		usort($correctiveNeddedArray, function ($a, $b) {
+			return strtotime($b['created_at']) <=> strtotime($a['created_at']);
+		});
+		//echo "<pre>";print_r($correctiveNeddedArray);die;
+		
 		$data['correctiveNeddedArray'] = array_slice($correctiveNeddedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 		

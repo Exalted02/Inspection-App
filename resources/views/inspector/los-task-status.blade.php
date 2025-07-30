@@ -3,7 +3,7 @@
 @php 
 //echo "<pre>";print_r($categoryData);die;
 //echo "<pre>";print_r($correctiveAction);die;
-//echo "<pre>";print_r($correctiveNeeded);die;
+//echo "<pre>";print_r($correctiveNeddedArray);die;
 //echo "<pre>";print_r($approvedCompleted);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
