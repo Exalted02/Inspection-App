@@ -2865,6 +2865,7 @@ class DashboardInspectorController extends Controller
 					->whereIn('subchecklist_id', $correctiveSubChecklistIds)
 			);
 		}, 'combined')
+		->orderBy('updated_at', 'desc')
 		->offset($offset)
 		->limit($limit)
 		->get();
@@ -6407,6 +6408,7 @@ class DashboardInspectorController extends Controller
 					'task_list_id',
 					'category_id',
 					'approve',
+					'updated_at',
 					DB::raw('NULL as subchecklist_id'),
 					DB::raw('NULL as task_list_checklist_id')
 				)
@@ -6424,6 +6426,7 @@ class DashboardInspectorController extends Controller
 						'task_list_id',
 						'category_id',
 						'approve',
+						'updated_at',
 						'subchecklist_id',
 						'task_list_checklist_id'
 					)
@@ -6433,6 +6436,7 @@ class DashboardInspectorController extends Controller
 					->whereIn('subchecklist_id', $correctiveSubChecklistIds)
 			);
 		}, 'combined')
+		->orderBy('updated_at','desc')
 		->offset($lower)
 		->limit($upper)
 		->get();
