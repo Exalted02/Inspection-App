@@ -1326,7 +1326,8 @@ $(document ).ready(function() {
 		
 		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('los-load-more-data') }}";
+		//var URL = "{{ route('los-load-more-data') }}";
+		var URL = "{{ route('los-load-more-action-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1358,7 +1359,8 @@ $(document ).ready(function() {
 		
 		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('los-load-more-data') }}";
+		//var URL = "{{ route('los-load-more-data') }}";
+		var URL = "{{ route('los-load-more-plan-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",

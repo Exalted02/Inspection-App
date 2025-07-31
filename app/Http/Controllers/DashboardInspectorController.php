@@ -7256,6 +7256,204 @@ class DashboardInspectorController extends Controller
 		
 		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
 	}
+	public function los_load_more_action_data(Request $request)
+	{
+		$location_id = $request->location_id;
+		
+		$data = array();
+		$interval = config('custom.LOAD_MORE_INTERVAL');
+		$lower = empty($request->moreload) ? 0 : $request->moreload;
+		$upper = empty($request->moreload) ? config('custom.LOAD_MORE_LIST_SHOW') : config('custom.LOAD_MORE_INTERVAL');
+		
+		//----------------------------------------
+		/*$taskListIds = Task_lists::where('location_id', $location_id)
+			->where('inspector_id', auth()->user()->id)
+			->pluck('id');*/
+		$taskListIds = Task_lists::where('location_id', $location_id)->pluck('id');
+
+		$categoryIds = Task_list_subcategories::whereIn('task_list_id', $taskListIds)
+			->pluck('task_list_category_id');
+			
+		$correctiveActionArray = [];
+		
+		$correctiveActionData = Task_list_corrective_action::whereIn('lo_direct_approve', [1])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
+			->where(function ($q) {
+				$q->where(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 1);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 0);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 0);
+				});
+			})
+			->offset($lower)
+			->limit($upper)
+			->get();
+			//->whereNotNull('checklist_id')
+			//->pluck('checklist_id')->toArray();
+		//echo "<pre>";print_r($correctiveActionData);die;
+		foreach($correctiveActionData as $action)
+		{
+			//echo $action->checklist_id. "</br>";
+			
+			$type = '';
+			$image = '';
+			if($action->subchecklist_id == null)
+			{
+				$type = 'checklist';
+				
+				$checklistFile = Task_list_checklists::with('get_checklist_files')->where('task_list_id', $action->task_list_id)->where('checklist_id', $action->checklist_id)->first();
+				
+				$image = $checklistFile && $checklistFile->get_checklist_files->isNotEmpty() ? $checklistFile->get_checklist_files->first()->file : null;
+				
+			}
+			else
+			{
+				$type = 'subchecklist';
+				
+				$subChecklistFile = Task_list_subchecklists::with('get_subchecklist_files')->where('task_list_id', $action->task_list_id)->where('task_list_checklist_id', $action->checklist_id)->where('subchecklist_id', $action->subchecklist_id)->first();
+				
+				$image = $subChecklistFile && $subChecklistFile->get_subchecklist_files->isNotEmpty() ? $subChecklistFile->get_subchecklist_files->first()->file : null;
+			}
+			
+			$correctiveActionArray[] = [
+				'type' => $type ,
+				'task_id' => $action->task_list_id,
+				'checklist_id' => $action->checklist_id,
+				'subchecklist_id' => $action->subchecklist_id,
+				'rejected_region' => $action->lo_corrective_action_plan,
+				'inspector_action' => $action->inspector_action,
+				'los_action' => $action->los_action,
+				'second_checked' => $action->lo_corrective_action_plan_second_check,
+				'lo_direct_approve' => $action->lo_direct_approve,
+				'image' => $image,
+			];
+			
+		}
+		//---------------------------------------
+		$correctiveActionCount = Task_list_corrective_action::whereIn('lo_direct_approve', [1])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
+			->where(function ($q) {
+				$q->where(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 1);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 0);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 0);
+				});
+			})->count();
+			
+		//echo "<pre>";print_r($correctiveActionArray);die;
+		$data['location_id'] = $location_id;
+		$data['mode'] = 'corrective_action';
+		$data['correctiveActionArray'] = $correctiveActionArray;
+		$html = view('inspector.loadmore.ins-filter-load-more-data', $data)->render();
+		//----------------
+		$count  = $request->moreload =='' ? config('custom.LOAD_MORE_LIST_SHOW') : $request->moreload + $interval;
+		$remain = $correctiveActionCount - $count;
+		
+		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
+			
+			
+	}
+	public function los_load_more_plan_data(Request $request)
+	{
+		$location_id = $request->location_id;
+		
+		$data = array();
+		$interval = config('custom.LOAD_MORE_INTERVAL');
+		$lower = empty($request->moreload) ? 0 : $request->moreload;
+		$upper = empty($request->moreload) ? config('custom.LOAD_MORE_LIST_SHOW') : config('custom.LOAD_MORE_INTERVAL');
+		//---------------------------------------------------
+		/*$taskListIds = Task_lists::where('location_id', $location_id)
+			->where('inspector_id', auth()->user()->id)
+			->pluck('id');*/
+			
+		$taskListIds = Task_lists::where('location_id', $location_id)->pluck('id');
+
+		$categoryIds = Task_list_subcategories::whereIn('task_list_id', $taskListIds)
+			->pluck('task_list_category_id');
+		
+		$correctivePlanArray = [];
+		
+		$correctivePlanData = Task_list_corrective_action::whereIn('lo_direct_approve', [0])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
+			->where(function ($q) {
+				$q->where(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 1);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 0);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 0);
+				});
+			})
+			->offset($lower)
+			->limit($upper)
+			->get();
+			
+		//echo "<pre>";print_r($correctiveActionData);die;
+		foreach($correctivePlanData as $plan)
+		{
+			//echo $action->checklist_id. "</br>";
+			
+			$type = '';
+			$image = '';
+			if($plan->subchecklist_id == null)
+			{
+				$type = 'checklist';
+				
+				$checklistFile = Task_list_checklists::with('get_checklist_files')->where('task_list_id', $plan->task_list_id)->where('checklist_id', $plan->checklist_id)->first();
+				
+				$image = $checklistFile && $checklistFile->get_checklist_files->isNotEmpty() ? $checklistFile->get_checklist_files->first()->file : null;
+				
+			}
+			else
+			{
+				$type = 'subchecklist';
+				
+				$subChecklistFile = Task_list_subchecklists::with('get_subchecklist_files')->where('task_list_id', $plan->task_list_id)->where('task_list_checklist_id', $plan->checklist_id)->where('subchecklist_id', $plan->subchecklist_id)->first();
+				
+				$image = $subChecklistFile && $subChecklistFile->get_subchecklist_files->isNotEmpty() ? $subChecklistFile->get_subchecklist_files->first()->file : null;
+			}
+			
+			$correctivePlanArray[] = [
+				'type' => $type ,
+				'task_id' => $plan->task_list_id,
+				'checklist_id' => $plan->checklist_id,
+				'subchecklist_id' => $plan->subchecklist_id,
+				'rejected_region' => $plan->lo_corrective_action_plan,
+				'inspector_action' => $plan->inspector_action,
+				'los_action' => $plan->los_action,
+				'second_checked' => $plan->lo_corrective_action_plan_second_check,
+				'lo_direct_approve' => $plan->lo_direct_approve,
+				'image' => $image,
+			];
+			
+		}
+		
+		$correctivePlanCount = Task_list_corrective_action::whereIn('lo_direct_approve', [0])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
+			->where(function ($q) {
+				$q->where(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 1);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 0);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 0);
+				});
+			})->count();
+		
+		//$totalRecord = $correctiveActionArray;
+		//$correctiveActionArray = array_slice($correctiveActionArray, $lower, $upper);
+		//echo "<pre>";print_r($correctiveActionArray);
+		$data['location_id'] = $location_id;
+		$data['mode'] = 'corrective_plan';
+		$data['correctivePlanArray'] = $correctivePlanArray;
+		$html = view('inspector.loadmore.ins-filter-load-more-data', $data)->render();
+		//----------------
+		$count  = $request->moreload =='' ? config('custom.LOAD_MORE_LIST_SHOW') : $request->moreload + $interval;
+		$remain = $correctivePlanCount - $count;
+		
+		return response()->json(['location_id'=> $location_id, 'html'=> $html, 'loadmore'=> $lower+$upper, 'remain'=> $remain]);
+			
+	}
 	public function los_load_more_data_old(Request $request)
 	{
 		$location_id = $request->location_id;

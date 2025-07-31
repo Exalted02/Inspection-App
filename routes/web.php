@@ -142,6 +142,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('los-load-more-data', [DashboardInspectorController::class, 'los_load_more_data'])->name('los-load-more-data'); //old
 	
 	Route::post('los-load-more-needed-data', [DashboardInspectorController::class, 'los_load_more_needed_data'])->name('los-load-more-needed-data');
+	Route::post('los-load-more-action-data', [DashboardInspectorController::class, 'los_load_more_action_data'])->name('los-load-more-action-data');
+	Route::post('los-load-more-plan-data', [DashboardInspectorController::class, 'los_load_more_plan_data'])->name('los-load-more-plan-data');
 	
 	
 	// load more route lo
