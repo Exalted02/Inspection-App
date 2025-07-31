@@ -150,6 +150,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	// load more route lo
 	Route::post('lo-load-more-data', [DashboardInspectorController::class, 'lo_load_more_data'])->name('lo-load-more-data');
 	
+	Route::post('lo-load-more-needed-data', [DashboardInspectorController::class, 'lo_load_more_needed_data'])->name('lo-load-more-needed-data');
+	Route::post('lo-load-more-action-data', [DashboardInspectorController::class, 'lo_load_more_action_data'])->name('lo-load-more-action-data');
+	Route::post('lo-load-more-plan-data', [DashboardInspectorController::class, 'lo_load_more_plan_data'])->name('lo-load-more-plan-data');
+	Route::post('lo-load-more-appr-data', [DashboardInspectorController::class, 'lo_load_more_appr_data'])->name('lo-load-more-appr-data');
+	
+	//---------
 	Route::get('lo-checklist-first-reply-view/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'lo_checklist_first_reply_view'])->name('lo-checklist-first-reply-view');
 	
 	Route::get('lo-subchecklist-first-reply-view/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'lo_subchecklist_first_reply_view'])->name('lo-subchecklist-first-reply-view');

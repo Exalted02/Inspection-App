@@ -6,7 +6,7 @@ $l = 0;
 $m = 0;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 
-/*$correctiveNeddedArray = [];
+$correctiveNeddedArray = [];
 $correctiveActionArray = [];
 $correctivePlanArray = [];
 $approvedCompletedArray = [];
@@ -199,7 +199,7 @@ if($mode == 'corrective_appr')
 	}
 	
 	$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
-}*/
+}
 
 //echo "<pre>";print_r($correctiveNeddedArray);die;
 @endphp

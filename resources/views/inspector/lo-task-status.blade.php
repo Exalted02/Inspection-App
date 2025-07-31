@@ -114,7 +114,6 @@ foreach($correctiveCheck as $result)
 				'los_action' => $result['los_action'],
 				'second_checked' => $result['second_checked'],
 				'lo_direct_approve' => $result['lo_direct_approve']
-			
 			];
 		}
 		else{
@@ -1085,7 +1084,8 @@ $(document).ready(function() {
 		
 		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('lo-load-more-data') }}";
+		//var URL = "{{ route('lo-load-more-data') }}";
+		var URL = "{{ route('lo-load-more-needed-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1118,7 +1118,8 @@ $(document).ready(function() {
 		
 		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('lo-load-more-data') }}";
+		//var URL = "{{ route('lo-load-more-data') }}";
+		var URL = "{{ route('lo-load-more-action-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1151,7 +1152,8 @@ $(document).ready(function() {
 		
 		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('lo-load-more-data') }}";
+		//var URL = "{{ route('lo-load-more-data') }}";
+		var URL = "{{ route('lo-load-more-plan-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1184,7 +1186,8 @@ $(document).ready(function() {
 		
 		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('lo-load-more-data') }}";
+		//var URL = "{{ route('lo-load-more-data') }}";
+		var URL = "{{ route('lo-load-more-appr-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
