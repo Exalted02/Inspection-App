@@ -13,7 +13,7 @@ $k = 0;
 $l = 0;
 $m = 0;
 
-$countNedded = 0;
+/*$countNedded = 0;
 $countAction = 0;
 $countPlan = 0;
 $countCompleted = 0;
@@ -237,7 +237,7 @@ foreach($approvedCompleted as $result)
 		}
 		
 	}
-}
+}*/
 
 $approvedCompletedArray = array_slice($approvedCompletedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
 
