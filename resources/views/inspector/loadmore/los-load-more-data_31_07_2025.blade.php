@@ -6,13 +6,13 @@ $l = 0;
 $m = 0;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 //echo "<pre>";print_r($approvedCompleted);die;
-/*$correctiveNeddedArray = [];
+$correctiveNeddedArray = [];
 $correctiveActionArray = [];
 $correctivePlanArray = [];
-$approvedCompletedArray = [];*/
+$approvedCompletedArray = [];
 
 
-/*if($mode == 'corrective_needed')
+if($mode == 'corrective_needed')
 {
 	foreach($correctiveNeeded as $needed)
 	{
@@ -164,9 +164,9 @@ if($mode == 'corrective_appr')
 	}
 	
 	$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
-}*/
+}
 
-//echo "<pre>";print_r($correctiveNeddedArray);die;
+
 @endphp
 @if($mode == 'corrective_needed')					
 	@foreach($correctiveNeddedArray as $result)

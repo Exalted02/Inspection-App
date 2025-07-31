@@ -4,7 +4,7 @@
 //echo "<pre>";print_r($categoryData);die;
 //echo "<pre>";print_r($correctiveAction);die;
 //echo "<pre>";print_r($correctiveNeddedArray);die;
-//echo "<pre>";print_r($approvedCompleted);die;
+//echo "<pre>";print_r($approvedCompletedArray);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 use Carbon\Carbon;
 $taskData  = App\Models\Task_lists::where('id', $task_id)->first();
@@ -16,7 +16,7 @@ $l = 0;
 $m = 0;
 
 
-$countNedded = 0;
+/*$countNedded = 0;
 $countAction = 0;
 $countPlan = 0;
 $countCompleted = 0;
@@ -159,7 +159,7 @@ foreach($approvedCompleted as $appr)
 	}
 }
 
-$approvedCompletedArray = array_slice($approvedCompletedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));
+$approvedCompletedArray = array_slice($approvedCompletedArray, 0, config('custom.LOAD_MORE_LIST_SHOW'));*/
 
 $action_show = config('custom.LOAD_MORE_LIST_SHOW');
 $totalNeeded = $countNedded;
@@ -1292,7 +1292,8 @@ $(document ).ready(function() {
 		
 		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('los-load-more-data') }}";
+		//var URL = "{{ route('los-load-more-data') }}"; old
+		var URL = "{{ route('los-load-more-needed-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
