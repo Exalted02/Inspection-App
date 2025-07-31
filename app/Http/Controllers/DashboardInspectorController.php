@@ -9533,7 +9533,7 @@ class DashboardInspectorController extends Controller
 		$data['location_id'] = $location_id;
 		$data['mode'] = 'corrective_appr';
 		
-		$html = view('inspector.loadmore.los-load-more-data', $data)->render();
+		$html = view('inspector.loadmore.lo-load-more-data', $data)->render();
 		
 		//--------------------------------------
 		$count  = $request->moreload =='' ? config('custom.LOAD_MORE_LIST_SHOW') : $request->moreload + $interval;
