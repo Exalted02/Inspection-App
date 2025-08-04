@@ -4,6 +4,7 @@ $j = 0;
 $k = 0;
 $l = 0;
 $m = 0;
+//echo "<pre>";print_r($correctiveNeddedArray);die;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 @endphp
 @if($mode == 'corrective_needed')					
