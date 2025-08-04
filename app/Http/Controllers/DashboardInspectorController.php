@@ -2920,7 +2920,7 @@ class DashboardInspectorController extends Controller
 				//echo $needed->checklist_id."</br>";
 				$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $needed->task_list_id)->where('checklist_id', $needed->checklist_id)->first();
 				
-				$checklistData = Task_list_checklists::where('checklist_id', $needed->checklist_id)->first();
+				$checklistData = Task_list_checklists::where('checklist_id', $needed->checklist_id)->where('task_list_id', $needed->task_list_id)->first();
 				$id = $checklistData ? $checklistData->id : '';
 					
 				if(!$task_list_checklist_corrective_needed)
@@ -3911,7 +3911,7 @@ class DashboardInspectorController extends Controller
 		
 			$existingCorrectiveChecklistIds = DB::table('task_list_corrective_actions')
 			    ->whereIn('task_list_id', $taskListIds)
-				->whereNotNull('checklist_id') // make sure you're only checking checklist-type
+				->whereNotNull('checklist_id') 
 				->pluck('checklist_id')->toArray();
 
 			$checklistIds = DB::table('task_list_checklists')
@@ -4053,7 +4053,7 @@ class DashboardInspectorController extends Controller
 				//echo $needed->checklist_id."</br>";
 				$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $needed->task_list_id)->where('checklist_id', $needed->checklist_id)->first();
 				
-				$checklistData = Task_list_checklists::where('checklist_id', $needed->checklist_id)->first();
+				$checklistData = Task_list_checklists::where('checklist_id', $needed->checklist_id)->where('task_list_id', $needed->task_list_id)->first();
 				$id = $checklistData ? $checklistData->id : '';
 					
 				if(!$task_list_checklist_corrective_needed)
@@ -5089,7 +5089,7 @@ class DashboardInspectorController extends Controller
 				//echo $needed->checklist_id."</br>";
 				$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $needed->task_list_id)->where('checklist_id', $needed->checklist_id)->first();
 				
-				$checklistData = Task_list_checklists::where('checklist_id', $needed->checklist_id)->first();
+				$checklistData = Task_list_checklists::where('checklist_id', $needed->checklist_id)->where('task_list_id', $needed->task_list_id)->first();
 				$id = $checklistData ? $checklistData->id : '';
 					
 				if(!$task_list_checklist_corrective_needed)
