@@ -3334,7 +3334,7 @@ class DashboardInspectorController extends Controller
 				->from('task_list_checklists')
 				->whereIn('task_list_id', $taskListIds)
 				->whereIn('category_id', $categoryIds)
-				//->where('approve', 0)
+				->whereIn('approve', [0,1])
 				->whereIn('checklist_id', $correctiveApprChecklistIds)
 			->unionAll(
 				DB::table('task_list_subchecklists')
@@ -3353,7 +3353,7 @@ class DashboardInspectorController extends Controller
 					)
 					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					//->where('approve', 0)
+					->whereIn('approve', [0,1])
 					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 			);
 		}, 'combined')
@@ -3384,7 +3384,7 @@ class DashboardInspectorController extends Controller
 				->from('task_list_checklists')
 				->whereIn('task_list_id', $taskListIds)
 				->whereIn('category_id', $categoryIds)
-				//->where('approve', 0)
+				->whereIn('approve', [0,1])
 				->whereIn('checklist_id', $correctiveApprChecklistIds)
 			->unionAll(
 				DB::table('task_list_subchecklists')
@@ -3403,13 +3403,12 @@ class DashboardInspectorController extends Controller
 					)
 					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					//->where('approve', 0)
+					->whereIn('approve', [0,1])
 					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 			);
 		}, 'combined')->count();
 		
 		//echo $correctiveApprovedCount;die;
-		
 		foreach($correctiveApproved as $appr)
 		{
 			
@@ -3439,6 +3438,7 @@ class DashboardInspectorController extends Controller
 							//'second_checked'=> $task_list_checklist_corrective_action->lo_corrective_action_plan_second_check,
 						];
 					}
+					
 				}
 				else if($appr->type == 'subchecklist')
 				{
@@ -3468,6 +3468,7 @@ class DashboardInspectorController extends Controller
 							];
 						}
 					}
+					
 				}
 			}
 			elseif($appr->approve == 1)
@@ -3484,6 +3485,7 @@ class DashboardInspectorController extends Controller
 						'created_at'=> change_date_format($appr->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 						'updated_at'=> change_date_format($appr->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 					];
+					
 				}
 				else
 				{
@@ -3498,11 +3500,12 @@ class DashboardInspectorController extends Controller
 						'created_at'=>change_date_format($appr->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 						'updated_at'=>change_date_format($appr->updated_at, 'Y-m-d H:i:s', 'd M Y, h:i A'),
 					];
+					
 				}
 			}
 			
 		}
-		
+		//echo $appCnt;die;
 		usort($approvedCompletedArray, function ($a, $b) {
 			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
 		});
@@ -3522,7 +3525,8 @@ class DashboardInspectorController extends Controller
 		$data['countPlan'] = $correctivePlanCount;
 		
 		$data['approvedCompletedArray'] = $approvedCompletedArray;
-		$data['countCompleted'] = $correctiveApprovedCount;
+		//$data['countCompleted'] = $correctiveApprovedCount;
+		$data['countCompleted'] = count($approvedCompletedArray);
 		
 		$data['correctiveAction'] = [];
 		
@@ -4743,7 +4747,8 @@ class DashboardInspectorController extends Controller
 		$data['countPlan'] = $correctivePlanCount;
 		
 		$data['approvedCompletedArray'] = $approvedCompletedArray;
-		$data['countCompleted'] = $correctiveApprovedCount;
+		//$data['countCompleted'] = $correctiveApprovedCount;
+		$data['countCompleted'] = count($approvedCompletedArray);
 		
 		$data['correctiveAction'] = [];
 		
@@ -5866,7 +5871,8 @@ class DashboardInspectorController extends Controller
 		$data['countPlan'] = $correctivePlanCount;
 		
 		$data['approvedCompletedArray'] = $approvedCompletedArray;
-		$data['countCompleted'] = $correctiveApprovedCount;
+		//$data['countCompleted'] = $correctiveApprovedCount;
+		$data['countCompleted'] = count($approvedCompletedArray);
 		
 		$data['correctiveAction'] = [];
 		
