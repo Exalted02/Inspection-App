@@ -3357,6 +3357,7 @@ class DashboardInspectorController extends Controller
 					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 			);
 		}, 'combined')
+		->orderByDesc('updated_at')
 		->offset($offset)
 		->limit($limit)
 		->get();
