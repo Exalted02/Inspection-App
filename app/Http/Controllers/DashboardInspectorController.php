@@ -3058,7 +3058,7 @@ class DashboardInspectorController extends Controller
 			{
 				$task_list_subchecklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $needed->task_list_id)->where('checklist_id', $needed->task_list_checklist_id)->where('subchecklist_id', $needed->subchecklist_id)->first();
 							
-				$subchecklistData = Task_list_subchecklists::where('task_list_checklist_id', $needed->task_list_checklist_id)->where('subchecklist_id',$needed->subchecklist_id)->first();
+				$subchecklistData = Task_list_subchecklists::where('task_list_id', $needed->task_list_id)->where('task_list_checklist_id', $needed->task_list_checklist_id)->where('subchecklist_id',$needed->subchecklist_id)->first();
 				$id = $subchecklistData ? $subchecklistData->id : '';
 							
 				if(!$task_list_subchecklist_corrective_needed)
@@ -5401,7 +5401,7 @@ class DashboardInspectorController extends Controller
 			{
 				$task_list_subchecklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $needed->task_list_id)->where('checklist_id', $needed->task_list_checklist_id)->where('subchecklist_id', $needed->subchecklist_id)->first();
 							
-				$subchecklistData = Task_list_subchecklists::where('task_list_checklist_id', $needed->task_list_checklist_id)->where('subchecklist_id',$needed->subchecklist_id)->first();
+				$subchecklistData = Task_list_subchecklists::where('task_list_id', $needed->task_list_id)->where('task_list_checklist_id', $needed->task_list_checklist_id)->where('subchecklist_id',$needed->subchecklist_id)->first();
 				$id = $subchecklistData ? $subchecklistData->id : '';
 							
 				if(!$task_list_subchecklist_corrective_needed)
@@ -5740,7 +5740,7 @@ class DashboardInspectorController extends Controller
 					$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $appr->task_list_id)->where('checklist_id', $appr->checklist_id)->first();
 					if($task_list_checklist_corrective_needed)
 					{
-						$chklstData  = Task_list_checklists::where('checklist_id', $appr->checklist_id)->first();
+						$chklstData  = Task_list_checklists::where('task_list_id', $appr->task_list_id)->where('checklist_id', $appr->checklist_id)->first();
 						$id = $chklstData ? $chklstData->id : '';
 						$isfiles = '';
 						$images = '';
@@ -5766,7 +5766,7 @@ class DashboardInspectorController extends Controller
 					{
 						if($task_list_subchecklist_corrective_needed)
 						{
-							$subchklstData  = task_list_subchecklists::where('task_list_checklist_id', $appr->checklist_id)->where('subchecklist_id',$appr->subchecklist_id)->first();
+							$subchklstData  = task_list_subchecklists::where('task_list_id', $appr->task_list_id)->where('task_list_checklist_id', $appr->checklist_id)->where('subchecklist_id',$appr->subchecklist_id)->first();
 							$id = $subchklstData ? $subchklstData->id : '';
 						
 							$isSubChecklistfiles = '';
