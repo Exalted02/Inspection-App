@@ -407,6 +407,29 @@
 								<div class="col-md-8 d-flex flex-wrap gap-2" id="preview-container">
 								</div>
 							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<label class="d-block col-form-label"></label>
+									<div class="status-toggle">
+										<input type="checkbox" name="lo_direct_approve" id="lo_direct_approve" class="check">
+										<label for="lo_direct_approve" class="checktoggle">Corrective Done</label>
+									</div>
+								</div>
+							</div>
+							<div class="row set_time_div" style="margin-top:17px;">
+								<div class="col-md-12">
+									<label>{{ __('Set Timeline') }}</label>
+									<div class="split-placeholder-wrapper">
+									<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time">
+									<span class="custom-left-placeholder" id="selected_time">Set Time</span>
+									<span class="custom-right-placeholder" id="selected_date">Set Date</span>
+								</div>
+								<span id="settimeline_id_error" style="display:none;  color: red;"></span>
+								<input type="hidden" id="hidden_set_date" name="hidden_set_date">
+								<input type="hidden" id="hidden_set_time" name="hidden_set_time">
+								</div>
+							</div>
+						
 							<input type="hidden" id="task_id" value="{{ $task_id ?? ''}}">
 							<input type="hidden" id="checklist_id" value="{{ $checklist_id  ?? ''}}">
 							<input type="hidden" id="subchecklist_id" value="{{ $subchecklist_id ?? ''}}">
@@ -437,9 +460,8 @@
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
-	{{--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
-		{{--<script src="{{url('front-assets/js/moment.min.js') }}"></script>
-<script src="{{url('front-assets/js/bootstrap-datetimepicker.min.js') }}"></script>--}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
 /*document.getElementById('lo_file').addEventListener('change', function(e) {
@@ -450,7 +472,55 @@
 
 <script>
 $(document).ready(function() {
-	
+flatpickr("#set_time", {
+    enableTime: false,
+    dateFormat: "d M Y H:i",
+    onChange: function(selectedDates, dateStr, instance) {
+		
+			if (selectedDates.length == 1) {
+				const date = selectedDates[0];
+				const dateOnly = flatpickr.formatDate(date, "d M Y");
+				const timeOnly = flatpickr.formatDate(date, "H:i");
+				
+				document.getElementById('selected_time').innerText = 'Set Time';
+				document.getElementById('selected_date').innerText = dateOnly;
+				$('#hidden_set_date').val(dateOnly);
+				$('#hidden_set_time').val(timeOnly);
+				// Delay clearing input to prevent recursion
+				// Responsive fix for mobile view
+				if (window.innerWidth <= 576) {
+					//$('#selected_time').hide();
+					$('.set-timeline-input').val('');
+					setTimeout(() => {
+							instance.input.value = '';
+							instance.input.blur();
+						}, 0);
+					
+					
+				} else {
+					// Reset for desktop
+					$('#selected_time').css({
+						'display': '',
+						'position': '',
+						'text-align': '',
+						'margin-bottom': ''
+					});
+					$('#selected_date').css({
+						'display': '',
+						'position': '',
+						'text-align': ''
+					});
+					
+					setTimeout(() => {
+						instance.input.value = '';
+						instance.input.blur();
+					}, 0);
+				}
+			} else {
+				document.getElementById('selected_date').innerText = "Setdate";
+			}
+		}
+	});
   
 let previewContainer = $('#preview-container');
 let selectedFiles = [];
@@ -529,10 +599,23 @@ $('#lo_file').on('change', function (e) {
 	   var location_id = $('#location_id').val();
 	   
 	   let lo_corrective_action_plan = $('#lo_corrective_action_plan').val().trim();
+	   
+	   let hidden_set_date = $('#hidden_set_date').val();
+	   let hidden_set_time = $('#hidden_set_time').val();
+	   let lo_direct_approve = $('#lo_direct_approve').is(':checked');
+	   
 	   if(lo_corrective_action_plan=='')
 	   {
 		   $('#action_plan').fadeIn().delay(2000).fadeOut();
 		   return false;
+	   }
+	   
+	   if(lo_direct_approve == false)
+	   {
+	    if(hidden_set_date === '') {
+			$('#settimeline_id_error').text('Please enter date').fadeIn().delay(2000).fadeOut();
+			return false;
+		}
 	   }
 	   
 	   let files = $('#lo_file')[0].files;
@@ -568,6 +651,9 @@ $('#lo_file').on('change', function (e) {
 		formData.append('subchecklist_id', subchecklist_id);
 		formData.append('type', type);
 		formData.append('content', lo_corrective_action_plan);
+		formData.append('lo_direct_approve', lo_direct_approve);
+		formData.append('hidden_set_date', hidden_set_date);
+		formData.append('hidden_set_time', hidden_set_time);
 		formData.append('inspector_action', 2);
 		formData.append('los_action', 2);
 		formData.append('_token', csrfToken);

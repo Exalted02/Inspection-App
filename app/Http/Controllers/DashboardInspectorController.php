@@ -2368,6 +2368,17 @@ class DashboardInspectorController extends Controller
 		$type = $request->type;
 		$content = $request->content ?? null;
 		
+		if($request->lo_direct_approve == 'false')
+		{
+			$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
+			$time = $request->post('hidden_set_time');
+			$datetime  = $date.' '.$time;
+			$lo_completed_by = date('Y-m-d', strtotime($datetime));
+		}
+		else{
+			$lo_completed_by = date('Y-m-d h:i:s');
+		}
+		
 		$corrective_action_data = Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
 		
 		$id = $corrective_action_data ? $corrective_action_data->id : '';
@@ -2381,6 +2392,8 @@ class DashboardInspectorController extends Controller
 		$model->los_action = 0;
 		$model->approved_status = 0;
 		$model->rejected_status = 0;
+		$model->lo_completed_by = $lo_completed_by; // add new 05-08-2025
+		$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0; // add new 05-08-2025
 		//$model->rejected_repeated = 0; // add new 29-07-2025
 		$model->save();
 		
