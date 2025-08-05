@@ -3526,8 +3526,8 @@ class DashboardInspectorController extends Controller
 		$data['countPlan'] = $correctivePlanCount;
 		
 		$data['approvedCompletedArray'] = $approvedCompletedArray;
-		//$data['countCompleted'] = $correctiveApprovedCount;
-		$data['countCompleted'] = count($approvedCompletedArray);
+		$data['countCompleted'] = $correctiveApprovedCount;
+		//$data['countCompleted'] = count($approvedCompletedArray);
 		
 		$data['correctiveAction'] = [];
 		
@@ -4583,7 +4583,7 @@ class DashboardInspectorController extends Controller
 				->from('task_list_checklists')
 				->whereIn('task_list_id', $taskListIds)
 				->whereIn('category_id', $categoryIds)
-				//->where('approve', 0)
+				->whereIn('approve', [0,1])
 				->whereIn('checklist_id', $correctiveApprChecklistIds)
 			->unionAll(
 				DB::table('task_list_subchecklists')
@@ -4602,7 +4602,7 @@ class DashboardInspectorController extends Controller
 					)
 					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					//->where('approve', 0)
+					->whereIn('approve', [0,1])
 					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 			);
 		}, 'combined')
@@ -4611,29 +4611,53 @@ class DashboardInspectorController extends Controller
 		->limit($limit)
 		->get();
 		//echo "<pre>";print_r($correctiveApproved);die;
-		
-		
 		$correctiveApprovedCount = DB::table(function ($query) use (
-										$taskListIds,
-										$categoryIds,
-										$correctiveApprChecklistIds,
-										$correctiveApprSubChecklistIds
-									) {
-										$query->select(DB::raw('1 as dummy'))
-											->from('task_list_checklists')
-											->whereIn('task_list_id', $taskListIds)
-											->whereIn('category_id', $categoryIds)
-											->whereIn('checklist_id', $correctiveApprChecklistIds)
-											->unionAll(
-												DB::table('task_list_subchecklists')
-													->select(DB::raw('1 as dummy'))
-													->whereIn('task_list_id', $taskListIds)
-													->whereIn('category_id', $categoryIds)
-													->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-											);
-									}, 'combined')->count();
-
+			$taskListIds,
+			$categoryIds,
+			$correctiveApprChecklistIds,
+			$correctiveApprSubChecklistIds
+		) {
+			$query->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->from('task_list_checklists')
+				->whereIn('task_list_id', $taskListIds)
+				->whereIn('category_id', $categoryIds)
+				->whereIn('approve', [0,1])
+				->whereIn('checklist_id', $correctiveApprChecklistIds)
+			->unionAll(
+				DB::table('task_list_subchecklists')
+					->select(
+						'id',
+						'subchecklist_id as item_id',
+						DB::raw("'subchecklist' as type"),
+						'task_list_id',
+						'category_id',
+						'approve',
+						'rejected_region',
+						'created_at',
+						'updated_at',
+						'subchecklist_id',
+						'task_list_checklist_id'
+					)
+					->whereIn('task_list_id', $taskListIds)
+					->whereIn('category_id', $categoryIds)
+					->whereIn('approve', [0,1])
+					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
+			);
+		}, 'combined')->count();
 		
+	
 		//echo $correctiveApprovedCount;die;
 		
 		foreach($correctiveApproved as $appr)
@@ -4748,8 +4772,8 @@ class DashboardInspectorController extends Controller
 		$data['countPlan'] = $correctivePlanCount;
 		
 		$data['approvedCompletedArray'] = $approvedCompletedArray;
-		//$data['countCompleted'] = $correctiveApprovedCount;
-		$data['countCompleted'] = count($approvedCompletedArray);
+		$data['countCompleted'] = $correctiveApprovedCount;
+		//$data['countCompleted'] = count($approvedCompletedArray);
 		
 		$data['correctiveAction'] = [];
 		
@@ -5707,7 +5731,7 @@ class DashboardInspectorController extends Controller
 				->from('task_list_checklists')
 				->whereIn('task_list_id', $taskListIds)
 				->whereIn('category_id', $categoryIds)
-				//->where('approve', 0)
+				->whereIn('approve', [0,1])
 				->whereIn('checklist_id', $correctiveApprChecklistIds)
 			->unionAll(
 				DB::table('task_list_subchecklists')
@@ -5726,7 +5750,7 @@ class DashboardInspectorController extends Controller
 					)
 					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					//->where('approve', 0)
+					->whereIn('approve', [0,1])
 					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 			);
 		}, 'combined')
