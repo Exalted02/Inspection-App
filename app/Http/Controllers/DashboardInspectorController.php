@@ -4607,6 +4607,7 @@ class DashboardInspectorController extends Controller
 			);
 		}, 'combined')
 		//->orderByDesc('updated_at')
+		->orderBy('updated_at', 'asc')
 		->offset($offset)
 		->limit($limit)
 		->get();
@@ -5755,6 +5756,7 @@ class DashboardInspectorController extends Controller
 			);
 		}, 'combined')
 		//->orderByDesc('updated_at')
+		->orderBy('updated_at', 'asc')
 		->offset($offset)
 		->limit($limit)
 		->get();
@@ -8768,7 +8770,7 @@ class DashboardInspectorController extends Controller
 					->from('task_list_checklists')
 					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					//->where('approve', 0)
+					->whereIn('approve', [0,1])
 					->whereIn('checklist_id', $correctiveApprChecklistIds)
 				->unionAll(
 					DB::table('task_list_subchecklists')
@@ -8786,11 +8788,12 @@ class DashboardInspectorController extends Controller
 						)
 						->whereIn('task_list_id', $taskListIds)
 						->whereIn('category_id', $categoryIds)
-						//->where('approve', 0)
+						->whereIn('approve', [0,1])
 						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 				);
 			}, 'combined')
 			//->orderByDesc('updated_at')
+			->orderBy('updated_at', 'asc')
 			->offset($lower)
 			->limit($upper)
 			->get();
@@ -8817,7 +8820,7 @@ class DashboardInspectorController extends Controller
 					->from('task_list_checklists')
 					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					//->where('approve', 0)
+					->whereIn('approve', [0,1])
 					->whereIn('checklist_id', $correctiveApprChecklistIds)
 				->unionAll(
 					DB::table('task_list_subchecklists')
@@ -8835,7 +8838,7 @@ class DashboardInspectorController extends Controller
 						)
 						->whereIn('task_list_id', $taskListIds)
 						->whereIn('category_id', $categoryIds)
-						//->where('approve', 0)
+						->whereIn('approve', [0,1])
 						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 				);
 			}, 'combined')->count();
@@ -8932,9 +8935,9 @@ class DashboardInspectorController extends Controller
 		}
 		
 		//--------------------------------------------------
-		/*usort($approvedCompletedArray, function ($a, $b) {
+		usort($approvedCompletedArray, function ($a, $b) {
 			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
-		});*/
+		});
 		
 		//$totalRecord = $approvedCompletedArray;
 		//$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
@@ -9975,7 +9978,7 @@ class DashboardInspectorController extends Controller
 					->from('task_list_checklists')
 					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					//->where('approve', 0)
+					->whereIn('approve', [0,1])
 					->whereIn('checklist_id', $correctiveApprChecklistIds)
 				->unionAll(
 					DB::table('task_list_subchecklists')
@@ -9993,11 +9996,12 @@ class DashboardInspectorController extends Controller
 						)
 						->whereIn('task_list_id', $taskListIds)
 						->whereIn('category_id', $categoryIds)
-						//->where('approve', 0)
+						->whereIn('approve', [0,1])
 						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 				);
 			}, 'combined')
 			//->orderByDesc('updated_at')
+			->orderBy('updated_at', 'asc')
 			->offset($lower)
 			->limit($upper)
 			->get();
@@ -10024,7 +10028,7 @@ class DashboardInspectorController extends Controller
 					->from('task_list_checklists')
 					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					//->where('approve', 0)
+					->whereIn('approve', [0,1])
 					->whereIn('checklist_id', $correctiveApprChecklistIds)
 				->unionAll(
 					DB::table('task_list_subchecklists')
@@ -10042,7 +10046,7 @@ class DashboardInspectorController extends Controller
 						)
 						->whereIn('task_list_id', $taskListIds)
 						->whereIn('category_id', $categoryIds)
-						//->where('approve', 0)
+						->whereIn('approve', [0,1])
 						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 				);
 			}, 'combined')->count();
@@ -10139,9 +10143,9 @@ class DashboardInspectorController extends Controller
 		}
 		
 		//--------------------------------------------------
-		/*usort($approvedCompletedArray, function ($a, $b) {
+		usort($approvedCompletedArray, function ($a, $b) {
 			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
-		});*/
+		});
 		
 		//$totalRecord = $approvedCompletedArray;
 		//$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
