@@ -2770,13 +2770,13 @@ class DashboardInspectorController extends Controller
 		$taskListIds = Task_lists::where('location_id', $lid)
 			->where('inspector_id', auth()->user()->id)
 			->pluck('id');
-
+		
 		$categoryIds = Task_list_subcategories::whereIn('task_list_id', $taskListIds)
 			->pluck('task_list_category_id');
-			
+		//echo "<pre>";print_r($categoryIds);die;
 		//-----05-08-2025 if submit checklist then submit task data show-----
 		$submit_task_id = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)->pluck('task_list_id')->toArray();
-
+		//echo "<pre>";print_r($taskListIds);die;
 		// Checklist IDs with existing corrective needed
 		
 		$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
@@ -3278,7 +3278,7 @@ class DashboardInspectorController extends Controller
 		//correctiveChecklistIds
 		$approvedCompletedArray = [];
 		// Checklist IDs with existing corrective needed
-		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $submit_task_id)
+		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
@@ -3289,17 +3289,16 @@ class DashboardInspectorController extends Controller
 			
 			//print_r($correctiveChecklistApprIds);die;
 		//------------------------------------
+		//echo "<pre>"; print_r($submit_task_id);die;
 		
 			$existingCorrectiveChecklistApprIds = DB::table('task_list_corrective_actions')
-			    //->whereIn('task_list_id', $taskListIds)
-			    ->whereIn('task_list_id', $submit_task_id)
+			    ->whereIn('task_list_id', $taskListIds)
 				->whereNotNull('checklist_id')
 				->pluck('checklist_id')->toArray();
 
 			$checklistApprIds = DB::table('task_list_checklists')
 				->where('approve', 1)
-				//->whereIn('task_list_id', $taskListIds)
-				->whereIn('task_list_id', $submit_task_id)
+				->whereIn('task_list_id', $taskListIds)
 				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
 				->pluck('checklist_id')
 				->toArray();
@@ -3309,7 +3308,7 @@ class DashboardInspectorController extends Controller
 		//print_r($correctiveApprChecklistIds);die;
 		//------------------------------------
 
-		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $submit_task_id)
+		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
@@ -3318,7 +3317,7 @@ class DashboardInspectorController extends Controller
 			->whereNotNull('subchecklist_id')
 			->pluck('subchecklist_id')->toArray();
 			
-		//print_r($correctiveSubChecklist_Ids);die;
+		//print_r($correctiveSubChecklistApprIds);die;
 			
 			$existingCorrectiveSubChecklistIds = DB::table('task_list_corrective_actions')
 			    ->whereIn('task_list_id', $taskListIds)
@@ -3327,13 +3326,12 @@ class DashboardInspectorController extends Controller
 
 			$subchecklistApprIds = DB::table('task_list_subchecklists')
 				->where('approve', 1)
-				//->whereIn('task_list_id', $taskListIds)
-				->whereIn('task_list_id', $submit_task_id)
+				->whereIn('task_list_id', $taskListIds)
 				//->whereNotIn('subchecklist_id', $existingCorrectiveSubChecklistIds)
 				->pluck('subchecklist_id')
 				->toArray();
 			
-			//print_r($subchecklistIds);die;
+			//print_r($subchecklistApprIds);die;
 			$correctiveApprSubChecklistIds = array_merge($correctiveSubChecklistApprIds,$subchecklistApprIds);	
 			//print_r($correctiveApprSubChecklistIds);die;
 
@@ -3359,8 +3357,8 @@ class DashboardInspectorController extends Controller
 					DB::raw('NULL as task_list_checklist_id')
 				)
 				->from('task_list_checklists')
-				//->whereIn('task_list_id', $taskListIds)
-				->whereIn('task_list_id', $submit_task_id)
+				->whereIn('task_list_id', $taskListIds)
+				//->whereIn('task_list_id', $submit_task_id)
 				->whereIn('category_id', $categoryIds)
 				->whereIn('approve', [0,1])
 				->whereIn('checklist_id', $correctiveApprChecklistIds)
@@ -3379,8 +3377,8 @@ class DashboardInspectorController extends Controller
 						'subchecklist_id',
 						'task_list_checklist_id'
 					)
-					//->whereIn('task_list_id', $taskListIds)
-					->whereIn('task_list_id', $submit_task_id)
+					->whereIn('task_list_id', $taskListIds)
+					//->whereIn('task_list_id', $submit_task_id)
 					->whereIn('category_id', $categoryIds)
 					->whereIn('approve', [0,1])
 					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
@@ -3413,9 +3411,9 @@ class DashboardInspectorController extends Controller
 					DB::raw('NULL as task_list_checklist_id')
 				)
 				->from('task_list_checklists')
-				//->whereIn('task_list_id', $taskListIds)
+				->whereIn('task_list_id', $taskListIds)
 				->whereIn('category_id', $categoryIds)
-				->whereIn('task_list_id', $submit_task_id)
+				//->whereIn('task_list_id', $submit_task_id)
 				->whereIn('approve', [0,1])
 				->whereIn('checklist_id', $correctiveApprChecklistIds)
 			->unionAll(
@@ -3433,9 +3431,9 @@ class DashboardInspectorController extends Controller
 						'subchecklist_id',
 						'task_list_checklist_id'
 					)
-					//->whereIn('task_list_id', $taskListIds)
+					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					->whereIn('task_list_id', $submit_task_id)
+					//->whereIn('task_list_id', $submit_task_id)
 					->whereIn('approve', [0,1])
 					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
 			);
