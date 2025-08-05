@@ -9276,65 +9276,81 @@ class DashboardInspectorController extends Controller
 			->pluck('task_list_category_id');
 
 		// Checklist IDs with existing corrective needed
-		$correctiveChecklist_Ids = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])->whereIn('task_list_id', $taskListIds)
+		$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+			->whereIn('task_list_id', $taskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				})->orWhere(function ($q) {
-					$q->where('inspector_action', 2)->where('los_action', 2);
+					$q->where('inspector_action', 1)->where('los_action', 0);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 1);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
 			->whereNotNull('checklist_id')
-			->pluck('checklist_id')->toArray();
+			->get(['task_list_id', 'checklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->checklist_id;
+			})
+			->toArray();
+		  //echo "<pre>";print_r($excludedChecklistPairs);die;
 			
-			//print_r($correctiveChecklist_Ids);die;
-		//------------------------------------
-		
-			$existingCorrectiveChecklistIds = DB::table('task_list_corrective_actions')
-			    ->whereIn('task_list_id', $taskListIds)
-				->whereNotNull('checklist_id') // make sure you're only checking checklist-type
-				->pluck('checklist_id')->toArray();
-
-			$checklistIds = DB::table('task_list_checklists')
-				->where('approve', 0)
-				->whereIn('task_list_id', $taskListIds)
-				->whereNotIn('checklist_id', $existingCorrectiveChecklistIds)
-				->pluck('checklist_id')
-				->toArray();
+			$correctiveChecklistIds = DB::table('task_list_checklists')
+			->where('approve', 0)
+			->whereIn('task_list_id', $taskListIds)
+			->whereIn('category_id', $categoryIds)
+			->get(['task_list_id', 'checklist_id'])
+			->filter(function ($item) use ($excludedChecklistPairs) {
+				$pairKey = $item->task_list_id . '-' . $item->checklist_id;
+				return !in_array($pairKey, $excludedChecklistPairs);
+			})
+			->toArray();
 				
-		//print_r($checklistIds);die;
-		$correctiveChecklistIds = array_merge($correctiveChecklist_Ids,$checklistIds);
-		//print_r($correctiveChecklistIds);die;
-		//------------------------------------
+		
+		//--------------subchecklist---------------------
 
-		$correctiveSubChecklist_Ids = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])->whereIn('task_list_id', $taskListIds)
+		$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+			->whereIn('task_list_id', $taskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				})->orWhere(function ($q) {
-					$q->where('inspector_action', 2)->where('los_action', 2);
+					$q->where('inspector_action', 1)->where('los_action', 0);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 0)->where('los_action', 1);
+				})->orWhere(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
-			->whereNotNull('subchecklist_id')
-			->pluck('subchecklist_id')->toArray();
+			->whereNotNull('checklist_id')
+			->get(['task_list_id', 'checklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->checklist_id;
+			})
+			->toArray();
 			
-		//print_r($correctiveSubChecklist_Ids);die;
+			//echo "<pre>";print_r($excludedSubChecklistPairs);die;
 			
-			$existingCorrectiveSubChecklistIds = DB::table('task_list_corrective_actions')
-			    ->whereIn('task_list_id', $taskListIds)
-				->whereNotNull('subchecklist_id')
-				->pluck('subchecklist_id')->toArray();
-
-			$subchecklistIds = DB::table('task_list_subchecklists')
-				->where('approve', 0)
-				->whereIn('task_list_id', $taskListIds)
-				->whereNotIn('subchecklist_id', $existingCorrectiveSubChecklistIds)
-				->pluck('subchecklist_id')
-				->toArray();
-			
-			//print_r($subchecklistIds);die;
-			$correctiveSubChecklistIds = array_merge($correctiveSubChecklist_Ids,$subchecklistIds);	
-				//print_r($correctiveSubChecklistIds);die;
+			$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
+			->where('approve', 0)
+			->whereIn('task_list_id', $taskListIds)
+			->whereIn('category_id', $categoryIds)
+			->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
+			->filter(function ($item) use ($excludedSubChecklistPairs) {
+				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id;
+				return !in_array($pairKey, $excludedSubChecklistPairs);
+			})
+			->map(function ($item) {
+				return (object)[
+					'task_list_id' => $item->task_list_id,
+					'subchecklist_id' => $item->subchecklist_id,
+					'task_list_checklist_id' => $item->task_list_checklist_id,
+				];
+			})
+			->values()
+			->toArray();
 
 		// Raw union query
 		$correctiveneeded = DB::table(function ($query) use (
@@ -9343,44 +9359,83 @@ class DashboardInspectorController extends Controller
 			$correctiveChecklistIds,
 			$correctiveSubChecklistIds
 		) {
-			$query->select(
+			// Subquery 1: From task_list_checklists
+			$baseQuery = DB::table('task_list_checklists')
+				->select(
 					'id',
-					'checklist_id',
+					'checklist_id as checklist_id',
 					DB::raw("'checklist' as type"),
 					'task_list_id',
 					'category_id',
 					'approve',
+					'created_at',
+					'updated_at',
 					DB::raw('NULL as subchecklist_id'),
 					DB::raw('NULL as task_list_checklist_id')
 				)
-				->from('task_list_checklists')
+				->whereIn('category_id', $categoryIds)
+				->where('approve', 0)
+				->where(function ($query) use ($correctiveChecklistIds) {
+					if (!empty($correctiveChecklistIds)) {
+						$query->where(function ($q) use ($correctiveChecklistIds) {
+							foreach ($correctiveChecklistIds as $item) {
+								$taskListId = is_array($item) ? $item['task_list_id'] : $item->task_list_id;
+								$checklistId = is_array($item) ? $item['checklist_id'] : $item->checklist_id;
+
+								$q->orWhere(function ($subQ) use ($taskListId, $checklistId) {
+									$subQ->where('task_list_id', $taskListId)
+										 ->where('checklist_id', $checklistId);
+								});
+							}
+						});
+					} else {
+						$query->whereRaw('1 = 0'); // Prevent matching any row
+					}
+				});
+
+			// Subquery 2: From task_list_subchecklists
+			$unionQuery = DB::table('task_list_subchecklists')
+				->select(
+					'id',
+					'subchecklist_id as item_id',
+					DB::raw("'subchecklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'created_at',
+					'updated_at',
+					'subchecklist_id',
+					'task_list_checklist_id'
+				)
 				->whereIn('task_list_id', $taskListIds)
 				->whereIn('category_id', $categoryIds)
 				->where('approve', 0)
-				->whereIn('checklist_id', $correctiveChecklistIds)
-			->unionAll(
-				DB::table('task_list_subchecklists')
-					->select(
-						'id',
-						'subchecklist_id as item_id',
-						DB::raw("'subchecklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'subchecklist_id',
-						'task_list_checklist_id'
-					)
-					->whereIn('task_list_id', $taskListIds)
-					->whereIn('category_id', $categoryIds)
-					->where('approve', 0)
-					->whereIn('subchecklist_id', $correctiveSubChecklistIds)
-			);
+				->where(function ($query) use ($correctiveSubChecklistIds) {
+					if (!empty($correctiveSubChecklistIds)) {
+						foreach ($correctiveSubChecklistIds as $item) {
+							$taskListId = is_array($item) ? $item['task_list_id'] : $item->task_list_id;
+							$subchecklistId = is_array($item) ? $item['subchecklist_id'] : $item->subchecklist_id;
+
+							$query->orWhere(function ($subQ) use ($taskListId, $subchecklistId) {
+								$subQ->where('task_list_id', $taskListId)
+									 ->where('subchecklist_id', $subchecklistId);
+							});
+						}
+					} else {
+						$query->whereRaw('1 = 0');
+					}
+				});
+
+			// Merge both queries using unionAll
+			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')
-		->offset($lower)
-		->limit($upper)
-		->get();
+			->orderByDesc('updated_at')
+			->offset($lower)
+			->limit($upper)
+			->get();
 		
 		
+		$correctiveNeddedArray = [];
 		$correctiveNeddedArray = [];
 		foreach($correctiveneeded as $needed)
 		{
@@ -9389,7 +9444,7 @@ class DashboardInspectorController extends Controller
 				//echo $needed->checklist_id."</br>";
 				$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $needed->task_list_id)->where('checklist_id', $needed->checklist_id)->first();
 				
-				$checklistData = Task_list_checklists::where('task_list_id', $needed->task_list_id)->where('checklist_id', $needed->checklist_id)->first();
+				$checklistData = Task_list_checklists::where('checklist_id', $needed->checklist_id)->where('task_list_id', $needed->task_list_id)->first();
 				$id = $checklistData ? $checklistData->id : '';
 					
 				if(!$task_list_checklist_corrective_needed)
@@ -9498,38 +9553,74 @@ class DashboardInspectorController extends Controller
 			$correctiveChecklistIds,
 			$correctiveSubChecklistIds
 		) {
-			$query->select(
+			// Subquery 1: From task_list_checklists
+			$baseQuery = DB::table('task_list_checklists')
+				->select(
 					'id',
-					'checklist_id',
+					'checklist_id as checklist_id',
 					DB::raw("'checklist' as type"),
 					'task_list_id',
 					'category_id',
 					'approve',
+					'created_at',
+					'updated_at',
 					DB::raw('NULL as subchecklist_id'),
 					DB::raw('NULL as task_list_checklist_id')
 				)
-				->from('task_list_checklists')
+				->whereIn('category_id', $categoryIds)
+				->where('approve', 0)
+				->where(function ($query) use ($correctiveChecklistIds) {
+					if (!empty($correctiveChecklistIds)) {
+						$query->where(function ($q) use ($correctiveChecklistIds) {
+							foreach ($correctiveChecklistIds as $item) {
+								$taskListId = is_array($item) ? $item['task_list_id'] : $item->task_list_id;
+								$checklistId = is_array($item) ? $item['checklist_id'] : $item->checklist_id;
+
+								$q->orWhere(function ($subQ) use ($taskListId, $checklistId) {
+									$subQ->where('task_list_id', $taskListId)
+										 ->where('checklist_id', $checklistId);
+								});
+							}
+						});
+					} else {
+						$query->whereRaw('1 = 0'); // Prevent matching any row
+					}
+				});
+
+			$unionQuery = DB::table('task_list_subchecklists')
+				->select(
+					'id',
+					'subchecklist_id as item_id',
+					DB::raw("'subchecklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'created_at',
+					'updated_at',
+					'subchecklist_id',
+					'task_list_checklist_id'
+				)
 				->whereIn('task_list_id', $taskListIds)
 				->whereIn('category_id', $categoryIds)
 				->where('approve', 0)
-				->whereIn('checklist_id', $correctiveChecklistIds)
-			->unionAll(
-				DB::table('task_list_subchecklists')
-					->select(
-						'id',
-						'subchecklist_id as item_id',
-						DB::raw("'subchecklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'subchecklist_id',
-						'task_list_checklist_id'
-					)
-					->whereIn('task_list_id', $taskListIds)
-					->whereIn('category_id', $categoryIds)
-					->where('approve', 0)
-					->whereIn('subchecklist_id', $correctiveSubChecklistIds)
-			);
+				->where(function ($query) use ($correctiveSubChecklistIds) {
+					if (!empty($correctiveSubChecklistIds)) {
+						foreach ($correctiveSubChecklistIds as $item) {
+							$taskListId = is_array($item) ? $item['task_list_id'] : $item->task_list_id;
+							$subchecklistId = is_array($item) ? $item['subchecklist_id'] : $item->subchecklist_id;
+
+							$query->orWhere(function ($subQ) use ($taskListId, $subchecklistId) {
+								$subQ->where('task_list_id', $taskListId)
+									 ->where('subchecklist_id', $subchecklistId);
+							});
+						}
+					} else {
+						$query->whereRaw('1 = 0');
+					}
+				});
+
+			// Merge both queries using unionAll
+			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')->count();
 		
 		$count  = $request->moreload =='' ? config('custom.LOAD_MORE_LIST_SHOW') : $request->moreload + $interval;
