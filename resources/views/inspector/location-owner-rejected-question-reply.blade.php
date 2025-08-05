@@ -684,6 +684,17 @@ $('#lo_file').on('change', function (e) {
 		});
 	});
 	
+	$(document).on('click', '#lo_direct_approve', function(){
+		var lo_direct_approve  = $('#lo_direct_approve').is(':checked');
+		if(lo_direct_approve == true)
+		{
+			$('.set_time_div').hide();
+		}
+		else{
+			$('.set_time_div').show();
+		}
+	});
+	
 	$(document).on('click','.location-owner-rejected', function(){
 		var task_id = $('#task_id').val();
 	   var checklist_id = $('#checklist_id').val();
