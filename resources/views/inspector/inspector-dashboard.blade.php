@@ -301,6 +301,13 @@ $country = '';
 											
 										}
 									}
+									
+									//$taskStatus = $val->status == 0 ? '' : //($tasks->status == 1 ? 'Incomplete' : '');
+									
+									if($val->status == 1)
+									{
+										$taskCnt++;
+									}
 								}
 							}
 							$countAction = 0;
@@ -349,7 +356,7 @@ $country = '';
 											$exists = App\Models\Task_list_subcategories::where('task_list_id', $val->id)->where('task_list_category_id', $cat)->exists();
 											if(!$exists)
 											{
-												$taskCnt++;
+												//$taskCnt++;
 											}
 										}
 									}
@@ -376,12 +383,12 @@ $country = '';
 									<div class="image" style="background-image: url('{{ $loc_image }}');">
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
-										{{--<div class="price-tag">
-											<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }} pending tasks</span></div>
-										</div>--}}
 										<div class="price-tag">
-											<div class="price"><span>{{ $countNedded }} pending tasks</span></div>
+											<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }} pending tasks</span></div>
 										</div>
+										{{--<div class="price-tag">
+											<div class="price"><span>{{ $taskCnt + $countNedded }} pending tasks</span></div>
+										</div>--}}
 									</div>
 									<div class="short-description-1 clearfix">
 										<h3>{{ $lacationData->location_name ?? '' }}</h3>
@@ -392,9 +399,9 @@ $country = '';
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-										{{--<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>
-										</div>--}}
-										<div class="price"><span>{{ $countNedded }}  pending tasks</span></div>
+										<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>
+										</div>
+										{{--<div class="price"><span>{{ $countNedded }}  pending tasks</span></div>--}}
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">
@@ -407,7 +414,7 @@ $country = '';
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-											<div class="price"><span>{{ $countNedded }}  pending tasks</span></div>
+											<div class="price"><span>{{ $taskCnt + $countNedded }}  pending tasks</span></div>
 										</div>
 									</div>
 									<div class="short-description-1 clearfix">
