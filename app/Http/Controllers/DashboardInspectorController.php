@@ -3278,7 +3278,7 @@ class DashboardInspectorController extends Controller
 		//correctiveChecklistIds
 		$approvedCompletedArray = [];
 		// Checklist IDs with existing corrective needed
-		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $submit_task_id)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
@@ -3291,13 +3291,15 @@ class DashboardInspectorController extends Controller
 		//------------------------------------
 		
 			$existingCorrectiveChecklistApprIds = DB::table('task_list_corrective_actions')
-			    ->whereIn('task_list_id', $taskListIds)
+			    //->whereIn('task_list_id', $taskListIds)
+			    ->whereIn('task_list_id', $submit_task_id)
 				->whereNotNull('checklist_id')
 				->pluck('checklist_id')->toArray();
 
 			$checklistApprIds = DB::table('task_list_checklists')
 				->where('approve', 1)
-				->whereIn('task_list_id', $taskListIds)
+				//->whereIn('task_list_id', $taskListIds)
+				->whereIn('task_list_id', $submit_task_id)
 				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
 				->pluck('checklist_id')
 				->toArray();
@@ -3307,7 +3309,7 @@ class DashboardInspectorController extends Controller
 		//print_r($correctiveApprChecklistIds);die;
 		//------------------------------------
 
-		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $submit_task_id)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
@@ -3325,7 +3327,8 @@ class DashboardInspectorController extends Controller
 
 			$subchecklistApprIds = DB::table('task_list_subchecklists')
 				->where('approve', 1)
-				->whereIn('task_list_id', $taskListIds)
+				//->whereIn('task_list_id', $taskListIds)
+				->whereIn('task_list_id', $submit_task_id)
 				//->whereNotIn('subchecklist_id', $existingCorrectiveSubChecklistIds)
 				->pluck('subchecklist_id')
 				->toArray();
