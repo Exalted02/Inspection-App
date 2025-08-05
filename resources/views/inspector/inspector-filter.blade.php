@@ -1095,7 +1095,6 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-needed', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadneeded").val();
-		
 		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
 		var URL = "{{ route('ins-load-more-needed-data') }}";
@@ -1191,9 +1190,9 @@ $(document ).ready(function() {
 	$(document).on('click', '.load-more-appr', function(){
 		var location_id = $('#location_id').val();
 		var moreload = $("#moreloadappr").val();
-		
-		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading...');
 		//alert(moreload);
+		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading...');
+		
 		var URL = "{{ route('ins-load-more-appr-data') }}";
 		$.ajax({
 			url: URL,
