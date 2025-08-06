@@ -1080,13 +1080,23 @@ $(document ).ready(function() {
 	
 	if(isactive == 1 && user_id == 3)
 	{
-		$('a[href="#corrective_needed_tab"]').tab('show');
+		/*$('a[href="#corrective_needed_tab"]').tab('show');
 		$('#isactive').val(0);
 		
 		var norecord_j = $('#norecord_j').val();
 		if(norecord_j==0)
 		{
 			$('#no_record').show();
+		}*/
+		
+		$('a[href="#corrective_checked_tab"]').tab('show');
+		$('#isactive').val(0); 
+		
+		var norecord_k = $('#norecord_k').val();
+		if(norecord_k==0)
+		{
+			$('#no_record').show();
+			$('#showloadaction').hide();
 		}
 	}
 	
