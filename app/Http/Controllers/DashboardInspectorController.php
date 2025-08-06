@@ -6027,10 +6027,19 @@ class DashboardInspectorController extends Controller
 				)
 				->from('task_list_checklists')
 				//->whereIn('task_list_id', $taskListIds)
-				->whereIn('task_list_id', $matchingTaskListIds)
+				//->whereIn('task_list_id', $matchingTaskListIds)
 				->whereIn('category_id', $categoryIds)
 				->whereIn('approve', [0,1])
-				->whereIn('checklist_id', $correctiveApprChecklistIds)
+				//->whereIn('checklist_id', $correctiveApprChecklistIds)
+				->where(function ($query) use ($correctiveApprChecklistIds) {
+					foreach ($correctiveApprChecklistIds as $pair) {
+						[$taskListId, $checklistId] = explode('-', $pair);
+						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
+							$q->where('task_list_id', $taskListId)
+							  ->where('checklist_id', $checklistId);
+						});
+					}
+				})
 			->unionAll(
 				DB::table('task_list_subchecklists')
 					->select(
@@ -6047,10 +6056,20 @@ class DashboardInspectorController extends Controller
 						'task_list_checklist_id'
 					)
 					//->whereIn('task_list_id', $taskListIds)
-					->whereIn('task_list_id', $matchingTaskListIds)
+					//>whereIn('task_list_id', $matchingTaskListIds)
 					->whereIn('category_id', $categoryIds)
 					->whereIn('approve', [0,1])
-					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
+					//->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
+					->where(function ($query) use ($correctiveApprSubChecklistIds) {
+						foreach ($correctiveApprSubChecklistIds as $pair) {
+								[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
+								$query->orWhere(function ($q) use ($taskListId, $checklistId, $subchecklistId) {
+									$q->where('task_list_id', $taskListId)
+									  ->where('task_list_checklist_id', $checklistId)
+									  ->where('subchecklist_id', $subchecklistId);
+								});
+							}
+					})
 			);
 		}, 'combined')->count();
 
