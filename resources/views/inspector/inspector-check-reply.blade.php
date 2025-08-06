@@ -549,7 +549,7 @@ $(document).ready(function() {
 						localStorage.setItem('insPlanApproved', 1);
 					}
 					
-					var active = 0;
+					var active = 1;
 					@if(auth()->user()->user_type == 1)
 					{
 						//var baseUrl = "{{ url('/location-details') }}";

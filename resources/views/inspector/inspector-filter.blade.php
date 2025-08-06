@@ -861,7 +861,7 @@ $(document ).ready(function() {
 	var isactive = $('#isactive').val();
 	//alert(isactive);
 	var user_id = $('#user_id').val();
-	//alert(isactive);
+
 	if(isactive == 0)
 	{
 		const selectedTab = localStorage.getItem('selectedTab');
