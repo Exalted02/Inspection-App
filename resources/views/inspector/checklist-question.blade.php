@@ -2458,9 +2458,13 @@ $(document ).ready(function() {
 				 //alert(response.barHtml);
 					//$('#progress-bar-section').html(response.barHtml);
 					//$('#progress-bar-section').append(response.barHtml);
+					//alert(response.order_no);
 					if(response.order_no == 1)
 					{
 						$('.previous_question').hide(); // 22-07-2025
+					}
+					else{
+						$('.previous_question').show(); // 22-07-2025
 					}
 				// ----------------------------------
 				//--implement 08-05-2025
