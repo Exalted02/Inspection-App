@@ -592,17 +592,7 @@ class ManagementController extends Controller
 		//echo "<pre>";print_r($matchingTaskListIds);die;
 		
 		// Checklist IDs with existing corrective needed
-		// old
-		/*$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
-			->where(function ($q) {
-				$q->where(function ($q) {
-					$q->where('inspector_action', 1)->where('los_action', 1);
-				});
-			})
-			->whereNotNull('checklist_id')
-			->pluck('checklist_id')->toArray();*/
-			
-			// new
+		
 		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
 		->where(function ($q) {
 			$q->where(function ($q) {
@@ -625,17 +615,6 @@ class ManagementController extends Controller
 				->whereNotNull('checklist_id')
 				->pluck('checklist_id')->toArray();
 			
-			// old 
-			/*$checklistApprIds = DB::table('task_list_checklists')
-				->where('approve', 1)
-				->whereIn('task_list_id', $matchingTaskListIds)
-				->whereIn('category_id', $categoryIds)
-				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
-				->pluck('checklist_id')
-				->toArray();*/
-			
-			// new 
-			
 			$checklistApprIds = DB::table('task_list_checklists')
 				->where('approve', 1)
 				->whereIn('task_list_id', $matchingTaskListIds)
@@ -651,17 +630,7 @@ class ManagementController extends Controller
 		$correctiveApprChecklistIds = array_merge($correctiveChecklistApprIds,$checklistApprIds);
 		//echo "<pre>";print_r($correctiveApprChecklistIds);die;
 		//------------------------------------
-		// old
-		/*$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
-			->where(function ($q) {
-				$q->where(function ($q) {
-					$q->where('inspector_action', 1)->where('los_action', 1);
-				});
-			})
-			->whereNotNull('subchecklist_id')
-			->pluck('subchecklist_id')->toArray();*/
 		
-		// new
 		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
@@ -681,17 +650,7 @@ class ManagementController extends Controller
 			    ->whereIn('task_list_id', $taskListIds)
 				->whereNotNull('subchecklist_id')
 				->pluck('subchecklist_id')->toArray();
-			
-			// old 
-			/*$subchecklistApprIds = DB::table('task_list_subchecklists')
-				->where('approve', 1)
-				->whereIn('task_list_id', $matchingTaskListIds)
-				->whereIn('category_id', $categoryIds)
-				//->whereNotIn('subchecklist_id', $existingCorrectiveSubChecklistIds)
-				->pluck('subchecklist_id')
-				->toArray();*/
-			
-            // new 			
+						
 			$subchecklistApprIds = DB::table('task_list_subchecklists')
 			->where('approve', 1)
 			->whereIn('task_list_id', $matchingTaskListIds)
@@ -947,12 +906,11 @@ class ManagementController extends Controller
 			}
 			
 		}
-		//echo "<pre>";print_r($approvedCompletedArray);die;
-		
 		
 		/*usort($approvedCompletedArray, function ($a, $b) {
 			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
 		});*/
+		
 		//echo "<pre>";print_r($approvedCompletedArray);die;
 		//echo "<pre>";print_r($correctiveNeddedArray);die;
 		//==========================================================
@@ -974,7 +932,7 @@ class ManagementController extends Controller
 		
 		$data['correctiveAction'] = [];
 		
-		$data['location_id'] = Task_lists::where('id', $id)->first()->location_id;
+		$data['location_id'] = Task_lists::where('id', $tid)->first()->location_id;
 		$data['task_id'] = $tid;
 		$data['task_name'] = '';
 		$data['isactive'] = $active;
