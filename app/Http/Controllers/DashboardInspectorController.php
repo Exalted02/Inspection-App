@@ -403,7 +403,7 @@ class DashboardInspectorController extends Controller
 			$hasChecklists = Checklist::where('category_id', $category_id)->first();
 			
 			//---21-06-2025 direct get the final edit page----
-			$totalChecklist = Checklist::where('category_id', $category_id)->count();
+			$totalChecklist = Checklist::where('category_id', $category_id)->where('status', '!=', 2)->count();
 			$countTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)->where('category_id', $category_id)->count();
 			$countTaskSubChecklist = Task_list_subchecklists::distinct('task_list_checklist_id')->where('task_list_id', $task_id)->where('category_id', $category_id)->count();
 			$allChecklistDone = $countTaskChecklist + $countTaskSubChecklist;
