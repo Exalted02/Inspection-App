@@ -3163,8 +3163,6 @@ class DashboardInspectorController extends Controller
 		//echo "<pre>";print_r($correctiveActionData);die;
 		foreach($correctiveActionData as $action)
 		{
-			//echo $action->checklist_id. "</br>";
-			
 			$type = '';
 			$image = '';
 			if($action->subchecklist_id == null)
