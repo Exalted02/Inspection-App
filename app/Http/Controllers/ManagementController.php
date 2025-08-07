@@ -36,6 +36,11 @@ class ManagementController extends Controller
     }
     public function management_location($id='')
     {
+		if (auth()->user()->user_type == 1 || auth()->user()->user_type == 2 
+		|| auth()->user()->user_type == 3) {
+			return redirect('management-dashboard');
+		}
+		
 		$data = [];
 		$data['location_id'] = $id;
 		$data['location_details'] = Manage_location::where('id', $id)->first();
@@ -907,9 +912,9 @@ class ManagementController extends Controller
 			
 		}
 		
-		/*usort($approvedCompletedArray, function ($a, $b) {
+		usort($approvedCompletedArray, function ($a, $b) {
 			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
-		});*/
+		});
 		
 		//echo "<pre>";print_r($approvedCompletedArray);die;
 		//echo "<pre>";print_r($correctiveNeddedArray);die;

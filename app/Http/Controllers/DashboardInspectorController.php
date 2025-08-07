@@ -29,6 +29,7 @@ class DashboardInspectorController extends Controller
 {
     public function inspector_dashboard()
     {
+		
 		$data = [];
 
 		$id = auth()->user()->id;
