@@ -1065,7 +1065,7 @@ $(document ).ready(function() {
 		
 		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload); 
-		var URL = "{{ route('mgnt-load-more-data') }}";
+		var URL = "{{ route('mgnt-load-more-needed-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1099,7 +1099,7 @@ $(document ).ready(function() {
 		//alert(moreload);
 		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		
-		var URL = "{{ route('mgnt-load-more-data') }}";
+		var URL = "{{ route('mgnt-load-more-action-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1133,7 +1133,7 @@ $(document ).ready(function() {
 		
 		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('mgnt-load-more-data') }}";
+		var URL = "{{ route('mgnt-load-more-plan-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1167,7 +1167,7 @@ $(document ).ready(function() {
 		
 		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('mgnt-load-more-data') }}";
+		var URL = "{{ route('mgnt-load-more-appr-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
