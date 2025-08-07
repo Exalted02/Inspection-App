@@ -351,7 +351,8 @@
 								}
 							@endphp
 							<div class="row IA-IOS-get-reply">
-								<div class="col-md-12"><label>{{ $final_title }} checks</label></div>
+								<div class="col-md-12"><label>Corrective</label></div>
+									{{--<div class="col-md-12"><label>{{ $final_title }} checks</label></div>--}}
 							</div>
 							
 							<div class="row">
