@@ -17,7 +17,7 @@ $l = 0;
 $m = 0;
 
 
-$countNedded = 0;
+/*$countNedded = 0;
 $countAction = 0;
 $countPlan = 0;
 $countCompleted = 0;
@@ -48,7 +48,7 @@ foreach($approvedCompleted as $result)
 	{
 		$countCompleted++;
 	}
-}
+}*/
 
 
 $action_show = config('custom.LOAD_MORE_LIST_SHOW');
