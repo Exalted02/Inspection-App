@@ -304,10 +304,21 @@ $country = '';
 									
 									//$taskStatus = $val->status == 0 ? '' : //($tasks->status == 1 ? 'Incomplete' : '');
 									
-									if($val->status == 1)
+									if(auth()->user()->user_type == 1)
 									{
-										$taskCnt++;
+										if($val->status == 0 || $val->status == 1)
+										{
+											$taskCnt++;
+										}
 									}
+									else{
+										if($val->status == 1)
+										{
+											$taskCnt++;
+										}
+									}
+									
+									
 								}
 							}
 							$countAction = 0;
