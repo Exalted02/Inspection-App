@@ -259,7 +259,7 @@
 						</div>
 						
 						<div class="row">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($lo_corrective_completed_by) ? change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? change_date_format($corrective_action_data->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
 						</div>
 						
 						@if($lo_direct_approve == 0)

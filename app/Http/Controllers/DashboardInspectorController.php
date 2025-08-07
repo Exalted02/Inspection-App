@@ -4905,9 +4905,9 @@ class DashboardInspectorController extends Controller
 		//echo "<pre>";print_r($approvedCompletedArray);die;
 		
 		
-		/*usort($approvedCompletedArray, function ($a, $b) {
+		usort($approvedCompletedArray, function ($a, $b) {
 			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
-		});*/
+		});
 		//echo "<pre>";print_r($approvedCompletedArray);die;
 		//echo "<pre>";print_r($correctiveNeddedArray);die;
 		//==========================================================
@@ -6167,9 +6167,9 @@ class DashboardInspectorController extends Controller
 			
 		}
 		
-		/*usort($approvedCompletedArray, function ($a, $b) {
+		usort($approvedCompletedArray, function ($a, $b) {
 			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
-		});*/
+		});
 		//echo "<pre>";print_r($approvedCompletedArray);die;
 		//echo "<pre>";print_r($correctiveNeddedArray);die;
 		//==========================================================
