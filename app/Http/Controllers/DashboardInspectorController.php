@@ -1888,9 +1888,12 @@ class DashboardInspectorController extends Controller
 		if($request->lo_direct_approve == 'false')
 		{
 			$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
-			$time = $request->post('hidden_set_time');
+			//$time = $request->post('hidden_set_time');
+			$time = date('h:i:s');
+			
 			$datetime  = $date.' '.$time;
-			$lo_completed_by = date('Y-m-d', strtotime($datetime));
+			$lo_completed_by = date('Y-m-d h:i:s', strtotime($datetime));
+			//echo $lo_completed_by;die;
 		}
 		else{
 			$lo_completed_by = date('Y-m-d h:i:s');
@@ -1929,6 +1932,7 @@ class DashboardInspectorController extends Controller
 		$model->inspector_id = $inspector_id;
 		$model->los_id = $los_id;
 		$model->rejected_repeated = 1; // 04-08-2025
+		$model->created_at = date('Y-m-d h:i:s'); // 11-08-2025
 		$model->save();
 		$id = $model->id;
 		
@@ -2224,15 +2228,16 @@ class DashboardInspectorController extends Controller
 		{
 			$actionStatus = Task_list_corrective_action::where('id',$id)->first();
 			
-			$model->inspector_action_date = date('Y-m-d h:i:s');
+			//$model->inspector_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 			$model->inspector_action = $inspector_action;
 			//$model->inspector_id = $user_id;
 			$model->ia_los_first_rejected_reason = $first_rejected_reason ?? '';
-			$model->los_action_date = date('Y-m-d h:i:s');
+			//$model->los_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 			$model->los_action = $inspector_action;
 			
 			if(auth()->user()->user_type == 1)
 			{
+				$model->inspector_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 				//-------
 				$ins_action_test = Task_list_corrective_action::where('id', $id)->first()->inspector_action;
 				if($ins_action_test == 2)
@@ -2246,6 +2251,7 @@ class DashboardInspectorController extends Controller
 			
 			if(auth()->user()->user_type == 3)
 			{
+				$model->los_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 				//-------
 				$los_action_test = Task_list_corrective_action::where('id', $id)->first()->los_action;
 				if($los_action_test == 2)
@@ -2304,20 +2310,22 @@ class DashboardInspectorController extends Controller
 			}
 			else if($inspector_action == 2)
 			{
-				$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
+				//$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');  // 11-08-2025
 				
 				//$model->inspector_id = $user_id;
 				$correctiveActionDtldModel->ia_los_rejected_reason = $first_rejected_reason ?? '';
-				$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
+				//$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');// 11-08-2025
 				
 				
 				if(auth()->user()->user_type == 1)
 				{
+					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 					$correctiveActionDtldModel->rejected_status = 1;
 				}
 				
 				if(auth()->user()->user_type == 3)
 				{
+					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 					$correctiveActionDtldModel->rejected_status = 2;
 				}
 				
@@ -2372,9 +2380,10 @@ class DashboardInspectorController extends Controller
 		if($request->lo_direct_approve == 'false')
 		{
 			$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
-			$time = $request->post('hidden_set_time');
+			//$time = $request->post('hidden_set_time');
+			$time = date('h:i:s');
 			$datetime  = $date.' '.$time;
-			$lo_completed_by = date('Y-m-d', strtotime($datetime));
+			$lo_completed_by = date('Y-m-d h:i:s', strtotime($datetime));
 		}
 		else{
 			$lo_completed_by = date('Y-m-d h:i:s');
@@ -2450,6 +2459,7 @@ class DashboardInspectorController extends Controller
 		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
 		$correctiveActionDtldModel->order = $new_status;
 		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks = $content;
+		$correctiveActionDtldModel->created_at = date('Y-m-d h:i:s');
 		$correctiveActionDtldModel->save();
 		
 		// update the status of Task lists after approve by lo 
@@ -2637,7 +2647,7 @@ class DashboardInspectorController extends Controller
 					$correctiveActionDtldModel->rejected_status = 1;
 					//$correctiveActionDtldModel->approved_status = 2;
 					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
-					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
+					//$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
 				}
 				
 				if(auth()->user()->user_type == 3)
@@ -2645,7 +2655,7 @@ class DashboardInspectorController extends Controller
 					$correctiveActionDtldModel->rejected_status = 2;
 					//$correctiveActionDtldModel->approved_status = 1;
 					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
-					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
+					//$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
 				}
 				
 				$correctiveActionDtldModel->rejected_repeated = 1;

@@ -191,6 +191,7 @@ $(document).ready(function() {
 				const date = selectedDates[0];
 				const dateOnly = flatpickr.formatDate(date, "d M Y");
 				const timeOnly = flatpickr.formatDate(date, "H:i");
+				//alert(timeOnly);
 				
 				document.getElementById('selected_time').innerText = 'Set Time';
 				document.getElementById('selected_date').innerText = dateOnly;
@@ -248,7 +249,7 @@ $(document).ready(function() {
 	   let hidden_set_date = $('#hidden_set_date').val();
 	   let hidden_set_time = $('#hidden_set_time').val();
 	   let lo_direct_approve = $('#lo_direct_approve').is(':checked');
-	   //alert(lo_direct_approve);
+	   //alert(hidden_set_time);
 	   
 	   if(lo_corrective_action_plan=='')
 	   {

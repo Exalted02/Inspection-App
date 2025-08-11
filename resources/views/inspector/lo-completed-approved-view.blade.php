@@ -343,7 +343,8 @@
 								
 							@endphp
 						<div class="row IA-IOS-get-reply">
-							<div class="col-md-12"><label>{{ $final_title }} checks</label></div>
+							<div class="col-md-12"><label>Corrective</label></div>
+								{{--<div class="col-md-12"><label>{{ $final_title }} checks</label></div>--}}
 						</div>
 						<div class="row">
 							<div class="col-md-12"><p class="text-muted mb-0">{{ $val->lo_corrective_action_plan_final_checks ?? '' }}</p></div>
@@ -394,11 +395,11 @@
 								@if($corrective_action_data->inspector_action == 1 && $corrective_action_data->los_action == 1)
 								
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
-									<span class="show-completed-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span><span class="show-completed-status">{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span>
+									<span class="show-completed-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span><span class="show-completed-status">{{ change_date_format($val->inspector_action_date,  'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
 									</div>
 									
 									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
-									<span class="show-completed-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span><span class="show-completed-status">{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
+									<span class="show-completed-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span><span class="show-completed-status">{{ change_date_format($val->los_action_date,  'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 								@endif
 								@php
 									break;
