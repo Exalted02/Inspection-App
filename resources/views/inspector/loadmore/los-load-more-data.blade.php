@@ -184,7 +184,7 @@ if($mode == 'corrective_appr')
 			
 			$rejectedRegionData = $result['type'] == 'checklist'
 			? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-			: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+			: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
 
 			if($result['image'] != '')
 			{
@@ -325,7 +325,7 @@ if($mode == 'corrective_appr')
 		
 		$rejectedRegionData = $result['type'] == 'checklist'
 		? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
 
 		if($result['image'] != '')
 		{
@@ -489,7 +489,7 @@ if($mode == 'corrective_appr')
 		
 		$rejectedRegionData = $result['type'] == 'checklist'
 		? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
 
 		if($result['image'] != '')
 		{
@@ -653,7 +653,7 @@ if($mode == 'corrective_appr')
 		
 		$rejectedRegionData = $result['type'] == 'checklist'
 		? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
 
 		
 		//$images =url('images/noimages/noimage_region.png');
