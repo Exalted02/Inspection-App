@@ -1878,7 +1878,7 @@ class DashboardInspectorController extends Controller
 	}
 	public function submit_lo_corrective_action(Request $request)
 	{
-		echo "<pre>"; print_r($request->all());die;
+		//echo "<pre>"; print_r($request->all());die;
 		$type 				= $request->type;
 		$task_list_id 		= $request->task_id;
 		$checklist_id 		= $request->checklist_id;

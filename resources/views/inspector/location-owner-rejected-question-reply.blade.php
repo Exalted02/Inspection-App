@@ -524,69 +524,49 @@ flatpickr("#set_time", {
 let previewContainer = $('#preview-container');
 let selectedFiles = [];
 	
-$('#lo_file').on('change', function (e) {
-    //let files = e.target.files;
-	let files = Array.from(e.target.files); // new
-	selectedFiles = files; // new
-	//selectedFiles = [...selectedFiles, ...files];
-    previewContainer.empty(); // Clear previous previews
-	
-	/*Array.from(files).forEach((file, index) => {
-	  if (file) {
-		let reader = new FileReader();
-		reader.onload = function (e) {
-			alert(e.target.result);
-		  let previewHtml = '';
-			
-		  if (file.type.startsWith('image/')) {
-			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><img src="' + e.target.result + '" class="preview-image" /><div class="remove-image" data-index="' + index + '">&times;</div></div>';
-		  }
-		  else if (file.type.startsWith('video/')) {
-			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><div class="remove-image" data-index="' + index + '">&times;</div></div>';
-		  }
-		  alert(previewHtml);
-		  previewContainer.append(previewHtml);
-		};
+	$('#lo_file').on('change', function (e) {
+		let files = Array.from(e.target.files);
 
-		//reader.readAsDataURL(file);
-	  }
-	});*/
-	
-    Array.from(files).forEach((file, index) => {
-      //if (file && file.type.startsWith('image/')) {
-      if (file) {
-        let reader = new FileReader();
-		//$('#preview-container').show();
-		let imgHtml = '';
-        reader.onload = function (e) {
-			//alert(file.type);
-			if (file.type.startsWith('image/')) {
-			  let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image" data-index="' + index +'">&times;</div></div>';
-			  previewContainer.append(imgHtml);
-			}
-			else if (file.type.startsWith('video/')) {
-				imgHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><div class="remove-image" data-index="' + index + '">&times;</div></div>';
-				previewContainer.append(imgHtml);
-			}
-			  //previewContainer.append(imgHtml);
-        };
+		selectedFiles = [...selectedFiles, ...files];
 
-        reader.readAsDataURL(file);
-      }
-    });
-	
-	//updateFileInput();
-  });
+		files.forEach((file, index) => {
+			let reader = new FileReader();
+			reader.onload = function (e) {
+				let previewHtml = '';
+
+				if (file.type.startsWith('image/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '"><img src="' + e.target.result 
+						+ '" class="preview-image" /><button type="button" class="remove-image" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				} else if (file.type.startsWith('video/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '"><video src="' + e.target.result 
+						+ '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="remove-image" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				}
+				previewContainer.append(previewHtml);
+			};
+			reader.readAsDataURL(file);
+		});
+
+		$(this).val('');
+	});
 
 
-  // Delegate remove button click
-  previewContainer.on('click', '.remove-image', function () {
-	const indexToRemove = $(this).data('index');
-	//alert(indexToRemove);alert(selectedFiles);
-    $(this).parent().remove();
-	selectedFiles[indexToRemove] = null;
-	selectedFiles = selectedFiles.filter(file => file !== null);
-  });
+	// Remove file from preview & array
+	previewContainer.on('click', '.remove-image', function () {
+		const indexToRemove = $(this).data('index');
+		$(this).parent().remove();
+		selectedFiles[indexToRemove] = null;
+		selectedFiles = selectedFiles.filter(file => file !== null);
+	});
+
+
    
    $(document).on('click','.location-owner-submit', function(){
 	   //e.preventDefault();
