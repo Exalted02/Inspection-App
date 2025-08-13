@@ -56,7 +56,7 @@ $totalNeeded = $countNedded;
 $totalAction = $countAction;
 $totalPlan = $countPlan;
 $totalapprcompleted = $countCompleted;
-
+//echo "<pre>";print_r($approvedCompletedArray);die;
 @endphp
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	
