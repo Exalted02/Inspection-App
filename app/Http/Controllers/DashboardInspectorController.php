@@ -2402,8 +2402,8 @@ class DashboardInspectorController extends Controller
 		$model->los_action = 0;
 		$model->approved_status = 0;
 		$model->rejected_status = 0;
-		$model->lo_completed_by = $lo_completed_by; // add new 05-08-2025
-		$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0; // add new 05-08-2025
+		//$model->lo_completed_by = $lo_completed_by; // comment 13-08-2025
+		//$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0; // comment 13-08-2025
 		//$model->rejected_repeated = 0; // add new 29-07-2025
 		$model->save();
 		
@@ -2460,6 +2460,10 @@ class DashboardInspectorController extends Controller
 		$correctiveActionDtldModel->order = $new_status;
 		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks = $content;
 		$correctiveActionDtldModel->created_at = date('Y-m-d h:i:s');
+		
+		$correctiveActionDtldModel->lo_completed_by = $lo_completed_by; // add new 13-08-2025
+		$correctiveActionDtldModel->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0; // add new 13-08-2025
+		
 		$correctiveActionDtldModel->save();
 		
 		// update the status of Task lists after approve by lo 
