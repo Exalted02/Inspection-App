@@ -1984,6 +1984,8 @@ class DashboardInspectorController extends Controller
 		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
 		$correctiveActionDtldModel->order = 1;
 		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks =$request->lo_corrective_action_plan;
+		$correctiveActionDtldModel->lo_completed_by = $lo_completed_by;
+		$correctiveActionDtldModel->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0;
 		$correctiveActionDtldModel->save();
 		
 		return response()->json(['location_id'=>$location_id, 'task_id'=>$task_list_id]);
@@ -2403,7 +2405,7 @@ class DashboardInspectorController extends Controller
 		$model->approved_status = 0;
 		$model->rejected_status = 0;
 		//$model->lo_completed_by = $lo_completed_by; // comment 13-08-2025
-		//$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0; // comment 13-08-2025
+		$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0; // add new 13-08-2025
 		//$model->rejected_repeated = 0; // add new 29-07-2025
 		$model->save();
 		
