@@ -90,7 +90,7 @@
 			 ];
 		}
 		
-		$corrective_action = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		$corrective_action = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
 		$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 		
 		$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
