@@ -142,10 +142,11 @@ class ManagementController extends Controller
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
-			->whereNotNull('checklist_id')
-			->get(['task_list_id', 'checklist_id'])
+			//->whereNotNull('checklist_id')
+			->whereNotNull('subchecklist_id')
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
 			->map(function ($item) {
-				return $item->task_list_id . '-' . $item->checklist_id;
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
 			})
 			->toArray();
 			
@@ -157,7 +158,7 @@ class ManagementController extends Controller
 			->whereIn('category_id', $categoryIds)
 			->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
 			->filter(function ($item) use ($excludedSubChecklistPairs) {
-				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id;
+				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
 				return !in_array($pairKey, $excludedSubChecklistPairs);
 			})
 			->map(function ($item) {
