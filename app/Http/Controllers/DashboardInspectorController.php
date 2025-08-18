@@ -3193,6 +3193,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -3231,12 +3232,16 @@ class DashboardInspectorController extends Controller
 				'los_action' => $action->los_action,
 				'second_checked' => $action->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $action->lo_direct_approve,
+				'updated_at' => $action->updated_at,
 				'image' => $image,
 			];
 			
 		}
 			
 		//echo '<pre>';print_r($correctiveActionArray);die;
+		usort($correctiveActionArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		
 		//============= corrective plan  --------------------------
 		$correctivePlanArray = [];
@@ -3263,6 +3268,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -3303,11 +3309,15 @@ class DashboardInspectorController extends Controller
 				'los_action' => $plan->los_action,
 				'second_checked' => $plan->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $plan->lo_direct_approve,
+				'updated_at' => $plan->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		usort($correctivePlanArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctivePlanArray);die;
 		
 		//============= corrective completed approved -------------
@@ -3579,9 +3589,9 @@ class DashboardInspectorController extends Controller
 		//echo "<pre>";print_r($approvedCompletedArray);die;
 		//echo "<pre>";print_r($correctiveNeddedArray);die;
 		//==========================================================
-		/*usort($correctiveNeddedArray, function ($a, $b) {
+		usort($correctiveNeddedArray, function ($a, $b) {
 			return strtotime($b['created_at']) <=> strtotime($a['created_at']);
-		});*/
+		});
 		// Checklist corrective action
 		$data = [];
 		$data['correctiveNeddedArray'] = $correctiveNeddedArray;
@@ -4237,7 +4247,8 @@ class DashboardInspectorController extends Controller
 			// Merge both queries using unionAll
 			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')
-			->orderByDesc('updated_at')
+			//->orderByDesc('updated_at')
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -4454,6 +4465,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -4494,11 +4506,15 @@ class DashboardInspectorController extends Controller
 				'los_action' => $action->los_action,
 				'second_checked' => $action->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $action->lo_direct_approve,
+				'updated_at' => $action->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		usort($correctiveActionArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctiveActionArray);die;
 		
 		//============= corrective plan  --------------------------
@@ -4526,6 +4542,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -4566,11 +4583,15 @@ class DashboardInspectorController extends Controller
 				'los_action' => $plan->los_action,
 				'second_checked' => $plan->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $plan->lo_direct_approve,
+				'updated_at' => $plan->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		usort($correctivePlanArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctivePlanArray);die;
 		
 		//============= corrective completed approved -------------
@@ -5511,7 +5532,8 @@ class DashboardInspectorController extends Controller
 
 			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')
-			->orderByDesc('updated_at')
+			//->orderByDesc('updated_at')
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -5732,6 +5754,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -5772,11 +5795,16 @@ class DashboardInspectorController extends Controller
 				'los_action' => $action->los_action,
 				'second_checked' => $action->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $action->lo_direct_approve,
+				'updated_at' => $action->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		
+		usort($correctiveActionArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctiveActionArray);die;
 		
 		//============= corrective plan  --------------------------
@@ -5804,6 +5832,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -5844,11 +5873,15 @@ class DashboardInspectorController extends Controller
 				'los_action' => $plan->los_action,
 				'second_checked' => $plan->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $plan->lo_direct_approve,
+				'updated_at' => $plan->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		usort($correctivePlanArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctivePlanArray);die;
 		
 		//============= corrective completed approved -------------
