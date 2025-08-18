@@ -2970,7 +2970,8 @@ class DashboardInspectorController extends Controller
 			// Merge both queries using unionAll
 			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')
-			->orderByDesc('updated_at')
+			//->orderByDesc('updated_at')
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -3161,7 +3162,12 @@ class DashboardInspectorController extends Controller
 			}
 			
 		}
+		
+		/*usort($correctiveNeddedArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});*/
 		//echo "<pre>";print_r($correctiveneeded);die;
+		//echo "<pre>";print_r($correctiveNeddedArray);die;
 		//============= corrective action --------------------------
 		$correctiveActionArray = [];
 		
@@ -3573,9 +3579,9 @@ class DashboardInspectorController extends Controller
 		//echo "<pre>";print_r($approvedCompletedArray);die;
 		//echo "<pre>";print_r($correctiveNeddedArray);die;
 		//==========================================================
-		usort($correctiveNeddedArray, function ($a, $b) {
+		/*usort($correctiveNeddedArray, function ($a, $b) {
 			return strtotime($b['created_at']) <=> strtotime($a['created_at']);
-		});
+		});*/
 		// Checklist corrective action
 		$data = [];
 		$data['correctiveNeddedArray'] = $correctiveNeddedArray;
