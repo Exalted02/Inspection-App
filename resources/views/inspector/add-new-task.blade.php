@@ -206,9 +206,11 @@ $(document).ready(function() {
 		}
 	});
 	
+	
+	
 	$("#set_time").on("change", function(e) {
-		 //alert('ok');
-		 instance.input.value = '';
+		//instance.input.value = '';
+		this.value = '';
 	  //e.preventDefault();
 	});
 	

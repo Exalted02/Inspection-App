@@ -596,6 +596,7 @@ let selectedFiles = [];
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var type = $('#type').val();
+	   //alert(type);
 	   //var category_id = $('#category_id').val();
 	   var location_id = $('#location_id').val();
 	   

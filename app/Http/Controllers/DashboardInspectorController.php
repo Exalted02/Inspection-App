@@ -2391,7 +2391,14 @@ class DashboardInspectorController extends Controller
 			$lo_completed_by = date('Y-m-d h:i:s');
 		}
 		
-		$corrective_action_data = Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		if($type == 'checklist')
+		{
+			$corrective_action_data = Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		}
+		else
+		{
+			$corrective_action_data = Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
+		}
 		
 		$id = $corrective_action_data ? $corrective_action_data->id : '';
 		
@@ -2570,7 +2577,14 @@ class DashboardInspectorController extends Controller
 		$first_rejected_reason = $request->first_rejected_reason;
 		
 		/*$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;*/
-		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first()->id;
+		$query = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id);
+		
+		if(!empty($subchecklist_id))
+		{
+			$query->where('subchecklist_id', $subchecklist_id);
+		}
+		
+		$id = $query->first()->id;
 		
 		$model = Task_list_corrective_action::find($id);
 		$model->inspector_action_date = date('Y-m-d h:i:s');
