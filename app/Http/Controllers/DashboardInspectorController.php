@@ -3530,7 +3530,7 @@ class DashboardInspectorController extends Controller
 					})
 			);
 		}, 'combined')
-		 ->orderBy('updated_at', 'asc')
+		 ->orderBy('updated_at', 'desc')
 		->offset($offset)
 		->limit($limit)
 		->get();
@@ -4911,7 +4911,7 @@ class DashboardInspectorController extends Controller
 			);
 		}, 'combined')
 		//->orderByDesc('updated_at')
-		->orderBy('updated_at', 'asc')
+		->orderBy('updated_at', 'desc')
 		->offset($offset)
 		->limit($limit)
 		->get();
@@ -6188,7 +6188,7 @@ class DashboardInspectorController extends Controller
 			);
 		}, 'combined')
 		//->orderByDesc('updated_at')
-		->orderBy('updated_at', 'asc')
+		->orderBy('updated_at', 'desc')
 		->offset($offset)
 		->limit($limit)
 		->get();
@@ -8280,7 +8280,7 @@ class DashboardInspectorController extends Controller
 				);
 			}, 'combined')
 			//->orderByDesc('updated_at')
-			->orderBy('updated_at', 'asc')
+			->orderBy('updated_at', 'desc')
 			->offset($lower)
 			->limit($upper)
 			->get();
@@ -9404,7 +9404,7 @@ class DashboardInspectorController extends Controller
 				);
 			}, 'combined')
 			//->orderByDesc('updated_at')
-			->orderBy('updated_at', 'asc')
+			->orderBy('updated_at', 'desc')
 			->offset($lower)
 			->limit($upper)
 			->get();
@@ -10676,7 +10676,7 @@ class DashboardInspectorController extends Controller
 				);
 			}, 'combined')
 			//->orderByDesc('updated_at')
-			->orderBy('updated_at', 'asc')
+			->orderBy('updated_at', 'desc')
 			->offset($lower)
 			->limit($upper)
 			->get();
