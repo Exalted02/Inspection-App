@@ -1090,8 +1090,18 @@ $(document ).ready(function() {
 			$('#no_record').show();
 		}*/
 		
-		$('a[href="#corrective_checked_tab"]').tab('show');
-		$('#isactive').val(0); 
+		var totalAction = $('#totalAction').val();
+		var totalPlan = $('#totalPlan').val();
+		if(totalAction > 0 && totalPlan > 0)
+		{
+			$('a[href="#corrective_checked_tab"]').tab('show');
+			$('#isactive').val(0); 
+		}
+		else if(totalAction == 0 && totalPlan > 0) 
+		{
+			$('a[href="#process_final_checked_tab"]').tab('show');
+		    $('#isactive').val(0); 
+		}
 		
 		var norecord_k = $('#norecord_k').val();
 		if(norecord_k==0)
