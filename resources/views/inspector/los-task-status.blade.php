@@ -1097,6 +1097,11 @@ $(document ).ready(function() {
 			$('a[href="#corrective_checked_tab"]').tab('show');
 			$('#isactive').val(0); 
 		}
+		else if(totalAction == 0 && totalPlan == 0) 
+		{
+			$('a[href="#corrective_checked_tab"]').tab('show');
+		    $('#isactive').val(0); 
+		}
 		else if(totalAction == 0 && totalPlan > 0) 
 		{
 			$('a[href="#process_final_checked_tab"]').tab('show');
