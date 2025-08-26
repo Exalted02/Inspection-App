@@ -21,6 +21,10 @@ class ManagementController extends Controller
     public function index()
     {
 		$data = [];
+		if(auth()->user()->user_type == 1 ||auth()->user()->user_type == 2 ||auth()->user()->user_type == 3)
+		{
+			return redirect('inspector-dashboard');
+		}
 		
 		//$locations = Manage_location::where('company_id', auth()->user()->company_name)->get();
 		//----------------------

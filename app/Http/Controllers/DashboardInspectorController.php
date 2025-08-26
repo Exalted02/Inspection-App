@@ -31,6 +31,10 @@ class DashboardInspectorController extends Controller
     {
 		
 		$data = [];
+		if(auth()->user()->user_type == 4)
+		{
+			return redirect('management-dashboard');
+		}
 
 		$id = auth()->user()->id;
 		$data['userdata'] = User::with('get_user_location')->where('id', $id)->first();
