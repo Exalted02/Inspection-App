@@ -171,29 +171,29 @@ use Carbon\Carbon;
 		<div class="main-content-area clearfix">
 			<section class="custom-padding1">
 					<div class="pt-2 pb-2">
-						<div class="row ">
-							<div class="col-md-6 col-sm-6 col-xs-6 small-card-odd">
+						<div class="row flex-wrap d-flex">
+							<div class="col-md-6 col-sm-6 col-xs-6 small-card-odd d-flex">
 								<div class="bg small-card">
 									<div class="small-card-title">No. of inspections</div>
 									<div class="small-card-counter">{{ $tot_inspection }}</div>
 									<div class="small-card-counter-title">WEEKLY</div>
 								</div>
 							</div>
-							<div class="col-md-6 col-sm-6 col-xs-6 small-card-even">
+							<div class="col-md-6 col-sm-6 col-xs-6 small-card-even d-flex">
 								<div class="bg small-card">
 									<div class="small-card-title">No. of observations</div>
 									<div class="small-card-counter">{{ $no_of_obs ?? '' }}</div>
 									<div class="small-card-counter-title">WEEKLY</div>
 								</div>
 							</div>
-							<div class="col-md-6 col-sm-6 col-xs-6 small-card-odd">
+							<div class="col-md-6 col-sm-6 col-xs-6 small-card-odd d-flex">
 								<div class="bg small-card">
 									<div class="small-card-title">Time to close observation</div>
 									<div class="small-card-counter">{{ $close_obs }}</div>
 									<div class="small-card-counter-title">DAYS</div>
 								</div>
 							</div>
-							<div class="col-md-6 col-sm-6 col-xs-6 small-card-even">
+							<div class="col-md-6 col-sm-6 col-xs-6 small-card-even d-flex">
 								<div class="bg small-card">
 									<div class="small-card-title">Repeated observations found</div>
 									<div class="small-card-counter">{{ $no_of_repeated_obs }}</div>

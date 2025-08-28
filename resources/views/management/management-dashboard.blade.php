@@ -45,22 +45,22 @@
 		<h2 class="page-title">Welcome to your overview</h2>
 		<div class="page-subtitle">Check out how your factory is performing</div>
 		<div class="pt-2 pb-2">
-			<div class="row ">
-				<div class="col-md-4 col-sm-4 col-xs-4 small-card-first">
+			<div class="row flex-wrap d-flex">
+				<div class="col-md-4 col-sm-4 col-xs-4 small-card-first d-flex">
 					<div class="bg small-card">
 						<div class="small-card-title">No. of inspections</div>
 						<div class="small-card-counter">{{ $tot_inspection ?? ''}}</div>
 						<div class="small-card-counter-title">WEEKLY</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
+				<div class="col-md-4 col-sm-4 col-xs-4 small-card-second d-flex">
 					<div class="bg small-card">
 						<div class="small-card-title">No. of observations</div>
 						<div class="small-card-counter"><span id="tot_no_of_obs">0</span></div>
 						<div class="small-card-counter-title">WEEKLY</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-4 col-xs-4 small-card-third">
+				<div class="col-md-4 col-sm-4 col-xs-4 small-card-third d-flex">
 					<div class="bg small-card">
 						<div class="small-card-title">Time to close observation</div>
 						<div class="small-card-counter"><span id="tot_close_obs">0</span></div>
@@ -232,22 +232,22 @@
 					</small>
 				</div>
 			</div></a>
-			<div class="row ">
-				<div class="col-md-4 col-sm-4 col-xs-4 small-card-first">
+			<div class="row flex-wrap d-flex">
+				<div class="col-md-4 col-sm-4 col-xs-4 small-card-first d-flex">
 					<div class="small-card">
 						<div class="small-card-title">No. of observations</div>
 						<div class="small-card-counter">{{ $no_of_obs ?? '' }}</div>
 						<div class="small-card-counter-title">WEEKLY</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
+				<div class="col-md-4 col-sm-4 col-xs-4 small-card-second d-flex">
 					<div class="small-card">
 						<div class="small-card-title">Repeat observations</div>
 						<div class="small-card-counter">{{ $no_of_repeated_obs }}</div>
 						<div class="small-card-counter-title">WEEKLY</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-4 col-xs-4 small-card-third">
+				<div class="col-md-4 col-sm-4 col-xs-4 small-card-third d-flex">
 					<div class="small-card">
 						<div class="small-card-title">Time to close observations</div>
 						<div class="small-card-counter">{{ $close_obs }}</div>

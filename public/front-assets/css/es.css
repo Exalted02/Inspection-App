@@ -37,6 +37,9 @@ body, h1, h2, h3, h4, h5, h6 {
 .d-flex {
 	display: flex !important;
 }
+.flex-wrap {
+	flex-wrap: wrap !important;
+}
 .align-items-center {
 	align-items: center !important;
 }
@@ -689,6 +692,10 @@ body, h1, h2, h3, h4, h5, h6 {
 	background-color: #F7F7F7;
 	border: 1px solid #F7F7F7;
     border-radius: 12px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 .small-card-title {
 	font-size: 12px;
