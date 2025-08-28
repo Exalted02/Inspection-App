@@ -16,6 +16,7 @@
  
  //-- total inspection
  $count_inspection = App\Models\Task_list_subcategories::whereIn('task_list_id', $allTaskLocationWise)->whereBetween('created_at', [$startDate, $endDate])->count();
+ //echo "<pre>";print_r($count_inspection);die;
  $tot_inspection = ceil($count_inspection / 4);
  //--- ---- 
  
@@ -73,6 +74,8 @@
 	@php 
 		$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
 		
+		//echo "<pre>";print_r($taskLocation);die;
+		
 		//$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->get();
 		
 		//$allTaskCompleted = App\Models\Task_list_subcategories::whereIn('task_list_id', $taskLocation)->pluck('task_list_id')->toArray();
@@ -107,8 +110,6 @@
 						{
 							if(!$task_list_checklist_corrective_needed)
 							{								
-								
-								
 								
 								$correctiveNeddedChecklistArray[] = [
 										'type' => 'checklist',
@@ -185,6 +186,7 @@
 		
 		$countNedded = 0;
 		$correctiveNeeded = array_merge($correctiveNeddedChecklistArray, $correctiveNeddedSubchecklistArray);
+		//echo "<pre>";print_r($correctiveNeeded); die;
 		foreach($correctiveNeeded as $result)
 		{
 			if(($result['inspector_action']=='' && $result['inspector_action']=='') || ($result['inspector_action']== 2 && $result['inspector_action']==2))
@@ -200,6 +202,7 @@
 		
 		//------- for rejected repeated count ---
 		$repeated_obs_count = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('rejected_repeated', 1)->whereBetween('created_at', [$startDate, $endDate])->count();
+		//echo $repeated_obs_count;die;
 		$no_of_repeated_obs = ceil($repeated_obs_count / 4);
 		
 		//------- for time to close observation count ---
