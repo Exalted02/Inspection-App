@@ -1,7 +1,7 @@
 *****Not required table*****
 tasklist_subcategories
 
-
+submit_inspector_status
 
 *****Truncate list table*****
 TRUNCATE TABLE `inspection_app`.`task_lists`;

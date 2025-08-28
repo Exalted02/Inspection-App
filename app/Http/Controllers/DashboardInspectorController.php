@@ -2282,8 +2282,8 @@ class DashboardInspectorController extends Controller
 			}
 			
 			$model->rejected_repeated = 1;
+			$model->repeated_observation = 1;
 		}
-		
 		$model->save();
 		
 		// update the status of Task lists 
@@ -2651,6 +2651,7 @@ class DashboardInspectorController extends Controller
 			}
 			
 			$model->rejected_repeated = 1;
+			$model->repeated_observation = 1;
 		}
 		
 		if($inspector_action == 1 || $los_action == 1)

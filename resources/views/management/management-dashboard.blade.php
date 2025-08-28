@@ -199,7 +199,7 @@
 		$loc_tot_no_of_obs = $loc_tot_no_of_obs + $no_of_obs;
 		
 		//------- for rejected repeated count ---
-		$repeated_obs_count = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('rejected_repeated', 1)->whereBetween('created_at', [$startDate, $endDate])->count();
+		$repeated_obs_count = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('repeated_observation', 1)->whereBetween('created_at', [$startDate, $endDate])->count();
 		$no_of_repeated_obs = ceil($repeated_obs_count / 4);
 		
 		//------- for time to close observation count ---
