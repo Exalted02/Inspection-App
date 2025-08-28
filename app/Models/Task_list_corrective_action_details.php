@@ -13,6 +13,8 @@ class Task_list_corrective_action_details extends Model
 		'order',
         'lo_corrective_action_plan_final_checks', 
         'ia_los_rejected_reason', 
+        'lo_direct_approve', 
+        'lo_completed_by', 
 		'inspector_action_date',
 		'los_action_date', 
         'approved_status', 

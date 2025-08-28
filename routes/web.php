@@ -187,8 +187,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::get('management-subchecklist-completed-approved-view/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [ManagementController::class, 'management_subchecklist_completed_approved_view'])->name('management-subchecklist-completed-approved-view');
 	
-	// load more
+	// load more management
 	Route::post('mgnt-load-more-data', [ManagementController::class, 'mgnt_load_more_data'])->name('mgnt-load-more-data');
+	
+	Route::post('mgnt-load-more-needed-data', [ManagementController::class, 'mgnt_load_more_needed_data'])->name('mgnt-load-more-needed-data');
+	Route::post('mgnt-load-more-action-data', [ManagementController::class, 'mgnt_load_more_action_data'])->name('mgnt-load-more-action-data');
+	Route::post('mgnt-load-more-plan-data', [ManagementController::class, 'mgnt_load_more_plan_data'])->name('mgnt-load-more-plan-data');
+	Route::post('mgnt-load-more-appr-data', [ManagementController::class, 'mgnt_load_more_appr_data'])->name('mgnt-load-more-appr-data');
 	
 	
 	//User-Accounts  

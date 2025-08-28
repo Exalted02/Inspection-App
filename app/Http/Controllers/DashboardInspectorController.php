@@ -29,7 +29,12 @@ class DashboardInspectorController extends Controller
 {
     public function inspector_dashboard()
     {
+		
 		$data = [];
+		if(auth()->user()->user_type == 4)
+		{
+			return redirect('management-dashboard');
+		}
 
 		$id = auth()->user()->id;
 		$data['userdata'] = User::with('get_user_location')->where('id', $id)->first();
@@ -403,7 +408,7 @@ class DashboardInspectorController extends Controller
 			$hasChecklists = Checklist::where('category_id', $category_id)->first();
 			
 			//---21-06-2025 direct get the final edit page----
-			$totalChecklist = Checklist::where('category_id', $category_id)->count();
+			$totalChecklist = Checklist::where('category_id', $category_id)->where('status', '!=', 2)->count();
 			$countTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)->where('category_id', $category_id)->count();
 			$countTaskSubChecklist = Task_list_subchecklists::distinct('task_list_checklist_id')->where('task_list_id', $task_id)->where('category_id', $category_id)->count();
 			$allChecklistDone = $countTaskChecklist + $countTaskSubChecklist;
@@ -1887,9 +1892,12 @@ class DashboardInspectorController extends Controller
 		if($request->lo_direct_approve == 'false')
 		{
 			$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
-			$time = $request->post('hidden_set_time');
+			//$time = $request->post('hidden_set_time');
+			$time = date('h:i:s');
+			
 			$datetime  = $date.' '.$time;
-			$lo_completed_by = date('Y-m-d', strtotime($datetime));
+			$lo_completed_by = date('Y-m-d h:i:s', strtotime($datetime));
+			//echo $lo_completed_by;die;
 		}
 		else{
 			$lo_completed_by = date('Y-m-d h:i:s');
@@ -1928,6 +1936,7 @@ class DashboardInspectorController extends Controller
 		$model->inspector_id = $inspector_id;
 		$model->los_id = $los_id;
 		$model->rejected_repeated = 1; // 04-08-2025
+		$model->created_at = date('Y-m-d h:i:s'); // 11-08-2025
 		$model->save();
 		$id = $model->id;
 		
@@ -1979,6 +1988,8 @@ class DashboardInspectorController extends Controller
 		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
 		$correctiveActionDtldModel->order = 1;
 		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks =$request->lo_corrective_action_plan;
+		$correctiveActionDtldModel->lo_completed_by = $lo_completed_by;
+		$correctiveActionDtldModel->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0;
 		$correctiveActionDtldModel->save();
 		
 		return response()->json(['location_id'=>$location_id, 'task_id'=>$task_list_id]);
@@ -2190,6 +2201,18 @@ class DashboardInspectorController extends Controller
 		
 		//$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;
 		
+		// update the date of tasklist_checklist and tasklist_subchecklist table
+		if(!empty($checklist_id) && !empty($subchecklist_id))
+		{
+			Task_list_subchecklists::where('task_list_id', $task_list_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->update(['updated_at' => date('Y-m-d h:i:s')]);
+		}
+		
+		if(!empty($checklist_id) && empty($subchecklist_id))
+		{
+			Task_list_checklists::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->update(['updated_at' => date('Y-m-d h:i:s')]);
+		}
+		//--------------------------------------------
+		
 		$query = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id);
 		
 		if (!empty($subchecklist_id)) {
@@ -2223,15 +2246,16 @@ class DashboardInspectorController extends Controller
 		{
 			$actionStatus = Task_list_corrective_action::where('id',$id)->first();
 			
-			$model->inspector_action_date = date('Y-m-d h:i:s');
+			//$model->inspector_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 			$model->inspector_action = $inspector_action;
 			//$model->inspector_id = $user_id;
 			$model->ia_los_first_rejected_reason = $first_rejected_reason ?? '';
-			$model->los_action_date = date('Y-m-d h:i:s');
+			//$model->los_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 			$model->los_action = $inspector_action;
 			
 			if(auth()->user()->user_type == 1)
 			{
+				$model->inspector_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 				//-------
 				$ins_action_test = Task_list_corrective_action::where('id', $id)->first()->inspector_action;
 				if($ins_action_test == 2)
@@ -2245,6 +2269,7 @@ class DashboardInspectorController extends Controller
 			
 			if(auth()->user()->user_type == 3)
 			{
+				$model->los_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 				//-------
 				$los_action_test = Task_list_corrective_action::where('id', $id)->first()->los_action;
 				if($los_action_test == 2)
@@ -2303,20 +2328,22 @@ class DashboardInspectorController extends Controller
 			}
 			else if($inspector_action == 2)
 			{
-				$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
+				//$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');  // 11-08-2025
 				
 				//$model->inspector_id = $user_id;
 				$correctiveActionDtldModel->ia_los_rejected_reason = $first_rejected_reason ?? '';
-				$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
+				//$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');// 11-08-2025
 				
 				
 				if(auth()->user()->user_type == 1)
 				{
+					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 					$correctiveActionDtldModel->rejected_status = 1;
 				}
 				
 				if(auth()->user()->user_type == 3)
 				{
+					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s'); // 11-08-2025
 					$correctiveActionDtldModel->rejected_status = 2;
 				}
 				
@@ -2371,15 +2398,23 @@ class DashboardInspectorController extends Controller
 		if($request->lo_direct_approve == 'false')
 		{
 			$date = date('Y-m-d', strtotime($request->post('hidden_set_date')));
-			$time = $request->post('hidden_set_time');
+			//$time = $request->post('hidden_set_time');
+			$time = date('h:i:s');
 			$datetime  = $date.' '.$time;
-			$lo_completed_by = date('Y-m-d', strtotime($datetime));
+			$lo_completed_by = date('Y-m-d h:i:s', strtotime($datetime));
 		}
 		else{
 			$lo_completed_by = date('Y-m-d h:i:s');
 		}
 		
-		$corrective_action_data = Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		if($type == 'checklist')
+		{
+			$corrective_action_data = Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		}
+		else
+		{
+			$corrective_action_data = Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
+		}
 		
 		$id = $corrective_action_data ? $corrective_action_data->id : '';
 		
@@ -2392,8 +2427,8 @@ class DashboardInspectorController extends Controller
 		$model->los_action = 0;
 		$model->approved_status = 0;
 		$model->rejected_status = 0;
-		$model->lo_completed_by = $lo_completed_by; // add new 05-08-2025
-		$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0; // add new 05-08-2025
+		//$model->lo_completed_by = $lo_completed_by; // comment 13-08-2025
+		$model->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0; // add new 13-08-2025
 		//$model->rejected_repeated = 0; // add new 29-07-2025
 		$model->save();
 		
@@ -2449,6 +2484,11 @@ class DashboardInspectorController extends Controller
 		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
 		$correctiveActionDtldModel->order = $new_status;
 		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks = $content;
+		$correctiveActionDtldModel->created_at = date('Y-m-d h:i:s');
+		
+		$correctiveActionDtldModel->lo_completed_by = $lo_completed_by; // add new 13-08-2025
+		$correctiveActionDtldModel->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0; // add new 13-08-2025
+		
 		$correctiveActionDtldModel->save();
 		
 		// update the status of Task lists after approve by lo 
@@ -2553,7 +2593,28 @@ class DashboardInspectorController extends Controller
 		$first_rejected_reason = $request->first_rejected_reason;
 		
 		/*$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->where('inspector_id', $inspector_id)->first()->id;*/
-		$id = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first()->id;
+		
+		
+		// update the date of tasklist_checklist and tasklist_subchecklist table
+		if(!empty($checklist_id) && !empty($subchecklist_id))
+		{
+			Task_list_subchecklists::where('task_list_id', $task_list_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->update(['updated_at' => date('Y-m-d h:i:s')]);
+		}
+		
+		if(!empty($checklist_id) && empty($subchecklist_id))
+		{
+			Task_list_checklists::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->update(['updated_at' => date('Y-m-d h:i:s')]);
+		}
+		//--------------------------------------------
+		
+		$query = Task_list_corrective_action::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id);
+		
+		if(!empty($subchecklist_id))
+		{
+			$query->where('subchecklist_id', $subchecklist_id);
+		}
+		
+		$id = $query->first()->id;
 		
 		$model = Task_list_corrective_action::find($id);
 		$model->inspector_action_date = date('Y-m-d h:i:s');
@@ -2636,7 +2697,7 @@ class DashboardInspectorController extends Controller
 					$correctiveActionDtldModel->rejected_status = 1;
 					//$correctiveActionDtldModel->approved_status = 2;
 					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
-					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
+					//$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
 				}
 				
 				if(auth()->user()->user_type == 3)
@@ -2644,7 +2705,7 @@ class DashboardInspectorController extends Controller
 					$correctiveActionDtldModel->rejected_status = 2;
 					//$correctiveActionDtldModel->approved_status = 1;
 					$correctiveActionDtldModel->los_action_date = date('Y-m-d h:i:s');
-					$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
+					//$correctiveActionDtldModel->inspector_action_date = date('Y-m-d h:i:s');
 				}
 				
 				$correctiveActionDtldModel->rejected_repeated = 1;
@@ -2827,10 +2888,11 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
-			->whereNotNull('checklist_id')
-			->get(['task_list_id', 'checklist_id'])
+			//->whereNotNull('checklist_id')
+			->whereNotNull('subchecklist_id')
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
 			->map(function ($item) {
-				return $item->task_list_id . '-' . $item->checklist_id;
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
 			})
 			->toArray();
 			
@@ -2842,7 +2904,7 @@ class DashboardInspectorController extends Controller
 			->whereIn('category_id', $categoryIds)
 			->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
 			->filter(function ($item) use ($excludedSubChecklistPairs) {
-				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id;
+				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
 				return !in_array($pairKey, $excludedSubChecklistPairs);
 			})
 			->map(function ($item) {
@@ -2938,7 +3000,8 @@ class DashboardInspectorController extends Controller
 			// Merge both queries using unionAll
 			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')
-			->orderByDesc('updated_at')
+			//->orderByDesc('updated_at')
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -3129,7 +3192,12 @@ class DashboardInspectorController extends Controller
 			}
 			
 		}
+		
+		/*usort($correctiveNeddedArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});*/
 		//echo "<pre>";print_r($correctiveneeded);die;
+		//echo "<pre>";print_r($correctiveNeddedArray);die;
 		//============= corrective action --------------------------
 		$correctiveActionArray = [];
 		
@@ -3155,6 +3223,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -3163,8 +3232,6 @@ class DashboardInspectorController extends Controller
 		//echo "<pre>";print_r($correctiveActionData);die;
 		foreach($correctiveActionData as $action)
 		{
-			//echo $action->checklist_id. "</br>";
-			
 			$type = '';
 			$image = '';
 			if($action->subchecklist_id == null)
@@ -3195,12 +3262,16 @@ class DashboardInspectorController extends Controller
 				'los_action' => $action->los_action,
 				'second_checked' => $action->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $action->lo_direct_approve,
+				'updated_at' => $action->updated_at,
 				'image' => $image,
 			];
 			
 		}
 			
 		//echo '<pre>';print_r($correctiveActionArray);die;
+		usort($correctiveActionArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		
 		//============= corrective plan  --------------------------
 		$correctivePlanArray = [];
@@ -3227,6 +3298,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -3267,25 +3339,48 @@ class DashboardInspectorController extends Controller
 				'los_action' => $plan->los_action,
 				'second_checked' => $plan->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $plan->lo_direct_approve,
+				'updated_at' => $plan->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		usort($correctivePlanArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctivePlanArray);die;
 		
 		//============= corrective completed approved -------------
 		//correctiveChecklistIds
 		$approvedCompletedArray = [];
 		// Checklist IDs with existing corrective needed
-		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+		//--------18-08-2025------------
+		$subcategoriesTaskIds = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)
+			->pluck('task_list_id');
+
+		$matchingTaskListIds = array_values(array_intersect($taskListIds->toArray(),  $subcategoriesTaskIds->toArray()));
+		
+		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
+		->where(function ($q) {
+			$q->where(function ($q) {
+				$q->where('inspector_action', 1)->where('los_action', 1);
+			});
+		})
+		->whereNotNull('checklist_id')
+		->get(['task_list_id', 'checklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->checklist_id;
+			})
+		->toArray();
+		//---------comment on 18-08-2025------------------
+		/*$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
 			->whereNotNull('checklist_id')
-			->pluck('checklist_id')->toArray();
+			->pluck('checklist_id')->toArray();*/
 			
 			//print_r($correctiveChecklistApprIds);die;
 		//------------------------------------
@@ -3295,27 +3390,52 @@ class DashboardInspectorController extends Controller
 			    ->whereIn('task_list_id', $taskListIds)
 				->whereNotNull('checklist_id')
 				->pluck('checklist_id')->toArray();
-
-			$checklistApprIds = DB::table('task_list_checklists')
+			
+			// comment on 18-08-2025----
+			/*$checklistApprIds = DB::table('task_list_checklists')
 				->where('approve', 1)
 				->whereIn('task_list_id', $taskListIds)
 				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
 				->pluck('checklist_id')
+				->toArray();*/
+				
+			$checklistApprIds = DB::table('task_list_checklists')
+				->where('approve', 1)
+				->whereIn('task_list_id', $matchingTaskListIds)
+				->whereIn('category_id', $categoryIds)
+				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
+				->get(['task_list_id', 'checklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id;
+				 })
 				->toArray();
 				
 		//print_r($checklistApprIds);die;
 		$correctiveApprChecklistIds = array_merge($correctiveChecklistApprIds,$checklistApprIds);
 		//print_r($correctiveApprChecklistIds);die;
-		//------------------------------------
+		//-----------comment on 18-08-2025-----------------------
 
-		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+		/*$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
 			->whereNotNull('subchecklist_id')
-			->pluck('subchecklist_id')->toArray();
+			->pluck('subchecklist_id')->toArray();*/
+		//------18-08-2025=============
+		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
+			->where(function ($q) {
+				$q->where(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 1);
+				});
+			})
+			->whereNotNull('subchecklist_id')
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
+			})
+			->toArray();
 			
 		//print_r($correctiveSubChecklistApprIds);die;
 			
@@ -3323,27 +3443,34 @@ class DashboardInspectorController extends Controller
 			    ->whereIn('task_list_id', $taskListIds)
 				->whereNotNull('subchecklist_id')
 				->pluck('subchecklist_id')->toArray();
-
-			$subchecklistApprIds = DB::table('task_list_subchecklists')
+			
+			//-- comment on 18-08-2025-------
+			/*$subchecklistApprIds = DB::table('task_list_subchecklists')
 				->where('approve', 1)
 				->whereIn('task_list_id', $taskListIds)
 				//->whereNotIn('subchecklist_id', $existingCorrectiveSubChecklistIds)
 				->pluck('subchecklist_id')
-				->toArray();
+				->toArray();*/
+			//---- 18-08-2025----
+			$subchecklistApprIds = DB::table('task_list_subchecklists')
+			->where('approve', 1)
+			->whereIn('task_list_id', $matchingTaskListIds)
+			->whereIn('category_id', $categoryIds)
+			->get(['task_list_id', 'task_list_checklist_id', 'subchecklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+			 })
+			->toArray();
 			
 			//print_r($subchecklistApprIds);die;
 			$correctiveApprSubChecklistIds = array_merge($correctiveSubChecklistApprIds,$subchecklistApprIds);	
 			//print_r($correctiveApprSubChecklistIds);die;
 
 		// Raw union query
-		$correctiveApproved = DB::table(function ($query) use (
-			$taskListIds,
-			$categoryIds,
-			$submit_task_id,
-			$correctiveApprChecklistIds,
-			$correctiveApprSubChecklistIds
-		) {
-			$query->select(
+		
+		if (!empty($correctiveApprChecklistIds)) {
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
 					'id',
 					'checklist_id',
 					DB::raw("'checklist' as type"),
@@ -3356,90 +3483,81 @@ class DashboardInspectorController extends Controller
 					DB::raw('NULL as subchecklist_id'),
 					DB::raw('NULL as task_list_checklist_id')
 				)
-				->from('task_list_checklists')
-				->whereIn('task_list_id', $taskListIds)
-				//->whereIn('task_list_id', $submit_task_id)
-				->whereIn('category_id', $categoryIds)
-				->whereIn('approve', [0,1])
-				->whereIn('checklist_id', $correctiveApprChecklistIds)
-			->unionAll(
-				DB::table('task_list_subchecklists')
-					->select(
-						'id',
-						'subchecklist_id as item_id',
-						DB::raw("'subchecklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'created_at',
-						'updated_at',
-						'subchecklist_id',
-						'task_list_checklist_id'
-					)
-					->whereIn('task_list_id', $taskListIds)
-					//->whereIn('task_list_id', $submit_task_id)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-			);
-		}, 'combined')
-		 ->orderBy('updated_at', 'asc')
-		->offset($offset)
-		->limit($limit)
-		->get();
+				->where(function ($query) use ($correctiveApprChecklistIds) {
+					foreach ($correctiveApprChecklistIds as $pair) {
+						[$taskListId, $checklistId] = explode('-', $pair);
+						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
+							$q->where('task_list_id', $taskListId)
+							  ->where('checklist_id', $checklistId)
+							  ->whereIn('approve', [0,1]);
+						});
+					}
+				});
+		} else {
+			// Empty query (always false condition)
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->whereRaw('1=0');
+		}
+
+		// if subchecklist ids are not empty, union it
+		if (!empty($correctiveApprSubChecklistIds)) {
+			$subChecklistQuery = DB::table('task_list_subchecklists')
+				->select(
+					'id',
+					DB::raw('NULL as checklist_id'),
+					DB::raw("'subchecklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					'subchecklist_id',
+					'task_list_checklist_id'
+				)
+				->where(function ($q) use ($correctiveApprSubChecklistIds) {
+					foreach ($correctiveApprSubChecklistIds as $pair) {
+						[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
+						$q->orWhere(function ($sub) use ($taskListId, $checklistId, $subchecklistId) {
+							$sub->where('task_list_id', $taskListId)
+								->where('task_list_checklist_id', $checklistId)
+								->where('subchecklist_id', $subchecklistId)
+								->whereIn('approve', [0,1]);
+						});
+					}
+				});
+
+			$baseChecklistQuery->unionAll($subChecklistQuery);
+		}
+
+
+		$correctiveApproved = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)
+			->orderBy('updated_at', 'desc')
+			->offset($offset)
+			->limit($limit)
+			->get();
+		
+
 		//echo "<pre>";print_r($correctiveApproved);die;
 		
-		$correctiveApprovedCount = DB::table(function ($query) use (
-			$taskListIds,
-			$categoryIds,
-			$submit_task_id,
-			$correctiveApprChecklistIds,
-			$correctiveApprSubChecklistIds
-		) {
-			$query->select(
-					'id',
-					'checklist_id',
-					DB::raw("'checklist' as type"),
-					'task_list_id',
-					'category_id',
-					'approve',
-					'rejected_region',
-					'created_at',
-					'updated_at',
-					DB::raw('NULL as subchecklist_id'),
-					DB::raw('NULL as task_list_checklist_id')
-				)
-				->from('task_list_checklists')
-				->whereIn('task_list_id', $taskListIds)
-				->whereIn('category_id', $categoryIds)
-				//->whereIn('task_list_id', $submit_task_id)
-				->whereIn('approve', [0,1])
-				->whereIn('checklist_id', $correctiveApprChecklistIds)
-			->unionAll(
-				DB::table('task_list_subchecklists')
-					->select(
-						'id',
-						'subchecklist_id as item_id',
-						DB::raw("'subchecklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'created_at',
-						'updated_at',
-						'subchecklist_id',
-						'task_list_checklist_id'
-					)
-					->whereIn('task_list_id', $taskListIds)
-					->whereIn('category_id', $categoryIds)
-					//->whereIn('task_list_id', $submit_task_id)
-					->whereIn('approve', [0,1])
-					->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-			);
-		}, 'combined')->count();
-		
+		$correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)->count();
 		//echo $correctiveApprovedCount;die;
+		
 		foreach($correctiveApproved as $appr)
 		{
 			
@@ -4094,10 +4212,11 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
-			->whereNotNull('checklist_id')
-			->get(['task_list_id', 'checklist_id'])
+			//->whereNotNull('checklist_id')
+			->whereNotNull('subchecklist_id')
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
 			->map(function ($item) {
-				return $item->task_list_id . '-' . $item->checklist_id;
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
 			})
 			->toArray();
 			
@@ -4109,7 +4228,7 @@ class DashboardInspectorController extends Controller
 			->whereIn('category_id', $categoryIds)
 			->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
 			->filter(function ($item) use ($excludedSubChecklistPairs) {
-				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id;
+				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
 				return !in_array($pairKey, $excludedSubChecklistPairs);
 			})
 			->map(function ($item) {
@@ -4200,7 +4319,8 @@ class DashboardInspectorController extends Controller
 			// Merge both queries using unionAll
 			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')
-			->orderByDesc('updated_at')
+			//->orderByDesc('updated_at')
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -4417,6 +4537,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -4457,11 +4578,15 @@ class DashboardInspectorController extends Controller
 				'los_action' => $action->los_action,
 				'second_checked' => $action->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $action->lo_direct_approve,
+				'updated_at' => $action->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		usort($correctiveActionArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctiveActionArray);die;
 		
 		//============= corrective plan  --------------------------
@@ -4489,6 +4614,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -4529,11 +4655,15 @@ class DashboardInspectorController extends Controller
 				'los_action' => $plan->los_action,
 				'second_checked' => $plan->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $plan->lo_direct_approve,
+				'updated_at' => $plan->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		usort($correctivePlanArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctivePlanArray);die;
 		
 		//============= corrective completed approved -------------
@@ -4664,150 +4794,98 @@ class DashboardInspectorController extends Controller
 			//echo "<pre>";print_r($correctiveApprSubChecklistIds);die;
 
 		// Raw union query
-		$correctiveApproved = DB::table(function ($query) use (
-			$taskListIds,
-			$matchingTaskListIds,
-			$categoryIds,
-			$submit_task_id,
-			$correctiveApprChecklistIds,
-			$correctiveApprSubChecklistIds
-		) {
-			$query->select(
-					'id',
-					'checklist_id',
-					DB::raw("'checklist' as type"),
-					'task_list_id',
-					'category_id',
-					'approve',
-					'rejected_region',
-					'created_at',
-					'updated_at',
-					DB::raw('NULL as subchecklist_id'),
-					DB::raw('NULL as task_list_checklist_id')
-				)
-				->from('task_list_checklists')
-				//->whereIn('task_list_id', $taskListIds)
-				//->whereIn('task_list_id', $matchingTaskListIds)
-				->whereIn('category_id', $categoryIds)
-				->whereIn('approve', [0,1])
-				//->whereIn('checklist_id', $correctiveApprChecklistIds)
-				->where(function ($query) use ($correctiveApprChecklistIds) {
-					foreach ($correctiveApprChecklistIds as $pair) {
-						[$taskListId, $checklistId] = explode('-', $pair);
-						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
-							$q->where('task_list_id', $taskListId)
-							  ->where('checklist_id', $checklistId);
-						});
-					}
-				})
-			->unionAll(
-				DB::table('task_list_subchecklists')
-					->select(
-						'id',
-						'subchecklist_id as item_id',
-						DB::raw("'subchecklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'created_at',
-						'updated_at',
-						'subchecklist_id',
-						'task_list_checklist_id'
-					)
-					//->whereIn('task_list_id', $taskListIds)
-					//->whereIn('task_list_id', $matchingTaskListIds)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					//->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-					->where(function ($query) use ($correctiveApprSubChecklistIds) {
-						foreach ($correctiveApprSubChecklistIds as $pair) {
-								[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
-								$query->orWhere(function ($q) use ($taskListId, $checklistId, $subchecklistId) {
-									$q->where('task_list_id', $taskListId)
-									  ->where('task_list_checklist_id', $checklistId)
-									  ->where('subchecklist_id', $subchecklistId);
-								});
-							}
-					})
-			);
-		}, 'combined')
-		//->orderByDesc('updated_at')
-		->orderBy('updated_at', 'asc')
-		->offset($offset)
-		->limit($limit)
-		->get();
-		//echo "<pre>";print_r($correctiveApproved);die;
-		$correctiveApprovedCount = DB::table(function ($query) use (
-			$taskListIds,
-			$matchingTaskListIds,
-			$categoryIds,
-			$submit_task_id,
-			$correctiveApprChecklistIds,
-			$correctiveApprSubChecklistIds
-		) {
-			$query->select(
-					'id',
-					'checklist_id',
-					DB::raw("'checklist' as type"),
-					'task_list_id',
-					'category_id',
-					'approve',
-					'rejected_region',
-					'created_at',
-					'updated_at',
-					DB::raw('NULL as subchecklist_id'),
-					DB::raw('NULL as task_list_checklist_id')
-				)
-				->from('task_list_checklists')
-				//->whereIn('task_list_id', $taskListIds)
-				//->whereIn('task_list_id', $matchingTaskListIds)
-				->whereIn('category_id', $categoryIds)
-				->whereIn('approve', [0,1])
-				//->whereIn('checklist_id', $correctiveApprChecklistIds)
-				->where(function ($query) use ($correctiveApprChecklistIds) {
-					foreach ($correctiveApprChecklistIds as $pair) {
-						[$taskListId, $checklistId] = explode('-', $pair);
-						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
-							$q->where('task_list_id', $taskListId)
-							  ->where('checklist_id', $checklistId);
-						});
-					}
-				})
-			->unionAll(
-				DB::table('task_list_subchecklists')
-					->select(
-						'id',
-						'subchecklist_id as item_id',
-						DB::raw("'subchecklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'created_at',
-						'updated_at',
-						'subchecklist_id',
-						'task_list_checklist_id'
-					)
-					//->whereIn('task_list_id', $taskListIds)
-					//->whereIn('task_list_id', $matchingTaskListIds)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					//->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-					->where(function ($query) use ($correctiveApprSubChecklistIds) {
-						foreach ($correctiveApprSubChecklistIds as $pair) {
-								[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
-								$query->orWhere(function ($q) use ($taskListId, $checklistId, $subchecklistId) {
-									$q->where('task_list_id', $taskListId)
-									  ->where('task_list_checklist_id', $checklistId)
-									  ->where('subchecklist_id', $subchecklistId);
-								});
-							}
-					})
-			);
-		}, 'combined')->count();
 		
-	
+		//echo "<pre>";print_r($correctiveApproved);die;
+		if (!empty($correctiveApprChecklistIds)) {
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->where(function ($query) use ($correctiveApprChecklistIds) {
+					foreach ($correctiveApprChecklistIds as $pair) {
+						[$taskListId, $checklistId] = explode('-', $pair);
+						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
+							$q->where('task_list_id', $taskListId)
+							  ->where('checklist_id', $checklistId)
+							  ->whereIn('approve', [0,1]);
+						});
+					}
+				});
+		} else {
+			// Empty query (always false condition)
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->whereRaw('1=0');
+		}
+
+		// if subchecklist ids are not empty, union it
+		if (!empty($correctiveApprSubChecklistIds)) {
+			$subChecklistQuery = DB::table('task_list_subchecklists')
+				->select(
+					'id',
+					DB::raw('NULL as checklist_id'),
+					DB::raw("'subchecklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					'subchecklist_id',
+					'task_list_checklist_id'
+				)
+				->where(function ($q) use ($correctiveApprSubChecklistIds) {
+					foreach ($correctiveApprSubChecklistIds as $pair) {
+						[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
+						$q->orWhere(function ($sub) use ($taskListId, $checklistId, $subchecklistId) {
+							$sub->where('task_list_id', $taskListId)
+								->where('task_list_checklist_id', $checklistId)
+								->where('subchecklist_id', $subchecklistId)
+								->whereIn('approve', [0,1]);
+						});
+					}
+				});
+
+			$baseChecklistQuery->unionAll($subChecklistQuery);
+		}
+
+
+		$correctiveApproved = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)
+			->orderBy('updated_at', 'desc')
+			->offset($offset)
+			->limit($limit)
+			->get();
+		
+
+		//echo "<pre>";print_r($correctiveApproved);die;
+		
+		$correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)->count();
+		
+		//echo $correctiveApprovedCount; die;
 		//echo "<pre>";print_r($correctiveApproved);die;
 		
 		foreach($correctiveApproved as $appr)
@@ -5366,10 +5444,11 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
-			->whereNotNull('checklist_id')
-			->get(['task_list_id', 'checklist_id'])
+			//->whereNotNull('checklist_id')
+			->whereNotNull('subchecklist_id')
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
 			->map(function ($item) {
-				return $item->task_list_id . '-' . $item->checklist_id;
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
 			})
 			->toArray();
 			
@@ -5381,7 +5460,7 @@ class DashboardInspectorController extends Controller
 			->whereIn('category_id', $categoryIds)
 			->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
 			->filter(function ($item) use ($excludedSubChecklistPairs) {
-				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id;
+				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
 				return !in_array($pairKey, $excludedSubChecklistPairs);
 			})
 			->map(function ($item) {
@@ -5393,7 +5472,7 @@ class DashboardInspectorController extends Controller
 			})
 			->values()
 			->toArray();
-		//echo "<pre>";print_r($correctiveSubChecklistIds);
+		//echo "<pre>";print_r($correctiveSubChecklistIds);die;
 		// Raw union query
 		$correctiveneeded = DB::table(function ($query) use (
 			$taskListIds,
@@ -5473,7 +5552,8 @@ class DashboardInspectorController extends Controller
 
 			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')
-			->orderByDesc('updated_at')
+			//->orderByDesc('updated_at')
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -5694,6 +5774,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -5734,11 +5815,16 @@ class DashboardInspectorController extends Controller
 				'los_action' => $action->los_action,
 				'second_checked' => $action->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $action->lo_direct_approve,
+				'updated_at' => $action->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		
+		usort($correctiveActionArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctiveActionArray);die;
 		
 		//============= corrective plan  --------------------------
@@ -5766,6 +5852,7 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 0)->where('los_action', 0);
 				});
 			})
+			->orderBy('updated_at', 'asc')
 			->offset($offset)
 			->limit($limit)
 			->get();
@@ -5806,11 +5893,15 @@ class DashboardInspectorController extends Controller
 				'los_action' => $plan->los_action,
 				'second_checked' => $plan->lo_corrective_action_plan_second_check,
 				'lo_direct_approve' => $plan->lo_direct_approve,
+				'updated_at' => $plan->updated_at,
 				'image' => $image,
 			];
 			
 		}
-			
+		
+		usort($correctivePlanArray, function ($a, $b) {
+			return strtotime($b['updated_at']) <=> strtotime($a['updated_at']);
+		});
 		//echo '<pre>';print_r($correctivePlanArray);die;
 		
 		//============= corrective completed approved -------------
@@ -5928,15 +6019,9 @@ class DashboardInspectorController extends Controller
 			//print_r($correctiveApprSubChecklistIds);die;
 
 		// Raw union query
-		$correctiveApproved = DB::table(function ($query) use (
-			$taskListIds,
-			$matchingTaskListIds,
-			$categoryIds,
-			$submit_task_id,
-			$correctiveApprChecklistIds,
-			$correctiveApprSubChecklistIds
-		) {
-			$query->select(
+		if (!empty($correctiveApprChecklistIds)) {
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
 					'id',
 					'checklist_id',
 					DB::raw("'checklist' as type"),
@@ -5949,129 +6034,79 @@ class DashboardInspectorController extends Controller
 					DB::raw('NULL as subchecklist_id'),
 					DB::raw('NULL as task_list_checklist_id')
 				)
-				->from('task_list_checklists')
-				//->whereIn('task_list_id', $taskListIds)
-				//->whereIn('task_list_id', $matchingTaskListIds)
-				->whereIn('category_id', $categoryIds)
-				->whereIn('approve', [0,1])
-				//->whereIn('checklist_id', $correctiveApprChecklistIds)
 				->where(function ($query) use ($correctiveApprChecklistIds) {
 					foreach ($correctiveApprChecklistIds as $pair) {
 						[$taskListId, $checklistId] = explode('-', $pair);
 						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
 							$q->where('task_list_id', $taskListId)
-							  ->where('checklist_id', $checklistId);
+							  ->where('checklist_id', $checklistId)
+							  ->whereIn('approve', [0,1]);
 						});
 					}
-				})
-			->unionAll(
-				DB::table('task_list_subchecklists')
-					->select(
-						'id',
-						'subchecklist_id as item_id',
-						DB::raw("'subchecklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'created_at',
-						'updated_at',
-						'subchecklist_id',
-						'task_list_checklist_id'
-					)
-					//->whereIn('task_list_id', $taskListIds)
-					//->whereIn('task_list_id', $matchingTaskListIds)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					//->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-					->where(function ($query) use ($correctiveApprSubChecklistIds) {
-						foreach ($correctiveApprSubChecklistIds as $pair) {
-								[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
-								$query->orWhere(function ($q) use ($taskListId, $checklistId, $subchecklistId) {
-									$q->where('task_list_id', $taskListId)
-									  ->where('task_list_checklist_id', $checklistId)
-									  ->where('subchecklist_id', $subchecklistId);
-								});
-							}
-					})
-			);
-		}, 'combined')
-		//->orderByDesc('updated_at')
-		->orderBy('updated_at', 'asc')
-		->offset($offset)
-		->limit($limit)
-		->get();
+				});
+		} else {
+			// Empty query (always false condition)
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->whereRaw('1=0');
+		}
+
+		// if subchecklist ids are not empty, union it
+		if (!empty($correctiveApprSubChecklistIds)) {
+			$subChecklistQuery = DB::table('task_list_subchecklists')
+				->select(
+					'id',
+					DB::raw('NULL as checklist_id'),
+					DB::raw("'subchecklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					'subchecklist_id',
+					'task_list_checklist_id'
+				)
+				->where(function ($q) use ($correctiveApprSubChecklistIds) {
+					foreach ($correctiveApprSubChecklistIds as $pair) {
+						[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
+						$q->orWhere(function ($sub) use ($taskListId, $checklistId, $subchecklistId) {
+							$sub->where('task_list_id', $taskListId)
+								->where('task_list_checklist_id', $checklistId)
+								->where('subchecklist_id', $subchecklistId)
+								->whereIn('approve', [0,1]);
+						});
+					}
+				});
+
+			$baseChecklistQuery->unionAll($subChecklistQuery);
+		}
+
+
+		$correctiveApproved = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)
+			->orderBy('updated_at', 'desc')
+			->offset($offset)
+			->limit($limit)
+			->get();
+		
+
 		//echo "<pre>";print_r($correctiveApproved);die;
 		
-		
-		$correctiveApprovedCount = DB::table(function ($query) use (
-			$taskListIds,
-			$matchingTaskListIds,
-			$categoryIds,
-			$submit_task_id,
-			$correctiveApprChecklistIds,
-			$correctiveApprSubChecklistIds
-		) {
-			$query->select(
-					'id',
-					'checklist_id',
-					DB::raw("'checklist' as type"),
-					'task_list_id',
-					'category_id',
-					'approve',
-					'rejected_region',
-					'created_at',
-					'updated_at',
-					DB::raw('NULL as subchecklist_id'),
-					DB::raw('NULL as task_list_checklist_id')
-				)
-				->from('task_list_checklists')
-				//->whereIn('task_list_id', $taskListIds)
-				//->whereIn('task_list_id', $matchingTaskListIds)
-				->whereIn('category_id', $categoryIds)
-				->whereIn('approve', [0,1])
-				//->whereIn('checklist_id', $correctiveApprChecklistIds)
-				->where(function ($query) use ($correctiveApprChecklistIds) {
-					foreach ($correctiveApprChecklistIds as $pair) {
-						[$taskListId, $checklistId] = explode('-', $pair);
-						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
-							$q->where('task_list_id', $taskListId)
-							  ->where('checklist_id', $checklistId);
-						});
-					}
-				})
-			->unionAll(
-				DB::table('task_list_subchecklists')
-					->select(
-						'id',
-						'subchecklist_id as item_id',
-						DB::raw("'subchecklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'created_at',
-						'updated_at',
-						'subchecklist_id',
-						'task_list_checklist_id'
-					)
-					//->whereIn('task_list_id', $taskListIds)
-					//>whereIn('task_list_id', $matchingTaskListIds)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					//->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-					->where(function ($query) use ($correctiveApprSubChecklistIds) {
-						foreach ($correctiveApprSubChecklistIds as $pair) {
-								[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
-								$query->orWhere(function ($q) use ($taskListId, $checklistId, $subchecklistId) {
-									$q->where('task_list_id', $taskListId)
-									  ->where('task_list_checklist_id', $checklistId)
-									  ->where('subchecklist_id', $subchecklistId);
-								});
-							}
-					})
-			);
-		}, 'combined')->count();
+		$correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)->count();
 
 		
 		//echo $correctiveApprovedCount;die;
@@ -6994,10 +7029,11 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
-			->whereNotNull('checklist_id')
-			->get(['task_list_id', 'checklist_id'])
+			//->whereNotNull('checklist_id')
+			->whereNotNull('subchecklist_id')
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
 			->map(function ($item) {
-				return $item->task_list_id . '-' . $item->checklist_id;
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
 			})
 			->toArray();
 			
@@ -7009,7 +7045,7 @@ class DashboardInspectorController extends Controller
 			->whereIn('category_id', $categoryIds)
 			->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
 			->filter(function ($item) use ($excludedSubChecklistPairs) {
-				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id;
+				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
 				return !in_array($pairKey, $excludedSubChecklistPairs);
 			})
 			->map(function ($item) {
@@ -7909,14 +7945,34 @@ class DashboardInspectorController extends Controller
 		//-------
 		$approvedCompletedArray = [];
 		// Checklist IDs with existing corrective needed
-		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+		// comment 18-08-2025-----
+		/*$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
 			->whereNotNull('checklist_id')
-			->pluck('checklist_id')->toArray();
+			->pluck('checklist_id')->toArray();*/
+			
+		//------- 18-08-2025-------------
+		$subcategoriesTaskIds = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)
+			->pluck('task_list_id');
+
+		$matchingTaskListIds = array_values(array_intersect($taskListIds->toArray(),  $subcategoriesTaskIds->toArray()));
+		
+		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
+		->where(function ($q) {
+			$q->where(function ($q) {
+				$q->where('inspector_action', 1)->where('los_action', 1);
+			});
+		})
+		->whereNotNull('checklist_id')
+		->get(['task_list_id', 'checklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->checklist_id;
+			})
+		->toArray();
 			
 			//print_r($correctiveChecklistApprIds);die;
 		//------------------------------------
@@ -7925,27 +7981,53 @@ class DashboardInspectorController extends Controller
 			    ->whereIn('task_list_id', $taskListIds)
 				->whereNotNull('checklist_id')
 				->pluck('checklist_id')->toArray();
-
-			$checklistApprIds = DB::table('task_list_checklists')
+			
+			//-- comment 18-08-2025-------
+			/*$checklistApprIds = DB::table('task_list_checklists')
 				->where('approve', 1)
 				->whereIn('task_list_id', $taskListIds)
 				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
 				->pluck('checklist_id')
+				->toArray();*/
+			//---- 18-08-2025-------
+			$checklistApprIds = DB::table('task_list_checklists')
+				->where('approve', 1)
+				->whereIn('task_list_id', $matchingTaskListIds)
+				->whereIn('category_id', $categoryIds)
+				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
+				->get(['task_list_id', 'checklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id;
+				 })
 				->toArray();
 				
 		//print_r($checklistApprIds);die;
 		$correctiveApprChecklistIds = array_merge($correctiveChecklistApprIds,$checklistApprIds);
 		//print_r($correctiveApprChecklistIds);die;
 		//------------------------------------
-
-		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+		//----- 18-08-2025--------
+		/*$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
 			->whereNotNull('subchecklist_id')
-			->pluck('subchecklist_id')->toArray();
+			->pluck('subchecklist_id')->toArray();*/
+		
+		//---- 18-08-2025------
+		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
+			->where(function ($q) {
+				$q->where(function ($q) {
+					$q->where('inspector_action', 1)->where('los_action', 1);
+				});
+			})
+			->whereNotNull('subchecklist_id')
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
+			})
+			->toArray();
 			
 		//print_r($correctiveSubChecklist_Ids);die;
 			
@@ -7953,116 +8035,118 @@ class DashboardInspectorController extends Controller
 			    ->whereIn('task_list_id', $taskListIds)
 				->whereNotNull('subchecklist_id')
 				->pluck('subchecklist_id')->toArray();
-
-			$subchecklistApprIds = DB::table('task_list_subchecklists')
+			
+			//---- comment 18-08-2025------
+			/*$subchecklistApprIds = DB::table('task_list_subchecklists')
 				->where('approve', 1)
 				->whereIn('task_list_id', $taskListIds)
 				//->whereNotIn('subchecklist_id', $existingCorrectiveSubChecklistIds)
 				->pluck('subchecklist_id')
-				->toArray();
+				->toArray();*/
+			//----- 18-08-2025--------------
+			$subchecklistApprIds = DB::table('task_list_subchecklists')
+			->where('approve', 1)
+			->whereIn('task_list_id', $matchingTaskListIds)
+			->whereIn('category_id', $categoryIds)
+			->get(['task_list_id', 'task_list_checklist_id', 'subchecklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+			 })
+			->toArray();
 			
 			//print_r($subchecklistIds);die;
 			$correctiveApprSubChecklistIds = array_merge($correctiveSubChecklistApprIds,$subchecklistApprIds);	
 			//print_r($correctiveApprSubChecklistIds);die;
 
 		// Raw union query
-			$correctiveApproved = DB::table(function ($query) use (
-				$taskListIds,
-				$categoryIds,
-				$submit_task_id,
-				$correctiveApprChecklistIds,
-				$correctiveApprSubChecklistIds
-			) {
-				$query->select(
-						'id',
-						'checklist_id',
-						DB::raw("'checklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'updated_at',
-						DB::raw('NULL as subchecklist_id'),
-						DB::raw('NULL as task_list_checklist_id')
-					)
-					->from('task_list_checklists')
-					->whereIn('task_list_id', $submit_task_id)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					->whereIn('checklist_id', $correctiveApprChecklistIds)
-				->unionAll(
-					DB::table('task_list_subchecklists')
-						->select(
-							'id',
-							'subchecklist_id as item_id',
-							DB::raw("'subchecklist' as type"),
-							'task_list_id',
-							'category_id',
-							'approve',
-							'rejected_region',
-							'updated_at',
-							'subchecklist_id',
-							'task_list_checklist_id'
-						)
-						//->whereIn('task_list_id', $taskListIds)
-						->whereIn('task_list_id', $submit_task_id)
-						->whereIn('category_id', $categoryIds)
-						->whereIn('approve', [0,1])
-						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-				);
-			}, 'combined')
-			//->orderByDesc('updated_at')
-			->orderBy('updated_at', 'asc')
+			if (!empty($correctiveApprChecklistIds)) {
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->where(function ($query) use ($correctiveApprChecklistIds) {
+					foreach ($correctiveApprChecklistIds as $pair) {
+						[$taskListId, $checklistId] = explode('-', $pair);
+						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
+							$q->where('task_list_id', $taskListId)
+							  ->where('checklist_id', $checklistId)
+							  ->whereIn('approve', [0,1]);
+						});
+					}
+				});
+		} else {
+			// Empty query (always false condition)
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->whereRaw('1=0');
+		}
+
+		// if subchecklist ids are not empty, union it
+		if (!empty($correctiveApprSubChecklistIds)) {
+			$subChecklistQuery = DB::table('task_list_subchecklists')
+				->select(
+					'id',
+					DB::raw('NULL as checklist_id'),
+					DB::raw("'subchecklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					'subchecklist_id',
+					'task_list_checklist_id'
+				)
+				->where(function ($q) use ($correctiveApprSubChecklistIds) {
+					foreach ($correctiveApprSubChecklistIds as $pair) {
+						[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
+						$q->orWhere(function ($sub) use ($taskListId, $checklistId, $subchecklistId) {
+							$sub->where('task_list_id', $taskListId)
+								->where('task_list_checklist_id', $checklistId)
+								->where('subchecklist_id', $subchecklistId)
+								->whereIn('approve', [0,1]);
+						});
+					}
+				});
+
+			$baseChecklistQuery->unionAll($subChecklistQuery);
+		}
+
+
+		$correctiveApproved = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)
+			->orderBy('updated_at', 'desc')
 			->offset($lower)
 			->limit($upper)
 			->get();
-			//echo "<pre>";print_r($correctiveApproved);die;
-			
-			$correctiveApprovedCount = DB::table(function ($query) use (
-				$taskListIds,
-				$categoryIds,
-				$submit_task_id,
-				$correctiveApprChecklistIds,
-				$correctiveApprSubChecklistIds
-			) {
-				$query->select(
-						'id',
-						'checklist_id',
-						DB::raw("'checklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'updated_at',
-						DB::raw('NULL as subchecklist_id'),
-						DB::raw('NULL as task_list_checklist_id')
-					)
-					->from('task_list_checklists')
-					->whereIn('task_list_id', $submit_task_id)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					->whereIn('checklist_id', $correctiveApprChecklistIds)
-				->unionAll(
-					DB::table('task_list_subchecklists')
-						->select(
-							'id',
-							'subchecklist_id as item_id',
-							DB::raw("'subchecklist' as type"),
-							'task_list_id',
-							'category_id',
-							'approve',
-							'rejected_region',
-							'updated_at',
-							'subchecklist_id',
-							'task_list_checklist_id'
-						)
-						//->whereIn('task_list_id', $taskListIds)
-						->whereIn('task_list_id', $submit_task_id)
-						->whereIn('category_id', $categoryIds)
-						->whereIn('approve', [0,1])
-						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-				);
-			}, 'combined')->count();
+		
+
+		//echo "<pre>";print_r($correctiveApproved);die;
+		
+		$correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)->count();
 		
 		//echo $correctiveApprovedCount;die;
 		
@@ -8454,10 +8538,11 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
-			->whereNotNull('checklist_id')
-			->get(['task_list_id', 'checklist_id'])
+			//->whereNotNull('checklist_id')
+			->whereNotNull('subchecklist_id')
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
 			->map(function ($item) {
-				return $item->task_list_id . '-' . $item->checklist_id;
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
 			})
 			->toArray();
 			
@@ -8469,7 +8554,7 @@ class DashboardInspectorController extends Controller
 			->whereIn('category_id', $categoryIds)
 			->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
 			->filter(function ($item) use ($excludedSubChecklistPairs) {
-				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id;
+				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->task_list_checklist_id;
 				return !in_array($pairKey, $excludedSubChecklistPairs);
 			})
 			->map(function ($item) {
@@ -8984,161 +9069,163 @@ class DashboardInspectorController extends Controller
 		$submit_task_id = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)->pluck('task_list_id')->toArray();
 			
 		$approvedCompletedArray = [];
+		
+		$subcategoriesTaskIds = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)
+			->pluck('task_list_id');
+			
+		$matchingTaskListIds = array_values(array_intersect($taskListIds->toArray(),  $subcategoriesTaskIds->toArray()));
+		
 		// Checklist IDs with existing corrective needed
-		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
-			->where(function ($q) {
-				$q->where(function ($q) {
-					$q->where('inspector_action', 1)->where('los_action', 1);
-				});
+		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
+		->where(function ($q) {
+			$q->where(function ($q) {
+				$q->where('inspector_action', 1)->where('los_action', 1);
+			});
+		})
+		->whereNotNull('checklist_id')
+		->get(['task_list_id', 'checklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->checklist_id;
 			})
-			->whereNotNull('checklist_id')
-			->pluck('checklist_id')->toArray();
+		->toArray();
 			
 			//print_r($correctiveChecklistApprIds);die;
 		//------------------------------------
-		
-			$existingCorrectiveChecklistApprIds = DB::table('task_list_corrective_actions')
-			    ->whereIn('task_list_id', $taskListIds)
-				->whereNotNull('checklist_id')
-				->pluck('checklist_id')->toArray();
-
 			$checklistApprIds = DB::table('task_list_checklists')
 				->where('approve', 1)
-				->whereIn('task_list_id', $taskListIds)
+				->whereIn('task_list_id', $matchingTaskListIds)
+				->whereIn('category_id', $categoryIds)
 				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
-				->pluck('checklist_id')
+				->get(['task_list_id', 'checklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id;
+				 })
 				->toArray();
+			
 				
 		//print_r($checklistApprIds);die;
 		$correctiveApprChecklistIds = array_merge($correctiveChecklistApprIds,$checklistApprIds);
 		//print_r($correctiveApprChecklistIds);die;
 		//------------------------------------
 
-		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
 			->whereNotNull('subchecklist_id')
-			->pluck('subchecklist_id')->toArray();
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
+			})
+			->toArray();
 			
-		//print_r($correctiveSubChecklist_Ids);die;
+			//print_r($correctiveSubChecklistApprIds);die;
 			
-			$existingCorrectiveSubChecklistIds = DB::table('task_list_corrective_actions')
-			    ->whereIn('task_list_id', $taskListIds)
-				->whereNotNull('subchecklist_id')
-				->pluck('subchecklist_id')->toArray();
-
 			$subchecklistApprIds = DB::table('task_list_subchecklists')
-				->where('approve', 1)
-				->whereIn('task_list_id', $taskListIds)
-				//->whereNotIn('subchecklist_id', $existingCorrectiveSubChecklistIds)
-				->pluck('subchecklist_id')
-				->toArray();
+			->where('approve', 1)
+			->whereIn('task_list_id', $matchingTaskListIds)
+			->whereIn('category_id', $categoryIds)
+			->get(['task_list_id', 'task_list_checklist_id', 'subchecklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+			 })
+			->toArray();
 			
 			//print_r($subchecklistIds);die;
 			$correctiveApprSubChecklistIds = array_merge($correctiveSubChecklistApprIds,$subchecklistApprIds);	
 			//print_r($correctiveApprSubChecklistIds);die;
 
 		// Raw union query
-			$correctiveApproved = DB::table(function ($query) use (
-				$taskListIds,
-				$categoryIds,
-				$submit_task_id,
-				$correctiveApprChecklistIds,
-				$correctiveApprSubChecklistIds
-			) {
-				$query->select(
-						'id',
-						'checklist_id',
-						DB::raw("'checklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'updated_at',
-						DB::raw('NULL as subchecklist_id'),
-						DB::raw('NULL as task_list_checklist_id')
-					)
-					->from('task_list_checklists')
-					->whereIn('task_list_id', $submit_task_id)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					->whereIn('checklist_id', $correctiveApprChecklistIds)
-				->unionAll(
-					DB::table('task_list_subchecklists')
-						->select(
-							'id',
-							'subchecklist_id as item_id',
-							DB::raw("'subchecklist' as type"),
-							'task_list_id',
-							'category_id',
-							'approve',
-							'rejected_region',
-							'updated_at',
-							'subchecklist_id',
-							'task_list_checklist_id'
-						)
-						//->whereIn('task_list_id', $taskListIds)
-						->whereIn('task_list_id', $submit_task_id)
-						->whereIn('category_id', $categoryIds)
-						->whereIn('approve', [0,1])
-						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-				);
-			}, 'combined')
-			//->orderByDesc('updated_at')
-			->orderBy('updated_at', 'asc')
+			if (!empty($correctiveApprChecklistIds)) {
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->where(function ($query) use ($correctiveApprChecklistIds) {
+					foreach ($correctiveApprChecklistIds as $pair) {
+						[$taskListId, $checklistId] = explode('-', $pair);
+						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
+							$q->where('task_list_id', $taskListId)
+							  ->where('checklist_id', $checklistId)
+							  ->whereIn('approve', [0,1]);
+						});
+					}
+				});
+		} else {
+			// Empty query (always false condition)
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->whereRaw('1=0');
+		}
+
+		// if subchecklist ids are not empty, union it
+		if (!empty($correctiveApprSubChecklistIds)) {
+			$subChecklistQuery = DB::table('task_list_subchecklists')
+				->select(
+					'id',
+					DB::raw('NULL as checklist_id'),
+					DB::raw("'subchecklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					'subchecklist_id',
+					'task_list_checklist_id'
+				)
+				->where(function ($q) use ($correctiveApprSubChecklistIds) {
+					foreach ($correctiveApprSubChecklistIds as $pair) {
+						[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
+						$q->orWhere(function ($sub) use ($taskListId, $checklistId, $subchecklistId) {
+							$sub->where('task_list_id', $taskListId)
+								->where('task_list_checklist_id', $checklistId)
+								->where('subchecklist_id', $subchecklistId)
+								->whereIn('approve', [0,1]);
+						});
+					}
+				});
+
+			$baseChecklistQuery->unionAll($subChecklistQuery);
+		}
+
+
+		$correctiveApproved = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)
+			->orderBy('updated_at', 'desc')
 			->offset($lower)
 			->limit($upper)
 			->get();
-			//echo "<pre>";print_r($correctiveApproved);die;
-			
-			$correctiveApprovedCount = DB::table(function ($query) use (
-				$taskListIds,
-				$categoryIds,
-				$submit_task_id,
-				$correctiveApprChecklistIds,
-				$correctiveApprSubChecklistIds
-			) {
-				$query->select(
-						'id',
-						'checklist_id',
-						DB::raw("'checklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'updated_at',
-						DB::raw('NULL as subchecklist_id'),
-						DB::raw('NULL as task_list_checklist_id')
-					)
-					->from('task_list_checklists')
-					->whereIn('task_list_id', $submit_task_id)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					->whereIn('checklist_id', $correctiveApprChecklistIds)
-				->unionAll(
-					DB::table('task_list_subchecklists')
-						->select(
-							'id',
-							'subchecklist_id as item_id',
-							DB::raw("'subchecklist' as type"),
-							'task_list_id',
-							'category_id',
-							'approve',
-							'rejected_region',
-							'updated_at',
-							'subchecklist_id',
-							'task_list_checklist_id'
-						)
-						//->whereIn('task_list_id', $taskListIds)
-						->whereIn('task_list_id', $submit_task_id)
-						->whereIn('category_id', $categoryIds)
-						->whereIn('approve', [0,1])
-						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-				);
-			}, 'combined')->count();
+		
+
+		//echo "<pre>";print_r($correctiveApproved);die;
+		
+		$correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)->count();
 		
 		//echo $correctiveApprovedCount;die;
 		
@@ -9152,7 +9239,7 @@ class DashboardInspectorController extends Controller
 					$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $appr->task_list_id)->where('checklist_id', $appr->checklist_id)->first();
 					if($task_list_checklist_corrective_needed)
 					{
-						$chklstData  = Task_list_checklists::where('checklist_id', $appr->checklist_id)->first();
+						$chklstData  = Task_list_checklists::where('task_list_id', $appr->task_list_id)->where('checklist_id', $appr->checklist_id)->first();
 						$id = $chklstData ? $chklstData->id : '';
 						$isfiles = '';
 						$images = '';
@@ -9682,10 +9769,11 @@ class DashboardInspectorController extends Controller
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
-			->whereNotNull('checklist_id')
-			->get(['task_list_id', 'checklist_id'])
+			//->whereNotNull('checklist_id')
+			->whereNotNull('subchecklist_id')
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
 			->map(function ($item) {
-				return $item->task_list_id . '-' . $item->checklist_id;
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
 			})
 			->toArray();
 			
@@ -9697,7 +9785,7 @@ class DashboardInspectorController extends Controller
 			->whereIn('category_id', $categoryIds)
 			->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
 			->filter(function ($item) use ($excludedSubChecklistPairs) {
-				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id;
+				$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
 				return !in_array($pairKey, $excludedSubChecklistPairs);
 			})
 			->map(function ($item) {
@@ -10210,31 +10298,38 @@ class DashboardInspectorController extends Controller
 		
 		//-----05-08-2025 if submit checklist then submit task data show-----
 		$submit_task_id = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)->pluck('task_list_id')->toArray();
-			
+		
 		$approvedCompletedArray = [];
+		
+		$subcategoriesTaskIds = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)
+			->pluck('task_list_id');
+			
+		$matchingTaskListIds = array_values(array_intersect($taskListIds->toArray(),  $subcategoriesTaskIds->toArray()));
 		// Checklist IDs with existing corrective needed
-		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+		$correctiveChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
 			->whereNotNull('checklist_id')
-			->pluck('checklist_id')->toArray();
+			->get(['task_list_id', 'checklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id;
+				})
+			->toArray();
 			
 			//print_r($correctiveChecklistApprIds);die;
 		//------------------------------------
-		
-			$existingCorrectiveChecklistApprIds = DB::table('task_list_corrective_actions')
-			    ->whereIn('task_list_id', $taskListIds)
-				->whereNotNull('checklist_id')
-				->pluck('checklist_id')->toArray();
-
 			$checklistApprIds = DB::table('task_list_checklists')
 				->where('approve', 1)
-				->whereIn('task_list_id', $taskListIds)
+				->whereIn('task_list_id', $matchingTaskListIds)
+				->whereIn('category_id', $categoryIds)
 				//->whereNotIn('checklist_id', $existingCorrectiveChecklistApprIds)
-				->pluck('checklist_id')
+				->get(['task_list_id', 'checklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id;
+				 })
 				->toArray();
 				
 		//print_r($checklistApprIds);die;
@@ -10242,131 +10337,124 @@ class DashboardInspectorController extends Controller
 		//print_r($correctiveApprChecklistIds);die;
 		//------------------------------------
 
-		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $taskListIds)
+		$correctiveSubChecklistApprIds = Task_list_corrective_action::whereIn('task_list_id', $matchingTaskListIds)
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 1)->where('los_action', 1);
 				});
 			})
 			->whereNotNull('subchecklist_id')
-			->pluck('subchecklist_id')->toArray();
+			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
+			})
+			->toArray();
 			
 		//print_r($correctiveSubChecklist_Ids);die;
 			
-			$existingCorrectiveSubChecklistIds = DB::table('task_list_corrective_actions')
-			    ->whereIn('task_list_id', $taskListIds)
-				->whereNotNull('subchecklist_id')
-				->pluck('subchecklist_id')->toArray();
-
 			$subchecklistApprIds = DB::table('task_list_subchecklists')
-				->where('approve', 1)
-				->whereIn('task_list_id', $taskListIds)
-				//->whereNotIn('subchecklist_id', $existingCorrectiveSubChecklistIds)
-				->pluck('subchecklist_id')
-				->toArray();
+			->where('approve', 1)
+			->whereIn('task_list_id', $matchingTaskListIds)
+			->whereIn('category_id', $categoryIds)
+			->get(['task_list_id', 'task_list_checklist_id', 'subchecklist_id'])
+			->map(function ($item) {
+				return $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+			 })
+			->toArray();
 			
 			//print_r($subchecklistIds);die;
 			$correctiveApprSubChecklistIds = array_merge($correctiveSubChecklistApprIds,$subchecklistApprIds);	
 			//print_r($correctiveApprSubChecklistIds);die;
 
 		// Raw union query
-			$correctiveApproved = DB::table(function ($query) use (
-				$taskListIds,
-				$categoryIds,
-				$submit_task_id,
-				$correctiveApprChecklistIds,
-				$correctiveApprSubChecklistIds
-			) {
-				$query->select(
-						'id',
-						'checklist_id',
-						DB::raw("'checklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'updated_at',
-						DB::raw('NULL as subchecklist_id'),
-						DB::raw('NULL as task_list_checklist_id')
-					)
-					->from('task_list_checklists')
-					->whereIn('task_list_id', $submit_task_id)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					->whereIn('checklist_id', $correctiveApprChecklistIds)
-				->unionAll(
-					DB::table('task_list_subchecklists')
-						->select(
-							'id',
-							'subchecklist_id as item_id',
-							DB::raw("'subchecklist' as type"),
-							'task_list_id',
-							'category_id',
-							'approve',
-							'rejected_region',
-							'updated_at',
-							'subchecklist_id',
-							'task_list_checklist_id'
-						)
-						//->whereIn('task_list_id', $taskListIds)
-						->whereIn('task_list_id', $submit_task_id)
-						->whereIn('category_id', $categoryIds)
-						->whereIn('approve', [0,1])
-						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-				);
-			}, 'combined')
-			//->orderByDesc('updated_at')
-			->orderBy('updated_at', 'asc')
+			if (!empty($correctiveApprChecklistIds)) {
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->where(function ($query) use ($correctiveApprChecklistIds) {
+					foreach ($correctiveApprChecklistIds as $pair) {
+						[$taskListId, $checklistId] = explode('-', $pair);
+						$query->orWhere(function ($q) use ($taskListId, $checklistId) {
+							$q->where('task_list_id', $taskListId)
+							  ->where('checklist_id', $checklistId)
+							  ->whereIn('approve', [0,1]);
+						});
+					}
+				});
+		} else {
+			// Empty query (always false condition)
+			$baseChecklistQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->whereRaw('1=0');
+		}
+
+		// if subchecklist ids are not empty, union it
+		if (!empty($correctiveApprSubChecklistIds)) {
+			$subChecklistQuery = DB::table('task_list_subchecklists')
+				->select(
+					'id',
+					DB::raw('NULL as checklist_id'),
+					DB::raw("'subchecklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'rejected_region',
+					'created_at',
+					'updated_at',
+					'subchecklist_id',
+					'task_list_checklist_id'
+				)
+				->where(function ($q) use ($correctiveApprSubChecklistIds) {
+					foreach ($correctiveApprSubChecklistIds as $pair) {
+						[$taskListId, $checklistId, $subchecklistId] = explode('-', $pair);
+						$q->orWhere(function ($sub) use ($taskListId, $checklistId, $subchecklistId) {
+							$sub->where('task_list_id', $taskListId)
+								->where('task_list_checklist_id', $checklistId)
+								->where('subchecklist_id', $subchecklistId)
+								->whereIn('approve', [0,1]);
+						});
+					}
+				});
+
+			$baseChecklistQuery->unionAll($subChecklistQuery);
+		}
+
+
+		$correctiveApproved = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)
+			->orderBy('updated_at', 'desc')
 			->offset($lower)
 			->limit($upper)
 			->get();
-			//echo "<pre>";print_r($correctiveApproved);die;
-			
-			$correctiveApprovedCount = DB::table(function ($query) use (
-				$taskListIds,
-				$categoryIds,
-				$submit_task_id,
-				$correctiveApprChecklistIds,
-				$correctiveApprSubChecklistIds
-			) {
-				$query->select(
-						'id',
-						'checklist_id',
-						DB::raw("'checklist' as type"),
-						'task_list_id',
-						'category_id',
-						'approve',
-						'rejected_region',
-						'updated_at',
-						DB::raw('NULL as subchecklist_id'),
-						DB::raw('NULL as task_list_checklist_id')
-					)
-					->from('task_list_checklists')
-					->whereIn('task_list_id', $submit_task_id)
-					->whereIn('category_id', $categoryIds)
-					->whereIn('approve', [0,1])
-					->whereIn('checklist_id', $correctiveApprChecklistIds)
-				->unionAll(
-					DB::table('task_list_subchecklists')
-						->select(
-							'id',
-							'subchecklist_id as item_id',
-							DB::raw("'subchecklist' as type"),
-							'task_list_id',
-							'category_id',
-							'approve',
-							'rejected_region',
-							'updated_at',
-							'subchecklist_id',
-							'task_list_checklist_id'
-						)
-						//->whereIn('task_list_id', $taskListIds)
-						->whereIn('task_list_id', $submit_task_id)
-						->whereIn('category_id', $categoryIds)
-						->whereIn('approve', [0,1])
-						->whereIn('subchecklist_id', $correctiveApprSubChecklistIds)
-				);
-			}, 'combined')->count();
+		
+
+		//echo "<pre>";print_r($correctiveApproved);die;
+		
+		$correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
+			->mergeBindings($baseChecklistQuery)->count();
 		
 		//echo $correctiveApprovedCount;die;
 		
@@ -10380,7 +10468,7 @@ class DashboardInspectorController extends Controller
 					$task_list_checklist_corrective_needed = Task_list_corrective_action::where('task_list_id', $appr->task_list_id)->where('checklist_id', $appr->checklist_id)->first();
 					if($task_list_checklist_corrective_needed)
 					{
-						$chklstData  = Task_list_checklists::where('checklist_id', $appr->checklist_id)->first();
+						$chklstData  = Task_list_checklists::where('task_list_id', $appr->task_list_id)->where('checklist_id', $appr->checklist_id)->first();
 						$id = $chklstData ? $chklstData->id : '';
 						$isfiles = '';
 						$images = '';

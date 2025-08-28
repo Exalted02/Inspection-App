@@ -17,7 +17,7 @@ $l = 0;
 $m = 0;
 
 
-$countNedded = 0;
+/*$countNedded = 0;
 $countAction = 0;
 $countPlan = 0;
 $countCompleted = 0;
@@ -48,7 +48,7 @@ foreach($approvedCompleted as $result)
 	{
 		$countCompleted++;
 	}
-}
+}*/
 
 
 $action_show = config('custom.LOAD_MORE_LIST_SHOW');
@@ -139,7 +139,7 @@ $totalapprcompleted = $countCompleted;
 										
 										$rejectedRegionData = $result['type'] == 'checklist'
 										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
 
 										if($result['image'] != '')
 										{
@@ -285,7 +285,7 @@ $totalapprcompleted = $countCompleted;
 										
 										$rejectedRegionData = $result['type'] == 'checklist'
 										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
 
 										if($result['image'] != '')
 										{
@@ -437,7 +437,7 @@ $totalapprcompleted = $countCompleted;
 									
 									$rejectedRegionData = $result['type'] == 'checklist'
 									? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-									: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+									: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
 
 									if($result['image'] != '')
 									{
@@ -590,7 +590,7 @@ $totalapprcompleted = $countCompleted;
 										
 										$rejectedRegionData = $result['type'] == 'checklist'
 										? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
+										: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
 
 										
 										//$images =url('images/noimages/noimage_region.png');
@@ -1065,7 +1065,7 @@ $(document ).ready(function() {
 		
 		$('.load-more-needed').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload); 
-		var URL = "{{ route('mgnt-load-more-data') }}";
+		var URL = "{{ route('mgnt-load-more-needed-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1099,7 +1099,7 @@ $(document ).ready(function() {
 		//alert(moreload);
 		$('.load-more-action').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		
-		var URL = "{{ route('mgnt-load-more-data') }}";
+		var URL = "{{ route('mgnt-load-more-action-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1133,7 +1133,7 @@ $(document ).ready(function() {
 		
 		$('.load-more-plan').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('mgnt-load-more-data') }}";
+		var URL = "{{ route('mgnt-load-more-plan-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -1167,7 +1167,7 @@ $(document ).ready(function() {
 		
 		$('.load-more-appr').html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading...');
 		//alert(moreload);
-		var URL = "{{ route('mgnt-load-more-data') }}";
+		var URL = "{{ route('mgnt-load-more-appr-data') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",

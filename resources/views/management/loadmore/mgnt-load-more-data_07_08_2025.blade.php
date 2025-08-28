@@ -6,13 +6,14 @@ $l = 0;
 $m = 0;
 $location_name = App\Models\Manage_location::where('id', $location_id)->first()->location_name;
 //echo "<pre>";print_r($approvedCompleted);die;
-/*$correctiveNeddedArray = [];
+$correctiveNeddedArray = [];
 $correctiveActionArray = [];
 $correctivePlanArray = [];
-$approvedCompletedArray = [];*/
+$approvedCompletedArray = [];
 
+//echo "<pre>";print_r($correctiveNeeded);die;
 
-/*if($mode == 'corrective_needed')
+if($mode == 'corrective_needed')
 {
 	foreach($correctiveNeeded as $needed)
 	{
@@ -164,9 +165,9 @@ if($mode == 'corrective_appr')
 	}
 	
 	$approvedCompletedArray = array_slice($approvedCompletedArray, $lower, $upper);
-}*/
+}
 
-//echo "<pre>";print_r($correctiveNeddedArray);die;
+
 @endphp
 @if($mode == 'corrective_needed')					
 	@foreach($correctiveNeddedArray as $result)
@@ -184,7 +185,7 @@ if($mode == 'corrective_appr')
 			
 			$rejectedRegionData = $result['type'] == 'checklist'
 			? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-			: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
+			: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
 			if($result['image'] != '')
 			{
@@ -237,7 +238,7 @@ if($mode == 'corrective_appr')
 			</div>
 			<div class="flex-grow-1">
 			{{--<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">--}}
-					<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+					<a href="{{ route('management-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 				<h6>{{ $checklistName ?? '' }} 
 				@if($val!='')
 					-> {{$val['name'] ?? ''}}
@@ -281,7 +282,7 @@ if($mode == 'corrective_appr')
 				@endif
 			</div>
 			<div class="flex-grow-1">
-				<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+				<a href="{{ route('management-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 				<h6>{{ $checklistName ?? '' }} 
 				</h6>
 					<p class="text-muted mb-0">
@@ -306,7 +307,6 @@ if($mode == 'corrective_appr')
 			</div>
 		</div>
 		@endif
-	 <hr class="horizontal-line-list-page">
 	@endforeach
 @endif
 
@@ -325,7 +325,7 @@ if($mode == 'corrective_appr')
 		
 		$rejectedRegionData = $result['type'] == 'checklist'
 		? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
+		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
 		if($result['image'] != '')
 		{
@@ -378,9 +378,9 @@ if($mode == 'corrective_appr')
 		</div>
 		<div class="flex-grow-1">
 			@if($result['second_checked'] == '')
-			<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			<a href="{{ route('management-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 			@else
-			<a href="{{ route('inspector-subchecklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			<a href="{{ route('management-subchecklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 			@endif
 			<h6>{{ $checklistName ?? '' }} 
 			@if($val!='')
@@ -434,9 +434,9 @@ if($mode == 'corrective_appr')
 		</div>
 		<div class="flex-grow-1">
 			@if($result['second_checked'] == '')
-			<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			<a href="{{ route('management-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 			@else
-			<a href="{{ route('inspector-checklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			<a href="{{ route('management-checklist-second-approve-by-lo', ['location_id'=>$location_id, 'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 			@endif
 			<h6>{{ $checklistName ?? '' }} 
 			</h6>
@@ -470,7 +470,6 @@ if($mode == 'corrective_appr')
 		</div>
 	</div>
 	@endif
-	<hr class="horizontal-line-list-page">
 	@endforeach
 @endif
 
@@ -489,7 +488,7 @@ if($mode == 'corrective_appr')
 		
 		$rejectedRegionData = $result['type'] == 'checklist'
 		? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
+		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
 		if($result['image'] != '')
 		{
@@ -542,9 +541,9 @@ if($mode == 'corrective_appr')
 		</div>
 		<div class="flex-grow-1">
 			@if($result['second_checked'] == '')
-			<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			<a href="{{ route('management-subchecklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 			@else
-			<a href="{{ route('inspector-subchecklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			<a href="{{ route('management-subchecklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 			@endif
 			<h6>{{ $checklistName ?? '' }} 
 			@if($val!='')
@@ -598,9 +597,9 @@ if($mode == 'corrective_appr')
 		</div>
 		<div class="flex-grow-1">
 			@if($result['second_checked'] == '')
-			<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			<a href="{{ route('management-checklist-question-reply',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 			@else
-			<a href="{{ route('inspector-checklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+			<a href="{{ route('management-checklist-second-approve-by-lo',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
 			@endif
 			<h6>{{ $checklistName ?? '' }} 
 			</h6>
@@ -609,7 +608,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
+				<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
 				</p>
 				@endif
 				<p class="text-muted mb-0">
@@ -634,7 +633,6 @@ if($mode == 'corrective_appr')
 		</div>
 	</div>
 	@endif
-	<hr class="horizontal-line-list-page">
 	@endforeach
 @endif
 
@@ -653,7 +651,7 @@ if($mode == 'corrective_appr')
 		
 		$rejectedRegionData = $result['type'] == 'checklist'
 		? App\Models\Task_list_checklists::where('task_list_id',$result['task_id'])->where('checklist_id', $result['checklist_id'])->first()
-		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->where('subchecklist_id', $result['subchecklist_id'])->first();
+		: App\Models\Task_list_subchecklists::where('task_list_id',$result['task_id'])->where('task_list_checklist_id', $result['checklist_id'])->first();
 
 		
 		//$images =url('images/noimages/noimage_region.png');
@@ -704,7 +702,7 @@ if($mode == 'corrective_appr')
 					
 				if(array_key_exists('image', $result))
 				{
-					$route = route('ia-los-subchecklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+					$route = route('management-subchecklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
 					$class = '';
 				} else {
 					$route = "javascript:void(0)";
@@ -731,7 +729,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)	
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
+				<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 				</p>
 				@endif
 				<p class="text-muted mb-0">
@@ -752,7 +750,7 @@ if($mode == 'corrective_appr')
 				
 			if(array_key_exists('image', $result))
 			{
-				$route = route('ia-los-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+				$route = route('management-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
 				$class = '';
 			} else {
 				$route = "javascript:void(0)";
@@ -776,7 +774,7 @@ if($mode == 'corrective_appr')
 				</p>
 				@if($rejectedRegionData)
 				<p class="text-muted mb-0">
-				<i class="fa fa-clock"></i> {{ change_date_format($rejectedRegionData->created_at, 'Y-m-d H:i:s', 'd M Y, h.i A') }}
+				<i class="fa fa-clock"></i> {{ Carbon::parse($rejectedRegionData->created_at)->format('d M Y, h:i A') }}
 				</p>
 				@endif
 				<p class="text-muted mb-0">
@@ -786,7 +784,6 @@ if($mode == 'corrective_appr')
 		</div>
 	</div>
 	@endif
-	<hr class="horizontal-line-list-page">
 @endforeach
 
 @endif

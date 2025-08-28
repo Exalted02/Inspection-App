@@ -51,6 +51,11 @@
 		 }
 	 //---------------------------------------------
 	$corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
+	// new add 13-08-2025------not previous --
+		$lo_direct_approve = $corrective_dtls_data ? $corrective_dtls_data->lo_direct_approve : '';
+		
+		$lo_corrective_completed_by = $corrective_dtls_data ? $corrective_dtls_data->lo_completed_by : '';
+	//---------------------
 	
 	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
 	 
@@ -85,7 +90,7 @@
 			 ];
 		}
 		
-		$corrective_action = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		$corrective_action = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
 		$corrective_plan  = $corrective_action ? $corrective_action->lo_corrective_action_plan : '';
 		
 		$inspector_action_date  = $corrective_action ? $corrective_action->inspector_action_date : '';
@@ -112,6 +117,12 @@
 	 //---------------------------------------------
 	 
 		$corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
+		
+		// new add 13-08-2025------not previous --
+			$lo_direct_approve = $corrective_dtls_data ? $corrective_dtls_data->lo_direct_approve : '';
+			
+			$lo_corrective_completed_by = $corrective_dtls_data ? $corrective_dtls_data->lo_completed_by : '';
+		//---------------------
 		
 		$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
 		 
@@ -340,8 +351,19 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action->created_at) ? change_date_format($corrective_action->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action->get_lo->name ?? ''}} </span><span>{{ !empty($val->created_at) ? change_date_format($val->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
 						</div>
+						
+						@if($val->lo_direct_approve == 0)
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
+							<label>Completed By</label>
+								<div class="mt-1">
+									{{ change_date_format($val->lo_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
+								</div>
+							</div>
+						</div>
+						@endif
 						
 						@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
 							</br>
@@ -524,69 +546,49 @@ flatpickr("#set_time", {
 let previewContainer = $('#preview-container');
 let selectedFiles = [];
 	
-$('#lo_file').on('change', function (e) {
-    //let files = e.target.files;
-	let files = Array.from(e.target.files); // new
-	selectedFiles = files; // new
-	//selectedFiles = [...selectedFiles, ...files];
-    previewContainer.empty(); // Clear previous previews
-	
-	/*Array.from(files).forEach((file, index) => {
-	  if (file) {
-		let reader = new FileReader();
-		reader.onload = function (e) {
-			alert(e.target.result);
-		  let previewHtml = '';
-			
-		  if (file.type.startsWith('image/')) {
-			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><img src="' + e.target.result + '" class="preview-image" /><div class="remove-image" data-index="' + index + '">&times;</div></div>';
-		  }
-		  else if (file.type.startsWith('video/')) {
-			previewHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><div class="remove-image" data-index="' + index + '">&times;</div></div>';
-		  }
-		  alert(previewHtml);
-		  previewContainer.append(previewHtml);
-		};
+	$('#lo_file').on('change', function (e) {
+		let files = Array.from(e.target.files);
 
-		//reader.readAsDataURL(file);
-	  }
-	});*/
-	
-    Array.from(files).forEach((file, index) => {
-      //if (file && file.type.startsWith('image/')) {
-      if (file) {
-        let reader = new FileReader();
-		//$('#preview-container').show();
-		let imgHtml = '';
-        reader.onload = function (e) {
-			//alert(file.type);
-			if (file.type.startsWith('image/')) {
-			  let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image" data-index="' + index +'">&times;</div></div>';
-			  previewContainer.append(imgHtml);
-			}
-			else if (file.type.startsWith('video/')) {
-				imgHtml = '<div class="preview-image-wrapper" data-index="' + index + '"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><div class="remove-image" data-index="' + index + '">&times;</div></div>';
-				previewContainer.append(imgHtml);
-			}
-			  //previewContainer.append(imgHtml);
-        };
+		selectedFiles = [...selectedFiles, ...files];
 
-        reader.readAsDataURL(file);
-      }
-    });
-	
-	//updateFileInput();
-  });
+		files.forEach((file, index) => {
+			let reader = new FileReader();
+			reader.onload = function (e) {
+				let previewHtml = '';
+
+				if (file.type.startsWith('image/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '"><img src="' + e.target.result 
+						+ '" class="preview-image" /><button type="button" class="remove-image" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				} else if (file.type.startsWith('video/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '"><video src="' + e.target.result 
+						+ '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="remove-image" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				}
+				previewContainer.append(previewHtml);
+			};
+			reader.readAsDataURL(file);
+		});
+
+		$(this).val('');
+	});
 
 
-  // Delegate remove button click
-  previewContainer.on('click', '.remove-image', function () {
-	const indexToRemove = $(this).data('index');
-	//alert(indexToRemove);alert(selectedFiles);
-    $(this).parent().remove();
-	selectedFiles[indexToRemove] = null;
-	selectedFiles = selectedFiles.filter(file => file !== null);
-  });
+	// Remove file from preview & array
+	previewContainer.on('click', '.remove-image', function () {
+		const indexToRemove = $(this).data('index');
+		$(this).parent().remove();
+		selectedFiles[indexToRemove] = null;
+		selectedFiles = selectedFiles.filter(file => file !== null);
+	});
+
+
    
    $(document).on('click','.location-owner-submit', function(){
 	   //e.preventDefault();
@@ -594,6 +596,7 @@ $('#lo_file').on('change', function (e) {
 	   var checklist_id = $('#checklist_id').val();
 	   var subchecklist_id = $('#subchecklist_id').val();
 	   var type = $('#type').val();
+	   //alert(type);
 	   //var category_id = $('#category_id').val();
 	   var location_id = $('#location_id').val();
 	   

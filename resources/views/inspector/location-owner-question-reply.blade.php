@@ -191,6 +191,7 @@ $(document).ready(function() {
 				const date = selectedDates[0];
 				const dateOnly = flatpickr.formatDate(date, "d M Y");
 				const timeOnly = flatpickr.formatDate(date, "H:i");
+				//alert(timeOnly);
 				
 				document.getElementById('selected_time').innerText = 'Set Time';
 				document.getElementById('selected_date').innerText = dateOnly;
@@ -248,7 +249,7 @@ $(document).ready(function() {
 	   let hidden_set_date = $('#hidden_set_date').val();
 	   let hidden_set_time = $('#hidden_set_time').val();
 	   let lo_direct_approve = $('#lo_direct_approve').is(':checked');
-	   //alert(lo_direct_approve);
+	   //alert(hidden_set_time);
 	   
 	   if(lo_corrective_action_plan=='')
 	   {
@@ -341,7 +342,7 @@ $(document).ready(function() {
 
 
 
-$('#lo_file').on('change', function (e) {
+/*$('#lo_file').on('change', function (e) {
 	
 	let files = Array.from(e.target.files); // new
 	selectedFiles = files; // new
@@ -366,30 +367,8 @@ $('#lo_file').on('change', function (e) {
 	  }
 	});
 })
-/*$('#lo_file').on('change', function (e) {
-    //let files = e.target.files;
-	let files = Array.from(e.target.files); // new
-	selectedFiles = files; // new
-	//selectedFiles = [...selectedFiles, ...files];
-    previewContainer.empty(); // Clear previous previews
 
-    Array.from(files).forEach((file, index) => {
-      if (file && file.type.startsWith('image/')) {
-        let reader = new FileReader();
-		//$('#preview-container').show();
-        reader.onload = function (e) {
-          let imgHtml = '<div class="preview-image-wrapper" data-index="' + index +'"><img src="' + e.target.result + '" class="preview-image"><div class="remove-image" data-index="' + index +'">&times;</div></div>';
-          previewContainer.append(imgHtml);
-        };
-
-        reader.readAsDataURL(file);
-      }
-    });
-	
-	//updateFileInput();
-  });*/
-  
-  previewContainer.on('click', '.remove-image', function () {
+previewContainer.on('click', '.remove-image', function () {
 	const indexToRemove = $(this).data('index');
 	//alert(indexToRemove);alert(selectedFiles);
     $(this).parent().remove();
@@ -397,14 +376,54 @@ $('#lo_file').on('change', function (e) {
 	selectedFiles = selectedFiles.filter(file => file !== null);
   });
 	
+});*/
+
+//let selectedFiles = []; // store all selected files globally
+//--------- 13-08-2025----------------------------
+
+	$('#lo_file').on('change', function (e) {
+		let files = Array.from(e.target.files);
+
+		selectedFiles = [...selectedFiles, ...files];
+
+		files.forEach((file, index) => {
+			let reader = new FileReader();
+			reader.onload = function (e) {
+				let previewHtml = '';
+
+				if (file.type.startsWith('image/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '"><img src="' + e.target.result 
+						+ '" class="preview-image" /><button type="button" class="remove-image" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				} else if (file.type.startsWith('video/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '"><video src="' + e.target.result 
+						+ '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="remove-image" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				}
+				previewContainer.append(previewHtml);
+			};
+			reader.readAsDataURL(file);
+		});
+
+		$(this).val('');
+	});
+
+
+	// Remove file from preview & array
+	previewContainer.on('click', '.remove-image', function () {
+		const indexToRemove = $(this).data('index');
+		$(this).parent().remove();
+		selectedFiles[indexToRemove] = null;
+		selectedFiles = selectedFiles.filter(file => file !== null);
+	});
+
 });
-function updateFileInput() {
-  const dataTransfer = new DataTransfer();
-  selectedFiles.forEach(file => {
-    if (file) dataTransfer.items.add(file);
-  });
-  document.getElementById('lo_file').files = dataTransfer.files;
-}
 </script>
 @endsection
 

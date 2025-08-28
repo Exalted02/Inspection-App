@@ -73,6 +73,12 @@
 	 //----------------------------
 	$corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
 	
+	// new add 13-08-2025------not previous --
+		$lo_direct_approve = $corrective_dtls_data ? $corrective_dtls_data->lo_direct_approve : '';
+		
+		$lo_corrective_completed_by = $corrective_dtls_data ? $corrective_dtls_data->lo_completed_by : '';
+	//---------------------
+	
 	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
 	
 	$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
@@ -148,6 +154,12 @@
 	 //----------------------------
 	$corrective_dtls_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->first();
 	
+	// new add 13-08-2025------not previous --
+		$lo_direct_approve = $corrective_dtls_data ? $corrective_dtls_data->lo_direct_approve : '';
+		
+		$lo_corrective_completed_by = $corrective_dtls_data ? $corrective_dtls_data->lo_completed_by : '';
+	//---------------------
+	
 	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
 	
 	$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
@@ -218,16 +230,6 @@
 						</div>
 						<hr class="horizontal-line">
 						
-						@if($lo_direct_approve == 0)
-						<div class="row IA-IOS-get-reply">
-							<div class="col-md-12">
-							<label>Completed By</label>
-								<div class="mt-1">
-									{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
-								</div>
-							</div>
-						</div>
-						@endif
 						
 						@if(!empty($lo_corrective_action_plan))
 						<div class="row IA-IOS-get-reply">
@@ -274,10 +276,19 @@
 						@endif
 						
 						<div class="row">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ $corrective_action_data ? change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A') : '' }}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ $corrective_action_data->created_at ? change_date_format($corrective_action_data->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : '' }}</span></div>
 						</div>
 						
-						
+						@if($lo_direct_approve == 0)
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
+							<label>Completed By</label>
+								<div class="mt-1">
+									{{ change_date_format($lo_corrective_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
+								</div>
+							</div>
+						</div>
+						@endif
 						
 						@if(isset($corrective_dtls_data) && $corrective_dtls_data)
 						</br>
@@ -344,7 +355,8 @@
 								
 							@endphp
 						<div class="row IA-IOS-get-reply">
-							<div class="col-md-12"><label>{{ $final_title }} checks</label></div>
+							<div class="col-md-12"><label>Corrective</label></div>
+								{{--<div class="col-md-12"><label>{{ $final_title }} checks</label></div>--}}
 						</div>
 						<div class="row">
 							<div class="col-md-12"><p class="text-muted mb-0">{{ $val->lo_corrective_action_plan_final_checks ?? '' }}</p></div>
@@ -377,9 +389,19 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? change_date_format($corrective_action_data->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($val->created_at) ? change_date_format($val->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
 						</div>
 						
+						@if($val->lo_direct_approve == 0)
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
+							<label>Completed By</label>
+								<div class="mt-1">
+									{{ change_date_format($val->lo_completed_by, 'Y-m-d H:i:s', 'd M Y, h:i A')}}
+								</div>
+							</div>
+						</div>
+						@endif
 						
 							@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
 							</br>
@@ -395,11 +417,11 @@
 								@if($corrective_action_data->inspector_action == 1 && $corrective_action_data->los_action == 1)
 								
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
-									<span class="show-completed-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span><span class="show-completed-status">{{ Carbon::parse($corrective_action_data->inspector_action_date)->format('d M, Y h:i A')}}</span>
+									<span class="show-completed-status">Approved by (IA)	{{$corrective_action_data->get_inspector->name ?? ''}}</span><span class="show-completed-status">{{ change_date_format($val->inspector_action_date,  'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
 									</div>
 									
 									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
-									<span class="show-completed-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span><span class="show-completed-status">{{ Carbon::parse($corrective_action_data->los_action_date)->format('d M, Y h:i A')}}</span></div>
+									<span class="show-completed-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span><span class="show-completed-status">{{ change_date_format($val->los_action_date,  'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 								@endif
 								@php
 									break;
