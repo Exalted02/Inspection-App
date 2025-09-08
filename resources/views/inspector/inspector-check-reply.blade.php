@@ -761,7 +761,7 @@
 <script src="{{url('front-assets/js/bootstrap-datetimepicker.min.js') }}"></script>--}}
 <script>
 $(document).ready(function () {
-    $(".accordion").on("click", function () {
+	$(document).on('click','.accordion', function(){
         let $card = $(this).closest(".details-card");
         let $box = $card.find(".experience-box");
         let $icon = $(this).find("i");

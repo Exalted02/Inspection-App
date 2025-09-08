@@ -175,11 +175,61 @@ use Carbon\Carbon;
 			</section>
 		</div>
     </div>
+	<!-- =-=-=-=-=-=-= Rejected reason =-=-=-=-=-=-= -->
+	<div class="modal fade" id="forward-task" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<h2 class="owner-checklist-title">Forward to...</h3>
+							<div class="search-widget">
+							   <input placeholder="Forward to" type="text">
+							   <button type="submit"><i class="fa fa-search"></i></button>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="user-list">
+								<div class="user-item">
+								  <div class="user-info">
+									<img src="{{ url('front-assets/images/users/2.jpg') }}" alt="John Doe">
+									<span>John Doe</span>
+								  </div>
+								  <input type="radio" name="user">
+								</div>
+
+								<div class="user-item">
+								  <div class="user-info">
+									<img src="{{ url('front-assets/images/users/2.jpg') }}" alt="Jane Yami">
+									<span>Jane Yami</span>
+								  </div>
+								  <input type="radio" name="user">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="modal-checklist-question-sticky-footer">
+						<div class="footer-content question-navigation d-flex justify-content-between">
+							<button class="reject-class-button">Cancel</button>
+							<button class="ms-auto">Forward</button>
+						</div>
+					</div>				
+				</div>
+            </div>
+		</div>
+	</div>
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+$(document).on('click','.forward-task', function(){
+	$('#forward-task').modal('show');
+});
+</script>
 <script>
 $(document).ready(function() {
 	flatpickr("#set_time", {
