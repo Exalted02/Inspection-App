@@ -91,7 +91,7 @@ use Carbon\Carbon;
 						
 						
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-md-12 mt-1">
 								@if(!empty($image_arr))
 									@foreach($image_arr as $url)
 									@php 
@@ -110,7 +110,12 @@ use Carbon\Carbon;
 									@endforeach
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $userData->get_user->name ?? ''}}</span><span>{{ change_date_format($created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap">
+							<img src="{{ url('uploads/profile/'. $userData->get_user->id . '/inspector/'. $userData->get_user->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+							<span>By (IA) {{ $userData->get_user->name ?? ''}}</span><span>{{ change_date_format($created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') }}</span></div>
+								{{--<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
+							<img src="{{ url('uploads/profile/'. $corrective_action?->get_inspector?->id . '/inspector/'. $corrective_action?->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+							<span>By (IA) {{ $userData->get_user->name ?? ''}}</span><span>·</span><span>{{ change_date_format($created_at, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>--}}
 						</div>
 						<hr class="horizontal-line">
 

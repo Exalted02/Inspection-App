@@ -224,18 +224,38 @@
 									@endforeach
 								@endif
 							</div>
-							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By {{ $userData->get_user->name ?? ''}} </span><span>{{ change_date_format($created_at, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
+							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap">
+							<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+							<span>By {{ $userData->get_user->name ?? ''}} </span><span>·</span><span>{{ change_date_format($created_at, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 						</div>
 						<hr class="horizontal-line">
 						
-						<div class="row IA-IOS-get-reply">
+						@if(!empty($lo_corrective_action_plan))
+						{{--<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 								<label>Corrective</label>
 								<div>
 									<p class="text-muted mb-0">{{ $lo_corrective_action_plan ?? '' }}</p>
 								</div>
 							</div>
+						</div>--}}
+						
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
+								<div class="d-flex justify-between align-items-center">
+									<label>Corrective</label>
+									@if((($corrective_dtls_data->approved_status == 1 || $corrective_dtls_data->approved_status == 2) && ($corrective_dtls_data->rejected_status == 0)) || ($corrective_dtls_data->approved_status == 0 && $corrective_dtls_data->rejected_status == 0))
+									<div class="corrective-badge pending-badge">Pending  approval</div>
+								@elseif($corrective_dtls_data->rejected_status != 0)
+									<div class="corrective-badge rejected-badge">Rejected</div>
+								@endif
+								</div>
+								<div class="mt-1">
+									<p class="text-muted mb-0">{{ $lo_corrective_action_plan ?? '' }}</p>
+								</div>
+							</div>
 						</div>
+						@endif
 						<div class="row">
 							<div class="col-md-12">
 								@if(!empty($corrective_first_action_files))
@@ -263,8 +283,17 @@
 							</div>
 						</div>
 						
-						<div class="row">
+						{{--<div class="row">
 							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($corrective_action_data->created_at) ? change_date_format($corrective_action_data->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
+						</div>--}}
+						
+						<div class="row">
+							<div class="col-md-6 text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+								<img src="{{ url('uploads/profile/'. $corrective_action_data->get_lo->id . '/locationowner/'. $corrective_action_data->get_lo->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+								<span>By (LO)  {{ $corrective_action_data->get_lo->name ?? ''}}</span>
+								<span>·</span>
+								<span>{{ !empty($corrective_action_data->created_at) ? change_date_format($corrective_action_data->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span>
+							</div>
 						</div>
 						
 						@if($lo_direct_approve == 0)
@@ -278,16 +307,198 @@
 						</div>
 						@endif
 						
+						@if($corrective_dtls_data->approved_status == 1 || $corrective_dtls_data->approved_status == 2 || $corrective_dtls_data->rejected_status == 1 || $corrective_dtls_data->rejected_status == 2)
+							<div class="row">
+								<div class="col-md-12 mt-2">
+									<div class="details-card">
+										<div class="accordion d-flex justify-between align-items-center flex-wrap cursor-pointer">
+											<label class="mb-0">Progress</label>
+											<i class="fa-solid fa-chevron-up"></i>
+										</div>
+										<div class="experience-box mt-2">
+											<ul class="experience-list">
+											@if($corrective_dtls_data->approved_status == 1 && $corrective_dtls_data->rejected_status == 2)
+												
+											<li class="approved">
+												<div class="experience-user">
+													<i class="fa-solid fa-check"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Approved</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="rejected">
+												<div class="experience-user">
+													<i class="fa-solid fa-xmark"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Rejected</div>
+														<div class="title-reason mt-1">{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id . '/locationownersupervisor/'. $corrective_action_data->get_los->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											@elseif($corrective_dtls_data->approved_status == 2 && $corrective_dtls_data->rejected_status == 1)
+											<li class="approved">
+												<div class="experience-user">
+													<i class="fa-solid fa-check"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Approved</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id . '/locationownersupervisor/'. $corrective_action_data->get_los->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="rejected">
+												<div class="experience-user">
+													<i class="fa-solid fa-xmark"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Rejected</div>
+														<div class="title-reason mt-1">{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											@elseif($corrective_dtls_data->approved_status == 1 && $corrective_dtls_data->rejected_status == 0)
+												<li class="approved">
+													<div class="experience-user">
+														<i class="fa-solid fa-check"></i>
+													</div>
+													<div class="experience-content">
+														<div class="timeline-content">
+															<div class="title">Approved</div>
+															<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+																<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+																<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span>
+																<span>·</span>
+																<span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+															</div>
+														</div>
+													</div>
+												</li>
+												<li class="pending">
+													<div class="experience-user">
+														
+													</div>
+													<div class="experience-content">
+														<div class="timeline-content">
+															<div class="title-reason mt-1">
+															Pending Approval from LOS
+															</div>
+														</div>
+													</div>
+												</li>
+											@elseif($corrective_dtls_data->approved_status == 2 && $corrective_dtls_data->rejected_status == 0)
+												<li class="approved">
+													<div class="experience-user">
+														<i class="fa-solid fa-check"></i>
+													</div>
+													<div class="experience-content">
+														<div class="timeline-content">
+															<div class="title">Approved</div>
+															<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+																<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id . '/locationownersupervisor/'. $corrective_action_data->get_los->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+																<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span>
+																<span>·</span>
+																<span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+															</div>
+														</div>
+													</div>
+												</li>
+												<li class="pending">
+													<div class="experience-user">
+														
+													</div>
+													<div class="experience-content">
+														<div class="timeline-content">
+															<div class="title-reason mt-1">
+															Pending Approval from IA
+															</div>
+														</div>
+													</div>
+												</li>
+											@elseif($corrective_dtls_data->approved_status == 0 && $corrective_dtls_data->rejected_status == 1)
+											<li class="rejected">
+												<div class="experience-user">
+													<i class="fa-solid fa-xmark"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Rejected</div>
+														<div class="title-reason mt-1">{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}} </span>
+															<span></span>
+															<span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											@elseif($corrective_dtls_data->approved_status == 0 && $corrective_dtls_data->rejected_status == 2)
+											<li class="rejected">
+												<div class="experience-user">
+													<i class="fa-solid fa-xmark"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Rejected</div>
+														<div class="title-reason mt-1">{{ $corrective_dtls_data->ia_los_rejected_reason ?? ''  }}</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id . '/locationownersupervisor/'. $corrective_action_data->get_los->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											@endif
+											
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						@endif
+						
 						
 						@if($corrective_dtls_data)
 						</br>
 						@if($corrective_dtls_data->approved_status == 1 || $corrective_dtls_data->approved_status == 2 || $corrective_dtls_data->rejected_status == 1 || $corrective_dtls_data->rejected_status == 2)
-							<div class="row">
+						{{--<div class="row">
 								<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
-							</div>
+							</div>--}}
 						@endif
 						
-						<div class="row">
+						{{--<div class="row">
 							
 							@if($corrective_dtls_data->approved_status == 1)
 								<div class="col-md-12">
@@ -317,7 +528,7 @@
 								<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 							@endif
 							
-						</div>
+						</div>--}}
 						@endif
 						
 						<hr class="horizontal-line">
@@ -336,16 +547,33 @@
 								}
 								
 							@endphp
-						<div class="row IA-IOS-get-reply">
+						{{--<div class="row IA-IOS-get-reply">
 							<div class="col-md-12"><label>Corrective</label></div>
-								{{--<div class="col-md-12"><label>{{ $final_title }} checks</label></div>--}}
+								<div class="col-md-12"><label>{{ $final_title }} checks</label></div>
 						</div>
 						<div class="row">
 							<div class="col-md-12"><p class="text-muted mb-0">{{ $val->lo_corrective_action_plan_final_checks ?? '' }}</p></div>
+						</div>--}}
+						
+						<div class="row IA-IOS-get-reply">
+							<div class="col-md-12">
+								<div class="d-flex justify-between align-items-center">
+									<label>Corrective</label>
+									@if((($val->approved_status == 1 || $val->approved_status == 2) && ($val->rejected_status == 0))  || ($val->approved_status == 0 && $val->rejected_status == 0))
+									<div class="corrective-badge pending-badge">Pending  approval</div>
+								@elseif($val->rejected_status != 0)
+									<div class="corrective-badge rejected-badge">Rejected</div>
+								@endif
+								</div>
+								<div class="mt-1">
+									<p class="text-muted mb-0">{{ $val->lo_corrective_action_plan_final_checks ?? '' }}</p>
+								</div>
+							</div>
 						</div>
 						
+						
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-md-12 mt-1">
 								@if(!empty($corrective_final_files))
 									<div class="d-flex flex-wrap gap-3">
 										@foreach($corrective_final_files as $fileurl)
@@ -370,8 +598,17 @@
 								@endif
 							</div>
 						</div>
-						<div class="row">
+						{{--<div class="row">
 							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LO) {{ $corrective_action_data->get_lo->name ?? ''}} </span><span>{{ !empty($val->created_at) ? change_date_format($val->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span></div>
+						</div>--}}
+						
+						<div class="row">
+							<div class="col-md-6 text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+								<img src="{{ url('uploads/profile/'. $corrective_action_data->get_lo->id . '/locationowner/'. $corrective_action_data->get_lo->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+								<span>By (LO)  {{ $corrective_action_data->get_lo->name ?? ''}}</span>
+								<span>·</span>
+								<span>{{ !empty($val->created_at) ? change_date_format($val->created_at, 'Y-m-d H:i:s', 'd M Y, h:i A') : ''}}</span>
+							</div>
 						</div>
 						
 						@if($val->lo_direct_approve == 0)
@@ -385,68 +622,192 @@
 						</div>
 						@endif
 						
-						
-							@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
-							</br>
-								
-								@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
-									<div class="row">
-										<div class="col-md-12"><h4><strong>Approval</strong></h4></div>
-									</div>
-								@endif
-							@endif
-						
+						@if($val->approved_status == 1 || $val->approved_status == 2 || $val->rejected_status == 1 || $val->rejected_status == 2)
 							<div class="row">
-							
-								@if($val->approved_status == 1)
-									<div class="col-md-12">
-									<span class="show-agree-status">Approved</span>
+								<div class="col-md-12 mt-2">
+									<div class="details-card">
+										<div class="accordion d-flex justify-between align-items-center flex-wrap cursor-pointer">
+											<label class="mb-0">Progress</label>
+											<i class="fa-solid fa-chevron-up"></i>
+										</div>
+										<div class="experience-box mt-2">
+											<ul class="experience-list">
+											@if($val->approved_status == 1 && $val->rejected_status == 2)
+												
+											<li class="approved">
+												<div class="experience-user">
+													<i class="fa-solid fa-check"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Approved</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="rejected">
+												<div class="experience-user">
+													<i class="fa-solid fa-xmark"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Rejected</div>
+														<div class="title-reason mt-1">{{ $val->ia_los_rejected_reason ?? ''  }}</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id . '/locationownersupervisor/'. $corrective_action_data->get_los->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											@elseif($val->approved_status == 2 && $val->rejected_status == 1)
+											<li class="approved">
+												<div class="experience-user">
+													<i class="fa-solid fa-check"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Approved</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id . '/locationownersupervisor/'. $corrective_action_data->get_los->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="rejected">
+												<div class="experience-user">
+													<i class="fa-solid fa-xmark"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Rejected</div>
+														<div class="title-reason mt-1">{{ $val->ia_los_rejected_reason ?? ''  }}</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											@elseif($val->approved_status == 1 && $val->rejected_status == 0)
+												<li class="approved">
+													<div class="experience-user">
+														<i class="fa-solid fa-check"></i>
+													</div>
+													<div class="experience-content">
+														<div class="timeline-content">
+															<div class="title">Approved</div>
+															<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+																<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+																<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span>
+																<span>·</span>
+																<span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+															</div>
+														</div>
+													</div>
+												</li>
+												<li class="pending">
+													<div class="experience-user">
+														
+													</div>
+													<div class="experience-content">
+														<div class="timeline-content">
+															<div class="title-reason mt-1">
+															Pending Approval from LOS
+															</div>
+														</div>
+													</div>
+												</li>
+											@elseif($val->approved_status == 2 && $val->rejected_status == 0)
+												<li class="approved">
+													<div class="experience-user">
+														<i class="fa-solid fa-check"></i>
+													</div>
+													<div class="experience-content">
+														<div class="timeline-content">
+															<div class="title">Approved</div>
+															<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+																<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id . '/locationownersupervisor/'. $corrective_action_data->get_los->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+																<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span>
+																<span>·</span>
+																<span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+															</div>
+														</div>
+													</div>
+												</li>
+												<li class="pending">
+													<div class="experience-user">
+														
+													</div>
+													<div class="experience-content">
+														<div class="timeline-content">
+															<div class="title-reason mt-1">
+															Pending Approval from IA
+															</div>
+														</div>
+													</div>
+												</li>
+											@elseif($val->approved_status == 0 && $val->rejected_status == 1)
+											<li class="rejected">
+												<div class="experience-user">
+													<i class="fa-solid fa-xmark"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Rejected</div>
+														<div class="title-reason mt-1">{{ $val->ia_los_rejected_reason ?? ''  }}</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}} </span>
+															<span></span>
+															<span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											@elseif($val->approved_status == 0 && $val->rejected_status == 2)
+											<li class="rejected">
+												<div class="experience-user">
+													<i class="fa-solid fa-xmark"></i>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<div class="title">Rejected</div>
+														<div class="title-reason mt-1">{{ $val->ia_los_rejected_reason ?? ''  }}</div>
+														<div class="text-ia-lo-los d-flex align-items-center flex-wrap mt-1">
+															<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id . '/locationownersupervisor/'. $corrective_action_data->get_los->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+															<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}} </span>
+															<span>·</span>
+															<span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+														</div>
+													</div>
+												</div>
+											</li>
+											@endif
+											
+											</ul>
+										</div>
 									</div>
-									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
-									
-								@elseif($val->approved_status == 2)
-									<div class="col-md-12">
-									<span class="show-agree-status">Approved</span>
-									</div>
-									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
-								
-								@endif
-								
-								
-								@if($val->rejected_status == 1)
-									<div class="col-md-12 vertical-gap">
-									<span class="show-reject-status">Rejected</span>:<span class="reject_reply_reason">{{ $val->ia_los_rejected_reason ?? ''  }}</span>
-									</div>
-									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}}</span><span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
-								
-								@elseif($val->rejected_status == 2)
-									<div class="col-md-12 vertical-gap">
-									<span class="show-reject-status">Rejected</span>:<span class="reject_reply_reason">{{ $val->ia_los_rejected_reason ?? ''  }}</span>
-									</div>
-									<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap"><span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}}</span><span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
-								@endif
-							
+								</div>
 							</div>
-							<hr class="horizontal-line">
+						@endif
+						
+						<hr class="horizontal-line">
 						@endforeach
 					@endif
-									{{--<div class="row">
-										<div class="col-md-12">
-											<label class="d-block mb-2 fw-bold">Final checks</label>
-
-											@if(!empty($corrective_action_files))
-												<div class="d-flex flex-wrap gap-3">
-													@foreach($corrective_action_files as $fileurl)
-														<div class="cheklist-reply-images">
-															<img src="{{ $fileurl['url'] ?? '' }}" style="max-width: 150px; height: auto; border: 1px solid #ccc; padding: 5px;">
-														</div>
-													@endforeach
-												</div>
-											@endif
-										</div>
-									</div>--}}
-
-					
+									
 					<input type="hidden" id="location_id" value="{{ $location_id ?? ''}}">
 					<input type="hidden" id="task_id" value="{{ $task_id ?? ''}}">
 					<input type="hidden" id="checklist_id" value="{{ $checklist_id  ?? ''}}">
@@ -522,6 +883,19 @@
 	{{--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
 		{{--<script src="{{url('front-assets/js/moment.min.js') }}"></script>
 <script src="{{url('front-assets/js/bootstrap-datetimepicker.min.js') }}"></script>--}}
+<script>
+$(document).ready(function () {
+	$(document).on('click','.accordion', function(){
+        let $card = $(this).closest(".details-card");
+        let $box = $card.find(".experience-box");
+        let $icon = $(this).find("i");
+
+        $box.slideToggle(200); // toggle with animation
+        $icon.toggleClass("fa-chevron-up fa-chevron-down"); // toggle arrow
+    });
+});
+
+</script>
 <script>
 $(document).ready(function() {
 	/*$('.datetimepicker').datetimepicker({
