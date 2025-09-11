@@ -14,5 +14,6 @@ class Users_location extends Model
         'user_id', 
         'user_type', 
         'location_id', 
+        'notification_status', 
     ];
 }
