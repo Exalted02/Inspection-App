@@ -15,6 +15,11 @@ if(auth()->user()->user_type == 2)
 {
 	$path = 'locationowner';
 	$user_type_name = 'Location owner';
+	
+	$company_id = App\Models\User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+	
+	$user_loc_data = App\Models\Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->first();
+	$notifi_status = $user_loc_data ? $user_loc_data->notification_status : '';
 }
 
 if(auth()->user()->user_type == 3)
@@ -44,6 +49,7 @@ $country = '';
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
 		<div class="profile-banner" style="background-image: url( '{{ $backgroung_img ?? '' }} ')">
+		<div class="corrective-message" style="display:none;"></div>
 			<div class="mega-menu">
 				<ul class="menu-logo">
 					<li>
@@ -445,9 +451,33 @@ $country = '';
                </div>
             </div>
         </section>
+		<input type="hidden" id="notifi_status" value="{{ $notifi_status ?? '';}}">
     </div>
 @endsection 
 @section('scripts')
-
+<script>
+$(document).ready(function() {
+	var notifi_status = $('#notifi_status').val();
+	if(notifi_status != 0)
+	{
+		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Check Forwarded&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		
+		var URL = "{{ route('lo-update-nofication-status') }}";
+			$.ajax({
+				url: URL,
+				type: "POST",
+				data: {_token: csrfToken},
+				dataType: 'json',
+				success: function(response) {
+					//alert(response.html);
+					
+				},
+				complete: function() {
+					//$('.load-more-appr').html('Load more');
+				}
+			});
+	}
+});
+</script>
 @endsection
 

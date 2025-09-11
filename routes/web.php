@@ -173,6 +173,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::post('lo-search-users-data', [DashboardInspectorController::class, 'lo_search_users_data'])->name('lo-search-users-data');
 	Route::post('lo-transfer-location', [DashboardInspectorController::class, 'lo_transfer_location'])->name('lo-transfer-location');
+	Route::post('lo-update-nofication-status', [DashboardInspectorController::class, 'lo_update_nofication_status'])->name('lo-update-nofication-status');
 	
 	
 	//Management  

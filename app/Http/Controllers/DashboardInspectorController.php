@@ -11237,16 +11237,17 @@ class DashboardInspectorController extends Controller
 		$user_id = $request->user_id;
 		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
 		
-		Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id]);
-		/*$model = new Users_location();
-		$model->company_id = $company_id ?? '';
-		$model->user_id = $user_id ?? '';
-		$model->user_type = 2;
-		$model->location_id = $location_id ?? '';
-		$model->save();*/
+		Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id, 'notification_status'=>1]);
+		
 		
 		//Users_location::where
 		return response()->json(['msg'=>'success']);
+	}
+	public function lo_update_nofication_status(Request $request)
+	{
+		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+		
+		Users_location::where('user_id', auth()->user()->id)->where(['notification_status'=>0]);
 	}
 	
 }
