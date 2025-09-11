@@ -178,6 +178,7 @@
  //echo $corrective_action_primary_id; die;
  //echo "<pre>";print_r($corrective_dtls_data);die;
  //echo "<pre>";print_r($final_check_data);die;
+ //echo $created_at;die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
