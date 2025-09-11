@@ -448,15 +448,6 @@ $country = '';
     </div>
 @endsection 
 @section('scripts')
-<script>
-$(document).ready(function() {
-	var transferLocation = localStorage.getItem('transferLocation');
-	if(transferLocation == 1)
-	{
-		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Check Forwarded&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
-		localStorage.removeItem('transferLocation');
-	}
-});
-</script>
+
 @endsection
 

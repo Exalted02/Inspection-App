@@ -1304,10 +1304,16 @@ $(document).ready(function() {
 				//alert(response.msg);
 				if(response.msg == 'success')
 				{
+					$('#forward-task').modal('hide');
 					localStorage.setItem('transferLocation', 1);
-					window.location.href = "{{ route('inspector-dashboard') }} "; 
+					$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Check Forwarded&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+					
+					setTimeout(function() {
+						window.location.href = "{{ route('inspector-dashboard') }}";
+					}, 4000);
+					
 				}
-				//$(".user-list").html(response.html);
+				
 			},
 			complete: function() {
 				$('.load-more-appr').html('Load more');
