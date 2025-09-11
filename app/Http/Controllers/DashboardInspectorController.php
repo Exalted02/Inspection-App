@@ -11239,7 +11239,6 @@ class DashboardInspectorController extends Controller
 		
 		Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id, 'notification_status'=>1]);
 		
-		
 		//Users_location::where
 		return response()->json(['msg'=>'success']);
 	}
@@ -11247,7 +11246,7 @@ class DashboardInspectorController extends Controller
 	{
 		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
 		
-		Users_location::where('user_id', auth()->user()->id)->where(['notification_status'=>0]);
+		Users_location::where('user_id', auth()->user()->id)->update(['notification_status'=>0]);
 	}
 	
 }

@@ -458,7 +458,8 @@ $country = '';
 <script>
 $(document).ready(function() {
 	var notifi_status = $('#notifi_status').val();
-	if(notifi_status != 0)
+	//alert(notifi_status);
+	if(notifi_status == 1)
 	{
 		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Check Forwarded&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 		
