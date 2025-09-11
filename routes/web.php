@@ -171,6 +171,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	
 	Route::get('ia-los-subchecklist-completed-approved-view/{location_id}/{task_id}/{checklist_id}/{subchecklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'ia_los_subchecklist_completed_approved_view'])->name('ia-los-subchecklist-completed-approved-view');
 	
+	Route::post('lo-search-users-data', [DashboardInspectorController::class, 'lo_search_users_data'])->name('lo-search-users-data');
+	Route::post('lo-transfer-location', [DashboardInspectorController::class, 'lo_transfer_location'])->name('lo-transfer-location');
+	
 	
 	//Management  
 	Route::get('/management-dashboard', [ManagementController::class, 'index'])->name('management-dashboard');

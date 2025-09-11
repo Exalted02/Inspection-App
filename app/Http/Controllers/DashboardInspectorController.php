@@ -24,6 +24,7 @@ use App\Models\Task_list_corrective_action_file;
 use App\Models\Task_location_categories;
 use App\Models\Task_list_corrective_action_details;
 use Illuminate\Support\Facades\DB;
+use App\Models\Users_location;
 
 class DashboardInspectorController extends Controller
 {
@@ -6240,6 +6241,13 @@ class DashboardInspectorController extends Controller
 		$data['moreloadaction'] = config('custom.LOAD_MORE_LIST_SHOW');
 		$data['moreloadplan'] = config('custom.LOAD_MORE_LIST_SHOW');
 		$data['moreloadappr'] = config('custom.LOAD_MORE_LIST_SHOW');
+	    // get all LO w.r.t same company
+		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+		
+		$all_lo = User::where('user_type', 2)->where('id', '!=' ,auth()->user()->id)->where('company_name', $company_id)->get();
+		//echo "<pre>";print_r($all_lo);die;
+		$data['all_lo'] = $all_lo;
+		
 		return view('inspector.lo-task-status', $data);
 		
 	}
@@ -11200,6 +11208,45 @@ class DashboardInspectorController extends Controller
 		$data['los_action']  		= $corrective_actions_data ? $corrective_actions_data->los_action : '';
 		
 		return view('inspector.ia-los-completed-approved-view', $data);
+	}
+	public function lo_search_users_data(Request $request)
+	{
+		$search = $request->val;
+		
+		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+		
+		$result = User::where('user_type', 2)->where('id', '!=', auth()->user()->id)->where('company_name', $company_id)->where('name','LIKE','%' . $search . '%')->get();
+		//echo "<pre>";print_r($result);die;
+		$html = '<div class="user-list">';
+		foreach($result as $lo)
+		{
+			$html .= '<div class="user-item">
+					  <div class="user-info">
+						<img src="' . url('uploads/profile/'. $lo->id . '/locationowner/'. $lo->profile_image) .'" alt="' . ($lo->name ?? '') .'">
+						<span>' . ($lo->name ?? '') . '</span>
+					  </div>
+					  <input type="radio" id="lo_id" name="user" value="' .($lo->id ?? '') .'">
+					</div>';
+		}
+		$html .= '</div>';
+		return response()->json(['html'=> $html]);
+	}
+	public function lo_transfer_location(Request $request)
+	{
+		$location_id = $request->location_id;
+		$user_id = $request->user_id;
+		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+		
+		Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id]);
+		/*$model = new Users_location();
+		$model->company_id = $company_id ?? '';
+		$model->user_id = $user_id ?? '';
+		$model->user_type = 2;
+		$model->location_id = $location_id ?? '';
+		$model->save();*/
+		
+		//Users_location::where
+		return response()->json(['msg'=>'success']);
 	}
 	
 }
