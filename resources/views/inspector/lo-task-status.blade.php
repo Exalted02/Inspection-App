@@ -1306,7 +1306,7 @@ $(document).ready(function() {
 				{
 					$('#forward-task').modal('hide');
 					localStorage.setItem('transferLocation', 1);
-					$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Forwarded Successfully&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+					$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Check Forwarded&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 					
 					setTimeout(function() {
 						window.location.href = "{{ route('inspector-dashboard') }}";

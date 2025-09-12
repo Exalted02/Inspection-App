@@ -2166,5 +2166,21 @@ body, h1, h2, h3, h4, h5, h6 {
         width: 100% !important;
     }*/
 }
+.notification-message {
+    background-color: #0f0c0ce5;       
+    color: #fff;                    
+    border-radius: 20px !important; 
+    height: 40px;   
+    padding: 0 15px; 
+    display: flex;   
+    align-items: center; 
+    width: 400px;
+    /*width: auto;*/
+    gap: 5px;     
+    font-size: 14px;
+	text-align:center !important;
+	margin-left: 400px;
+	margin-top: 7px;
+}
 
 

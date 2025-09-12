@@ -18,8 +18,13 @@ if(auth()->user()->user_type == 2)
 	
 	$company_id = App\Models\User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
 	
-	$user_loc_data = App\Models\Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->first();
+	$user_loc_data = App\Models\Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('notification_status', 1)->first();
 	$notifi_status = $user_loc_data ? $user_loc_data->notification_status : '';
+	
+	$loc_id = $user_loc_data ? $user_loc_data->location_id : '';
+	$loc_data = App\Models\Manage_location::where('id', $loc_id)->first();
+	$loc_name = $loc_data ? $loc_data->location_name : '';
+	
 }
 
 if(auth()->user()->user_type == 3)
@@ -49,7 +54,7 @@ $country = '';
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
 		<div class="profile-banner" style="background-image: url( '{{ $backgroung_img ?? '' }} ')">
-		<div class="corrective-message" style="display:none;"></div>
+		<div class="notification-message" style="display:none;"></div>
 			<div class="mega-menu">
 				<ul class="menu-logo">
 					<li>
@@ -452,16 +457,20 @@ $country = '';
             </div>
         </section>
 		<input type="hidden" id="notifi_status" value="{{ $notifi_status ?? '';}}">
+		<input type="hidden" id="loc_name" value="{{ $loc_name ?? '';}}">
     </div>
 @endsection 
 @section('scripts')
 <script>
 $(document).ready(function() {
 	var notifi_status = $('#notifi_status').val();
+	
 	//alert(notifi_status);
 	if(notifi_status == 1)
 	{
-		$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Check Forwarded&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		var loc_name = $('#loc_name').val();
+		
+		$('.notification-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;You received a new location (' + loc_name + ') &nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
 		
 		var URL = "{{ route('lo-update-nofication-status') }}";
 			$.ajax({
