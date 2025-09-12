@@ -54,7 +54,11 @@ $country = '';
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
 		<div class="profile-banner" style="background-image: url( '{{ $backgroung_img ?? '' }} ')">
-		<div class="notification-message" style="display:none;"></div>
+		<div class="message-forward-bg">
+		  <div class="center-fixed corrective-message-forward" style="display:none;">
+		  </div>
+		</div>
+			{{--<div class="notification-message" style="display:none;"></div>--}}
 			<div class="mega-menu">
 				<ul class="menu-logo">
 					<li>
@@ -470,7 +474,7 @@ $(document).ready(function() {
 	{
 		var loc_name = $('#loc_name').val();
 		
-		$('.notification-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;You received a new location (' + loc_name + ') &nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+		$('.corrective-message-forward').html('<i class="fa fa-check"></i>You received a new location (' + loc_name + ')').fadeIn().delay(3000).fadeOut();
 		
 		var URL = "{{ route('lo-update-nofication-status') }}";
 			$.ajax({

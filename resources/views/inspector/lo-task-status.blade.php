@@ -969,6 +969,9 @@ $totalapprcompleted ?? ''}}" id="totalapprcompleted">
 <script>
 $(document).on('click','.forward-task', function(){
 	$('#forward-task').modal('show');
+}); 
+$(document).on('click','.reject-class-button', function(){
+	$('#forward-task').modal('hide');
 });
 </script>
 <script>
@@ -1306,7 +1309,7 @@ $(document).ready(function() {
 				{
 					$('#forward-task').modal('hide');
 					localStorage.setItem('transferLocation', 1);
-					$('.corrective-message').html('&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;&nbsp;Check Forwarded&nbsp;&nbsp;').fadeIn().delay(3000).fadeOut();
+					$('.corrective-message-forward').html('<i class="fa fa-check"></i>Check Forwarded').fadeIn().delay(3000).fadeOut();
 					
 					setTimeout(function() {
 						window.location.href = "{{ route('inspector-dashboard') }}";

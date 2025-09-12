@@ -11,6 +11,11 @@
 			  <div class="row">
 				 <div class="col-lg-12 col-md-12">
 					<!-- menu logo -->
+					
+					<div class="message-forward-bg">
+					  <div class="center-fixed corrective-message-forward" style="display:none;">
+					  </div>
+					</div>
 					<ul class="menu-logo">
 					   <li class="d-flex justify-between">
 							{{--<a href="{{ route('inspector-dashboard')}}">

@@ -1764,7 +1764,6 @@ body, h1, h2, h3, h4, h5, h6 {
 	margin-left: 56px;
 	margin-top: 7px;
 }
-
 .task-filter-button{
 	background:#F2F2F2 !important;
 	color: #000000 !important;
@@ -2170,17 +2169,48 @@ body, h1, h2, h3, h4, h5, h6 {
     background-color: #0f0c0ce5;       
     color: #fff;                    
     border-radius: 20px !important; 
-    height: 40px;   
+    min-height: 40px;   
     padding: 0 15px; 
     display: flex;   
     align-items: center; 
-    width: 400px;
-    /*width: auto;*/
+    /*width: 400px;*/
+    width: 100%;
     gap: 5px;     
     font-size: 14px;
 	text-align:center !important;
-	margin-left: 400px;
 	margin-top: 7px;
 }
+
+
+.message-forward-bg {
+  position: fixed;
+  top: 1%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.center-fixed {
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  color: #fff;
+  padding: 10px 15px;
+  background-color: #0f0c0ce5; /* optional for readability */
+  border-radius: 20px;
+  font-size: 14px;
+}
+.center-fixed i.fa {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+	margin-right:5px;
+}
+
 
 
