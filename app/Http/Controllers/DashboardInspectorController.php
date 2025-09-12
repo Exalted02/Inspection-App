@@ -11215,7 +11215,13 @@ class DashboardInspectorController extends Controller
 		
 		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
 		
-		$result = User::where('user_type', 2)->where('id', '!=', auth()->user()->id)->where('company_name', $company_id)->where('name','LIKE','%' . $search . '%')->get();
+		if(!empty($search))
+		{
+			$result = User::where('user_type', 2)->where('id', '!=', auth()->user()->id)->where('company_name', $company_id)->where('name','LIKE','%' . $search . '%')->get();
+		}
+		else{
+			$result = User::where('user_type', 2)->where('id', '!=', auth()->user()->id)->where('company_name', $company_id)->get();
+		}
 		//echo "<pre>";print_r($result);die;
 		$html = '<div class="user-list">';
 		foreach($result as $lo)

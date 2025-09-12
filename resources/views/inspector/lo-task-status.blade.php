@@ -932,10 +932,11 @@ $totalapprcompleted ?? ''}}" id="totalapprcompleted">
 						<div class="col-md-12">
 							<h2 class="owner-checklist-title">Forward to...</h3>
 							<div class="search-widget">
-							   <input placeholder="Forward to" type="text" oninput="input_search(this.value)">
+							   <input placeholder="Forward to" type="text" oninput="input_search(this.value)" id="search-text">
 							   <button type="submit"><i class="fa fa-search"></i></button>
 							</div>
 						</div>
+						<span id="errorMessage1" style="display: block; text-align: center;"></span>
 						<div class="col-md-12">
 							<div class="user-list">
 							@if($all_lo->isNotEmpty())
@@ -968,7 +969,26 @@ $totalapprcompleted ?? ''}}" id="totalapprcompleted">
 @section('scripts')
 <script>
 $(document).on('click','.forward-task', function(){
-	$('#forward-task').modal('show');
+	$('#search-text').val('');
+	$('input[name="user"]').prop('checked', false);
+	var val = $('#search-text').val();
+	var URL = "{{ route('lo-search-users-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {val:val, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				$(".user-list").html(response.html);
+				$('#forward-task').modal('show');
+			},
+			complete: function() {
+				
+			}
+		});
+	
+	
 }); 
 $(document).on('click','.reject-class-button', function(){
 	$('#forward-task').modal('hide');
@@ -1293,7 +1313,11 @@ $(document).ready(function() {
 		//var user_id = $(this).val();
 		var selectedLoId = $('input[name="user"]:checked').val();
 		if(selectedLoId) {
-			user_id = selectedLoId;
+			var user_id = selectedLoId;
+		}
+		else{
+			$('#errorMessage1').html('Select any one location owner').fadeIn().delay(3000).fadeOut();
+			return false;
 		}
 		//alert(user_id);
 		var location_id = $('#location_id').val();
