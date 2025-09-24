@@ -5906,6 +5906,7 @@ class DashboardInspectorController extends Controller
 			
 		
 		$correctiveActionData = Task_list_corrective_action::whereIn('lo_direct_approve', [1])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
+		->where('lo_id',auth()->user()->id) // add new 24-09-2025
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 1);
@@ -5985,6 +5986,7 @@ class DashboardInspectorController extends Controller
 			
 		
 		$correctivePlanData = Task_list_corrective_action::whereIn('lo_direct_approve', [0])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
+		->where('lo_id',auth()->user()->id) // add new 24-09-2025
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 1);
