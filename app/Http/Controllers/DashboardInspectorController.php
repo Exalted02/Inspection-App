@@ -2853,6 +2853,7 @@ class DashboardInspectorController extends Controller
 		
 		$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 			->whereIn('task_list_id', $taskListIds)
+			->where('lo_id', auth()->user()->id)  // add new 24-09-2025
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 0);
@@ -2888,6 +2889,7 @@ class DashboardInspectorController extends Controller
 		
 		$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 			->whereIn('task_list_id', $taskListIds)
+			->where('lo_id', auth()->user()->id) // add new 24-09-2025
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 0);
@@ -4177,6 +4179,7 @@ class DashboardInspectorController extends Controller
 		//--- 04-08-2025----
 		$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 			->whereIn('task_list_id', $taskListIds)
+			->where('lo_id', auth()->user()->id)  // add new 24-09-2025
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 0);
@@ -4212,6 +4215,7 @@ class DashboardInspectorController extends Controller
 		
 		$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 			->whereIn('task_list_id', $taskListIds)
+			->where('lo_id', auth()->user()->id) // add new 24-09-2025
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 0);
@@ -5402,35 +5406,89 @@ class DashboardInspectorController extends Controller
 		$categoryIds = Task_list_subcategories::whereIn('task_list_id', $taskListIds)
 			->pluck('task_list_category_id');
 			
-		//-----05-08-2025 if submit checklist then submit task data show-----
+		//-05-08-2025 if submit checklist then submit task data show-
 		$submit_task_id = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)->pluck('task_list_id')->toArray();
 
 		// Checklist IDs with existing corrective needed
+		// 24-09-2025
+		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
 		
+		$users_location = Users_location::where('company_id', $company_id)->where('user_type', 2)->where('user_id', auth()->user()->id)->where('location_id', $lid)->first();
+		$primary_owner = $users_location ? $users_location->primary_owner : '';
 		//----- 04-08-2025 --
-		$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
-			->whereIn('task_list_id', $taskListIds)
-			->where(function ($q) {
-				$q->where(function ($q) {
-					$q->where('inspector_action', 0)->where('los_action', 0);
-				})->orWhere(function ($q) {
-					$q->where('inspector_action', 1)->where('los_action', 0);
-				})->orWhere(function ($q) {
-					$q->where('inspector_action', 0)->where('los_action', 1);
-				})->orWhere(function ($q) {
-					$q->where('inspector_action', 1)->where('los_action', 1);
-				});
-			})
-			->whereNotNull('checklist_id')
-			->get(['task_list_id', 'checklist_id'])
-			->map(function ($item) {
-				return $item->task_list_id . '-' . $item->checklist_id;
-			})
-			->toArray();
+		$excludedChecklistPairs = [];
+		if($primary_owner == 1)
+		{
+			$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+				->whereIn('task_list_id', $taskListIds)
+				//->where('lo_id','!=',auth()->user()->id) //new 24-09-2025
+				//->where('lo_corrective_action_plan', null)
+				->where(function ($q) {
+					$q->where(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 1);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 1);
+					});
+				})
+				->whereNotNull('checklist_id')
+				->get(['task_list_id', 'checklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id;
+				})
+				->toArray();
+				
+				$correctiveChecklistIds = DB::table('task_list_checklists')
+				->where('approve', 0)
+				->whereIn('task_list_id', $taskListIds)
+				->whereIn('category_id', $categoryIds)
+				->get(['task_list_id', 'checklist_id'])
+				->filter(function ($item) use ($excludedChecklistPairs) {
+					$pairKey = $item->task_list_id . '-' . $item->checklist_id;
+					return !in_array($pairKey, $excludedChecklistPairs);
+				})
+				->toArray();
+		}
+		else{
+			$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+				->whereIn('task_list_id', $taskListIds)
+				->where('lo_id', auth()->user()->id) //new 24-09-2025
+				->where(function ($q) {
+					$q->where(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 1);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 1);
+					});
+				})
+				->whereNotNull('checklist_id')
+				->get(['task_list_id', 'checklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id;
+				})
+				->toArray();
+				
+				$correctiveChecklistIds = DB::table('task_list_checklists')
+				->where('approve', 0)
+				->whereIn('task_list_id', $taskListIds)
+				->whereIn('category_id', $categoryIds)
+				->get(['task_list_id', 'checklist_id'])
+				->filter(function ($item) use ($excludedChecklistPairs) {
+					$pairKey = $item->task_list_id . '-' . $item->checklist_id;
+					return in_array($pairKey, $excludedChecklistPairs);
+				})
+				->toArray();
+		}
 			
 			//echo "<pre>";print_r($excludedChecklistPairs);die;
-			
-			$correctiveChecklistIds = DB::table('task_list_checklists')
+			// comment on 24-09-2025
+			/*$correctiveChecklistIds = DB::table('task_list_checklists')
 			->where('approve', 0)
 			->whereIn('task_list_id', $taskListIds)
 			->whereIn('category_id', $categoryIds)
@@ -5439,35 +5497,104 @@ class DashboardInspectorController extends Controller
 				$pairKey = $item->task_list_id . '-' . $item->checklist_id;
 				return !in_array($pairKey, $excludedChecklistPairs);
 			})
-			->toArray();
+			->toArray();*/
 			
 			//echo "<pre>";print_r($correctiveChecklistIds);die;
 		//------------------------------------
+		$excludedSubChecklistPairs = [];
 		
-		$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
-			->whereIn('task_list_id', $taskListIds)
-			->where(function ($q) {
-				$q->where(function ($q) {
-					$q->where('inspector_action', 0)->where('los_action', 0);
-				})->orWhere(function ($q) {
-					$q->where('inspector_action', 1)->where('los_action', 0);
-				})->orWhere(function ($q) {
-					$q->where('inspector_action', 0)->where('los_action', 1);
-				})->orWhere(function ($q) {
-					$q->where('inspector_action', 1)->where('los_action', 1);
-				});
-			})
-			//->whereNotNull('checklist_id')
-			->whereNotNull('subchecklist_id')
-			->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
-			->map(function ($item) {
-				return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
-			})
-			->toArray();
+		if($primary_owner == 1)
+		{
+			$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+				->whereIn('task_list_id', $taskListIds)
+				//->where('lo_id', '!=' ,auth()->user()->id) //new 24-09-2025
+				//->where('lo_corrective_action_plan', null)
+				->where(function ($q) {
+					$q->where(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 1);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 1);
+					});
+				})
+				//->whereNotNull('checklist_id')
+				->whereNotNull('subchecklist_id')
+				->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
+				})
+				->toArray();
+				
+				$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
+					->where('approve', 0)
+					->whereIn('task_list_id', $taskListIds)
+					->whereIn('category_id', $categoryIds)
+					->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
+					->filter(function ($item) use ($excludedSubChecklistPairs) {
+						$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+						return !in_array($pairKey, $excludedSubChecklistPairs);
+					})
+					->map(function ($item) {
+						return (object)[
+							'task_list_id' => $item->task_list_id,
+							'subchecklist_id' => $item->subchecklist_id,
+							'task_list_checklist_id' => $item->task_list_checklist_id,
+						];
+					})
+					->values()
+					->toArray();
+		}
+		else{
+			
+			$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+				->whereIn('task_list_id', $taskListIds)
+				->where('lo_id', auth()->user()->id) //new 24-09-2025
+				->where(function ($q) {
+					$q->where(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 1);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 1);
+					});
+				})
+				//->whereNotNull('checklist_id')
+				->whereNotNull('subchecklist_id')
+				->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
+				})
+				->toArray();
+				
+				$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
+					->where('approve', 0)
+					->whereIn('task_list_id', $taskListIds)
+					->whereIn('category_id', $categoryIds)
+					->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
+					->filter(function ($item) use ($excludedSubChecklistPairs) {
+						$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+						return in_array($pairKey, $excludedSubChecklistPairs);
+					})
+					->map(function ($item) {
+						return (object)[
+							'task_list_id' => $item->task_list_id,
+							'subchecklist_id' => $item->subchecklist_id,
+							'task_list_checklist_id' => $item->task_list_checklist_id,
+						];
+					})
+					->values()
+					->toArray();
+		}
 			
 		//echo "<pre>";print_r($excludedSubChecklistPairs);
-			
-		$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
+		
+		// comment on 24-09-2025
+		/*$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
 			->where('approve', 0)
 			->whereIn('task_list_id', $taskListIds)
 			->whereIn('category_id', $categoryIds)
@@ -5484,7 +5611,7 @@ class DashboardInspectorController extends Controller
 				];
 			})
 			->values()
-			->toArray();
+			->toArray();*/
 		//echo "<pre>";print_r($correctiveSubChecklistIds);die;
 		// Raw union query
 		$correctiveneeded = DB::table(function ($query) use (
@@ -5766,6 +5893,7 @@ class DashboardInspectorController extends Controller
 		$correctiveActionArray = [];
 		
 		$correctiveActionCount = Task_list_corrective_action::whereIn('lo_direct_approve', [1])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
+		->where('lo_id',auth()->user()->id) // add new 24-09-2025
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 1);
@@ -5844,6 +5972,7 @@ class DashboardInspectorController extends Controller
 		$correctivePlanArray = [];
 		
 		$correctivePlanCount = Task_list_corrective_action::whereIn('lo_direct_approve', [0])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
+		->where('lo_id',auth()->user()->id) // add new 24-09-2025
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 1);
