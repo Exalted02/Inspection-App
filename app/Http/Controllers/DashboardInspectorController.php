@@ -2889,7 +2889,7 @@ class DashboardInspectorController extends Controller
 		
 		$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 			->whereIn('task_list_id', $taskListIds)
-			->where('lo_id', auth()->user()->id) // add new 24-09-2025
+			//->where('lo_id', auth()->user()->id) // add new 24-09-2025
 			->where(function ($q) {
 				$q->where(function ($q) {
 					$q->where('inspector_action', 0)->where('los_action', 0);
