@@ -924,7 +924,7 @@ $totalapprcompleted = $countCompleted;
 $totalapprcompleted ?? ''}}" id="totalapprcompleted">
 	
 	<!-- =-=-=-=-=-=-= Rejected reason =-=-=-=-=-=-= -->
-	<div class="modal fade" id="forward-task" tabindex="-1" role="dialog" aria-hidden="true">
+	{{--<div class="modal fade" id="forward-task" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
 				<div class="modal-body">
@@ -964,7 +964,7 @@ $totalapprcompleted ?? ''}}" id="totalapprcompleted">
 				</div>
             </div>
 		</div>
-	</div>
+	</div>--}}
 @endsection 
 @section('scripts')
 <script>
@@ -990,9 +990,9 @@ $(document).on('click','.forward-task', function(){
 	
 	
 }); 
-$(document).on('click','.reject-class-button', function(){
+/*$(document).on('click','.reject-class-button', function(){
 	$('#forward-task').modal('hide');
-});
+});*/
 </script>
 <script>
 $(document).ready(function() {
@@ -1309,7 +1309,7 @@ $(document).ready(function() {
 		$('#showloadappr').show();
 	}
 	
-	$(document).on('click', '.change-location', function(){
+	/*$(document).on('click', '.change-location', function(){
 		//var user_id = $(this).val();
 		var selectedLoId = $('input[name="user"]:checked').val();
 		if(selectedLoId) {
@@ -1346,7 +1346,7 @@ $(document).ready(function() {
 				$('.load-more-appr').html('Load more');
 			}
 		});
-	});
+	});*/
 });
 function input_search(val)
 {

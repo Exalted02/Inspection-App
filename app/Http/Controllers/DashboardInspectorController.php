@@ -1864,6 +1864,10 @@ class DashboardInspectorController extends Controller
 		$data['tab'] = $tab ?? '';
 		$data['location_id'] = $lid ?? '';
 		
+		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+		$all_lo = User::where('user_type', 2)->where('id', '!=' ,auth()->user()->id)->where('company_name', $company_id)->get();
+		//echo "<pre>";print_r($all_lo);die;
+		$data['all_lo'] = $all_lo;
 		return view('inspector.location-owner-question-reply', $data);
 	}
 	public function location_owner_subchecklist_question_reply($task_id='',$checklist_id='',$subchecklist_id='',$type='', $tab='', $lid='')
@@ -1879,6 +1883,11 @@ class DashboardInspectorController extends Controller
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
 		$data['location_id'] = $lid ?? '';
+		
+		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+		$all_lo = User::where('user_type', 2)->where('id', '!=' ,auth()->user()->id)->where('company_name', $company_id)->get();
+		//echo "<pre>";print_r($all_lo);die;
+		$data['all_lo'] = $all_lo;
 		return view('inspector.location-owner-question-reply', $data);
 	}
 	public function submit_lo_corrective_action(Request $request)
@@ -5419,6 +5428,8 @@ class DashboardInspectorController extends Controller
 			})
 			->toArray();
 			
+			//echo "<pre>";print_r($excludedChecklistPairs);die;
+			
 			$correctiveChecklistIds = DB::table('task_list_checklists')
 			->where('approve', 0)
 			->whereIn('task_list_id', $taskListIds)
@@ -5430,7 +5441,7 @@ class DashboardInspectorController extends Controller
 			})
 			->toArray();
 			
-		//echo "<pre>";print_r($correctiveChecklistIds);die;
+			//echo "<pre>";print_r($correctiveChecklistIds);die;
 		//------------------------------------
 		
 		$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
@@ -6242,11 +6253,11 @@ class DashboardInspectorController extends Controller
 		$data['moreloadplan'] = config('custom.LOAD_MORE_LIST_SHOW');
 		$data['moreloadappr'] = config('custom.LOAD_MORE_LIST_SHOW');
 	    // get all LO w.r.t same company
-		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+		/*$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
 		
 		$all_lo = User::where('user_type', 2)->where('id', '!=' ,auth()->user()->id)->where('company_name', $company_id)->get();
 		//echo "<pre>";print_r($all_lo);die;
-		$data['all_lo'] = $all_lo;
+		$data['all_lo'] = $all_lo;*/
 		
 		return view('inspector.lo-task-status', $data);
 		
@@ -11240,10 +11251,62 @@ class DashboardInspectorController extends Controller
 	public function lo_transfer_location(Request $request)
 	{
 		$location_id = $request->location_id;
-		$user_id = $request->user_id;
+		$lo_id = $request->user_id;
 		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
 		
-		Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id, 'notification_status'=>1]);
+		/*Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id, 'notification_status'=>1]);*/
+		$exists = Users_location::where('user_id', $lo_id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->exists();
+		if(!$exists)
+		{
+			$userLocmodel = new Users_location();
+			$userLocmodel->user_id = $lo_id;
+			$userLocmodel->company_id = $company_id;
+			$userLocmodel->user_type = 2;
+			$userLocmodel->location_id = $location_id;
+			$userLocmodel->notification_status = 1;
+			$userLocmodel->save();
+		}
+		/*Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id, 'notification_status'=>1]);*/
+		
+		$type 				= $request->type;
+		$task_list_id 		= $request->task_id;
+		$checklist_id 		= $request->checklist_id;
+		$subchecklist_id 	= $request->subchecklist_id ?? null;
+		$tab 				= $request->tab;
+		
+		$category_id = null;
+		if(!empty($checklist_id) && !empty($subchecklist_id))
+		{
+			$categoryData = Task_list_subchecklists::where('task_list_id', $task_list_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
+			$category_id = $categoryData ? $categoryData->category_id : null;
+		}
+		else if(!empty($checklist_id) && empty($subchecklist_id))
+		{
+			$categoryData = Task_list_checklists::where('task_list_id', $task_list_id)->where('checklist_id', $checklist_id)->first();
+			$category_id = $categoryData ? $categoryData->category_id : null;
+		}
+		
+		$taskData  = Task_lists::where('id', $task_list_id)->first();
+		$inspector_id = $taskData ? $taskData->inspector_id : null;
+		$location_id = $taskData ? $taskData->location_id : null;
+		//$category_id = $taskData ? $taskData->category_id : null; 22-05-2025
+		$los_id = $taskData ? $taskData->los_id : null;
+		
+		$model = new Task_list_corrective_action();
+		$model->task_list_id = $task_list_id;
+		$model->category_id = $category_id;
+		$model->checklist_id = $checklist_id;
+		$model->subchecklist_id = $subchecklist_id;
+		$model->lo_id = $lo_id ?? null;
+		$model->lo_corrective_action_plan = null;
+		$model->lo_completed_by = date('Y-m-d h:i:s');
+		$model->lo_direct_approve = 3;
+		$model->inspector_id = $inspector_id;
+		$model->los_id = $los_id;
+		$model->rejected_repeated = 1; // 04-08-2025
+		$model->created_at = date('Y-m-d h:i:s'); // 11-08-2025
+		$model->save();
+		
 		
 		//Users_location::where
 		return response()->json(['msg'=>'success']);

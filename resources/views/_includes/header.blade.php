@@ -28,7 +28,7 @@
 							</div>
 							<div class="corrective-message" style="display:none;"></div>
 							<div class="header-icon">
-							@if(auth()->user()->user_type == 2 && request()->routeIs('lo-task-status'))
+							@if(auth()->user()->user_type == 2 && (request()->routeIs('location-owner-checklist-question-reply') || request()->routeIs('location-owner-subchecklist-question-reply')))
 								<a href="javascript:void(0)" class="forward-task"><i class="fa-solid fa-share"></i></a>
 							@endif
 							@if(auth()->user()->user_type == 4)

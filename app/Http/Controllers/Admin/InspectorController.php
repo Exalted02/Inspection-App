@@ -166,6 +166,7 @@ class InspectorController extends Controller
 					$mngCatmodel->user_id = $id;
 					$mngCatmodel->user_type = $request->post('user_type');
 					$mngCatmodel->location_id = $location;
+					$mngCatmodel->primary_owner = 1;
 					$mngCatmodel->save();
 				}
 			}
