@@ -1934,6 +1934,13 @@ class DashboardInspectorController extends Controller
 		//$category_id = $taskData ? $taskData->category_id : null; 22-05-2025
 		$los_id = $taskData ? $taskData->los_id : null;
 		
+		$ifexists = Task_list_corrective_action::where('task_list_id',$task_list_id)->where('category_id', $category_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('lo_id', auth()->user()->id)->where('lo_corrective_action_plan', null)->where('lo_direct_approve' ,3)->where('inspector_id', $inspector_id)->where('los_id', $los_id)->exists();
+		
+		if($ifexists)
+		{
+			Task_list_corrective_action::where('task_list_id',$task_list_id)->where('category_id', $category_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('lo_id', auth()->user()->id)->where('lo_corrective_action_plan', null)->where('lo_direct_approve' ,3)->where('inspector_id', $inspector_id)->where('los_id', $los_id)->delete();
+		}
+		
 		$model = new Task_list_corrective_action();
 		$model->task_list_id = $task_list_id;
 		$model->category_id = $category_id;
@@ -5434,6 +5441,7 @@ class DashboardInspectorController extends Controller
 			$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 				->whereIn('task_list_id', $taskListIds)
 				//->where('lo_id','!=',auth()->user()->id) //new 24-09-2025
+				->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
 				//->where('lo_corrective_action_plan', null)
 				->where(function ($q) {
 					$q->where(function ($q) {
@@ -5468,6 +5476,7 @@ class DashboardInspectorController extends Controller
 			$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 				->whereIn('task_list_id', $taskListIds)
 				->where('lo_id', auth()->user()->id) //new 24-09-2025
+				->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
 				->where(function ($q) {
 					$q->where(function ($q) {
 						$q->where('inspector_action', 0)->where('los_action', 0);
@@ -11449,6 +11458,15 @@ class DashboardInspectorController extends Controller
 		$model->rejected_repeated = 1; // 04-08-2025
 		$model->created_at = date('Y-m-d h:i:s'); // 11-08-2025
 		$model->save();
+		$id = $model->id;
+		
+		/*$correctiveActionDtldModel = new Task_list_corrective_action_details();
+		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
+		$correctiveActionDtldModel->order = 1;
+		$correctiveActionDtldModel->lo_corrective_action_plan_final_checks = null;
+		$correctiveActionDtldModel->lo_completed_by = date('Y-m-d h:i:s');
+		$correctiveActionDtldModel->lo_direct_approve = 3;
+		$correctiveActionDtldModel->save();*/
 		
 		
 		//Users_location::where
