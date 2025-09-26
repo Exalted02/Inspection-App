@@ -5489,20 +5489,11 @@ class DashboardInspectorController extends Controller
 					});
 				})
 				->whereNotNull('checklist_id')
-				->whereNull('subchecklist_id')
 				->get(['task_list_id', 'checklist_id'])
 				->map(function ($item) {
 					return $item->task_list_id . '-' . $item->checklist_id;
 				})
 				->toArray();
-				
-				//----- 26-09-2025---
-				/*$excludedChecklistPairs = $excludedChecklistQuery->isNotEmpty()
-				? $excludedChecklistQuery->map(function ($item) {
-					return $item->task_list_id . '-' . $item->checklist_id;
-				})->toArray()
-				: [];*/
-				//---------------
 				
 				$correctiveChecklistIds = DB::table('task_list_checklists')
 				->where('approve', 0)
@@ -5517,7 +5508,6 @@ class DashboardInspectorController extends Controller
 		}
 			
 			//echo "<pre>";print_r($excludedChecklistPairs);die;
-			//echo "<pre>";print_r($correctiveChecklistIds);die;
 			// comment on 24-09-2025
 			/*$correctiveChecklistIds = DB::table('task_list_checklists')
 			->where('approve', 0)
@@ -5539,7 +5529,6 @@ class DashboardInspectorController extends Controller
 			$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 				->whereIn('task_list_id', $taskListIds)
 				//->where('lo_id', '!=' ,auth()->user()->id) //new 24-09-2025
-				->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
 				//->where('lo_corrective_action_plan', null)
 				->where(function ($q) {
 					$q->where(function ($q) {
@@ -5584,7 +5573,6 @@ class DashboardInspectorController extends Controller
 			$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 				->whereIn('task_list_id', $taskListIds)
 				->where('lo_id', auth()->user()->id) //new 24-09-2025
-				->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
 				->where(function ($q) {
 					$q->where(function ($q) {
 						$q->where('inspector_action', 0)->where('los_action', 0);
