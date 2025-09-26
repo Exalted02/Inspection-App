@@ -7312,6 +7312,7 @@ class DashboardInspectorController extends Controller
 			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')
 			->orderByDesc('updated_at')
+			//->orderBy('updated_at', 'asc')
 			->offset($lower)
 			->limit($upper)
 			->get();
