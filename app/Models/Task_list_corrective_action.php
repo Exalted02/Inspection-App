@@ -30,6 +30,7 @@ class Task_list_corrective_action extends Model
 		'rejected_status',
 		'rejected_repeated',
 		'repeated_observation',
+		'tab_no',
     ];
 	
 	public function get_inspector()
