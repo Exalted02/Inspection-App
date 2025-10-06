@@ -662,7 +662,7 @@ $tot_close_obs = 0;
 	@endforeach
 	<input type="hidden" id="loc_tot_no_of_obs" value="{{ $loc_tot_no_of_obs ?? ''}}">
 	<input type="hidden" id="time_to_close_obs" value="{{ $time_to_close_obs ?? ''}}">
-	<input type="text" id="tot_close_observation" value="{{ $tot_close_obs ?? ''}}">
+	<input type="hidden" id="tot_close_observation" value="{{ $tot_close_obs ?? ''}}">
 	{{--<div class="management-location-card pt-2 pb-2">
 		<div class="container">
 			<div class="d-flex align-items-center location-header mb-3">

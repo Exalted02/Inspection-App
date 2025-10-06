@@ -700,7 +700,7 @@ $correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) a
 						</div>
 					</div>
 				</div>
-               <div class="row mt-4">
+               <div class="row my-location">
 					<!-- Heading Area -->
 					<div class="heading-panel">
 					   <div class="col-xs-12 col-md-7 col-sm-6 left-side">
