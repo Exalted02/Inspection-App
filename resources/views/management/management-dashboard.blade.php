@@ -383,6 +383,8 @@
 
 		$correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
 					->mergeBindings($baseChecklistQuery)->count();
+					
+$tot_close_obs = 0;
 @endphp
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	
@@ -429,11 +431,12 @@
 			</div>
 		</div>
     </div>
-	@foreach($locations as $location)
+	@foreach($locations as $key=>$location)
 	@php 
 		$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
 		
 		//echo "<pre>";print_r($taskLocation);die;
+		
 		
 		//$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->get();
 		
@@ -571,10 +574,49 @@
 		$lo_no_direct_approve = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('lo_direct_approve', 0)->whereBetween('lo_completed_by', [$today, $futureDate])->count();
 		$close_obs = $lo_direct_approve + $lo_no_direct_approve;
 		
-		$time_to_close_obs = $time_to_close_obs + $close_obs;
+		//$time_to_close_obs = $time_to_close_obs + $close_obs;
 		
+		$days = 0;
+		foreach($taskLocation as $tsk_id)
+		{
+			$exists = App\Models\Task_list_corrective_action::where('task_list_id', $tsk_id)->where('los_action', 1)->where('inspector_action', 1)->exists();
+			
+			if ($exists) {
+				$corrective = App\Models\Task_list_corrective_action::where('task_list_id', $tsk_id)
+					->where('los_action', 1)
+					->where('inspector_action', 1)
+					->first();
+
+				$updated_at = Carbon::parse($corrective->updated_at);
+
+				// Try to get created_at from checklist first
+				$task_checklist = App\Models\Task_list_checklists::where('task_list_id', $tsk_id)
+					->where('approve', 0)
+					->first();
+
+				// If not found, try subchecklist
+				if ($task_checklist) {
+					$task_created_at = Carbon::parse($task_checklist->created_at);
+				} else {
+					$task_subchecklist = App\Models\Task_list_subchecklists::where('task_list_id', $tsk_id)
+						->where('approve', 0)
+						->first();
+
+					$task_created_at = $task_subchecklist ? Carbon::parse($task_subchecklist->created_at) : null;
+				}
+
+				if (isset($task_created_at)) {
+					// Calculate difference in days
+					$days = $days + $task_created_at->diffInDays($updated_at);
+					//echo "Task ID {$tsk_id}: {$days} days<br>";
+				}
+			}
+			
+			
+		}
 		
-		
+		$close_obs = $days;
+		$tot_close_obs = $tot_close_obs + $close_obs;
 	@endphp
 	<div class="management-location-card pt-2 pb-2">
 		<div class="container">
@@ -620,6 +662,7 @@
 	@endforeach
 	<input type="hidden" id="loc_tot_no_of_obs" value="{{ $loc_tot_no_of_obs ?? ''}}">
 	<input type="hidden" id="time_to_close_obs" value="{{ $time_to_close_obs ?? ''}}">
+	<input type="text" id="tot_close_observation" value="{{ $tot_close_obs ?? ''}}">
 	{{--<div class="management-location-card pt-2 pb-2">
 		<div class="container">
 			<div class="d-flex align-items-center location-header mb-3">
@@ -659,9 +702,11 @@
 <script>
 $(document).ready(function() {
 	var tot_obs = $('#loc_tot_no_of_obs').val();
-	var close_obs = $('#time_to_close_obs').val();
+	//var close_obs = $('#time_to_close_obs').val();
+	var tot_close_obs = $('#tot_close_observation').val();
+	//alert(tot_close_obs);
 	$('#tot_no_of_obs').text(tot_obs);
-	$('#tot_close_obs').text(close_obs);
+	$('#tot_close_obs').text(tot_close_obs);
 });
 </script>
 @endsection
