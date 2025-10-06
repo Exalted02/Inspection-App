@@ -2211,6 +2211,45 @@ body, h1, h2, h3, h4, h5, h6 {
     padding: 0;
 	margin-right:5px;
 }
+.my-dashboard-upper{
+	 background-color: #f4e1e1 !important;
+}
+.my-dashboard-lower{
+	 background-color: #ebeaea !important;
+}
+.small-card-upper-counter {
+	font-size: 40px;
+	font-weight: 700;
+	color: #f25555;
+}
+.small-card-upper-counter-title {
+	font-size: 14px;
+	font-weight: 700;
+	/*text-transform: uppercase;*/
+	color: #f25555;
+}
+
+.small-card-upper-counter-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.notification-badge {
+    position: absolute;
+    top: 8px; 
+    right: 14px;
+    background: red;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50% !important;
+    width: 10px;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
 
 
 

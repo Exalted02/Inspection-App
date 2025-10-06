@@ -88,6 +88,61 @@ $country = '';
     <div class="main-content-area clearfix">
         <section class="custom-padding gray">
             <div class="container">
+				<div class="row">
+					<div class="heading-panel">
+					   <div class="col-xs-12 col-md-7 col-sm-6 left-side">
+						  <!-- Main Title -->
+						  <h1>My dashboard</h1>
+					   </div>
+					</div>
+					<div class="pt-2 pb-2">
+						<div class="row flex-wrap d-flex">
+							<div class="col-md-6 col-sm-6 col-xs-6 small-card-first d-flex">
+								<div class="bg small-card my-dashboard-upper position-relative">
+								<span class="notification-badge"></span>
+									<div class="small-card-title">Open corrective action/plan</div>
+									<div class="d-flex align-items-center small-card-upper-counter-wrapper">
+										<div class="small-card-upper-counter me-2">10</div>
+										<div class="small-card-upper-counter-title">Pending task</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-6 col-xs-6 small-card-second d-flex">
+								<div class="bg small-card my-dashboard-upper position-relative">
+									<span class="notification-badge"></span>
+									<div class="small-card-title">Inspection closure</div>
+									<div class="d-flex align-items-center small-card-upper-counter-wrapper">
+										<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">0</span></div>
+										<div class="small-card-upper-counter-title">Pending task</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row flex-wrap d-flex">
+							<div class="col-md-4 col-sm-4 col-xs-4 small-card-first d-flex">
+								<div class="bg small-card my-dashboard-lower">
+									<div class="small-card-title">Inspection completed</div>
+									<div class="small-card-counter">10</div>
+									{{--<div class="small-card-counter-title">WEEKLY</div>--}}
+								</div>
+							</div>
+							<div class="col-md-4 col-sm-4 col-xs-4 small-card-second d-flex">
+								<div class="bg small-card my-dashboard-lower">
+									<div class="small-card-title">Observations</div>
+									<div class="small-card-counter"><span id="tot_no_of_obs">0</span></div>
+									{{--<div class="small-card-counter-title">WEEKLY</div>--}}
+								</div>
+							</div>
+							<div class="col-md-4 col-sm-4 col-xs-4 small-card-second d-flex">
+								<div class="bg small-card my-dashboard-lower">
+									<div class="small-card-title">Pending closure</div>
+									<div class="small-card-counter"><span id="tot_no_of_obs">0</span></div>
+									{{--<div class="small-card-counter-title">WEEKLY</div>--}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
                <div class="row">
 					<!-- Heading Area -->
 					<div class="heading-panel">

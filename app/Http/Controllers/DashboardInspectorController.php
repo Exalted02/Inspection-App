@@ -11554,19 +11554,6 @@ class DashboardInspectorController extends Controller
 		$lo_id = $request->user_id;
 		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
 		
-		/*Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id, 'notification_status'=>1]);*/
-		$exists = Users_location::where('user_id', $lo_id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->exists();
-		if(!$exists)
-		{
-			$userLocmodel = new Users_location();
-			$userLocmodel->user_id = $lo_id;
-			$userLocmodel->company_id = $company_id;
-			$userLocmodel->user_type = 2;
-			$userLocmodel->location_id = $location_id;
-			$userLocmodel->notification_status = 1;
-			$userLocmodel->save();
-		}
-		/*Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id, 'notification_status'=>1]);*/
 		
 		$type 				= $request->type;
 		$task_list_id 		= $request->task_id;
@@ -11592,22 +11579,80 @@ class DashboardInspectorController extends Controller
 		//$category_id = $taskData ? $taskData->category_id : null; 22-05-2025
 		$los_id = $taskData ? $taskData->los_id : null;
 		
-		$model = new Task_list_corrective_action();
-		$model->task_list_id = $task_list_id;
-		$model->category_id = $category_id;
-		$model->checklist_id = $checklist_id;
-		$model->subchecklist_id = $subchecklist_id;
-		$model->lo_id = $lo_id ?? null;
-		$model->lo_corrective_action_plan = null;
-		$model->lo_completed_by = date('Y-m-d h:i:s');
-		$model->lo_direct_approve = 3;
-		$model->inspector_id = $inspector_id;
-		$model->los_id = $los_id;
-		$model->rejected_repeated = 1; // 04-08-2025
-		$model->tab_no = 1; // 04-08-2025
-		$model->created_at = date('Y-m-d h:i:s'); // 11-08-2025
-		$model->save();
-		$id = $model->id;
+		/*Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id, 'notification_status'=>1]);*/
+		$exists = Users_location::where('user_id', $lo_id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->exists();
+		
+		
+		if(!$exists)
+		{
+			$del = Users_location::where('user_id', auth()->user()->id)->whereNull('primary_owner')->delete();
+			
+			$userLocmodel = new Users_location();
+			$userLocmodel->user_id = $lo_id;
+			$userLocmodel->company_id = $company_id;
+			$userLocmodel->user_type = 2;
+			$userLocmodel->location_id = $location_id;
+			$userLocmodel->notification_status = 1;
+			$userLocmodel->save();
+		}
+		else{
+			$del = Users_location::where('user_id', auth()->user()->id)->whereNull('primary_owner')->delete();
+			Task_list_corrective_action::where('lo_id', auth()->user()->id)->where('task_list_id', $task_list_id)->where('category_id', $category_id)->delete();
+			//$del = false;
+		}
+		
+		/*Users_location::where('user_id', auth()->user()->id)->where('company_id', $company_id)->where('user_type', 2)->where('location_id', $location_id)->update(['user_id'=>$user_id, 'notification_status'=>1]);*/
+		
+		
+		
+		
+		if($del != false)
+		{
+			$corrective_action_data = Task_list_corrective_action::where('task_list_id',$task_list_id )->where('category_id', $category_id)->where('checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('lo_id', auth()->user()->id)->where('inspector_id', $inspector_id)->where('los_id', $los_id)->first();
+			
+			$corrective_action_id = $corrective_action_data ? $corrective_action_data->id : '';
+			
+			
+			
+			if($corrective_action_id)
+			{
+				$model = Task_list_corrective_action::find($corrective_action_id);
+				$model->task_list_id = $task_list_id;
+				$model->category_id = $category_id;
+				$model->checklist_id = $checklist_id;
+				$model->subchecklist_id = $subchecklist_id;
+				$model->lo_id = $lo_id ?? null;
+				$model->lo_corrective_action_plan = null;
+				$model->lo_completed_by = date('Y-m-d h:i:s');
+				$model->lo_direct_approve = 3;
+				$model->inspector_id = $inspector_id;
+				$model->los_id = $los_id;
+				$model->rejected_repeated = 1; // 04-08-2025
+				$model->tab_no = 1; // 04-08-2025
+				$model->created_at = date('Y-m-d h:i:s'); // 11-08-2025
+				$model->save();
+			}
+		}
+		else
+		{
+			
+			$model = new Task_list_corrective_action();
+			$model->task_list_id = $task_list_id;
+			$model->category_id = $category_id;
+			$model->checklist_id = $checklist_id;
+			$model->subchecklist_id = $subchecklist_id;
+			$model->lo_id = $lo_id ?? null;
+			$model->lo_corrective_action_plan = null;
+			$model->lo_completed_by = date('Y-m-d h:i:s');
+			$model->lo_direct_approve = 3;
+			$model->inspector_id = $inspector_id;
+			$model->los_id = $los_id;
+			$model->rejected_repeated = 1; // 04-08-2025
+			$model->tab_no = 1; // 04-08-2025
+			$model->created_at = date('Y-m-d h:i:s'); // 11-08-2025
+			$model->save();
+			$id = $model->id;
+		}
 		
 		/*$correctiveActionDtldModel = new Task_list_corrective_action_details();
 		$correctiveActionDtldModel->task_list_corrective_action_id = $id;
