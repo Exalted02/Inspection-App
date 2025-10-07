@@ -5635,6 +5635,8 @@ class DashboardInspectorController extends Controller
 					})
 					->values()
 					->toArray();
+					
+					
 		}
 		
 		//echo auth()->user()->id;
