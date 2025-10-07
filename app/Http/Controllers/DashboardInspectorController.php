@@ -2387,6 +2387,10 @@ class DashboardInspectorController extends Controller
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
 		
+		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+		$all_lo = User::where('user_type', 2)->where('id', '!=' ,auth()->user()->id)->where('company_name', $company_id)->get();
+		$data['all_lo'] = $all_lo;
+		
 		return view('inspector.location-owner-rejected-question-reply', $data);
 	}
 	public function location_owner_subchecklist_rejected_question_reply($task_id='',$checklist_id='',$subchecklist_id='',$type='')
@@ -2401,6 +2405,11 @@ class DashboardInspectorController extends Controller
 		$data['subchecklist_id'] = $subchecklist_id ?? '';
 		$data['type'] = $type ?? '';
 		$data['tab'] = $tab ?? '';
+		
+		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+		$all_lo = User::where('user_type', 2)->where('id', '!=' ,auth()->user()->id)->where('company_name', $company_id)->get();
+		$data['all_lo'] = $all_lo;
+		
 		return view('inspector.location-owner-rejected-question-reply', $data);
 	}
 	

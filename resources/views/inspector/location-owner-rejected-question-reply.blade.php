@@ -823,6 +823,50 @@
 		</div>
 	</div>--}}
 	{{--</form>--}}
+	
+	
+	<!-- =-=-=-=-=-=-= Rejected reason =-=-=-=-=-=-= -->
+	<div class="modal fade" id="forward-task" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<h2 class="owner-checklist-title">Forward to...</h3>
+							<div class="search-widget">
+							   <input placeholder="Forward to" type="text" oninput="input_search(this.value)" id="search-text">
+							   <button type="submit"><i class="fa fa-search"></i></button>
+							</div>
+						</div>
+						<span id="errorMessage1" style="display: block; text-align: center;"></span>
+						<div class="col-md-12">
+							<div class="user-list">
+							@if($all_lo->isNotEmpty())
+								@foreach($all_lo as $lo)
+								<div class="user-item">
+								  <div class="user-info">
+									<img src="{{ url('uploads/profile/'. $lo->id . '/locationowner/'. $lo->profile_image) }}" alt="{{ $lo->name ?? ''}}">
+									<span>{{ $lo->name ?? ''}}</span>
+								  </div>
+								  <input type="radio" id="lo_id" name="user" value="{{ $lo->id}}">
+								</div>
+								@endforeach
+							@endif
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="modal-checklist-question-sticky-footer">
+						<div class="footer-content question-navigation d-flex justify-content-between">
+							<button class="reject-class-button">Cancel</button>
+							<button class="ms-auto change-location">Forward</button>
+						</div>
+					</div>				
+				</div>
+            </div>
+		</div>
+	</div>
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
@@ -842,7 +886,11 @@ $(document).ready(function () {
 });
 
 </script>
-
+<script>
+$(document).on('click','.forward-task', function(){
+	$('#forward-task').modal('show');
+});
+</script>
 <script>
 $(document).ready(function() {
 flatpickr("#set_time", {
@@ -1115,6 +1163,56 @@ let selectedFiles = [];
 			},
 		});
 	});
+	
+	$(document).on('click', '.change-location', function(){
+		//var user_id = $(this).val();
+		var selectedLoId = $('input[name="user"]:checked').val();
+		if(selectedLoId) {
+			var user_id = selectedLoId;
+		}
+		else{
+			$('#errorMessage1').html('Select any one location owner').fadeIn().delay(3000).fadeOut();
+			return false;
+		}
+		//alert(user_id);
+		var task_id = $('#task_id').val();
+		//alert(task_id);
+		var checklist_id = $('#checklist_id').val();
+		var subchecklist_id = $('#subchecklist_id').val();
+		var type = $('#type').val();
+		var tab = $('#tab').val();
+		var location_id = $('#location_id').val();
+		var URL = "{{ route('lo-transfer-location') }}";
+		
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {task_id:task_id,checklist_id:checklist_id,subchecklist_id:subchecklist_id,type:type,tab:tab,location_id:location_id,user_id:user_id, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.msg);
+				if(response.msg == 'success')
+				{
+					$('#forward-task').modal('hide');
+					localStorage.setItem('transferLocation', 1);
+					$('.corrective-message-forward').html('<i class="fa fa-check"></i>Check Forwarded').fadeIn().delay(3000).fadeOut();
+					
+					setTimeout(function() {
+						window.location.href = "{{ route('inspector-dashboard') }}";
+					}, 4000);
+					
+				}
+				
+			},
+			complete: function() {
+				$('.load-more-appr').html('Load more');
+			}
+		});
+	});
+	
+	$(document).on('click','.reject-class-button', function(){
+		$('#forward-task').modal('hide');
+	});
 });
 
 function updateFileInput() {
@@ -1123,6 +1221,24 @@ function updateFileInput() {
     if (file) dataTransfer.items.add(file);
   });
   document.getElementById('lo_file').files = dataTransfer.files;
+}
+
+function input_search(val)
+{
+	 var URL = "{{ route('lo-search-users-data') }}";
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: {val:val, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+				//alert(response.html);
+				$(".user-list").html(response.html);
+			},
+			complete: function() {
+				
+			}
+		});
 }
 </script>
 @endsection
