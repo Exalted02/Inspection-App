@@ -44,13 +44,26 @@ class ManagementController extends Controller
 		$today = Carbon::today();
 		$startDate = $today->copy()->subDays(15)->startOfWeek(Carbon::MONDAY);
 		$endDate = $today->copy()->addDays(15)->endOfWeek(Carbon::SUNDAY);
-
+		//echo $startDate.' '.$endDate; die;
 		$weeks = collect();
 		$current = $startDate->copy();
 		
 		$chartData = [];
 		foreach($locations as $key=>$location)
 		{
+			$taskLocation = Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
+			
+			// count total corrective needed
+		$taskListIds = App\Models\Task_lists::whereIn('location_id', $locations)->pluck('id');	
+		
+		$categoryIds = App\Models\Task_list_subcategories::whereIn('task_list_id', $taskListIds)
+			->pluck('task_list_category_id');
+			
+		$submit_task_id = App\Models\Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)->pluck('task_list_id')->toArray();
+		
+		
+		
+			
 		//------------------------------------------------
 			while ($current->lte($endDate)) {
 				$weekStart = $current->copy();
@@ -62,16 +75,194 @@ class ManagementController extends Controller
 				]);
 				$current->addWeek();
 			}
+			//echo "<pre>";print_r($weeks);die;
 
 			// Example data fetch (replace with your own DB query)
-			$daydata = collect([
-				['date' => '2025-09-24', 'corrective_needed' => 10, 'repeat_correction' => 5],
+			/*$daydata = collect([
+				['date' => '2025-09-22', 'corrective_needed' => 10, 'repeat_correction' => 15],
 				['date' => '2025-09-30', 'corrective_needed' => 20, 'repeat_correction' => 14],
+				['date' => '2025-10-13', 'corrective_needed' => 5,  'repeat_correction' => 3],
 				['date' => '2025-10-25', 'corrective_needed' => 5,  'repeat_correction' => 3],
-			]);
+			]);*/
+			
+			$daydata = collect();
 
+			foreach ($weeks as $week) {
+				$repeated_obs_count = Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('repeated_observation', 1)->whereBetween('created_at', [$week['start'], $week['end']])->count();
+				
+				
+				$excludedChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+				->whereIn('task_list_id', $taskListIds)
+				//->where('lo_id', auth()->user()->id) //add new 24-09-2025
+				->orWhereIn('lo_direct_approve', [0, 1])
+				->where(function ($q) {
+					$q->where(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 0);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 0)->where('los_action', 1);
+					})->orWhere(function ($q) {
+						$q->where('inspector_action', 1)->where('los_action', 1);
+					});
+				})
+				->whereNotNull('checklist_id')
+				->get(['task_list_id', 'checklist_id'])
+				->map(function ($item) {
+					return $item->task_list_id . '-' . $item->checklist_id;
+				})
+				->toArray();
+				
+			$correctiveChecklistIds = DB::table('task_list_checklists')
+						->where('approve', 0)
+						->whereIn('task_list_id', $taskListIds)
+						->whereIn('category_id', $categoryIds)
+						->get(['task_list_id', 'checklist_id'])
+						->filter(function ($item) use ($excludedChecklistPairs) {
+							$pairKey = $item->task_list_id . '-' . $item->checklist_id;
+							return !in_array($pairKey, $excludedChecklistPairs);
+						})
+						->toArray();
+						
+			$excludedSubChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+					->whereIn('task_list_id', $taskListIds)
+					//->where('los_id', auth()->user()->id) // add new 24-09-2025
+					->orWhereIn('lo_direct_approve', [0, 1])
+					//->orWhere('lo_direct_approve', 0)
+					//->orWhere('lo_direct_approve', 1)
+					/*->where(function ($q) {
+						$q->where('lo_direct_approve', 0)
+						  ->orWhere('lo_direct_approve', 1);
+					})*/
+					->where(function ($q) {
+						$q->where(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 0);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 1)->where('los_action', 0);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 1);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 1)->where('los_action', 1);
+						});
+					})
+					//->whereNotNull('checklist_id')
+					->whereNotNull('subchecklist_id')
+					->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
+					->map(function ($item) {
+						return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
+					})
+					->toArray();
+					
+			$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
+					->where('approve', 0)
+					->whereIn('task_list_id', $taskListIds)
+					->whereIn('category_id', $categoryIds)
+					->get(['task_list_id', 'subchecklist_id', 'task_list_checklist_id'])
+					->filter(function ($item) use ($excludedSubChecklistPairs) {
+						$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+						return !in_array($pairKey, $excludedSubChecklistPairs);
+					})
+					->map(function ($item) {
+						return (object)[
+							'task_list_id' => $item->task_list_id,
+							'subchecklist_id' => $item->subchecklist_id,
+							'task_list_checklist_id' => $item->task_list_checklist_id,
+						];
+					})
+					->values()
+					->toArray();
+				
+				$correctiveNeededCount = DB::table(function ($query) use (
+					$taskListIds,
+					$categoryIds,
+					$submit_task_id,
+					$correctiveChecklistIds,
+					$correctiveSubChecklistIds,
+					$week
+				) {
+					// Subquery 1: From task_list_checklists
+					$baseQuery = DB::table('task_list_checklists')
+						->select(
+							'id',
+							'checklist_id as checklist_id',
+							DB::raw("'checklist' as type"),
+							'task_list_id',
+							'category_id',
+							'approve',
+							'created_at',
+							'updated_at',
+							DB::raw('NULL as subchecklist_id'),
+							DB::raw('NULL as task_list_checklist_id')
+						)
+						->whereIn('category_id', $categoryIds)
+						->whereIn('task_list_id', $submit_task_id)
+						->where('approve', 0)
+						->whereBetween('created_at', [$week['start'], $week['end']])
+						->where(function ($query) use ($correctiveChecklistIds) {
+							if (!empty($correctiveChecklistIds)) {
+								$query->where(function ($q) use ($correctiveChecklistIds) {
+									foreach ($correctiveChecklistIds as $item) {
+										$taskListId = is_array($item) ? $item['task_list_id'] : $item->task_list_id;
+										$checklistId = is_array($item) ? $item['checklist_id'] : $item->checklist_id;
+
+										$q->orWhere(function ($subQ) use ($taskListId, $checklistId) {
+											$subQ->where('task_list_id', $taskListId)
+												 ->where('checklist_id', $checklistId);
+										});
+									}
+								});
+							} else {
+								$query->whereRaw('1 = 0'); // Prevent matching any row
+							}
+						});
+
+					$unionQuery = DB::table('task_list_subchecklists')
+						->select(
+							'id',
+							'subchecklist_id as item_id',
+							DB::raw("'subchecklist' as type"),
+							'task_list_id',
+							'category_id',
+							'approve',
+							'created_at',
+							'updated_at',
+							'subchecklist_id',
+							'task_list_checklist_id'
+						)
+						//->whereIn('task_list_id', $taskListIds)
+						->whereIn('task_list_id', $submit_task_id)
+						->whereIn('category_id', $categoryIds)
+						->where('approve', 0)
+						->whereBetween('created_at', [$week['start'], $week['end']])
+						->where(function ($query) use ($correctiveSubChecklistIds) {
+							if (!empty($correctiveSubChecklistIds)) {
+								foreach ($correctiveSubChecklistIds as $item) {
+									$taskListId = is_array($item) ? $item['task_list_id'] : $item->task_list_id;
+									$subchecklistId = is_array($item) ? $item['subchecklist_id'] : $item->subchecklist_id;
+
+									$query->orWhere(function ($subQ) use ($taskListId, $subchecklistId) {
+										$subQ->where('task_list_id', $taskListId)
+											 ->where('subchecklist_id', $subchecklistId);
+									});
+								}
+							} else {
+								$query->whereRaw('1 = 0');
+							}
+						});
+
+					// Merge both queries using unionAll
+					$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
+				}, 'combined')->count();
+				
+				$daydata->push([
+					'date' => $week['start'],
+					'corrective_needed' => 10,
+					'repeat_correction' => $repeated_obs_count,
+				]);
+			}
+			//echo "<pre>";print_r($daydata);die;
 			// Prepare weekly data
-			$chartData[$key] = $weeks->map(function ($week) use ($daydata) {
+			$chartData[$key] = collect($weeks)->map(function ($week) use ($daydata) {
 				$weekData = $daydata->filter(function ($item) use ($week) {
 					return $item['date'] >= $week['start'] && $item['date'] <= $week['end'];
 				});
