@@ -657,6 +657,9 @@ $tot_close_obs = 0;
 					</div>
 				</div>
 			</div>
+			<div class="row flex-wrap d-flex">
+				<canvas id="correctionChart{{$key}}" height="70"></canvas>
+			</div>
 		</div>
 	</div>
 	@endforeach
@@ -699,6 +702,7 @@ $tot_close_obs = 0;
 	</div>--}}
 @endsection 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 $(document).ready(function() {
 	var tot_obs = $('#loc_tot_no_of_obs').val();
@@ -708,6 +712,78 @@ $(document).ready(function() {
 	$('#tot_no_of_obs').text(tot_obs);
 	$('#tot_close_obs').text(tot_close_obs);
 });
+</script>
+<script>
+@foreach($locations as $key=>$location)
+    const chartData{{ $key }} = @json($chartData[$key]);
+
+    const labels{{ $key }} = chartData{{ $key }}.map(item => item.label);
+    const correctiveData{{ $key }} = chartData{{ $key }}.map(item => item.corrective_needed);
+    const repeatData{{ $key }} = chartData{{ $key }}.map(item => item.repeat_correction);
+
+    const data{{ $key }} = {
+        labels: labels{{ $key }},
+        datasets: [
+            {
+                label: '# of Corrective Needed',
+                data: correctiveData{{ $key }},
+                borderColor: '#0033cc', // deep blue
+                backgroundColor: '#0033cc',
+                tension: 0.4,
+                pointStyle: 'circle',
+                pointRadius: correctiveData{{ $key }}.map(v => v > 0 ? 6 : 0),
+                pointHoverRadius: 8,
+            },
+            {
+                label: '# of Repeat Correction Needed',
+                data: repeatData{{ $key }},
+                borderColor: '#cc0000', // deep red
+                backgroundColor: '#cc0000',
+                tension: 0.4,
+                pointStyle: 'circle',
+                pointRadius: repeatData{{ $key }}.map(v => v > 0 ? 6 : 0),
+                pointHoverRadius: 8,
+            }
+        ]
+    };
+
+    const config{{ $key }} = {
+        type: 'line',
+        data: data{{ $key }},
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            if (context.dataset.label === '# of Corrective Needed')
+                                return `${context.parsed.y} corrective needed`;
+                            else
+                                return `${context.parsed.y} repeat correction needed`;
+                        }
+                    }
+                },
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Weeks (Monday - Sunday)' },
+                },
+                y: {
+                    title: { display: true, text: 'Count' },
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    new Chart(document.getElementById('correctionChart{{ $key }}'), config{{ $key }});
+@endforeach
 </script>
 @endsection
 

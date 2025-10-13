@@ -16,6 +16,9 @@ use App\Models\Task_list_subchecklist_rejected_files;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
+
 class ManagementController extends Controller
 {
     public function index()
@@ -36,6 +39,54 @@ class ManagementController extends Controller
 		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 		$data['locations'] = $locations;
 		$data['userLocationArr'] =$userLocationArr;
+		
+		//====== chart data start=======
+		$today = Carbon::today();
+		$startDate = $today->copy()->subDays(15)->startOfWeek(Carbon::MONDAY);
+		$endDate = $today->copy()->addDays(15)->endOfWeek(Carbon::SUNDAY);
+
+		$weeks = collect();
+		$current = $startDate->copy();
+		
+		$chartData = [];
+		foreach($locations as $key=>$location)
+		{
+		//------------------------------------------------
+			while ($current->lte($endDate)) {
+				$weekStart = $current->copy();
+				$weekEnd = $current->copy()->endOfWeek(Carbon::SUNDAY);
+				$weeks->push([
+					'label' => $weekStart->format('d M') . ' - ' . $weekEnd->format('d M'),
+					'start' => $weekStart->toDateString(),
+					'end' => $weekEnd->toDateString(),
+				]);
+				$current->addWeek();
+			}
+
+			// Example data fetch (replace with your own DB query)
+			$daydata = collect([
+				['date' => '2025-09-24', 'corrective_needed' => 10, 'repeat_correction' => 5],
+				['date' => '2025-09-30', 'corrective_needed' => 20, 'repeat_correction' => 14],
+				['date' => '2025-10-25', 'corrective_needed' => 5,  'repeat_correction' => 3],
+			]);
+
+			// Prepare weekly data
+			$chartData[$key] = $weeks->map(function ($week) use ($daydata) {
+				$weekData = $daydata->filter(function ($item) use ($week) {
+					return $item['date'] >= $week['start'] && $item['date'] <= $week['end'];
+				});
+
+				return [
+					'label' => $week['label'],
+					'corrective_needed' => $weekData->sum('corrective_needed'),
+					'repeat_correction' => $weekData->sum('repeat_correction'),
+				];
+			});
+		//---------------------------------------------
+		}
+		
+		//echo "<pre>";print_r($chartData);die;
+		$data['chartData'] = $chartData;
         return view('management.management-dashboard', $data);
     }
     public function management_location($id='')
