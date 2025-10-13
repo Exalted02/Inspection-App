@@ -256,7 +256,7 @@ class ManagementController extends Controller
 				
 				$daydata->push([
 					'date' => $week['start'],
-					'corrective_needed' => 10,
+					'corrective_needed' => $correctiveNeededCount,
 					'repeat_correction' => $repeated_obs_count,
 				]);
 			}
