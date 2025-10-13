@@ -54,12 +54,12 @@ class ManagementController extends Controller
 			$taskLocation = Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
 			
 			// count total corrective needed
-		$taskListIds = App\Models\Task_lists::whereIn('location_id', $locations)->pluck('id');	
+		$taskListIds = Task_lists::where('location_id', $location)->pluck('id');	
 		
-		$categoryIds = App\Models\Task_list_subcategories::whereIn('task_list_id', $taskListIds)
+		$categoryIds = Task_list_subcategories::whereIn('task_list_id', $taskListIds)
 			->pluck('task_list_category_id');
 			
-		$submit_task_id = App\Models\Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)->pluck('task_list_id')->toArray();
+		$submit_task_id = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)->pluck('task_list_id')->toArray();
 		
 		
 		
@@ -91,7 +91,7 @@ class ManagementController extends Controller
 				$repeated_obs_count = Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('repeated_observation', 1)->whereBetween('created_at', [$week['start'], $week['end']])->count();
 				
 				
-				$excludedChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+				$excludedChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 				->whereIn('task_list_id', $taskListIds)
 				//->where('lo_id', auth()->user()->id) //add new 24-09-2025
 				->orWhereIn('lo_direct_approve', [0, 1])
@@ -124,7 +124,7 @@ class ManagementController extends Controller
 						})
 						->toArray();
 						
-			$excludedSubChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+			$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 					->whereIn('task_list_id', $taskListIds)
 					//->where('los_id', auth()->user()->id) // add new 24-09-2025
 					->orWhereIn('lo_direct_approve', [0, 1])
