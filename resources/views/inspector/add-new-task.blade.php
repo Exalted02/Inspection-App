@@ -30,8 +30,182 @@ if(!empty($task_id))
 }
  
 @endphp
-    <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
+	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
+	<!-- =-=-=-=-=-=-= New Structure start =-=-=-=-=-=-= -->
 	<div class="container checklist">
+		<h2 class="checklist-title"></h2>
+			
+		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
+		<!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
+		<div class="main-content-area clearfix">
+			<section class="custom-padding1">
+				<div class="container1">
+					<div class="custom-tab" style="margin-bottom: 80px;">
+						
+						<form id="frmcategory" action="{{ route('save-task-data') }}" enctype="multipart/form-data">
+							<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
+							<input type="hidden" id="hid_task_id" name="id" value="{{ $task_id ?? ''}}">
+							<input type="hidden" id="hid_task_image" name="hid_task_image" value="{{ $task_image ?? ''}}">
+							@csrf	
+							<div class="row form-group task-main-form">
+								<div class="col-md-12">
+									@if(empty($task_id))
+									<h2 class="owner-checklist-title">Add Task</h2>
+									@else
+									<h2 class="owner-checklist-title">Edit Task</h2>
+									@endif
+								</div>
+								<div class="col-md-12">
+									<label>{{ __('Task Type') }}</label>
+									<div class="task-type-radio-group">
+										<div class="task-type-item">
+											<div class="task-type-radio">
+												<input type="radio" name="task_type" value="0">
+											</div>
+											<div class="task-type-name"><strong>Routine</strong></div>
+										</div>
+										<div class="task-type-item">
+											<div class="task-type-radio">
+												<input type="radio" name="task_type" value="1">
+											</div>
+											<div class="task-type-name"><strong>Ad-Hoc</strong></div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 mt-2" id="task_form" style="display: none;">
+									<div class="row form-group">
+										<div class="col-md-12">
+											<label>{{ __('Task Title') }}</label>
+											<input class="form-control" placeholder="Add task title" type="text" name="task_title" id="task_title" value="{{ $task_title ?? ''}}">
+											<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
+										</div>
+									</div>
+									<div class="row form-group">
+										<div class="col-md-12">
+											<label>{{ __('Category') }}</label>
+											<div><button class="button-add-category add-category" type="button"><i class="fa-solid fa-plus"></i> Add category</button></div>
+										</div>
+									</div>
+									<div class="row form-group">
+										<div class="col-md-12">
+											<label>{{ __('What’s your observation?') }}</label>
+											<textarea class="form-control" placeholder="State your observations"></textarea>
+										</div>
+									</div>
+									<div class="row align-items-center update-image">
+										<div class="col-md-4 mb-3">
+											<label for="task_image" class="task-cover-image">Upload Cover</label>
+											<div class="upload-wrapper">
+												<input type="file" name="task_image" id="task_image" style="display: none;" accept="image/*">
+												<label for="task_image" class="task-upload-label">
+												<span class="task-upload-text">Update image</span>
+												<i class="fa fa-upload task-upload-icon"></i>
+												</label>
+												<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;">
+											<div class="task-preview-wrapper position-relative d-inline-block">
+												<img id="" class="img-responsive task-img-upload" src="{{ $task_image ? url('uploads/task/' . $task_image) : url('images/noimages/default-task-pic.png') }}" alt=""/>
+												<button type="button" class="task-img-delete" id="delete-image">×</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="">
+								@if(empty($task_id))
+									<button class="sticky-footer save-task task-load-add" type="button">Add Task</button>
+								@else
+									<button class="sticky-footer save-task task-load-edit" type="button">Edit Task</button>
+								@endif
+								</div>
+							</div>
+							<div class="row form-group task-category-form" style="display: none;">
+								<div class="col-md-12">
+									<h2 class="owner-checklist-title">Select Category</h2>
+								</div>
+								<div class="col-md-12">
+									<ul class="accordion mt-2">
+										<li>
+										   <h3 class="accordion-title"><a href="#">Personal protective equipments</a></h3>
+										   <div class="accordion-content">
+											  <div class="subcategory-box">
+													<div class="subcategory-item">
+														<div class="subcategory-checkbox">
+															<input type="checkbox" name="location_category[]" value="1">
+														</div>
+														<div class="subcategory-name"><strong>Use of Safety Goggles / Glasses at Sink / Clean Room</strong></div>														
+													</div>
+													<div class="subcategory-item">
+														<div class="subcategory-checkbox">
+															<input type="checkbox" name="location_category[]" value="2">
+														</div>
+														<div class="subcategory-name"><strong>PPE used during Chemical pouring and handling waste</strong></div>
+													</div>
+													<div class="subcategory-sub-item">
+														<div class="subcategory-checkbox">
+															<input type="checkbox" name="location_category[]" value="2">
+														</div>
+														<div class="subcategory-name"><strong>PPE used during Chemical pouring and handling waste</strong></div>														
+													</div>
+													<div class="subcategory-item">
+														<div class="subcategory-checkbox">
+															<input type="checkbox" name="location_category[]" value="3">
+														</div>
+														<div class="subcategory-name"><strong>Lorem Ipsum</strong></div>
+													</div>
+												</div>
+										   </div>
+										</li>
+										<li>
+										   <h3 class="accordion-title"><a href="#">Process gases</a></h3>
+										   <div class="accordion-content">
+											  <div class="subcategory-box">
+													<div class="subcategory-item">
+														<div class="subcategory-checkbox">
+															<input type="checkbox" name="location_category[]" value="1">
+														</div>
+														<div class="subcategory-name"><strong>Use of Safety Goggles / Glasses at Sink / Clean Room</strong></div>														
+													</div>
+													<div class="subcategory-item">
+														<div class="subcategory-checkbox">
+															<input type="checkbox" name="location_category[]" value="2">
+														</div>
+														<div class="subcategory-name"><strong>PPE used during Chemical pouring and handling waste</strong></div>
+													</div>
+													<div class="subcategory-sub-item">
+														<div class="subcategory-checkbox">
+															<input type="checkbox" name="location_category[]" value="2">
+														</div>
+														<div class="subcategory-name"><strong>PPE used during Chemical pouring and handling waste</strong></div>														
+													</div>
+													<div class="subcategory-item">
+														<div class="subcategory-checkbox">
+															<input type="checkbox" name="location_category[]" value="3">
+														</div>
+														<div class="subcategory-name"><strong>Lorem Ipsum</strong></div>
+													</div>
+												</div>
+										   </div>
+										</li>
+									</ul>								
+								</div>
+								<div class="">
+									<button class="sticky-footer select-category" type="button">Select Category</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</section>
+		</div>
+    </div>
+	<!-- =-=-=-=-=-=-= New Structure end =-=-=-=-=-=-= -->
+	
+    <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
+	{{--<div class="container checklist">
 		<h2 class="checklist-title"></h2>
 			
 		<!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
@@ -138,13 +312,32 @@ if(!empty($task_id))
 				</div>
 			</section>
 		</div>
-    </div>
+    </div>--}}
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+$(document).ready(function() {
+    $('input[name="task_type"]').on('change', function() {
+		if ($(this).is(':checked')) {
+			$('#task_form').slideDown(); // smooth show
+		} else {
+			$('#task_form').slideUp();
+		}
+	});
+    $('.add-category').on('click', function() {
+		$('.task-main-form').slideUp();
+		$('.task-category-form').slideDown();
+	});
+    $('.select-category').on('click', function() {
+		$('.task-category-form').slideUp();
+		$('.task-main-form').slideDown();
+	});
+});
+</script>
 <script>
 $(document).ready(function() {
 	flatpickr("#set_time", {
