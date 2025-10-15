@@ -696,7 +696,7 @@ $(document).ready(function() {
 			}
 		});
 		
-		alert(JSON.stringify(result));
+		//alert(JSON.stringify(result));
 		//alert(hid_task_id);
 		//let set_time = $('#set_time').val().trim();
 		//let task_image = $('#task_image')[0].files.length;

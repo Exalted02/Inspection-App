@@ -2158,7 +2158,7 @@ class DashboardInspectorController extends Controller
 	
 	public function save_task_adhoc_data(Request $request)
 	{
-		echo "<pre>";print_r($request->all());die;
+		//echo "<pre>";print_r($request->all());die;
 	}
 	
 	public function delete_task_image(Request $request)
