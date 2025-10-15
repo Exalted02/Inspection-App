@@ -67,7 +67,7 @@ if(!empty($task_id))
 								</div>
 							</div>
 							<div class="col-md-12">								
-								<form id="frmcategory" action="{{ route('save-task-data') }}" enctype="multipart/form-data" class="form-adhoc" style="display: none;">
+								<form id="frmtaskadhoc" action="{{ route('save-task-adhoc-data') }}" enctype="multipart/form-data" class="form-adhoc" style="display: none;">
 									<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
 									<input type="hidden" id="hid_task_id" name="id" value="{{ $task_id ?? ''}}">
 									<input type="hidden" id="hid_task_image" name="hid_task_image" value="{{ $task_image ?? ''}}">
@@ -88,7 +88,7 @@ if(!empty($task_id))
 												</div>
 												<div class="col-md-12 mt-2">
 													<div class="category-tag tag-container">
-													  <div class="tag-content">
+													{{--<div class="tag-content">
 														<div class="tag">Use of Safety Goggles / Glasses at Sink / Clean Room</div>
 														<span class="close">&times;</span>
 													  </div>
@@ -97,16 +97,16 @@ if(!empty($task_id))
 														<span class="close">&times;</span>
 													  </div>
 													  <div class="tag-content">
-														<div class="tag">Lorem Ipsum</div>
+														<div class="tag">Lorem Ipsum category</div>
 														<span class="close">&times;</span>
-													  </div>
+													  </div>--}}
 													</div>
 												</div>
 											</div>
 											<div class="row form-group">
 												<div class="col-md-12">
 													<label>{{ __('What’s your observation?') }}</label>
-													<textarea class="form-control" placeholder="State your observations"></textarea>
+													<textarea class="form-control" placeholder="State your observations" name="observation" id="observation"></textarea>
 												</div>
 											</div>
 											<div class="row align-items-center update-image">
@@ -133,9 +133,9 @@ if(!empty($task_id))
 										</div>
 										<div class="">
 										@if(empty($task_id))
-											<button class="sticky-footer save-task task-load-add" type="button">Add Task</button>
+											<button class="sticky-footer save-adhoc-task task-load-add" type="button">Add Task</button>
 										@else
-											<button class="sticky-footer save-task task-load-edit" type="button">Edit Task</button>
+											<button class="sticky-footer save-adhoc-task task-load-edit" type="button">Edit Task</button>
 										@endif
 										</div>
 									</div>
@@ -145,69 +145,43 @@ if(!empty($task_id))
 										</div>
 										<div class="col-md-12">
 											<ul class="accordion mt-2">
-												<li>
-												   <h3 class="accordion-title"><a href="#">Personal protective equipments</a></h3>
+											@foreach($locationWisecategory as $categoties)
+											
+											@php 
+											
+											$category_chklst_subchklst = App\Models\Checklist::with('get_subchecklist')->where('category_id', $categoties['id'])->orderBy('order_no')->get();
+											
+											@endphp
+												<li class="category-item">
+													<h3 class="accordion-title"><a href="#">{{ $categoties['name'] }}
+													<input type="hidden" name="loc_category[]" value="{{ $categoties['id'] }}">
+													<input type="hidden" name="loc_category_name[]" value="{{ $categoties['name'] }}">
+													</a></h3>
 												   <div class="accordion-content">
 													  <div class="subcategory-box">
-															<div class="subcategory-item">
+														@foreach($category_chklst_subchklst as $checklists)
+														<div class="subcategory-item">
 																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="location_category[]" value="1">
+																	<input type="checkbox" name="loc_category_checklist[]" value="{{ $checklists->id}}">
 																</div>
-																<div class="subcategory-name"><strong>Use of Safety Goggles / Glasses at Sink / Clean Room</strong></div>														
-															</div>
-															<div class="subcategory-item">
-																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="location_category[]" value="2">
-																</div>
-																<div class="subcategory-name"><strong>PPE used during Chemical pouring and handling waste</strong></div>
-															</div>
-															<div class="subcategory-sub-item">
-																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="location_category[]" value="2">
-																</div>
-																<div class="subcategory-name"><strong>PPE used during Chemical pouring and handling waste</strong></div>														
-															</div>
-															<div class="subcategory-item">
-																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="location_category[]" value="3">
-																</div>
-																<div class="subcategory-name"><strong>Lorem Ipsum</strong></div>
-															</div>
+																<div class="subcategory-name"><strong>{{ $checklists->name }}</strong></div>														
+														</div>
+															@if(!empty($checklists->get_subchecklist))
+																	@foreach($checklists->get_subchecklist as $subchecklist)
+	<div class="subcategory-sub-item" data-parent="{{ $checklists->id }}">
+		<div class="subcategory-checkbox">
+		<input type="checkbox" name="loc_category_checklist_subchecklist[]" value="{{ $subchecklist->id }}">
+		</div>
+		<div class="subcategory-name"><strong>{{ $subchecklist->name }}</strong></div>
+	</div>							
+@endforeach																			
+															@endif
+														@endforeach
 														</div>
 												   </div>
 												</li>
-												<li>
-												   <h3 class="accordion-title"><a href="#">Process gases</a></h3>
-												   <div class="accordion-content">
-													  <div class="subcategory-box">
-															<div class="subcategory-item">
-																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="location_category[]" value="1">
-																</div>
-																<div class="subcategory-name"><strong>Use of Safety Goggles / Glasses at Sink / Clean Room</strong></div>														
-															</div>
-															<div class="subcategory-item">
-																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="location_category[]" value="2">
-																</div>
-																<div class="subcategory-name"><strong>PPE used during Chemical pouring and handling waste</strong></div>
-															</div>
-															<div class="subcategory-sub-item">
-																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="location_category[]" value="2">
-																</div>
-																<div class="subcategory-name"><strong>PPE used during Chemical pouring and handling waste</strong></div>														
-															</div>
-															<div class="subcategory-item">
-																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="location_category[]" value="3">
-																</div>
-																<div class="subcategory-name"><strong>Lorem Ipsum</strong></div>
-															</div>
-														</div>
-												   </div>
-												</li>
-											</ul>								
+											@endforeach	
+											</ul>
 										</div>
 										<div class="">
 											<button class="sticky-footer select-category" type="button">Select Category</button>
@@ -293,7 +267,7 @@ if(!empty($task_id))
 									
 									<div class="">
 									@if(empty($task_id))
-										<button class="sticky-footer save-task task-load-add" type="button">Add Task</button>
+										<button class="sticky-footer save-task task-load-add" type="button">Add Task_s</button>
 									@else
 										<button class="sticky-footer save-task task-load-edit" type="button">Edit Task</button>
 									@endif
@@ -372,9 +346,98 @@ $(document).ready(function() {
 		$('.task-main-form').slideUp();
 		$('.task-category-form').slideDown();
 	});
+	
     $('.select-category').on('click', function() {
+		
+		let result = [];
+		$('.category-item').each(function() {
+			let categoryId = $(this).find('input[name="loc_category[]"]').val();
+			let categoryName = $(this).find('input[name="loc_category_name[]"]').val();
+			let categoryData = {
+				category_id: categoryId,
+				category_name: categoryName,
+				checklists: []
+			};
+
+			
+			$(this).find('input[name="loc_category_checklist[]"]:checked').each(function() {
+				let checklistId = $(this).val();
+				let checklistData = {
+					id: checklistId,
+					subchecklists: []
+				};
+
+				
+				$(this)
+					.closest('.subcategory-box')
+					.find(`.subcategory-sub-item[data-parent="${checklistId}"] input[name="loc_category_checklist_subchecklist[]"]:checked`)
+					.each(function() {
+						checklistData.subchecklists.push($(this).val());
+					});
+
+				categoryData.checklists.push(checklistData);
+			});
+
+			if (categoryData.checklists.length > 0) {
+				result.push(categoryData);
+			}
+		});
+		
+		//alert(JSON.stringify(result));
+		
+		$('.category-tag.tag-container').empty();
+		
+		result.forEach(cat => {
+		  let tagHTML ='<div class="tag-content"><div class="tag">' + cat.category_name + '</div><span class="close reject_category" data-id="' +cat.category_id + '">&times;</span></div>';
+		  $('.category-tag.tag-container').append(tagHTML);
+		});
+		
 		$('.task-category-form').slideUp();
 		$('.task-main-form').slideDown();
+	});
+	
+	$(document).on('click', '.reject_category', function(){
+		let cat_id = $(this).data('id');
+		//alert(cat_id);
+		$(this).closest('.tag-content').remove();
+		
+		let result = [];
+		$('.category-item').each(function() {
+			let categoryId = $(this).find('input[name="loc_category[]"]').val();
+			let categoryName = $(this).find('input[name="loc_category_name[]"]').val();
+			let categoryData = {
+				category_id: categoryId,
+				category_name: categoryName,
+				checklists: []
+			};
+
+			
+			$(this).find('input[name="loc_category_checklist[]"]:checked').each(function() {
+				let checklistId = $(this).val();
+				let checklistData = {
+					id: checklistId,
+					subchecklists: []
+				};
+
+				
+				$(this)
+					.closest('.subcategory-box')
+					.find(`.subcategory-sub-item[data-parent="${checklistId}"] input[name="loc_category_checklist_subchecklist[]"]:checked`)
+					.each(function() {
+						checklistData.subchecklists.push($(this).val());
+					});
+
+				categoryData.checklists.push(checklistData);
+			});
+
+			if (categoryData.checklists.length > 0) {
+				result.push(categoryData);
+			}
+		});
+		
+		result = result.filter(cat => cat.category_id != cat_id);
+		$(this).closest('.tag-content').remove();
+		//alert(JSON.stringify(result));
 	});
 });
 </script>
@@ -592,6 +655,175 @@ $(document).ready(function() {
 		});
 		
 	});
+	
+	$(document).on('click','.save-adhoc-task', function(){
+		
+		let task_title = $('#task_title').val().trim();
+		let observation = $('#observation').val().trim();
+		let hid_task_id = $('#hid_task_id').val();
+		
+		let result = [];
+		$('.category-item').each(function() {
+			let categoryId = $(this).find('input[name="loc_category[]"]').val();
+			let categoryName = $(this).find('input[name="loc_category_name[]"]').val();
+			let categoryData = {
+				category_id: categoryId,
+				category_name: categoryName,
+				checklists: []
+			};
+
+			
+			$(this).find('input[name="loc_category_checklist[]"]:checked').each(function() {
+				let checklistId = $(this).val();
+				let checklistData = {
+					id: checklistId,
+					subchecklists: []
+				};
+
+				
+				$(this)
+					.closest('.subcategory-box')
+					.find(`.subcategory-sub-item[data-parent="${checklistId}"] input[name="loc_category_checklist_subchecklist[]"]:checked`)
+					.each(function() {
+						checklistData.subchecklists.push($(this).val());
+					});
+
+				categoryData.checklists.push(checklistData);
+			});
+
+			if (categoryData.checklists.length > 0) {
+				result.push(categoryData);
+			}
+		});
+		
+		alert(JSON.stringify(result));
+		//alert(hid_task_id);
+		//let set_time = $('#set_time').val().trim();
+		//let task_image = $('#task_image')[0].files.length;
+		//let hidden_set_date = $('#hidden_set_date').val();
+		//let hidden_set_time = $('#hidden_set_time').val();
+		
+		/*if (task_title === '') {
+			$('#tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut();
+			return false;
+		}*/
+		
+		//alert(hidden_set_date);
+		
+		/*if (hidden_set_date === '') {
+			$('#settimeline_id_error').text('Please enter date').fadeIn().delay(2000).fadeOut();
+			return false;
+		}*/
+		
+		
+		
+		/*let selectedLocations = [];
+		$('input[name="location_category[]"]:checked').each(function() {
+			selectedLocations.push($(this).val());
+		});*/
+		//alert(selectedLocations);
+		
+		//alert(task_image);
+		/*if (task_image === 0) {
+			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
+			return false;
+		}*/
+		
+		/*if (selectedLocations.length === 0) {
+			$('#tasktcategory_id_error').text('Please select category').fadeIn().delay(2000).fadeOut();
+			
+			@if(empty($locationWisecategory))
+			{
+				Swal.fire({
+					  icon: "warning",
+					  title: "Category not present for this location, please add from admin",
+					  
+					  confirmButtonColor: "#0b2b57",
+					  customClass: {
+						confirmButton : 'swal-save-exist-black'
+					  }
+					  
+					});
+			}
+			@endif
+			return false;
+		}*/
+		
+		//var form = $("#frmlocation");
+		var URL = $('#frmtaskadhoc').attr('action');
+		var id = $('#id').val();
+		
+		if(hid_task_id == '')
+		{
+			$('.task-load-add').prop('disabled', true);
+			$('.task-load-add').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
+		}
+		else{
+			$('.task-load-edit').prop('disabled', true);
+			$('.task-load-edit').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
+		}
+		
+		
+		let formData = new FormData($('#frmtaskadhoc')[0]);
+		formData.append('category_ids', JSON.stringify(result));
+		formData.append('_token', csrfToken);
+		//alert(URL);
+		$.ajax({
+			url: URL,
+			type: "POST",
+			data: formData,
+			processData: false,
+			contentType: false,
+			//dataType: 'json',
+			success: function(response) {
+				if (!response.success) {
+					
+					$('#tasktitle_id_error').text('Task title already exists.').fadeIn().delay(2000).fadeOut(); 
+					
+					if(hid_task_id == '')
+					{
+						$('.task-load-add').html('Add Task').prop('disabled', false);
+					}
+					else{
+						$('.task-load-edit').html('Edit Task').prop('disabled', false);
+					}
+					//$('#task_title').addClass('is-invalid');
+					//$('#task_title').next('.invalid-feedback').text(response.message).show();
+				} else {
+				
+					$('#category_id').val('').trigger('change');
+					//$('#task_title').val('');
+					let hid_task_id = $('#hid_task_id').val();
+					if(hid_task_id == '')
+					{
+						localStorage.setItem('taskcreated', 1);
+					}
+					else{
+						localStorage.setItem('taskupdated', 1);
+					}
+					
+					var baseUrl = "{{ url('/location-details') }}";
+					var location_id = $('#location_id').val();
+					var redirectUrl = baseUrl + '/'+ location_id;
+					window.location.href = redirectUrl;
+					/*setTimeout(() => {
+						window.location.reload();
+					}, "2000");*/
+				}
+			},
+			complete: function() {
+				
+				let hid_task_id = $('#hid_task_id').val();
+				if(hid_task_id == '')
+				{
+					$('.task-load-add').prop('disabled', false);
+				}
+				else{
+					$('.task-load-edit').prop('disabled', false);
+				}
+			}
+		});
+	})
 	
 	$('#delete-image').on('click', function() {
 		//$('#img-upload').attr('src', '');

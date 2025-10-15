@@ -102,6 +102,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('delete-task', [DashboardInspectorController::class, 'delete_task'])->name('delete-task');
 	Route::post('delete-task-image', [DashboardInspectorController::class, 'delete_task_image'])->name('delete-task-image');
 	
+	Route::post('save-task-adhoc-data', [DashboardInspectorController::class, 'save_task_adhoc_data'])->name('save-task-adhoc-data');
+	
 	
 	Route::get('inspector-checklist-question-reply/{location_id}/{task_id}/{checklist_id}/{type}/{tab}', [DashboardInspectorController::class, 'inspector_checklist_question_reply'])->name('inspector-checklist-question-reply');
 	

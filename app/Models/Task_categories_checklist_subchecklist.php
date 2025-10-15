@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Task_categories_checklist_subchecklist extends Model
 {
     use HasFactory;
+	protected $table = 'task_categories_checklist_subchecklists';
 	protected $fillable = [
         'task_list_id', 
         'category_id', 

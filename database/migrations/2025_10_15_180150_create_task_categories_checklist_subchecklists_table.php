@@ -16,8 +16,7 @@ return new class extends Migration
 			$table->integer('task_list_id')->nullable();
 			$table->integer('category_id')->nullable();
 			$table->integer('checklist_id')->nullable();
-			$table->text('rejected_region')->nullable();
-			$table->tinyInteger('approve')->default(1)->comment('0=No, 1=Yes');
+			$table->integer('subchecklist_id')->nullable();
             $table->timestamps();
         });
     }

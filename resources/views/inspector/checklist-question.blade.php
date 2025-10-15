@@ -6,7 +6,7 @@
 @section('content')
 @php
 //echo $previous_checklist_id; die;
-echo "<pre>";print_r($checklistdata);die;
+//echo "<pre>";print_r($checklistdata);die;
 //echo "<pre>";print_r($checklistdata->get_subchecklist);die;
 
 

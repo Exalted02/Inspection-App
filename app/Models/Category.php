@@ -31,4 +31,9 @@ class Category extends Model
 	{
 		return $this->hasMany(Subcategory::class, 'category_id', 'id');
 	}*/
+	
+	public function checklists()
+    {
+        return $this->hasMany(Checklist::class, 'category_id', 'id');
+    }
 }

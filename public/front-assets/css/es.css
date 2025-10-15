@@ -2335,12 +2335,14 @@ body, h1, h2, h3, h4, h5, h6 {
 	border-radius: 6px;
 	padding: 6px 10px;
 	font-size: 14px;
+	justify-content: space-between; /* new */
+	align-items: center; /* new */
 }
 .category-tag .close {
 	background-color: #f3f3f3;
 	margin-top: 3px;
 	margin-left: 8px;
-	font-size: 16px;
+	font-size: 20px;
 	color: #666;
 	cursor: pointer;
 	transition: color 0.2s ease;
@@ -2348,4 +2350,11 @@ body, h1, h2, h3, h4, h5, h6 {
 
 .category-tag .close:hover {
 	color: #000;
+}
+
+/* new */
+.tag {
+  color: #333;
+  font-size: 14px;
+  flex: 1; /* allow text to take available space */
 }
