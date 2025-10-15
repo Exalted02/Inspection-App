@@ -2288,10 +2288,64 @@ body, h1, h2, h3, h4, h5, h6 {
     font-size: 15px !important;
     font-weight: 600 !important;
 }
+.accordion-title a:hover {
+	color: #232323 !important;
+}
 .subcategory-sub-item {
 	display: flex;
     align-items: center;
     padding: 0px 12px;
     border-bottom: 0px solid #e0e0e0;
     margin-left: 30px;
+}
+
+.category-tag.tag-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: "Inter", sans-serif;
+}
+
+/*.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f3f3f3;
+  color: #333;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}*/
+.category-tag .tag {
+	line-height: 1.4;
+	-webkit-line-clamp: 1;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.category-tag .tag-content {
+	display: flex;
+	background-color: #f3f3f3;
+	color: #333;
+	border-radius: 6px;
+	padding: 6px 10px;
+	font-size: 14px;
+}
+.category-tag .close {
+	background-color: #f3f3f3;
+	margin-top: 3px;
+	margin-left: 8px;
+	font-size: 16px;
+	color: #666;
+	cursor: pointer;
+	transition: color 0.2s ease;
+}
+
+.category-tag .close:hover {
+	color: #000;
 }

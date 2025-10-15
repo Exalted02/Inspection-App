@@ -85,6 +85,22 @@ if(!empty($task_id))
 											<label>{{ __('Category') }}</label>
 											<div><button class="button-add-category add-category" type="button"><i class="fa-solid fa-plus"></i> Add category</button></div>
 										</div>
+										<div class="col-md-12 mt-2">
+											<div class="category-tag tag-container">
+											  <div class="tag-content">
+												<div class="tag">Use of Safety Goggles / Glasses at Sink / Clean Room</div>
+												<span class="close">&times;</span>
+											  </div>
+											  <div class="tag-content">
+												<div class="tag">PPE used during Chemical pouring and handling waste:</div>
+												<span class="close">&times;</span>
+											  </div>
+											  <div class="tag-content">
+												<div class="tag">Lorem Ipsum</div>
+												<span class="close">&times;</span>
+											  </div>
+											</div>
+										</div>
 									</div>
 									<div class="row form-group">
 										<div class="col-md-12">
