@@ -437,10 +437,7 @@ $(document).ready(function() {
 	
 	$(document).on('click', '.reject_category', function(){
 		
-		//const locationWisecategory = @json($locationWisecategory);
-		//alert(JSON.stringify(locationWisecategory));
 		let cat_id = $(this).data('id');
-		//alert(cat_id);
 		$(this).closest('.tag-content').remove();
 		
 		let result = [];
@@ -481,14 +478,11 @@ $(document).ready(function() {
 		$(this).closest('.tag-content').remove();
 		//alert(JSON.stringify(result));
 		let location_id = $('#location_id').val();
-		// initialize the select the categories after delete category
+		// initialize the selected the categories after delete category
 		$.ajax({
 			url: "{{ route('add-task-initialize-category') }}",
 			type: "POST",
 			data: {location_id:location_id,result:result,_token:csrfToken},
-			//processData: false,
-			//contentType: false,
-			//dataType: 'json',
 			success: function(response) {
 				//alert(response.html);
 				$('.list-category').html(response.html);
