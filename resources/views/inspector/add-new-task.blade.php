@@ -54,15 +54,15 @@ if(!empty($task_id))
 							<div class="col-md-12">
 								<label>{{ __('Task Type') }}</label>
 								<div class="task-type-radio-group">
-									<div class="task-type-item" @if($task_type != 0) style="display:none;" @endif>
+									<div class="task-type-item" @if(isset($task_type) && $task_type != 0) style="display:none;" @endif>
 										<div class="task-type-radio">
 											<input type="radio" name="task_type" value="0">
 										</div>
 										<div class="task-type-name"><strong>Routine</strong></div>
 									</div>
-									<div class="task-type-item" @if($task_type != 1) style="display:none;" @endif>
+									<div class="task-type-item" @if(isset($task_type) && $task_type != 1) style="display:none;" @endif>
 										<div class="task-type-radio">
-											<input type="radio" name="task_type" value="1">
+											<input type="radio" name="task_type" value="1" {{ $task_type == 1 ? 'checked' : '' }}>
 										</div>
 										<div class="task-type-name"><strong>Ad-Hoc</strong></div>
 									</div>
@@ -156,7 +156,7 @@ if(!empty($task_id))
 														@foreach($category_chklst_subchklst as $checklists)
 														<div class="subcategory-item">
 																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="loc_category_checklist[]" value="{{ $checklists->id}}">
+																	<input type="checkbox" name="loc_category_checklist[]" value="{{ $checklists->id}}" {{ $checklists->id == 4 ? 'checked' : ''}} >
 																</div>
 																<div class="subcategory-name"><strong>{{ $checklists->name }}</strong></div>														
 														</div>
@@ -275,6 +275,7 @@ if(!empty($task_id))
 			</section>
 		</div>
 	</div>
+	<input type="hidden" value="{{ $task_type ?? ''}}" id="hid_task_type">
 	{{--<div class="container checklist">
 		<h2 class="checklist-title"></h2>
 			
@@ -326,6 +327,41 @@ if(!empty($task_id))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
+	if($('#hid_task_id') !='')
+	{
+		let hid_task_type = $('#hid_task_type').val();
+		if(hid_task_type == 1)
+		{
+			
+			//$('.select-category').click();
+			
+			setTimeout(function() {
+				$('.button-add-category').trigger('click');
+			}, 300);
+			
+			setTimeout(function() {
+				$('.select-category').trigger('click');
+			}, 300);
+			
+			setTimeout(function() {
+				$('.form-routine').slideUp();
+				$('.form-adhoc').slideDown();
+			}, 300);
+			
+			$('#adhoc_task_type').val(1);
+			
+		}
+		
+		if(hid_task_type == 0)
+		{
+			$('.form-routine').slideUp();
+			$('.form-adhoc').slideDown();
+			$('.select-category').click();
+			$('#routing_task_type').val(0);
+		}
+	}
+	
+	
     $('input[name="task_type"]').on('change', function() {
 		if ($(this).val() == 0) {
 			$('.form-adhoc').slideUp(); // smooth hide
