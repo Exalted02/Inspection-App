@@ -142,7 +142,7 @@ if(!empty($task_id))
 											@foreach($locationWisecategory as $categoties)
 											
 											@php 
-											
+											$categoryId = $categoties['id'];
 											$category_chklst_subchklst = App\Models\Checklist::with('get_subchecklist')->where('category_id', $categoties['id'])->orderBy('order_no')->get();
 											
 											@endphp
@@ -154,17 +154,24 @@ if(!empty($task_id))
 												   <div class="accordion-content">
 													  <div class="subcategory-box">
 														@foreach($category_chklst_subchklst as $checklists)
+														@php 
+															$isChecklistChecked = isset($structuredArray[$categoryId][$checklists->id]);
+														@endphp
 														<div class="subcategory-item">
 																<div class="subcategory-checkbox">
-																	<input type="checkbox" name="loc_category_checklist[]" value="{{ $checklists->id}}" {{ $checklists->id == 4 ? 'checked' : ''}} >
+																	<input type="checkbox" name="loc_category_checklist[]" value="{{ $checklists->id}}" {{ $isChecklistChecked ? 'checked' : '' }} >
 																</div>
 																<div class="subcategory-name"><strong>{{ $checklists->name }}</strong></div>														
 														</div>
 															@if(!empty($checklists->get_subchecklist))
 																	@foreach($checklists->get_subchecklist as $subchecklist)
+																
+																 @php 
+																	$isSubChecked = isset($structuredArray[$categoryId][$checklists->id]) && in_array($subchecklist->id, $structuredArray[$categoryId][$checklists->id]);
+																@endphp
 	<div class="subcategory-sub-item" data-parent="{{ $checklists->id }}">
 		<div class="subcategory-checkbox">
-		<input type="checkbox" name="loc_category_checklist_subchecklist[]" value="{{ $subchecklist->id }}">
+		<input type="checkbox" name="loc_category_checklist_subchecklist[]" value="{{ $subchecklist->id }}" {{ $isSubChecked ? 'checked' : '' }}>
 		</div>
 		<div class="subcategory-name"><strong>{{ $subchecklist->name }}</strong></div>
 	</div>							

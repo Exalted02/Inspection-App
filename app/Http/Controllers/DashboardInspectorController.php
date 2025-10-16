@@ -11498,6 +11498,38 @@ class DashboardInspectorController extends Controller
 			}
 			
 			$data['locationWisecategory']= $locationWisecategory;
+			
+			$results = Task_categories_checklist_subchecklist::where('task_list_id', $id)->get();
+			
+			$structuredArray = [];
+			
+
+			if ($results->isNotEmpty()) {
+				foreach ($results as $result) {
+					$categoryId = $result->category_id;
+					$checklistId = $result->checklist_id;
+					$subchecklistId = $result->subchecklist_id;
+
+					// Ensure category exists
+					if (!isset($structuredArray[$categoryId])) {
+						$structuredArray[$categoryId] = [];
+					}
+
+					// Ensure checklist exists
+					if (!isset($structuredArray[$categoryId][$checklistId])) {
+						$structuredArray[$categoryId][$checklistId] = [];
+					}
+
+					// Add subchecklist (if not null)
+					if ($subchecklistId !== null) {
+						$structuredArray[$categoryId][$checklistId][] = $subchecklistId;
+					}
+				}
+			}
+
+			//echo "<pre>";print_r($structuredArray);die;
+			$data['structuredArray'] = $structuredArray;
+			
 			return view('inspector.add-new-task', $data);
 		}
 		else{
