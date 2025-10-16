@@ -25,6 +25,7 @@ use App\Models\Task_location_categories;
 use App\Models\Task_list_corrective_action_details;
 use Illuminate\Support\Facades\DB;
 use App\Models\Users_location;
+use App\Models\Task_categories_checklist_subchecklist;
 
 class DashboardInspectorController extends Controller
 {
@@ -2082,6 +2083,7 @@ class DashboardInspectorController extends Controller
 			//$model->lo_id			=	;
 			$model->los_id			=	$los_id ?? null;
 			$model->task_title		=	$request->post('task_title');
+			$model->task_type		=	$request->post('routing_task_type');
 			$model->status		=	0;
 			$model->created_at	=	$created_at ?? '';
 			$model->save();
@@ -2095,6 +2097,7 @@ class DashboardInspectorController extends Controller
 			//$model->lo_id			=	;
 			$model->los_id			=	$los_id ?? null;
 			$model->task_title		=	$request->post('task_title');
+			$model->task_type		=	$request->post('routing_task_type');
 			$model->status		=	0;
 			$model->created_at	=	$created_at ?? '';
 			$model->save();
@@ -2158,7 +2161,165 @@ class DashboardInspectorController extends Controller
 	
 	public function save_task_adhoc_data(Request $request)
 	{
-		echo "<pre>";print_r($request->all());die;
+		//echo "<pre>";print_r($request->all());die;
+		$selectedCatagory = collect($request->category_ids ?? []);
+		$data = json_decode($selectedCatagory->first(), true);
+		
+		$finalData = [];
+		
+		if (is_array($data)) {
+			foreach ($data as $category) {
+				$categoryArr = [
+					'category_id' => (int) $category['category_id'],
+					'checklists' => []
+				];
+
+				if (!empty($category['checklists'])) {
+					foreach ($category['checklists'] as $checklist) {
+						$checklistArr = [
+							'id' => (int) $checklist['id'],
+							'subchecklists' => []
+						];
+
+						if (!empty($checklist['subchecklists'])) {
+							foreach ($checklist['subchecklists'] as $subId) {
+								$checklistArr['subchecklists'][] = (int) $subId;
+							}
+						}
+
+						$categoryArr['checklists'][] = $checklistArr;
+					}
+				}
+
+				$finalData[] = $categoryArr;
+			}
+		}
+		
+		
+		
+		
+		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('task_title', $request->post('adhoc_task_title'))
+		->when($request->post('id'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->post('id'));
+        })
+		->first();
+		
+		if ($existingTask) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Task name name already exists.'
+			]);
+		}
+		
+		$los_id = User::where('company_name', auth()->user()->company_name)->where('user_type', 3)->first()->id;
+		
+		$id = $request->id ?? '';
+		
+		if(empty($request->id))
+		{
+			$model=new Task_lists();
+			$model->inspector_id	=	auth()->user()->id;
+			$model->location_id		=	$request->post('location_id');
+			//$model->category_id		=	$request->post('category_id');
+			//$model->lo_id			=	;
+			$model->los_id			=	$los_id ?? null;
+			$model->task_title		=	$request->post('adhoc_task_title');
+			$model->task_type		=	$request->post('adhoc_task_type');
+			$model->observation		=	$request->post('observation');
+			$model->status		=	0;
+			$model->created_at	=	date('Y-m-d H:i:s');
+			$model->save();
+			$id = $model->id;
+		}
+		else{
+			$model = Task_lists::find($id);
+			$model->inspector_id	=	auth()->user()->id;
+			$model->location_id		=	$request->post('location_id');
+			//$model->category_id		=	$request->post('category_id');
+			//$model->lo_id			=	;
+			$model->los_id			=	$los_id ?? null;
+			$model->task_title		=	$request->post('adhoc_task_title');
+			$model->task_type		=	$request->post('adhoc_task_type');
+			$model->observation		=	$request->post('observation');
+			$model->status			=	0;
+			$model->created_at		=	date('Y-m-d H:i:s');
+			$model->save();
+		}
+		
+		// add task_location_category
+		
+		$structuredArray = [];
+		if (!empty($finalData)) {
+			// Delete previous data for this task list
+			Task_location_categories::where('task_list_id', $id)->delete();
+			Task_categories_checklist_subchecklist::where('task_list_id', $id)->delete();
+
+			foreach ($finalData as $cat) {
+				$categoryId = is_array($cat['category_id']) ? $cat['category_id'][0] : $cat['category_id'];
+
+				// Save category for this task list
+				$locModel = new Task_location_categories();
+				$locModel->task_list_id = $id;
+				$locModel->category_id = $categoryId;
+				$locModel->save();
+
+				foreach ($cat['checklists'] as $chk) {
+					$checklistId = $chk['id'];
+					$subchecklists = $chk['subchecklists'] ?? [];
+
+					if (!empty($subchecklists)) {
+						// Insert each subchecklist
+						foreach ($subchecklists as $subId) {
+							$catChkSubchkModel = new Task_categories_checklist_subchecklist();
+							$catChkSubchkModel->task_list_id = $id;
+							$catChkSubchkModel->category_id = $categoryId;
+							$catChkSubchkModel->checklist_id = $checklistId;
+							$catChkSubchkModel->subchecklist_id = $subId;
+							$catChkSubchkModel->save();
+						}
+					} else {
+						// If no subchecklist, insert only checklist
+						$catChkSubchkModel = new Task_categories_checklist_subchecklist();
+						$catChkSubchkModel->task_list_id = $id;
+						$catChkSubchkModel->category_id = $categoryId;
+						$catChkSubchkModel->checklist_id = $checklistId;
+						$catChkSubchkModel->subchecklist_id = null; // Or 0 if you prefer
+						$catChkSubchkModel->save();
+					}
+				}
+			}
+		}
+		//echo "<pre>";print_r($structuredArray);die;
+		
+		// add file
+		$fileName = '';
+		if($request->hasFile('adhoc_task_image')) {
+			$destinationPath = public_path('uploads/task/');
+			if (!file_exists($destinationPath)) {
+				mkdir($destinationPath, 0777, true);
+			}
+			$file = $request->file('adhoc_task_image');
+			$fileName = time() . '_' . $file->getClientOriginalName();
+			$file->move($destinationPath, $fileName);
+			
+			//-- unlink---
+			if($request->hid_task_image)
+			{
+				$f_name = $request->hid_task_image;
+				if($f_name != 'default-task-pic.jpg')
+				{
+					$filePath = public_path('uploads/task/' . $f_name);
+					if (file_exists($filePath)) {
+						unlink($filePath);
+					}
+				}
+			}
+			//-----------
+			
+			$updtmodel= Task_lists::find($id);
+			$updtmodel->image = $fileName;
+			$updtmodel->save();
+		}
 	}
 	
 	public function delete_task_image(Request $request)

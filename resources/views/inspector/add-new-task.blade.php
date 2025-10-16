@@ -27,8 +27,10 @@ if(!empty($task_id))
 		}
 		
 	}
+	
+	$task_type = $taskData ? $taskData->task_type : '';
+	$observation = $taskData ? $taskData->observation : '';
 }
- 
 @endphp
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<!-- =-=-=-=-=-=-= New Structure start =-=-=-=-=-=-= -->
@@ -52,13 +54,13 @@ if(!empty($task_id))
 							<div class="col-md-12">
 								<label>{{ __('Task Type') }}</label>
 								<div class="task-type-radio-group">
-									<div class="task-type-item">
+									<div class="task-type-item" @if($task_type != 0) style="display:none;" @endif>
 										<div class="task-type-radio">
 											<input type="radio" name="task_type" value="0">
 										</div>
 										<div class="task-type-name"><strong>Routine</strong></div>
 									</div>
-									<div class="task-type-item">
+									<div class="task-type-item" @if($task_type != 1) style="display:none;" @endif>
 										<div class="task-type-radio">
 											<input type="radio" name="task_type" value="1">
 										</div>
@@ -71,6 +73,7 @@ if(!empty($task_id))
 									<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
 									<input type="hidden" id="hid_task_id" name="id" value="{{ $task_id ?? ''}}">
 									<input type="hidden" id="hid_task_image" name="hid_task_image" value="{{ $task_image ?? ''}}">
+									<input type="hidden" id="adhoc_task_type" name="adhoc_task_type">
 									@csrf	
 									<div class="row form-group task-main-form">
 										<div class="col-md-12 mt-2">
@@ -96,16 +99,16 @@ if(!empty($task_id))
 											<div class="row form-group">
 												<div class="col-md-12">
 													<label>{{ __('What’s your observation?') }}</label>
-													<textarea class="form-control" placeholder="State your observations" name="observation" id="observation"></textarea>
+													<textarea class="form-control" placeholder="State your observations" name="observation" id="observation" >{{ old('observation', $observation ?? '') }}</textarea>
 													<span id="adhoc_observation_id_error" style="display:none;  color: red;"></span>
 												</div>
 											</div>
 											<div class="row align-items-center update-image">
 												<div class="col-md-4 mb-3">
-													<label for="task_image" class="task-cover-image">Upload Cover</label>
+													<label for="adhoc_task_image" class="task-cover-image">Upload Cover</label>
 													<div class="upload-wrapper">
-														<input type="file" name="task_image" id="task_image" style="display: none;" accept="image/*">
-														<label for="task_image" class="task-upload-label">
+														<input type="file" name="adhoc_task_image" id="adhoc_task_image" style="display: none;" accept="image/*">
+														<label for="adhoc_task_image" class="task-upload-label">
 														<span class="task-upload-text">Update image</span>
 														<i class="fa fa-upload task-upload-icon"></i>
 														</label>
@@ -114,10 +117,10 @@ if(!empty($task_id))
 												</div>
 											</div>
 											<div class="row">
-												<div class="form-group  col-md-12  col-sm-12 taskImg" style="display:block;">
+												<div class="form-group  col-md-12  col-sm-12 adhoctaskImg" style="display:block;">
 													<div class="task-preview-wrapper position-relative d-inline-block">
 														<img id="" class="img-responsive task-img-upload" src="{{ $task_image ? url('uploads/task/' . $task_image) : url('images/noimages/default-task-pic.png') }}" alt=""/>
-														<button type="button" class="task-img-delete" id="delete-image">×</button>
+														<button type="button" class="task-img-delete" id="adhoc-delete-image">×</button>
 													</div>
 												</div>
 											</div>
@@ -184,6 +187,7 @@ if(!empty($task_id))
 									<input type="hidden" id="location_id" name="location_id" value="{{ $location_id ?? ''}}">
 									<input type="hidden" id="hid_task_id" name="id" value="{{ $task_id ?? ''}}">
 									<input type="hidden" id="hid_task_image" name="hid_task_image" value="{{ $task_image ?? ''}}">
+									<input type="hidden" id="routing_task_type" name="routing_task_type">
 									@csrf	
 										<div class="row form-group">
 											<div class="col-md-12 mt-2">
@@ -329,9 +333,11 @@ $(document).ready(function() {
 			
 			$('.task-category-form').slideUp();
 			$('.task-main-form').slideDown();
+			$('#routing_task_type').val(0);
 		} else {
 			$('.form-routine').slideUp(); // smooth hide
 			$('.form-adhoc').slideDown(); // smooth show
+			$('#adhoc_task_type').val(1);
 		}
 	});
     $('.add-category').on('click', function() {
@@ -565,6 +571,12 @@ $(document).ready(function() {
 		$('.taskImg').show();
         readURL(this);
     });
+	
+	$("#adhoc_task_image").change(function() {
+		$('#adhoc-delete-image').show();
+		$('.adhoctaskImg').show();
+        readURL(this);
+    });
    
    $(document).on('click','.save-task', function(){
 		//let category_id = $('#category_id').val().trim();
@@ -741,15 +753,6 @@ $(document).ready(function() {
 		//alert(JSON.stringify(result));
 		
 		
-		
-		
-		
-		//alert(hid_task_id);
-		//let set_time = $('#set_time').val().trim();
-		//let task_image = $('#task_image')[0].files.length;
-		//let hidden_set_date = $('#hidden_set_date').val();
-		//let hidden_set_time = $('#hidden_set_time').val();
-		
 		if (task_title === '') {
 			$('#adhoc_tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut();
 			return false;
@@ -850,6 +853,31 @@ $(document).ready(function() {
 		$('#task_image').val('');
 		$('#delete-image').hide();
 		$('.taskImg').show();
+		var hid_task_image = $('#hid_task_image').val();
+		var task_id = $('#hid_task_id').val();
+		if(hid_task_image != '')
+		{
+			$.ajax({
+				url: "{{ route('delete-task-image') }}",
+				type: "POST",
+				data: {task_id:task_id,task_image:hid_task_image,_token:csrfToken},
+				//processData: false,
+				//contentType: false,
+				//dataType: 'json',
+				success: function(response) {
+					
+				},
+			});
+		}
+	});
+	
+	$('#adhoc-delete-image').on('click', function() {
+		//$('#img-upload').attr('src', '');
+		var defaultImg = "{{ url('images/noimages/default-task-pic.png') }}";
+		$('.task-img-upload').attr('src', defaultImg);
+		$('#adhoc_task_image').val('');
+		$('#adhoc-delete-image').hide();
+		$('.adhoctaskImg').show();
 		var hid_task_image = $('#hid_task_image').val();
 		var task_id = $('#hid_task_id').val();
 		if(hid_task_image != '')
