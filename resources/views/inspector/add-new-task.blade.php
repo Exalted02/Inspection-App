@@ -56,13 +56,17 @@ if(!empty($task_id))
 								<div class="task-type-radio-group">
 									<div class="task-type-item" @if(isset($task_type) && $task_type != 0) style="display:none;" @endif>
 										<div class="task-type-radio">
+											@if(empty($task_type))
 											<input type="radio" name="task_type" value="0">
+											@endif
 										</div>
 										<div class="task-type-name"><strong>Routine</strong></div>
 									</div>
 									<div class="task-type-item" @if(isset($task_type) && $task_type != 1) style="display:none;" @endif>
 										<div class="task-type-radio">
-											<input type="radio" name="task_type" value="1" {{ $task_type == 1 ? 'checked' : '' }}>
+											@if(empty($task_type))
+											<input type="radio" name="task_type" value="1">
+											@endif
 										</div>
 										<div class="task-type-name"><strong>Ad-Hoc</strong></div>
 									</div>
@@ -335,14 +339,11 @@ if(!empty($task_id))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
-	if($('#hid_task_id') !='')
+	if($('#hid_task_id').val() !='')
 	{
 		let hid_task_type = $('#hid_task_type').val();
 		if(hid_task_type == 1)
 		{
-			
-			//$('.select-category').click();
-			
 			setTimeout(function() {
 				$('.button-add-category').trigger('click');
 			}, 300);
