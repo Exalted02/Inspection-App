@@ -2320,6 +2320,10 @@ class DashboardInspectorController extends Controller
 			$updtmodel->image = $fileName;
 			$updtmodel->save();
 		}
+		
+		return response()->json([
+			'success' => true
+		]);
 	}
 	
 	public function delete_task_image(Request $request)

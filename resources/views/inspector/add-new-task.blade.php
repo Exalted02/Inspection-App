@@ -812,7 +812,6 @@ $(document).ready(function() {
 			//dataType: 'json',
 			success: function(response) {
 				if (!response.success) {
-					
 					$('#tasktitle_id_error').text('Task title already exists.').fadeIn().delay(2000).fadeOut(); 
 					
 					if(hid_task_id == '')
@@ -825,7 +824,6 @@ $(document).ready(function() {
 					//$('#task_title').addClass('is-invalid');
 					//$('#task_title').next('.invalid-feedback').text(response.message).show();
 				} else {
-				
 					$('#category_id').val('').trigger('change');
 					//$('#task_title').val('');
 					let hid_task_id = $('#hid_task_id').val();
