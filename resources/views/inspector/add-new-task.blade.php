@@ -77,29 +77,19 @@ if(!empty($task_id))
 											<div class="row form-group">
 												<div class="col-md-12">
 													<label>{{ __('Task Title') }}</label>
-													<input class="form-control" placeholder="Add task title" type="text" name="task_title" id="task_title" value="{{ $task_title ?? ''}}">
-													<span id="tasktitle_id_error" style="display:none;  color: red;"></span>
+													<input class="form-control" placeholder="Add task title" type="text" name="adhoc_task_title" id="adhoc_task_title" value="{{ $task_title ?? ''}}">
+													<span id="adhoc_tasktitle_id_error" style="display:none;  color: red;"></span>
 												</div>
 											</div>
 											<div class="row form-group">
 												<div class="col-md-12">
 													<label>{{ __('Category') }}</label>
 													<div><button class="button-add-category add-category" type="button"><i class="fa-solid fa-plus"></i> Add category</button></div>
+													<span id="adhoc_add_cat_id_error" style="display:none;  color: red;"></span>
 												</div>
+												
 												<div class="col-md-12 mt-2">
 													<div class="category-tag tag-container">
-													{{--<div class="tag-content">
-														<div class="tag">Use of Safety Goggles / Glasses at Sink / Clean Room</div>
-														<span class="close">&times;</span>
-													  </div>
-													  <div class="tag-content">
-														<div class="tag">PPE used during Chemical pouring and handling waste:</div>
-														<span class="close">&times;</span>
-													  </div>
-													  <div class="tag-content">
-														<div class="tag">Lorem Ipsum category</div>
-														<span class="close">&times;</span>
-													  </div>--}}
 													</div>
 												</div>
 											</div>
@@ -107,6 +97,7 @@ if(!empty($task_id))
 												<div class="col-md-12">
 													<label>{{ __('What’s your observation?') }}</label>
 													<textarea class="form-control" placeholder="State your observations" name="observation" id="observation"></textarea>
+													<span id="adhoc_observation_id_error" style="display:none;  color: red;"></span>
 												</div>
 											</div>
 											<div class="row align-items-center update-image">
@@ -133,9 +124,9 @@ if(!empty($task_id))
 										</div>
 										<div class="">
 										@if(empty($task_id))
-											<button class="sticky-footer save-adhoc-task task-load-add" type="button">Add Task</button>
+											<button class="sticky-footer save-adhoc-task adhoc-task-load-add" type="button">Add Task</button>
 										@else
-											<button class="sticky-footer save-adhoc-task task-load-edit" type="button">Edit Task</button>
+											<button class="sticky-footer save-adhoc-task adhoc-task-load-edit" type="button">Edit Task</button>
 										@endif
 										</div>
 									</div>
@@ -709,7 +700,7 @@ $(document).ready(function() {
 	
 	$(document).on('click','.save-adhoc-task', function(){
 		
-		let task_title = $('#task_title').val().trim();
+		let task_title = $('#adhoc_task_title').val().trim();
 		let observation = $('#observation').val().trim();
 		let hid_task_id = $('#hid_task_id').val();
 		
@@ -748,70 +739,46 @@ $(document).ready(function() {
 		});
 		
 		//alert(JSON.stringify(result));
+		
+		
+		
+		
+		
 		//alert(hid_task_id);
 		//let set_time = $('#set_time').val().trim();
 		//let task_image = $('#task_image')[0].files.length;
 		//let hidden_set_date = $('#hidden_set_date').val();
 		//let hidden_set_time = $('#hidden_set_time').val();
 		
-		/*if (task_title === '') {
-			$('#tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut();
+		if (task_title === '') {
+			$('#adhoc_tasktitle_id_error').text('Please enter task title').fadeIn().delay(2000).fadeOut();
 			return false;
-		}*/
+		}
 		
-		//alert(hidden_set_date);
-		
-		/*if (hidden_set_date === '') {
-			$('#settimeline_id_error').text('Please enter date').fadeIn().delay(2000).fadeOut();
+		if(JSON.stringify(result) == "[]")
+		{
+			$('#adhoc_add_cat_id_error').text('Please add category').fadeIn().delay(2000).fadeOut();
 			return false;
-		}*/
+		}
 		
-		
-		
-		/*let selectedLocations = [];
-		$('input[name="location_category[]"]:checked').each(function() {
-			selectedLocations.push($(this).val());
-		});*/
-		//alert(selectedLocations);
-		
-		//alert(task_image);
-		/*if (task_image === 0) {
-			$('#taskimage_id_error').text('Please select image').fadeIn().delay(2000).fadeOut();
+		if (observation === '')
+		{
+			$('#adhoc_observation_id_error').text('Please enter observation').fadeIn().delay(2000).fadeOut();
 			return false;
-		}*/
+		}
 		
-		/*if (selectedLocations.length === 0) {
-			$('#tasktcategory_id_error').text('Please select category').fadeIn().delay(2000).fadeOut();
-			
-			@if(empty($locationWisecategory))
-			{
-				Swal.fire({
-					  icon: "warning",
-					  title: "Category not present for this location, please add from admin",
-					  
-					  confirmButtonColor: "#0b2b57",
-					  customClass: {
-						confirmButton : 'swal-save-exist-black'
-					  }
-					  
-					});
-			}
-			@endif
-			return false;
-		}*/
 		
-		//var form = $("#frmlocation");
 		var URL = $('#frmtaskadhoc').attr('action');
 		var id = $('#id').val();
 		
 		if(hid_task_id == '')
 		{
-			$('.task-load-add').prop('disabled', true);
-			$('.task-load-add').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
+			$('.adhoc-task-load-add').prop('disabled', true);
+			$('.adhoc-task-load-add').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
 		}
 		else{
-			$('.task-load-edit').prop('disabled', true);
-			$('.task-load-edit').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
+			$('.adhoc-task-load-edit').prop('disabled', true);
+			$('.adhoc-task-load-edit').html('<i class="fas fa-spinner fa-spin"></i> &nbsp;&nbsp;Submitting...').prop('disabled', true);
 		}
 		
 		
@@ -833,10 +800,10 @@ $(document).ready(function() {
 					
 					if(hid_task_id == '')
 					{
-						$('.task-load-add').html('Add Task').prop('disabled', false);
+						$('.adhoc-task-load-add').html('Add Task').prop('disabled', false);
 					}
 					else{
-						$('.task-load-edit').html('Edit Task').prop('disabled', false);
+						$('.adhoc-task-load-edit').html('Edit Task').prop('disabled', false);
 					}
 					//$('#task_title').addClass('is-invalid');
 					//$('#task_title').next('.invalid-feedback').text(response.message).show();
@@ -867,10 +834,10 @@ $(document).ready(function() {
 				let hid_task_id = $('#hid_task_id').val();
 				if(hid_task_id == '')
 				{
-					$('.task-load-add').prop('disabled', false);
+					$('.adhoc-task-load-add').prop('disabled', false);
 				}
 				else{
-					$('.task-load-edit').prop('disabled', false);
+					$('.adhoc-task-load-edit').prop('disabled', false);
 				}
 			}
 		});
