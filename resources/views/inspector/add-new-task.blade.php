@@ -143,7 +143,7 @@ if(!empty($task_id))
 										<div class="col-md-12 mt-2">
 											<h2 class="owner-checklist-title">Select Category</h2>
 										</div>
-										<div class="col-md-12">
+										<div class="col-md-12 list-category">
 											<ul class="accordion mt-2">
 											@foreach($locationWisecategory as $categoties)
 											
@@ -322,6 +322,7 @@ if(!empty($task_id))
 			</section>
 		</div>
     </div>--}}
+	
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/css/bootstrap.min.css') }}"></script>
@@ -343,8 +344,46 @@ $(document).ready(function() {
 		}
 	});
     $('.add-category').on('click', function() {
+		//alert(JSON.stringify(result));
+		/*let result = [];
+		$('.category-item').each(function() {
+			let categoryId = $(this).find('input[name="loc_category[]"]').val();
+			let categoryName = $(this).find('input[name="loc_category_name[]"]').val();
+			let categoryData = {
+				category_id: categoryId,
+				category_name: categoryName,
+				checklists: []
+			};
+
+			
+			$(this).find('input[name="loc_category_checklist[]"]:checked').each(function() {
+				let checklistId = $(this).val();
+				let checklistData = {
+					id: checklistId,
+					subchecklists: []
+				};
+
+				
+				$(this)
+					.closest('.subcategory-box')
+					.find(`.subcategory-sub-item[data-parent="${checklistId}"] input[name="loc_category_checklist_subchecklist[]"]:checked`)
+					.each(function() {
+						checklistData.subchecklists.push($(this).val());
+					});
+
+				categoryData.checklists.push(checklistData);
+			});
+
+			if (categoryData.checklists.length > 0) {
+				result.push(categoryData);
+			}
+		});
+		alert(JSON.stringify(result));*/
+		
+		//--------------------------------------------
 		$('.task-main-form').slideUp();
 		$('.task-category-form').slideDown();
+		
 	});
 	
     $('.select-category').on('click', function() {
@@ -397,6 +436,9 @@ $(document).ready(function() {
 	});
 	
 	$(document).on('click', '.reject_category', function(){
+		
+		//const locationWisecategory = @json($locationWisecategory);
+		//alert(JSON.stringify(locationWisecategory));
 		let cat_id = $(this).data('id');
 		//alert(cat_id);
 		$(this).closest('.tag-content').remove();
@@ -438,6 +480,21 @@ $(document).ready(function() {
 		result = result.filter(cat => cat.category_id != cat_id);
 		$(this).closest('.tag-content').remove();
 		//alert(JSON.stringify(result));
+		let location_id = $('#location_id').val();
+		// initialize the select the categories after delete category
+		$.ajax({
+			url: "{{ route('add-task-initialize-category') }}",
+			type: "POST",
+			data: {location_id:location_id,result:result,_token:csrfToken},
+			//processData: false,
+			//contentType: false,
+			//dataType: 'json',
+			success: function(response) {
+				alert(response.html);
+				$('.list-category').html(response.html);
+				initializeAccordion();
+			},
+		});
 	});
 });
 </script>
@@ -860,6 +917,26 @@ function readURL(input) {
 		};
 		reader.readAsDataURL(input.files[0]);
 	}
+}
+
+function initializeAccordion() {
+    $(document).off('click', '.accordion-title a'); // prevent duplicate bindings
+    $(document).on('click', '.accordion-title a', function(e) {
+        e.preventDefault();
+
+        var $content = $(this).closest('li').find('.accordion-content');
+
+        // Toggle accordion
+        if ($content.is(':visible')) {
+            $content.slideUp();
+            $(this).removeClass('active');
+        } else {
+            $('.accordion-content').slideUp(); // Close others
+            $('.accordion-title a').removeClass('active');
+            $content.slideDown();
+            $(this).addClass('active');
+        }
+    });
 }
 </script>
 @endsection

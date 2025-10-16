@@ -102,6 +102,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('delete-task', [DashboardInspectorController::class, 'delete_task'])->name('delete-task');
 	Route::post('delete-task-image', [DashboardInspectorController::class, 'delete_task_image'])->name('delete-task-image');
 	
+	Route::post('add-task-initialize-category', [DashboardInspectorController::class, 'add_task_initialize_category'])->name('add-task-initialize-category');
+	
 	Route::post('save-task-adhoc-data', [DashboardInspectorController::class, 'save_task_adhoc_data'])->name('save-task-adhoc-data');
 	
 	

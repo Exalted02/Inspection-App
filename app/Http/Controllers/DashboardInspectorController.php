@@ -11683,4 +11683,89 @@ class DashboardInspectorController extends Controller
 		Users_location::where('user_id', auth()->user()->id)->update(['notification_status'=>0]);
 	}
 	
+	public function add_task_initialize_category(Request $request)
+	{
+		//echo "<pre>";print_r($request->result);die;
+		$selectedData = collect($request->result ?? []);
+		//echo "<pre>";print_r($selectedData);die;
+		
+		$lid = $request->location_id ?? '';
+		
+		$locationWisecategory = [];
+		$categories = Category::where('location_id', $lid)->get();
+		foreach($categories as $category)
+		{
+			$exists = Checklist::where('category_id', $category->id)->exists();
+			if($exists)
+			{
+				$locationWisecategory[] = [
+					'id'  => $category->id,
+					'name'  => $category->name,
+				];
+			}
+		}
+		
+		//echo "<pre>";print_r($locationWisecategory);die;
+		
+		$html = '<ul class="accordion mt-2">';
+		foreach ($locationWisecategory as $category) {
+			
+			$selectedCategory = $selectedData->firstWhere('category_id', $category['id']);
+			
+			$category_chklst_subchklst = Checklist::with('get_subchecklist')
+				->where('category_id', $category['id'])
+				->orderBy('order_no')
+				->get();
+
+			$html .= '<li class="category-item">';
+			$html .= '<h3 class="accordion-title"><a href="#">' . $category['name'] . '</a></h3>';
+			$html .= '<input type="hidden" name="loc_category[]" value="' . $category['id'] . '">';
+			$html .= '<input type="hidden" name="loc_category_name[]" value="' . $category['name'] . '">';
+			$html .= '<div class="accordion-content"><div class="subcategory-box">';
+
+			foreach ($category_chklst_subchklst as $checklists) {
+				
+				$isChecklistSelected = false;
+				$selectedChecklist = null;
+
+				if ($selectedCategory) {
+					$selectedChecklist = collect($selectedCategory['checklists'])->firstWhere('id', $checklist->id);
+					$isChecklistSelected = !empty($selectedChecklist);
+				}
+				
+				$html .= '<div class="subcategory-item">';
+				$html .= '<div class="subcategory-checkbox">
+							<input type="checkbox" name="loc_category_checklist[]" value="' . $checklists->id . '" ' 
+                    . ($isChecklistSelected ? ' checked' : '') . '>
+						  </div>';
+				$html .= '<div class="subcategory-name"><strong>' . $checklists->name . '</strong></div>';
+				$html .= '</div>';
+
+				if ($checklists->get_subchecklist && count($checklists->get_subchecklist) > 0) {
+					foreach ($checklists->get_subchecklist as $subchecklist) {
+						
+						$isSubSelected = false;
+						if ($selectedChecklist && isset($selectedChecklist['subchecklists'])) {
+							$isSubSelected = in_array($subchecklist->id, $selectedChecklist['subchecklists']);
+						}
+						
+						$html .= '<div class="subcategory-sub-item" data-parent="' . $checklists->id . '">';
+						$html .= '<div class="subcategory-checkbox">
+									<input type="checkbox" name="loc_category_checklist_subchecklist[]" value="' . $subchecklist->id . '" ' 
+                            . ($isSubSelected ? ' checked' : '') . '>
+								  </div>';
+						$html .= '<div class="subcategory-name"><strong>' . $subchecklist->name . '</strong></div>';
+						$html .= '</div>';
+					}
+				}
+			}
+
+			$html .= '</div></div>';
+			$html .= '</li>';
+		}
+		$html .= '</ul>';
+
+		return response()->json(['html'=> $html]);
+	}
+	
 }
