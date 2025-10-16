@@ -11723,7 +11723,7 @@ class DashboardInspectorController extends Controller
 			$html .= '<input type="hidden" name="loc_category_name[]" value="' . $category['name'] . '">';
 			$html .= '<div class="accordion-content"><div class="subcategory-box">';
 
-			foreach ($category_chklst_subchklst as $checklists) {
+			foreach ($category_chklst_subchklst as $checklist) {
 				
 				$isChecklistSelected = false;
 				$selectedChecklist = null;
@@ -11735,24 +11735,24 @@ class DashboardInspectorController extends Controller
 				
 				$html .= '<div class="subcategory-item">';
 				$html .= '<div class="subcategory-checkbox">
-							<input type="checkbox" name="loc_category_checklist[]" value="' . $checklists->id . '" ' 
-                    . ($isChecklistSelected ? ' checked' : '') . '>
+							<input type="checkbox" name="loc_category_checklist[]" value="' . $checklist->id . '" ' 
+                    . ($isChecklistSelected ? 'checked' : '') . '>
 						  </div>';
-				$html .= '<div class="subcategory-name"><strong>' . $checklists->name . '</strong></div>';
+				$html .= '<div class="subcategory-name"><strong>' . $checklist->name . '</strong></div>';
 				$html .= '</div>';
 
-				if ($checklists->get_subchecklist && count($checklists->get_subchecklist) > 0) {
-					foreach ($checklists->get_subchecklist as $subchecklist) {
+				if ($checklist->get_subchecklist && count($checklist->get_subchecklist) > 0) {
+					foreach ($checklist->get_subchecklist as $subchecklist) {
 						
 						$isSubSelected = false;
 						if ($selectedChecklist && isset($selectedChecklist['subchecklists'])) {
 							$isSubSelected = in_array($subchecklist->id, $selectedChecklist['subchecklists']);
 						}
 						
-						$html .= '<div class="subcategory-sub-item" data-parent="' . $checklists->id . '">';
+						$html .= '<div class="subcategory-sub-item" data-parent="' . $checklist->id . '">';
 						$html .= '<div class="subcategory-checkbox">
 									<input type="checkbox" name="loc_category_checklist_subchecklist[]" value="' . $subchecklist->id . '" ' 
-                            . ($isSubSelected ? ' checked' : '') . '>
+                            . ($isSubSelected ? 'checked' : '') . '>
 								  </div>';
 						$html .= '<div class="subcategory-name"><strong>' . $subchecklist->name . '</strong></div>';
 						$html .= '</div>';

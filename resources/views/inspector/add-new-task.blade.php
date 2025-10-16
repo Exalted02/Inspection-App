@@ -490,7 +490,7 @@ $(document).ready(function() {
 			//contentType: false,
 			//dataType: 'json',
 			success: function(response) {
-				alert(response.html);
+				//alert(response.html);
 				$('.list-category').html(response.html);
 				initializeAccordion();
 			},
