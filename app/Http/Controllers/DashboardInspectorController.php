@@ -11542,6 +11542,7 @@ class DashboardInspectorController extends Controller
 		
 		Task_lists::where('id', $id)->delete();
 		Task_location_categories::where('task_list_id', $id)->delete();
+		Task_categories_checklist_subchecklist::where('task_list_id', $id)->delete();
 		
 		// delete from checklist and checklist files table
 		$checklistData = Task_list_checklists::where('task_list_id', $id)->where('approve', 0)->get();

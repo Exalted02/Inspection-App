@@ -136,6 +136,7 @@ if(!empty($task_id))
 									<div class="row form-group task-category-form" style="display: none;">
 										<div class="col-md-12 mt-2">
 											<h2 class="owner-checklist-title">Select Category</h2>
+											<span id="select_category_id_error" style="display:none;  color: red;"></span>
 										</div>
 										<div class="col-md-12 list-category">
 											<ul class="accordion mt-2">
@@ -383,47 +384,10 @@ $(document).ready(function() {
 			$('#adhoc_task_type').val(1);
 		}
 	});
+	
     $('.add-category').on('click', function() {
-		//alert(JSON.stringify(result));
-		/*let result = [];
-		$('.category-item').each(function() {
-			let categoryId = $(this).find('input[name="loc_category[]"]').val();
-			let categoryName = $(this).find('input[name="loc_category_name[]"]').val();
-			let categoryData = {
-				category_id: categoryId,
-				category_name: categoryName,
-				checklists: []
-			};
-
-			
-			$(this).find('input[name="loc_category_checklist[]"]:checked').each(function() {
-				let checklistId = $(this).val();
-				let checklistData = {
-					id: checklistId,
-					subchecklists: []
-				};
-
-				
-				$(this)
-					.closest('.subcategory-box')
-					.find(`.subcategory-sub-item[data-parent="${checklistId}"] input[name="loc_category_checklist_subchecklist[]"]:checked`)
-					.each(function() {
-						checklistData.subchecklists.push($(this).val());
-					});
-
-				categoryData.checklists.push(checklistData);
-			});
-
-			if (categoryData.checklists.length > 0) {
-				result.push(categoryData);
-			}
-		});
-		alert(JSON.stringify(result));*/
-		
-		//--------------------------------------------
 		$('.task-main-form').slideUp();
 		$('.task-category-form').slideDown();
-		
 	});
 	
     $('.select-category').on('click', function() {
@@ -463,6 +427,12 @@ $(document).ready(function() {
 		});
 		
 		//alert(JSON.stringify(result));
+		
+		if(JSON.stringify(result) == "[]")
+		{
+			$('#select_category_id_error').text('Please select category').fadeIn().delay(2000).fadeOut();
+			return false;
+		}
 		
 		$('.category-tag.tag-container').empty();
 		
