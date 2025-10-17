@@ -1162,7 +1162,7 @@ $(document ).ready(function() {
 				}
 				mulCounter++;
 			});
-			alert(hasError);
+			//alert(hasError);
 			if (hasError) {
 				return false;
 			}

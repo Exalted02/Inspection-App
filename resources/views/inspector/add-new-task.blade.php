@@ -436,7 +436,7 @@ $(document).ready(function() {
 		}
 		
 		$('.category-tag.tag-container').empty();
-		
+		//alert(JSON.stringify(result));
 		result.forEach(cat => {
 		  let tagHTML ='<div class="tag-content"><div class="tag">' + cat.category_name + '</div><span class="close reject_category" data-id="' +cat.category_id + '">&times;</span></div>';
 		  $('.category-tag.tag-container').append(tagHTML);
