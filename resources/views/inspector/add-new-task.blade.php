@@ -519,6 +519,11 @@ $(document).ready(function() {
 		
 		let allChecked = allSubCheckboxes.length === allSubCheckboxes.filter(':checked').length;
 		
+		if(allSubCheckboxes.filter(':checked').length > 0)
+		{
+			$(`input[name="loc_category_checklist[]"][value="${parentId}"]`).prop('checked', true);
+		}
+		
 		if(allSubCheckboxes.length == allSubCheckboxes.filter(':checked').length)
 		{
 			$(`input[name="loc_category_checklist[]"][value="${parentId}"]`).prop('checked', allChecked);

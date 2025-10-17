@@ -240,7 +240,6 @@
 						$('.task-main-form').slideDown();
 					}
 					else{
-						alert('ok10');
 						history.back();
 					}
 				}
