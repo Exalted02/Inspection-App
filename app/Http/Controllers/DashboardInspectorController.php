@@ -409,8 +409,19 @@ class DashboardInspectorController extends Controller
 			
 			$hasChecklists = Checklist::where('category_id', $category_id)->first();
 			
-			//---21-06-2025 direct get the final edit page----
-			$totalChecklist = Checklist::where('category_id', $category_id)->where('status', '!=', 2)->count();
+			//---- 17-10-2025-----
+			$task_type_data = Task_lists::where('id', $task_id)->first();
+			if($task_type_data->task_type == 1)
+			{
+				$res = Task_categories_checklist_subchecklist::where('category_id', $category_id)->where('task_list_id', $task_id)->orderBy('id', 'ASC')->get();
+				$totalChecklist = $res->pluck('checklist_id')->unique()->count();
+			}
+			else
+			{
+				//---21-06-2025 direct get the final edit page----
+				$totalChecklist = Checklist::where('category_id', $category_id)->where('status', '!=', 2)->count();
+			}
+			
 			$countTaskChecklist = Task_list_checklists::where('task_list_id', $task_id)->where('category_id', $category_id)->count();
 			$countTaskSubChecklist = Task_list_subchecklists::distinct('task_list_checklist_id')->where('task_list_id', $task_id)->where('category_id', $category_id)->count();
 			$allChecklistDone = $countTaskChecklist + $countTaskSubChecklist;
@@ -431,7 +442,26 @@ class DashboardInspectorController extends Controller
 			}
 			//------------reaching exists  checklist id-----------------
 			$order_no = 0;
-			$checklistQuestion = Checklist::where('category_id', $category_id)->where('status', '!=', 2)->orderBy('order_no')->get();
+			
+			//---- 17-10-2025-----
+			if($task_type_data->task_type == 1)
+			{
+				// change logic 17-10-2025
+				$res = Task_categories_checklist_subchecklist::where('category_id', $category_id)->where('task_list_id', $task_id)->orderBy('id', 'ASC')->get();
+				$getChecklists = $res->pluck('checklist_id')->unique()->toArray();
+				
+				$checklistQuestion = Checklist::where('category_id',$category_id)
+									->whereIn('id', $getChecklists)
+									->where('status','!=', 2)
+									->orderBy('order_no')
+									->get();
+			}
+			else
+			{
+				
+				$checklistQuestion = Checklist::where('category_id', $category_id)->where('status', '!=', 2)->orderBy('order_no')->get();
+			}
+			
 			foreach ($checklistQuestion as $list) {
 				$hasChecklists = Task_list_checklists::where('category_id', $category_id)
 					->where('checklist_id', $list->id)
@@ -3157,7 +3187,24 @@ class DashboardInspectorController extends Controller
 		$category_id = $request->category_id;
 		$categoryName = Category::where('id', $category_id)->first()->name;
 		
-		$checklists = Checklist::where('category_id',$category_id)->where('status','!=', 2)->orderBy('order_no')->get();
+		// logic for adhoc 17-10-2025
+		$task_type_data = Task_lists::where('id', $task_id)->first();
+		if($task_type_data->task_type == 1)
+		{
+			$res = Task_categories_checklist_subchecklist::where('category_id', $category_id)->where('task_list_id', $task_id)->orderBy('id', 'ASC')->get();
+			$getChecklists = $res->pluck('checklist_id')->unique()->toArray();
+				
+			$checklists = Checklist::where('category_id',$category_id)
+									->whereIn('id', $getChecklists)
+									->where('status','!=', 2)
+									->orderBy('order_no')
+									->get();
+		}
+		else 
+		{
+			// work on first day
+			$checklists = Checklist::where('category_id',$category_id)->where('status','!=', 2)->orderBy('order_no')->get();
+		}
 									
 			foreach ($checklists as $chklist) {
 				//$status = '';

@@ -908,6 +908,7 @@ $(document ).ready(function() {
 				else {*/
 					var mode = 'no';
 					var order_no = 0;
+					alert(response.finalEditPage);
 					if(response.finalEditPage==1)
 					{
 						mode = 'yes';
