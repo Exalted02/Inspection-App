@@ -1970,6 +1970,7 @@ $(document ).ready(function() {
 		
 	function back_checklist()	
 	{
+		//alert('back');
 		var current_id = $('#current_checklist_id').val();
 		var order_no = $('#order_no').val();
 		//alert(current_id);

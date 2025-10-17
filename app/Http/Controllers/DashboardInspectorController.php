@@ -1131,14 +1131,39 @@ class DashboardInspectorController extends Controller
 		$categoryDtls = Category::where('id',$category_id)->first();
 		$categoryName = $categoryDtls ? $categoryDtls->name : '';
 		
-		$nextQuestionExists = Checklist::where('category_id', $category_id)
-		//->where('subcategory_id', $subcategory_id) // 21-05-2025
-		->where('status', '!=', 2)
-		//->where('id', '<', $current_question_id)
-		->where('order_no', '<', $order_no)
-		->orderByRaw('CAST(order_no as UNSIGNED) desc')
-		//->orderBy('id', 'desc')
-		->exists();
+		//----17-10-2025-----------
+		$task_type_data = Task_lists::where('id', $task_id)->first();
+		if($task_type_data->task_type == 1)
+		{
+			//after change logic for selected checklist and selected subchecklist when task created 17-10-2025
+			$checklistIds = Task_categories_checklist_subchecklist::where('category_id', $category_id)
+			->where('task_list_id', $task_id)
+			->orderBy('id', 'asc') // order as inserted
+			->pluck('checklist_id')
+			->unique()
+			->values();
+
+			$nextChecklistId = null;
+			foreach ($checklistIds as $index => $checkId) {
+				if ($checkId == $current_question_id && isset($checklistIds[$index - 1])) {
+					$nextChecklistId = $checklistIds[$index - 1];
+					break;
+				}
+			}
+			
+			$nextQuestionExists = $nextChecklistId !='' ? true : false;
+		}
+		else
+		{
+			$nextQuestionExists = Checklist::where('category_id', $category_id)
+			//->where('subcategory_id', $subcategory_id) // 21-05-2025
+			->where('status', '!=', 2)
+			//->where('id', '<', $current_question_id)
+			->where('order_no', '<', $order_no)
+			->orderByRaw('CAST(order_no as UNSIGNED) desc')
+			//->orderBy('id', 'desc')
+			->exists();
+		}
 		
 		$nextId = '';
 		$name  = '';
@@ -1153,15 +1178,48 @@ class DashboardInspectorController extends Controller
 		
 		if($nextQuestionExists)
 		{
-			$nextQuestion = Checklist::with('get_subchecklist','get_category')->where('category_id', $category_id)
-			->where('category_id', $category_id)
-			//->where('subcategory_id', $subcategory_id) // 21-05-2025
-			->where('status', '!=', 2)
-			->where('order_no', '<', $order_no)
-			//->where('id', '<', $current_question_id)
-			->orderByRaw('CAST(order_no as UNSIGNED) desc')
-			//->orderBy('id', 'desc')
-			->first();
+			
+			$task_type_data = Task_lists::where('id', $task_id)->first();
+			if($task_type_data->task_type == 1)
+			{
+				// work 17-10-2025
+				$checklistIds = Task_categories_checklist_subchecklist::where('category_id', $category_id)
+				->where('task_list_id', $task_id)
+				->orderBy('id', 'asc') // order as inserted
+				->pluck('checklist_id')
+				->unique()
+				->values();
+
+				$nextChecklistId = null;
+				foreach ($checklistIds as $index => $checkId) {
+					if ($checkId == $current_question_id && isset($checklistIds[$index - 1])) {
+						$nextChecklistId = $checklistIds[$index - 1];
+						break;
+					}
+				}
+				
+				if($nextChecklistId)
+				{
+					$subIds = Task_categories_checklist_subchecklist::where('category_id', $category_id)->where('task_list_id', $task_id)->where('checklist_id', $nextChecklistId)->orderBy('id', 'ASC')->pluck('subchecklist_id')->toArray();
+					
+					$nextQuestion = Checklist::with(['get_subchecklist' => function ($query) use ($subIds) {
+							$query->whereIn('id', $subIds);
+						}
+					, 'get_category'])->where('id', $nextChecklistId)->first();
+				}
+			}
+			else
+			{
+			
+				$nextQuestion = Checklist::with('get_subchecklist','get_category')->where('category_id', $category_id)
+				//->where('subcategory_id', $subcategory_id) // 21-05-2025
+				->where('status', '!=', 2)
+				->where('order_no', '<', $order_no)
+				//->where('id', '<', $current_question_id)
+				->orderByRaw('CAST(order_no as UNSIGNED) desc')
+				//->orderBy('id', 'desc')
+				->first();
+			}
 			//echo "<pre>";print_r($nextQuestion);die;
 			$nextId = $nextQuestion->id;
 			$name = $nextQuestion->name;
