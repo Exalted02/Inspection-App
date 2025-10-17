@@ -21,4 +21,5 @@ class Task_list_checklists extends Model
 	{
 		return $this->hasMany(Task_list_checklist_rejected_files::class, 'task_list_checklist_id');
 	}
+
 }

@@ -2437,7 +2437,7 @@ $(document ).ready(function() {
 	}
 	
 	$(document).on('click','.get_checklist', function(){
-	   //alert('ok');
+	   //alert('get_checklist');
 	//$('.previous_question').hide();
 	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var directEdit = $(this).data('dedit'); // 21-06-2025
@@ -2445,6 +2445,7 @@ $(document ).ready(function() {
 	   var subcat_id = $(this).data('subcat');
 	   var task_id = $(this).data('task');
 	   var checklist_id = $(this).data('checklist');
+	   //alert(checklist_id);
 	   var URL = "{{ route('get-checklist-page') }}";
 	   $.ajax({
 			url: URL,

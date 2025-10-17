@@ -475,10 +475,33 @@ class DashboardInspectorController extends Controller
 		} 
 		
 		$data = [];
-		//echo $cat_id.' '.$subcat_id; die;
-		/*$data['checklistdata'] = Checklist::with('get_subchecklist','get_category','get_subcategory')->where('category_id',$cat_id)->where('status','!=', 2)->first();*/
 		
-		$data['checklistdata'] = Checklist::with('get_subchecklist','get_category')->where('category_id',$cat_id)->where('status','!=', 2)->orderBy('order_no')->first();
+		//-------- 17-10-2025-------------
+		$task_type_data = Task_lists::where('id', $taskid)->first();
+		if($task_type_data->task_type == 1)
+		{
+			$chklstId = Task_categories_checklist_subchecklist::where('category_id', $cat_id)->where('task_list_id', $taskid)->orderBy('id', 'ASC')->first()->checklist_id;
+			
+			$subIds = Task_categories_checklist_subchecklist::where('category_id', $cat_id)->where('task_list_id', $taskid)->where('checklist_id', $chklstId)->orderBy('id', 'ASC')->pluck('subchecklist_id')->toArray();
+			
+			$records = Checklist::with(['get_subchecklist' => function ($query) use ($subIds) {
+					$query->whereIn('id', $subIds);
+				}
+			, 'get_category'])->where('id', $chklstId)->first();
+			
+			$data['checklistdata'] = $records;
+			//echo "<pre>";print_r($records);die;
+		}
+		else{
+			$data['checklistdata'] = Checklist::with('get_subchecklist','get_category')->where('category_id',$cat_id)->where('status','!=', 2)->orderBy('order_no')->first();
+		}
+		//--------------------------------
+		//echo $cat_id.' '.$subcat_id; die;
+		
+		//17-10-2025 before adhoc all checklist and subchecklist fetch of this catgy.
+		
+		/*$data['checklistdata'] = Checklist::with('get_subchecklist','get_category')->where('category_id',$cat_id)->where('status','!=', 2)->orderBy('order_no')->first();*/
+		//--------------------------
 		
 		//echo "<pre>";print_r($checklistdata);die;
 		/*$nextQuestion = Checklist::where('category_id', $cat_id)
@@ -1377,13 +1400,45 @@ class DashboardInspectorController extends Controller
 		->where('status','!=', 2)->first();*/
 		
 		// fetch record with respect ti checklist
-		$nextQuestion = Checklist::with('get_subchecklist','get_category')->where('category_id', $category_id)
-			->where('category_id', $category_id)
-			//->where('subcategory_id', $subcategory_id) // 21-05-2025
+		// when task type= 1 adhoc
+		$task_type_data = Task_lists::where('id', $task_id)->first();
+		if($task_type_data->task_type == 1)
+		{
+			//after change logic for selected checklist and selected subchecklist when task created
+			
+			$chklstId = Task_categories_checklist_subchecklist::where('category_id', $cat_id)->where('task_list_id', $task_id)->orderBy('id', 'ASC')->first()->checklist_id;
+			
+			$subIds = Task_categories_checklist_subchecklist::where('category_id', $cat_id)->where('task_list_id', $task_id)->where('checklist_id', $chklstId)->orderBy('id', 'ASC')->pluck('subchecklist_id')->toArray();
+			
+			$nextQuestion = Checklist::with(['get_subchecklist' => function ($query) use ($subIds) {
+					$query->whereIn('id', $subIds);
+				}
+			, 'get_category'])
+			->where('id', $chklstId)
 			->where('status', '!=', 2)
-			->where('id', $current_question_id)
-			->orderBy('id', 'asc')
-			->first();
+			->orderBy('id', 'asc')->first();
+			
+			//-------------
+			/*$nextQuestion = Checklist::with('get_subchecklist','get_category')->where('category_id', $category_id)
+				->where('category_id', $category_id)
+				//->where('subcategory_id', $subcategory_id) // 21-05-2025
+				->where('status', '!=', 2)
+				->where('id', $current_question_id)
+				->orderBy('id', 'asc')
+				->first();*/
+
+		}
+		else
+		{
+			// for task type= routing all checklist and subchecklist first work
+			$nextQuestion = Checklist::with('get_subchecklist','get_category')->where('category_id', $category_id)
+				->where('category_id', $category_id)
+				//->where('subcategory_id', $subcategory_id) // 21-05-2025
+				->where('status', '!=', 2)
+				->where('id', $current_question_id)
+				->orderBy('id', 'asc')
+				->first();
+		}
 			//echo "<pre>";print_r($nextQuestion);die;
 			$nextId = $nextQuestion->id;
 			$name = $nextQuestion->name;

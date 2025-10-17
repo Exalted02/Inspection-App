@@ -15,4 +15,5 @@ class Task_categories_checklist_subchecklist extends Model
         'checklist_id', 
         'subchecklist_id', 
 	];
+	
 }
