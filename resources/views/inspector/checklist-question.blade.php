@@ -1141,7 +1141,7 @@ $(document ).ready(function() {
 				//alert(approveMulStatus);
 				if(approveMulStatus == '0')
 				{
-	
+					//alert(subchecklistId);
 					const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
 					const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
 					
@@ -1162,7 +1162,7 @@ $(document ).ready(function() {
 				}
 				mulCounter++;
 			});
-			
+			alert(hasError);
 			if (hasError) {
 				return false;
 			}
