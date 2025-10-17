@@ -501,6 +501,36 @@ $(document).ready(function() {
 			},
 		});
 	});
+	
+	$(document).on('change', 'input[name="loc_category_checklist[]"]', function () {
+		let checklistId = $(this).val();
+		let isChecked = $(this).is(':checked');
+
+		// Check/uncheck all subchecklists under this checklist
+		$(`.subcategory-sub-item[data-parent="${checklistId}"] input[type="checkbox"]`).prop('checked', isChecked);
+	});
+	
+	$(document).on('change', 'input[name="loc_category_checklist_subchecklist[]"]', function () {
+		let parentId = $(this).closest('.subcategory-sub-item').data('parent');
+		//alert(parentId);
+		let allSubCheckboxes = $(`.subcategory-sub-item[data-parent="${parentId}"] input[type="checkbox"]`);
+		
+		//alert(allSubCheckboxes.filter(':checked').length);
+		
+		let allChecked = allSubCheckboxes.length === allSubCheckboxes.filter(':checked').length;
+		
+		if(allSubCheckboxes.length == allSubCheckboxes.filter(':checked').length)
+		{
+			$(`input[name="loc_category_checklist[]"][value="${parentId}"]`).prop('checked', allChecked);
+		}
+
+		//$(`input[name="loc_category_checklist[]"][value="${parentId}"]`).prop('checked', allChecked);
+		
+		if(allSubCheckboxes.filter(':checked').length == 0)
+		{
+			$(`input[name="loc_category_checklist[]"][value="${parentId}"]`).prop('checked', false);
+		}
+	});
 });
 </script>
 <script>

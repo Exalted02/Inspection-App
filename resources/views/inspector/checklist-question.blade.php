@@ -16,9 +16,27 @@ $percentage = '';
 //if(!empty($checklistdata->category_id) && !empty($checklistdata->subcategory_id))
 if(!empty($checklistdata->category_id))
 {
-	$total_checklist = App\Models\Checklist::where('status','!=',2)->where('category_id', $checklistdata->category_id)->orderBy('order_no')->get();
-	$countCheklist  = $total_checklist->count();
-	$percentage = ceil(100/$countCheklist);
+	$task_type_data = App\models\Task_lists::where('id', $task_id)->first();
+	if($task_type_data->task_type == 1)
+	{
+		$res = App\models\Task_categories_checklist_subchecklist::where('category_id', $checklistdata->category_id)->where('task_list_id', $task_id)->orderBy('id', 'ASC')->get();
+		$getChecklists = $res->pluck('checklist_id')->unique()->toArray();
+		
+		$total_checklist = App\models\Checklist::where('category_id',$checklistdata->category_id)
+									->whereIn('id', $getChecklists)
+									->where('status','!=', 2)
+									->orderBy('order_no')
+									->get();
+		
+		$countCheklist = $total_checklist->count();
+		$percentage = ceil(100/$countCheklist);
+	}
+	else 
+	{
+		$total_checklist = App\Models\Checklist::where('status','!=',2)->where('category_id', $checklistdata->category_id)->orderBy('order_no')->get();
+		$countCheklist  = $total_checklist->count();
+		$percentage = ceil(100/$countCheklist);
+	}
 }
 //echo "<pre>";print_r($total_checklist); die;
 $existingFiles = [];
