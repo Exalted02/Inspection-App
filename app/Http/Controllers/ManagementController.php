@@ -54,7 +54,8 @@ class ManagementController extends Controller
 			$taskLocation = Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
 			
 			// count total corrective needed
-		$taskListIds = Task_lists::where('location_id', $location)->pluck('id');	
+		$taskListIds = Task_lists::where('location_id', $location->id)->pluck('id');
+		//echo "<pre>";print_r($taskListIds);die;
 		
 		$categoryIds = Task_list_subcategories::whereIn('task_list_id', $taskListIds)
 			->pluck('task_list_category_id');
@@ -123,7 +124,7 @@ class ManagementController extends Controller
 							return !in_array($pairKey, $excludedChecklistPairs);
 						})
 						->toArray();
-						
+			//echo "<pre>";print_r($correctiveChecklistIds);die;
 			$excludedSubChecklistPairs = Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 					->whereIn('task_list_id', $taskListIds)
 					//->where('los_id', auth()->user()->id) // add new 24-09-2025
@@ -171,6 +172,8 @@ class ManagementController extends Controller
 					})
 					->values()
 					->toArray();
+				//echo "<pre>";print_r($correctiveChecklistIds);die;
+				//echo "<pre>";print_r($correctiveSubChecklistIds);die;
 				
 				$correctiveNeededCount = DB::table(function ($query) use (
 					$taskListIds,
@@ -253,7 +256,7 @@ class ManagementController extends Controller
 					// Merge both queries using unionAll
 					$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 				}, 'combined')->count();
-				
+				//echo $repeated_obs_count;die;
 				$daydata->push([
 					'date' => $week['start'],
 					'corrective_needed' => $correctiveNeededCount,
