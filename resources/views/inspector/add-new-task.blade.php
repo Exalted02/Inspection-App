@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('content')
 @php 
- //echo "<pre>";print_r($locationWisecategory );die;
+ //echo "<pre>";print_r($locationWisecategory);die;
+ 
  
  $rejected_region = '';
 
@@ -152,7 +153,7 @@ if(!empty($task_id))
 											
 											@endphp
 												<li class="category-item">
-													<h3 class="accordion-title"><a href="#" id="edit-slide-down-{{ $categoties['id']}}">{{ $categoties['name'] }}
+													<h3 class="accordion-title"><a href="javascript:void(0);" id="edit-slide-down-{{ $categoties['id']}}">{{ $categoties['name'] }}
 													<input type="hidden" name="loc_category[]" value="{{ $categoties['id'] }}">
 													<input type="hidden" name="loc_category_name[]" value="{{ $categoties['name'] }}">
 													</a></h3>
@@ -340,12 +341,34 @@ if(!empty($task_id))
 <script>
 $(document).ready(function() {
 	let openCategoryId = {{ $firstCategoryId ?? ''}};
+	let firstCatId = {{ $locationWisecategory[0]['id'] }}
+	
 	if (openCategoryId) {
-        // Hide all category sections first (optional)
-        //$('.category-item').hide();
-		//alert(openCategoryId);
-		$('#edit-slide-down-' + openCategoryId).trigger('click');
+        
+		if(openCategoryId != firstCatId)
+		{
+			setTimeout(() => {
+				//alert(openCategoryId);
+				$('#edit-slide-down-' + openCategoryId).trigger('click');
+			}, 600);
+		}
+		else
+		{
+			const section = $('#edit-slide-down-' + openCategoryId)
+				.closest('.category-item')
+				.find('.accordion-content');
+
+			section.slideDown();
+		}
     }
+	else
+	{
+		const section = $('#edit-slide-down-' + openCategoryId)
+			.closest('.category-item')
+			.find('.accordion-content');
+		section.slideDown();
+	}
+	
 	
 	if($('#hid_task_id').val() !='')
 	{
@@ -399,8 +422,10 @@ $(document).ready(function() {
 		$('.task-category-form').slideDown();
 		localStorage.setItem('taskBackButton', 1);
 		/*if (openCategoryId) {
-			$('.accordion-content').slideUp();
-            $('#edit-slide-down-' + openCategoryId).trigger('click');
+			//$('.accordion-content').slideUp();
+			setTimeout(function() {
+				$('#edit-slide-down-' + openCategoryId).trigger('click');
+			}, 400)
         }*/
 	});
 	

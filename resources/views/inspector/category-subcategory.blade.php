@@ -49,6 +49,7 @@ foreach($approvedCompleted as $result)
 	}
 }
 
+
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -118,9 +119,10 @@ foreach($approvedCompleted as $result)
 								@php 
 								    
 									$task_type_data = App\Models\Task_lists::where('id', $task_id)->first();
+									
 									if($task_type_data->task_type == 1)
 									{
-										$res = App\models\Task_categories_checklist_subchecklist::where('category_id', $categories->id)->where('task_list_id', $task_id)->orderBy('id', 'ASC')->get();
+										$res = App\Models\Task_categories_checklist_subchecklist::where('category_id', $categories->id)->where('task_list_id', $task_id)->orderBy('id', 'ASC')->get();
 										$tot_checklist = $res->pluck('checklist_id')->unique()->count();
 									}
 									else
