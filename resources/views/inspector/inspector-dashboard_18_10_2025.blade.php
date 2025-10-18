@@ -50,7 +50,7 @@ $city = '';
 $state = '';
 $country = '';
 //$taskData = '';
-
+//$correctiveNeededCount = 0;
 //---- my dashboard ----
 $locations = App\Models\Users_location::where('user_id', auth()->user()->id)->pluck('location_id')->toArray();
 //echo "<pre>";print_r($locations);die;
@@ -159,199 +159,204 @@ $excludedSubChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn(
 
 if(auth()->user()->user_type == 2)
 {
-	$company_id = App\Models\User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
-		
-	$users_location = App\Models\Users_location::where('company_id', $company_id)->where('user_type', 2)->where('user_id', auth()->user()->id)->whereIn('location_id', $locations)->first();
-	$primary_owner = $users_location ? $users_location->primary_owner : '';
-	//echo "<pre>";print_r($primary_owner);die;
-	
-	if($primary_owner == 1)
-		{
-			$excludedChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
-				->whereIn('task_list_id', $taskListIds)
-				->where('lo_id','!=',auth()->user()->id) //new 24-09-2025
-				->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
-				//->where('lo_corrective_action_plan', null)
-				->where(function ($q) {
-					$q->where(function ($q) {
-						$q->where('inspector_action', 0)->where('los_action', 0);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 1)->where('los_action', 0);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 0)->where('los_action', 1);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 1)->where('los_action', 1);
-					});
-				})
-				->whereNotNull('checklist_id')
-				->get(['task_list_id', 'checklist_id'])
-				->map(function ($item) {
-					return $item->task_list_id . '-' . $item->checklist_id;
-				})
-				->toArray();
-				
-				$correctiveChecklistIds = DB::table('task_list_checklists')
-				->where('approve', 0)
-				->whereIn('task_list_id', $taskListIds)
-				->whereIn('category_id', $categoryIds)
-				->get(['task_list_id', 'checklist_id'])
-				->filter(function ($item) use ($excludedChecklistPairs) {
-					$pairKey = $item->task_list_id . '-' . $item->checklist_id;
-					return !in_array($pairKey, $excludedChecklistPairs);
-				})
-				->toArray();
-		}
-		else{
-			$excludedChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
-				->whereIn('task_list_id', $taskListIds)
-				->where('lo_id',auth()->user()->id) //new 24-09-2025
-				->where('tab_no', 1) //new 26-09-2025
-				//->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
-				->where(function ($q) {
-					$q->where(function ($q) {
-						$q->where('inspector_action', 0)->where('los_action', 0);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 2)->where('los_action', 2);
-					});
-					/*->orWhere(function ($q) {
-						$q->where('inspector_action', 0)->where('los_action', 1);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 1)->where('los_action', 1);
-					});*/
-				})
-				->whereNotNull('checklist_id')
-				->whereNull('subchecklist_id')
-				->get(['task_list_id', 'checklist_id'])
-				->map(function ($item) {
-					return $item->task_list_id . '-' . $item->checklist_id;
-				})
-				->toArray();
-				
-				$correctiveChecklistIds = DB::table('task_list_checklists')
-				->where('approve', 0)
-				->whereIn('task_list_id', $taskListIds)
-				->whereIn('category_id', $categoryIds)
-				->get(['task_list_id', 'checklist_id'])
-				->filter(function ($item) use ($excludedChecklistPairs) {
-					$pairKey = $item->task_list_id . '-' . $item->checklist_id;
-					
-					$excludedKeys = array_map(function($pair) {
-							$parts = explode('-', $pair);
-							return $parts[0] . '-' . $parts[1];
-						}, $excludedChecklistPairs);
-						
-					return in_array($pairKey, $excludedKeys);
-					
-					//return in_array($pairKey, $excludedChecklistPairs);
-				})
-				->toArray();
-		}
-		
-		
+		$company_id = App\Models\User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
+			
+		$users_location = App\Models\Users_location::where('company_id', $company_id)->where('user_type', 2)->where('user_id', auth()->user()->id)->whereIn('location_id', $locations)->first();
+		$primary_owner = $users_location ? $users_location->primary_owner : '';
+		//echo "<pre>";print_r($primary_owner);die;
 		
 		if($primary_owner == 1)
-		{
-			$excludedSubChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
-				->whereIn('task_list_id', $taskListIds)
-				->where('lo_id', '!=' ,auth()->user()->id) //new 24-09-2025
-				->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
-				//->where('lo_corrective_action_plan', null)
-				->where(function ($q) {
-					$q->where(function ($q) {
-						$q->where('inspector_action', 0)->where('los_action', 0);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 1)->where('los_action', 0);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 0)->where('los_action', 1);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 1)->where('los_action', 1);
-					});
-				})
-				//->whereNotNull('checklist_id')
-				->whereNotNull('subchecklist_id')
-				->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
-				->map(function ($item) {
-					return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
-				})
-				->toArray();
-				
-				$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
-					->where('approve', 0)
+			{
+				$excludedChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 					->whereIn('task_list_id', $taskListIds)
-					->whereIn('category_id', $categoryIds)
-					->get(['task_list_id', 'task_list_checklist_id', 'subchecklist_id'])
-					->filter(function ($item) use ($excludedSubChecklistPairs) {
-						$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
-						return !in_array($pairKey, $excludedSubChecklistPairs);
+					->where('lo_id','!=',auth()->user()->id) //new 24-09-2025
+					->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
+					//->where('lo_corrective_action_plan', null)
+					->where(function ($q) {
+						$q->where(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 0);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 1)->where('los_action', 0);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 1);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 1)->where('los_action', 1);
+						});
 					})
+					->whereNotNull('checklist_id')
+					->get(['task_list_id', 'checklist_id'])
 					->map(function ($item) {
-						return (object)[
-							'task_list_id' => $item->task_list_id,
-							'task_list_checklist_id' => $item->task_list_checklist_id,
-							'subchecklist_id' => $item->subchecklist_id,
-						];
+						return $item->task_list_id . '-' . $item->checklist_id;
 					})
-					->values()
 					->toArray();
-		}
-		else{
-			
-			$excludedSubChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
-				->whereIn('task_list_id', $taskListIds)
-				->where('lo_id', auth()->user()->id) //new 24-09-2025
-				->where('tab_no', 1) //new 26-09-2025
-				//->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
-				->where(function ($q) {
-					$q->where(function ($q) {
-						$q->where('inspector_action', 0)->where('los_action', 0);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 2)->where('los_action', 2);
-					});
-					/*->orWhere(function ($q) {
-						$q->where('inspector_action', 1)->where('los_action', 0);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 0)->where('los_action', 1);
-					})->orWhere(function ($q) {
-						$q->where('inspector_action', 2)->where('los_action', 2);
-					});*/
-				})
-				//->whereNotNull('checklist_id')
-				->whereNotNull('subchecklist_id')
-				->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
-				->map(function ($item) {
-					return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
-				})
-				->toArray();
-				
-				$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
+					
+					$correctiveChecklistIds = DB::table('task_list_checklists')
 					->where('approve', 0)
 					->whereIn('task_list_id', $taskListIds)
 					->whereIn('category_id', $categoryIds)
-					->get(['task_list_id', 'task_list_checklist_id', 'subchecklist_id'])
-					->filter(function ($item) use ($excludedSubChecklistPairs) {
-						$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+					->get(['task_list_id', 'checklist_id'])
+					->filter(function ($item) use ($excludedChecklistPairs) {
+						$pairKey = $item->task_list_id . '-' . $item->checklist_id;
+						return !in_array($pairKey, $excludedChecklistPairs);
+					})
+					->toArray();
+					
+					//echo "<pre>";print_r($correctiveChecklistIds);die;
+			}
+			else{
+				$excludedChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+					->whereIn('task_list_id', $taskListIds)
+					->where('lo_id',auth()->user()->id) //new 24-09-2025
+					->where('tab_no', 1) //new 26-09-2025
+					//->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
+					->where(function ($q) {
+						$q->where(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 0);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 2)->where('los_action', 2);
+						});
+						/*->orWhere(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 1);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 1)->where('los_action', 1);
+						});*/
+					})
+					->whereNotNull('checklist_id')
+					->whereNull('subchecklist_id')
+					->get(['task_list_id', 'checklist_id'])
+					->map(function ($item) {
+						return $item->task_list_id . '-' . $item->checklist_id;
+					})
+					->toArray();
+					
+					$correctiveChecklistIds = DB::table('task_list_checklists')
+					->where('approve', 0)
+					->whereIn('task_list_id', $taskListIds)
+					->whereIn('category_id', $categoryIds)
+					->get(['task_list_id', 'checklist_id'])
+					->filter(function ($item) use ($excludedChecklistPairs) {
+						$pairKey = $item->task_list_id . '-' . $item->checklist_id;
 						
 						$excludedKeys = array_map(function($pair) {
-							$parts = explode('-', $pair);
-							return $parts[0] . '-' . $parts[1] . '-' . $parts[2];
-						}, $excludedSubChecklistPairs);
-						
+								$parts = explode('-', $pair);
+								return $parts[0] . '-' . $parts[1];
+							}, $excludedChecklistPairs);
+							
 						return in_array($pairKey, $excludedKeys);
-						//return !in_array($pairKey, $excludedSubChecklistPairs);
+						
+						//return in_array($pairKey, $excludedChecklistPairs);
 					})
-					->map(function ($item) {
-						return (object)[
-							'task_list_id' => $item->task_list_id,
-							'task_list_checklist_id' => $item->task_list_checklist_id,
-							'subchecklist_id' => $item->subchecklist_id,
-						];
-					})
-					->values()
 					->toArray();
-		}
+			}
+			
+			
+			
+			if($primary_owner == 1)
+			{
+				$excludedSubChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+					->whereIn('task_list_id', $taskListIds)
+					->where('lo_id', '!=' ,auth()->user()->id) //new 24-09-2025
+					->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
+					//->where('lo_corrective_action_plan', null)
+					->where(function ($q) {
+						$q->where(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 0);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 1)->where('los_action', 0);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 1);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 1)->where('los_action', 1);
+						});
+					})
+					//->whereNotNull('checklist_id')
+					->whereNotNull('subchecklist_id')
+					->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
+					->map(function ($item) {
+						return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
+					})
+					->toArray();
+					
+					$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
+						->where('approve', 0)
+						->whereIn('task_list_id', $taskListIds)
+						->whereIn('category_id', $categoryIds)
+						->get(['task_list_id', 'task_list_checklist_id', 'subchecklist_id'])
+						->filter(function ($item) use ($excludedSubChecklistPairs) {
+							$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+							return !in_array($pairKey, $excludedSubChecklistPairs);
+						})
+						->map(function ($item) {
+							return (object)[
+								'task_list_id' => $item->task_list_id,
+								'task_list_checklist_id' => $item->task_list_checklist_id,
+								'subchecklist_id' => $item->subchecklist_id,
+							];
+						})
+						->values()
+						->toArray();
+			}
+			else{
+				
+				$excludedSubChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
+					->whereIn('task_list_id', $taskListIds)
+					->where('lo_id', auth()->user()->id) //new 24-09-2025
+					->where('tab_no', 1) //new 26-09-2025
+					//->orWhereIn('lo_direct_approve', [0, 1]) // new 25-09-2025
+					->where(function ($q) {
+						$q->where(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 0);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 2)->where('los_action', 2);
+						});
+						/*->orWhere(function ($q) {
+							$q->where('inspector_action', 1)->where('los_action', 0);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 0)->where('los_action', 1);
+						})->orWhere(function ($q) {
+							$q->where('inspector_action', 2)->where('los_action', 2);
+						});*/
+					})
+					//->whereNotNull('checklist_id')
+					->whereNotNull('subchecklist_id')
+					->get(['task_list_id', 'checklist_id', 'subchecklist_id'])
+					->map(function ($item) {
+						return $item->task_list_id . '-' . $item->checklist_id . '-' . $item->subchecklist_id;
+					})
+					->toArray();
+					
+					$correctiveSubChecklistIds = DB::table('task_list_subchecklists')
+						->where('approve', 0)
+						->whereIn('task_list_id', $taskListIds)
+						->whereIn('category_id', $categoryIds)
+						->get(['task_list_id', 'task_list_checklist_id', 'subchecklist_id'])
+						->filter(function ($item) use ($excludedSubChecklistPairs) {
+							$pairKey = $item->task_list_id . '-' . $item->task_list_checklist_id . '-' . $item->subchecklist_id;
+							
+							$excludedKeys = array_map(function($pair) {
+								$parts = explode('-', $pair);
+								return $parts[0] . '-' . $parts[1] . '-' . $parts[2];
+							}, $excludedSubChecklistPairs);
+							
+							return in_array($pairKey, $excludedKeys);
+							//return !in_array($pairKey, $excludedSubChecklistPairs);
+						})
+						->map(function ($item) {
+							return (object)[
+								'task_list_id' => $item->task_list_id,
+								'task_list_checklist_id' => $item->task_list_checklist_id,
+								'subchecklist_id' => $item->subchecklist_id,
+							];
+						})
+						->values()
+						->toArray();
+				
+			}
+			//echo "<pre>";print_r($correctiveSubChecklistIds);die;
 }
 
-$correctiveNeededCount = DB::table(function ($query) use (
+
+	$correctiveNeededCount = DB::table(function ($query) use (
 			$taskListIds,
 			$categoryIds,
 			$submit_task_id,
@@ -429,6 +434,7 @@ $correctiveNeededCount = DB::table(function ($query) use (
 			// Merge both queries using unionAll
 			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
 		}, 'combined')->count();
+
 //echo $correctiveNeededCount; die;
 //----------------corrective action ------------
 
@@ -652,162 +658,54 @@ $correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) a
 						  <h1>My dashboard</h1>
 					   </div>
 					</div>
-				</div>
-				@if(auth()->user()->user_type == 1)
-				<div class="row padding-bottom">
-					<div class="col-md-6 col-sm-6 col-xs-6 small-card-first">
-						<div class="bg small-card my-dashboard-upper position-relative">
-						<span class="notification-badge"></span>
-							<div class="small-card-title">Open corrective action/plan</div>
-							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>
-								<div class="small-card-upper-counter-title">Pending task</div>
+					<div class="pt-0 pb-0">
+						<div class="row flex-wrap d-flex">
+							<div class="col-md-6 col-sm-6 col-xs-6 small-card-first d-flex">
+								<div class="bg small-card my-dashboard-upper position-relative">
+								<span class="notification-badge"></span>
+									<div class="small-card-title">Open corrective action/plan</div>
+									<div class="d-flex align-items-center small-card-upper-counter-wrapper">
+										<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>
+										<div class="small-card-upper-counter-title">Pending task</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-6 col-xs-6 small-card-second d-flex">
+								<div class="bg small-card my-dashboard-upper position-relative">
+									<span class="notification-badge"></span>
+									<div class="small-card-title">Inspection closure</div>
+									<div class="d-flex align-items-center small-card-upper-counter-wrapper">
+										<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>
+										<div class="small-card-upper-counter-title">Pending task</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row flex-wrap d-flex">
+							<div class="col-md-4 col-sm-4 col-xs-4 small-card-first d-flex">
+								<div class="bg small-card my-dashboard-lower">
+									<div class="small-card-title">Inspection completed</div>
+									<div class="small-card-counter">{{ $correctiveApprovedCount + $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
+									{{--<div class="small-card-counter-title">WEEKLY</div>--}}
+								</div>
+							</div>
+							<div class="col-md-4 col-sm-4 col-xs-4 small-card-second d-flex">
+								<div class="bg small-card my-dashboard-lower">
+									<div class="small-card-title">Observations</div>
+									<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount }}</span></div>
+									{{--<div class="small-card-counter-title">WEEKLY</div>--}}
+								</div>
+							</div>
+							<div class="col-md-4 col-sm-4 col-xs-4 small-card-second d-flex">
+								<div class="bg small-card my-dashboard-lower">
+									<div class="small-card-title">Pending closure</div>
+									<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</span></div>
+									{{--<div class="small-card-counter-title">WEEKLY</div>--}}
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
-						<div class="bg small-card my-dashboard-upper position-relative">
-							<span class="notification-badge"></span>
-							<div class="small-card-title">Inspection closure</div>
-							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>
-								<div class="small-card-upper-counter-title">Pending task</div>
-							</div>
-						</div>
-					</div>
 				</div>
-				<div class="row flex-wrap d-flex">
-					<div class="col-md-4 col-sm-4 col-xs-4 small-card-first">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $correctiveApprovedCount + $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
-							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Observations</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount }}</span></div>
-							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Pending closure</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</span></div>
-							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
-						</div>
-					</div>
-				</div>
-				@endif
-				
-				@if(auth()->user()->user_type == 2)
-					<div class="row padding-bottom">
-					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
-						<div class="bg small-card my-dashboard-upper position-relative">
-						<span class="notification-badge"></span>
-							<div class="small-card-title">Open corrective action/plan</div>
-							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>
-								<div class="small-card-upper-counter-title">Pending task</div>
-							</div>
-						</div>
-					</div>
-					{{--<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
-						<div class="bg small-card my-dashboard-upper position-relative">
-							<span class="notification-badge"></span>
-							<div class="small-card-title">Inspection closure</div>
-							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>
-								<div class="small-card-upper-counter-title">Pending task</div>
-							</div>
-						</div>
-					</div>--}}
-				</div>
-				<div class="row flex-wrap d-flex">
-					<div class="col-md-3 col-sm-3 col-xs-3 small-card-first">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $correctiveApprovedCount + $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
-							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
-						</div>
-					</div>
-					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Observations</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount }}</span></div>
-							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
-						</div>
-					</div>
-					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Pending closure</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</span></div>
-							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
-						</div>
-					</div>
-					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Inspection closure</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>
-						</div>
-					</div>
-				</div>
-				@endif
-				
-				@if(auth()->user()->user_type == 3)
-					<div class="row padding-bottom">
-					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
-						<div class="bg small-card my-dashboard-upper position-relative">
-						<span class="notification-badge"></span>
-							<div class="small-card-title">Pending closure</div>
-							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
-								<div class="small-card-upper-counter-title">Pending task</div>
-							</div>
-						</div>
-					</div>
-					{{--<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
-						<div class="bg small-card my-dashboard-upper position-relative">
-							<span class="notification-badge"></span>
-							<div class="small-card-title">Inspection closure</div>
-							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>
-								<div class="small-card-upper-counter-title">Pending task</div>
-							</div>
-						</div>
-					</div>--}}
-				</div>
-				<div class="row flex-wrap d-flex">
-					<div class="col-md-3 col-sm-3 col-xs-3 small-card-first">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $correctiveApprovedCount + $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
-							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
-						</div>
-					</div>
-					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Observations</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount }}</span></div>
-							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
-						</div>
-					</div>
-					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Open corrective action/plan</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveActionCount + $correctivePlanCount}}</span></div>
-						</div>
-					</div>
-					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
-						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Inspection closure</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>
-						</div>
-					</div>
-				</div>
-				@endif
-				
                <div class="row my-location">
 					<!-- Heading Area -->
 					<div class="heading-panel">
