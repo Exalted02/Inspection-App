@@ -343,6 +343,7 @@ $(document).ready(function() {
 	if (openCategoryId) {
         // Hide all category sections first (optional)
         //$('.category-item').hide();
+		//alert(openCategoryId);
 		$('#edit-slide-down-' + openCategoryId).trigger('click');
     }
 	
@@ -396,11 +397,11 @@ $(document).ready(function() {
     $('.add-category').on('click', function() {
 		$('.task-main-form').slideUp();
 		$('.task-category-form').slideDown();
-		//$('#edit-slide-down-3').slideDown();
-		if (openCategoryId) {
-			//$('.category-item').show();
+		localStorage.setItem('taskBackButton', 1);
+		/*if (openCategoryId) {
+			$('.accordion-content').slideUp();
             $('#edit-slide-down-' + openCategoryId).trigger('click');
-        }
+        }*/
 	});
 	
     $('.select-category').on('click', function() {

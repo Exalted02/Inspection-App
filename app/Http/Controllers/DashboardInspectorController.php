@@ -2280,6 +2280,10 @@ class DashboardInspectorController extends Controller
 		}
 		
 		$data['locationWisecategory']= $locationWisecategory;
+		
+		$data['structuredArray'] = [];
+		$data['firstCategoryId'] = 0;
+		
 		return view('inspector.add-new-task', $data);
 	}
 	

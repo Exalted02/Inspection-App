@@ -194,6 +194,7 @@
 					var page_url3 = app_url+'/checklist-question';
 					var page_url4 = app_url+'/inspector-filter';
 					var page_url5 = app_url+'/add-new-task';
+					var page_url6 = app_url+'/task-list-edit';
 					var current_url = window.location.href;
 					//alert(page_url1);alert(current_url);
 					if(current_url.includes(page_url1))
@@ -234,10 +235,19 @@
 							window.location.href = redirectUrl;
 						}, 100);
 					}
-					else if(current_url.includes(page_url5))
+					else if(current_url.includes(page_url5) || current_url.includes(page_url6))
 					{
-						$('.task-category-form').slideUp();
-						$('.task-main-form').slideDown();
+						let taskBackButton = localStorage.getItem('taskBackButton');
+						if(taskBackButton == 1)
+						{
+							localStorage.removeItem('taskBackButton');
+							$('.task-category-form').slideUp();
+							$('.task-main-form').slideDown();
+						}
+						else
+						{
+							history.back();
+						}
 					}
 					else{
 						history.back();
