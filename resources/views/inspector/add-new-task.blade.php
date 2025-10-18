@@ -152,7 +152,7 @@ if(!empty($task_id))
 											
 											@endphp
 												<li class="category-item">
-													<h3 class="accordion-title"><a href="#">{{ $categoties['name'] }}
+													<h3 class="accordion-title"><a href="#" id="edit-slide-down-{{ $categoties['id']}}">{{ $categoties['name'] }}
 													<input type="hidden" name="loc_category[]" value="{{ $categoties['id'] }}">
 													<input type="hidden" name="loc_category_name[]" value="{{ $categoties['name'] }}">
 													</a></h3>
@@ -339,6 +339,13 @@ if(!empty($task_id))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
+	let openCategoryId = {{ $firstCategoryId ?? ''}};
+	if (openCategoryId) {
+        // Hide all category sections first (optional)
+        //$('.category-item').hide();
+		$('#edit-slide-down-' + openCategoryId).trigger('click');
+    }
+	
 	if($('#hid_task_id').val() !='')
 	{
 		let hid_task_type = $('#hid_task_type').val();
@@ -389,6 +396,11 @@ $(document).ready(function() {
     $('.add-category').on('click', function() {
 		$('.task-main-form').slideUp();
 		$('.task-category-form').slideDown();
+		//$('#edit-slide-down-3').slideDown();
+		if (openCategoryId) {
+			//$('.category-item').show();
+            $('#edit-slide-down-' + openCategoryId).trigger('click');
+        }
 	});
 	
     $('.select-category').on('click', function() {
@@ -538,6 +550,7 @@ $(document).ready(function() {
 	});
 });
 </script>
+
 <script>
 $(document).ready(function() {
 	flatpickr("#set_time", {

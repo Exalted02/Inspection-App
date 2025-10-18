@@ -11790,9 +11790,11 @@ class DashboardInspectorController extends Controller
 					}
 				}
 			}
-
+			
 			//echo "<pre>";print_r($structuredArray);die;
 			$data['structuredArray'] = $structuredArray;
+			$firstCategoryId = array_key_first($structuredArray);
+			$data['firstCategoryId'] = $firstCategoryId;
 			
 			return view('inspector.add-new-task', $data);
 		}
