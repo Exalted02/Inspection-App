@@ -11798,7 +11798,7 @@ class DashboardInspectorController extends Controller
 			//echo "<pre>";print_r($structuredArray);die;
 			$data['structuredArray'] = $structuredArray;
 			$firstCategoryId = array_key_first($structuredArray);
-			$data['firstCategoryId'] = $firstCategoryId;
+			$data['firstCategoryId'] = $firstCategoryId ?? 0;
 			
 			return view('inspector.add-new-task', $data);
 		}

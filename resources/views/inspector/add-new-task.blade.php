@@ -31,6 +31,7 @@ if(!empty($task_id))
 	
 	$task_type = $taskData ? $taskData->task_type : '';
 	$observation = $taskData ? $taskData->observation : '';
+	
 }
 @endphp
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
@@ -58,7 +59,7 @@ if(!empty($task_id))
 									<div class="task-type-item" @if(isset($task_type) && $task_type != 0) style="display:none;" @endif>
 										<div class="task-type-radio">
 											@if(empty($task_type))
-											<input type="radio" name="task_type" value="0">
+											<input type="radio" name="task_type" value="0" @if(isset($task_id) && $task_id != '') style="display:none;" @endif>
 											@endif
 										</div>
 										<div class="task-type-name"><strong>Routine</strong></div>
@@ -289,7 +290,6 @@ if(!empty($task_id))
 		</div>
 	</div>
 	<input type="hidden" value="{{ $task_type ?? ''}}" id="hid_task_type">
-	<input type="hidden" id="has_task_id"  value="{{ $task_id ?? ''}}">
 	{{--<div class="container checklist">
 		<h2 class="checklist-title"></h2>
 			
@@ -341,6 +341,7 @@ if(!empty($task_id))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
+
 	let openCategoryId = {{ $firstCategoryId ?? ''}};
 	let firstCatId = {{ $locationWisecategory[0]['id'] }}
 	
@@ -370,7 +371,7 @@ $(document).ready(function() {
 		section.slideDown();
 	}
 	
-	//alert($('#has_task_id').val());
+	
 	if($('#hid_task_id').val() !='')
 	{
 		let hid_task_type = $('#hid_task_type').val();
@@ -396,9 +397,11 @@ $(document).ready(function() {
 		
 		if(hid_task_type == 0)
 		{
-			$('.form-routine').slideUp();
-			$('.form-adhoc').slideDown();
-			$('.select-category').click();
+			$('.form-adhoc').slideUp(); // smooth hide
+			$('.form-routine').slideDown(); // smooth show
+			
+			$('.task-category-form').slideUp();
+			$('.task-main-form').slideDown();
 			$('#routing_task_type').val(0);
 		}
 	}
