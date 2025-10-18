@@ -275,7 +275,7 @@ if(!empty($task_id))
 									
 									<div class="">
 									@if(empty($task_id))
-										<button class="sticky-footer save-task task-load-add" type="button">Add Task_s</button>
+										<button class="sticky-footer save-task task-load-add" type="button">Add Task</button>
 									@else
 										<button class="sticky-footer save-task task-load-edit" type="button">Edit Task</button>
 									@endif
@@ -289,6 +289,7 @@ if(!empty($task_id))
 		</div>
 	</div>
 	<input type="hidden" value="{{ $task_type ?? ''}}" id="hid_task_type">
+	<input type="hidden" id="has_task_id"  value="{{ $task_id ?? ''}}">
 	{{--<div class="container checklist">
 		<h2 class="checklist-title"></h2>
 			
@@ -369,10 +370,11 @@ $(document).ready(function() {
 		section.slideDown();
 	}
 	
-	
+	//alert($('#has_task_id').val());
 	if($('#hid_task_id').val() !='')
 	{
 		let hid_task_type = $('#hid_task_type').val();
+		//alert(hid_task_type);
 		if(hid_task_type == 1)
 		{
 			setTimeout(function() {
