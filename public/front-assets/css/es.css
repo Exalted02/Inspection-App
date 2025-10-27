@@ -711,13 +711,14 @@ body, h1, h2, h3, h4, h5, h6 {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	min-height: 108px;
 }
 .small-card-title {
 	font-size: 10px;
 	font-weight: 400;
 }
 .small-card-counter {
-	font-size: 40px;
+	font-size: clamp(1.5rem, 5vw + 1rem, 5rem);
 	font-weight: 700;
 	color: #000;
 }
@@ -2219,7 +2220,7 @@ body, h1, h2, h3, h4, h5, h6 {
 	 background-color: #ebeaea !important;
 }
 .small-card-upper-counter {
-	font-size: 40px;
+	font-size: clamp(2.5rem, 5vw + 2rem, 5rem);
 	font-weight: 700;
 	color: #f25555;
 }

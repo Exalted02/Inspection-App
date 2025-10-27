@@ -607,6 +607,16 @@ if (!empty($correctiveApprChecklistIds)) {
 $correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
 			->mergeBindings($baseChecklistQuery)->count();
 
+$open_corrective_action_plan = $correctiveActionCount + $correctivePlanCount;
+$open_corrective_action_plan_red_dot = $open_corrective_action_plan != 0 ? 1 : '';
+
+
+$pending_closure = $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount;
+$pending_closure_plan_red_dot = $pending_closure != 0 ? 1 : '';
+
+$inspection_closure =$correctiveApprovedCount;
+$inspection_closure_red_dot = $inspection_closure != 0 ? 1 : '';
+
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
@@ -657,7 +667,9 @@ $correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) a
 				<div class="row padding-bottom">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
+						@if(!empty($open_corrective_action_plan_red_dot))
 						<span class="notification-badge"></span>
+						@endif
 							<div class="small-card-title">Open corrective action/plan</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
 								<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>
@@ -667,7 +679,9 @@ $correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) a
 					</div>
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
+							@if(!empty($inspection_closure_red_dot))
 							<span class="notification-badge"></span>
+							@endif
 							<div class="small-card-title">Inspection closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
 								<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>
@@ -705,7 +719,9 @@ $correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) a
 					<div class="row padding-bottom">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
+						@if(!empty($open_corrective_action_plan_red_dot))
 						<span class="notification-badge"></span>
+						@endif
 							<div class="small-card-title">Open corrective action/plan</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
 								<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>
@@ -759,7 +775,9 @@ $correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) a
 					<div class="row padding-bottom">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
+						@if(!empty($pending_closure_plan_red_dot))
 						<span class="notification-badge"></span>
+						@endif
 							<div class="small-card-title">Pending closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
 								<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
