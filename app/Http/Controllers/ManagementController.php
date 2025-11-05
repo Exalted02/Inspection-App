@@ -21,8 +21,9 @@ use Illuminate\Support\Collection;
 
 class ManagementController extends Controller
 {
-    public function index()
+    public function index($slug = '')
     {
+		//echo $slug; die;
 		$data = [];
 		if(auth()->user()->user_type == 1 || auth()->user()->user_type == 2 || auth()->user()->user_type == 3)
 		{
@@ -44,7 +45,7 @@ class ManagementController extends Controller
 		$today = Carbon::today();
 		$startDate = $today->copy()->subDays(15)->startOfWeek(Carbon::MONDAY);
 		$endDate = $today->copy()->addDays(15)->endOfWeek(Carbon::SUNDAY);
-		//echo $startDate.' '.$endDate; die;
+		//echo $startDate.' -- '.$endDate; die;
 		$weeks = collect();
 		$current = $startDate->copy();
 		
@@ -281,6 +282,7 @@ class ManagementController extends Controller
 		
 		//echo "<pre>";print_r($chartData);die;
 		$data['chartData'] = $chartData;
+		$data['slug'] = $slug;
         return view('management.management-dashboard', $data);
     }
     public function management_location($id='')

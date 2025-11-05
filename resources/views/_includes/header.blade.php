@@ -32,7 +32,7 @@
 								<a href="javascript:void(0)" class="forward-task"><i class="fa-solid fa-share"></i></a>
 							@endif
 							@if(auth()->user()->user_type == 4)
-								<a href="{{ route('management-dashboard')}}"><i class="fa-solid fa-house"></i></a>
+								<a href="{{ route('management-dashboard', ['slug' => 'weekly'])}}"><i class="fa-solid fa-house"></i></a>
 							@else
 								<a href="{{ route('inspector-dashboard')}}"><i class="fa-solid fa-house"></i></a>
 							@endif

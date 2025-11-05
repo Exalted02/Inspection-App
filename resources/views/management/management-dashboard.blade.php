@@ -386,6 +386,13 @@
 					
 $tot_close_obs = 0;
 @endphp
+
+<style>
+	.active-btn {
+		background-color: #b1b2b3 !important;
+		color: #fff !important;
+	}
+</style>
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	
 	<div class="profile-card">
@@ -404,6 +411,14 @@ $tot_close_obs = 0;
     <div class="container">
 		<h2 class="page-title">Welcome to your overview</h2>
 		<div class="page-subtitle">Check out how your factory is performing</div>
+		<div class="row flex-wrap d-flex">
+		<div class="col-md-1 col-sm-2 col-4 mb-2"><button type="button" class="btn">View by</button>
+			</div>
+			<div class="col-md-1 col-sm-2 col-4 mb-2"><button type="button" class="btn btn-outline-secondary weekly-list-show">Weekly</button>
+			</div>
+			<div class="col-md-1 col-sm-2 col-4 mb-2"><button type="button" class="btn btn-outline-secondary monthly-list-show">Monthly</button>
+			</div>
+		</div>
 		<div class="pt-2 pb-2">
 			<div class="row flex-wrap d-flex">
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-first d-flex">
@@ -700,6 +715,7 @@ $tot_close_obs = 0;
 			</div>
 		</div>
 	</div>--}}
+	<input type="hidden" value="{{ $slug ?? '' }}" id="slug">
 @endsection 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -711,6 +727,38 @@ $(document).ready(function() {
 	//alert(tot_close_obs);
 	$('#tot_no_of_obs').text(tot_obs);
 	$('#tot_close_obs').text(tot_close_obs);
+	
+	
+	let slug = $('#slug').val();
+	if(slug == 'weekly')
+	{
+		$('.weekly-list-show').addClass('active-btn');
+	}
+	
+	if(slug == 'monthly')
+	{
+		$('.monthly-list-show').addClass('active-btn');
+	}
+	
+	
+	$(document).on('click', '.weekly-list-show', function(){
+		$('.weekly-list-show').removeClass('active-btn');
+		$(this).addClass('active-btn');
+		
+		redirect = "{{ route('management-dashboard', ':slug') }}";
+		window.location.href = redirect.replace(':slug', 'weekly');
+		
+	});
+	
+	$(document).on('click', '.monthly-list-show', function(){
+		$('.weekly-list-show').removeClass('active-btn');
+		$(this).addClass('active-btn');
+		
+		redirect = "{{ route('management-dashboard', ':slug') }}";
+		window.location.href = redirect.replace(':slug', 'monthly');
+		
+	});
+	
 });
 </script>
 <script>
