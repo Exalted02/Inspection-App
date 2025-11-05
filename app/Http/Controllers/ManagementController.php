@@ -78,6 +78,8 @@ class ManagementController extends Controller
 		
 			
 		//------------------------------------------------
+		if($slug == 'weekly')
+		{
 			while ($current->lte($endDate)) {
 				$weekStart = $current->copy();
 				$weekEnd = $current->copy()->endOfWeek(Carbon::SUNDAY);
@@ -88,6 +90,32 @@ class ManagementController extends Controller
 				]);
 				$current->addWeek();
 			}
+		}
+		
+		if($slug == 'monthly')
+		{
+			while ($current->lte($endDate)) {
+				$weekStart = $current->copy()->startOfWeek(Carbon::MONDAY);
+				$weekEnd = $current->copy()->endOfWeek(Carbon::SUNDAY);
+
+				// Ensure the week is within the month
+				if ($weekStart->lt($startDate)) {
+					$weekStart = $startDate->copy();
+				}
+				if ($weekEnd->gt($endDate)) {
+					$weekEnd = $endDate->copy();
+				}
+
+				$weeks->push([
+					'label' => $weekStart->format('d M') . ' - ' . $weekEnd->format('d M'),
+					'start' => $weekStart->toDateString(),
+					'end' => $weekEnd->toDateString(),
+				]);
+
+				// Move to the next Monday
+				$current = $weekEnd->copy()->addDay();
+			}
+		}
 			//echo "<pre>";print_r($weeks);die;
 
 			// Example data fetch (replace with your own DB query)
