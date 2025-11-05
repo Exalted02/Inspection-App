@@ -23,7 +23,6 @@ class ManagementController extends Controller
 {
     public function index($slug = '')
     {
-		//echo $slug; die;
 		$data = [];
 		if(auth()->user()->user_type == 1 || auth()->user()->user_type == 2 || auth()->user()->user_type == 3)
 		{
@@ -43,11 +42,23 @@ class ManagementController extends Controller
 		
 		//====== chart data start=======
 		$today = Carbon::today();
-		$startDate = $today->copy()->subDays(15)->startOfWeek(Carbon::MONDAY);
-		$endDate = $today->copy()->addDays(15)->endOfWeek(Carbon::SUNDAY);
-		//echo $startDate.' -- '.$endDate; die;
-		$weeks = collect();
-		$current = $startDate->copy();
+		if($slug == 'weekly')
+		{
+			$startDate = $today->copy()->subDays(15)->startOfWeek(Carbon::MONDAY);
+			$endDate = $today->copy()->addDays(15)->endOfWeek(Carbon::SUNDAY);
+		}
+		
+		if($slug == 'monthly')
+		{
+			$startDate = $today->copy()->startOfMonth();
+			$endDate = $today->copy()->endOfMonth();
+		}
+			//echo $startDate.' -- '.$endDate; die;
+			$weeks = collect();
+			$current = $startDate->copy();
+		
+		
+		
 		
 		$chartData = [];
 		foreach($locations as $key=>$location)
