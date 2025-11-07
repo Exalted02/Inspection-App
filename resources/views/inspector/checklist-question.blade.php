@@ -9,7 +9,6 @@
 //echo "<pre>";print_r($checklistdata);die;
 //echo "<pre>";print_r($checklistdata->get_subchecklist);die;
 
-
 $total_checklist = [];
 $countCheklist = 0;
 $percentage = '';
@@ -70,15 +69,17 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 	
 	@if(isset($checklistdata) && $checklistdata->get_subchecklist->isEmpty())
 		@php 
-			$checkImageFile = App\Models\Task_list_checklists::where('task_list_id',$task_id)
-						->where('checklist_id',$checklistdata->id)->first();
+			$checkImageFile = App\Models\Task_list_checklists::where('task_list_id',$task_id)->where('checklist_id',$checklistdata->id)->first();
 			$task_list_checklist_id = $checkImageFile ? $checkImageFile->id : null;
 			$rejected_region = $checkImageFile ? $checkImageFile->rejected_region : '';
 			$approve = $checkImageFile ? $checkImageFile->approve : '';
 			//$existingFiles = [];
 			if (isset($task_list_checklist_id)) {
-				$imageData = App\Models\Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
-				foreach ($imageData as $file) {
+				//$imageData = App\Models\Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->get();
+				
+				$imageData = App\Models\Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_id)->get();
+				
+				foreach($imageData as $file) {
 					$filename = $file->file;
 					$existingFiles[] = [
 						'name' => $filename,
@@ -87,7 +88,6 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 					];
 				}
 			}
-				
 		@endphp
 		<div class="single-checklist d-none1">
 		{{--<div class="question-header">{{ $checklistdata->get_subcategory->name ?? '' }}</div>--}}
@@ -103,12 +103,33 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 				<input type="hidden" id="mode" value="single">
 				<input type="hidden" id="hasEditFile" value="">
 				<input type="hidden" id="approveStatus" value="{{ $approve}}">
-				<form action="{{ route('reject-files')}}" class="dropzone" id="dropzone-1">
+					{{--<form action="{{ route('reject-files')}}" class="dropzone" id="dropzone-1">
 					<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="{{ $checklistdata->id ?? '' }}">
 					<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="{{ $checklistdata->subcategory_id ?? '' }}">
 					<input type="hidden" name="checklistid" id="single-checklistid" value="{{ $checklistdata->checklist_id ?? '' }}">
 					<input type="hidden" name="task_id" id="single-task_id" value="{{ $task_id ?? '' }}">
-				</form>
+				</form>--}}
+				
+				<div class="col-md-12">
+					<label for="checklist_file"></label>
+					<div class="upload-wrapper">
+					  <input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">
+					  <label for="checklist_file" class="custom-upload-label">
+						<span class="upload-text">Upload image</span>
+						<i class="fa fa-upload upload-icon"></i>
+					  </label>
+					</div>
+				</div>
+				<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">
+				@if(!empty($existingFiles))
+					@foreach($existingFiles as $files)
+						<div class="preview-image-wrapper">
+							<img src="{{ url('uploads/reject-files/'. $files['name']) }}" class="preview-image-checklist"><button type="button" class="remove-checklist-image">
+							</button>
+						</div>
+					@endforeach
+				@endif
+				</div>
 			</div>
 			<div class="action-buttons-without-text">
 				<button class="rejected" id="question-reject-1" onclick="handleReject(1)"><i class="fa-solid fa-xmark"></i></button>
@@ -145,7 +166,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 					Please enter text or file.
 					</span>
 					<div class="reject-form mb-3" id="rejectForm-{{ $subchecklists->id }}">
-						<textarea placeholder="State why you rejected this..."> {{ $rejected_region ?? ''}} </textarea>
+						<textarea placeholder="State why you rejected this_2..."> {{ $rejected_region ?? ''}} </textarea>
 						<input type="hidden" id="mode" value="multiple">
 						<input type="hidden" id="approveMultipleStatus{{$subchecklists->id}}" value="">
 						
@@ -772,6 +793,7 @@ $(document).ready(function() {
 	
 	if(skip_order_no == 0 && isFinalEdit == 'no')
 	{
+		//alert('hi..');
 		setTimeout(function() {
 			$('#getchecklist').trigger('click');
 		}, 100); 
@@ -1098,6 +1120,9 @@ $(document ).ready(function() {
 	
 	
 	// ========= NEXT BUTTON ==============
+	let previewChecklistContainer = $('#preview-checklist-container');
+    let selectedChecklistFiles = [];
+	let selectedSubChecklistFiles = [];
 	
     $(document).on('click','.next_question', function(){
 		
@@ -1106,11 +1131,19 @@ $(document ).ready(function() {
 		var approveStatus = $('#approveStatus').val();
 		//alert(approveStatus);
 		//alert("approveStatus" + approveStatus);
+		let formData = new FormData();
+		
 		if(mode=='single')
 		{
 			if(approveStatus == '0')
 			{
 				var textIsEmpty = $('#single_rejecttext').val().trim() === '';
+				let checklistfiles = $('#checklist_file')[0].files;
+				let countChkFiles = selectedChecklistFiles.length;
+				selectedChecklistFiles.forEach(file => {
+					formData.append('checklist_file[]', file);
+				});
+				
 				var hasEditFile = $('#hasEditFile').val();
 				//alert(hasEditFile);
 				var hasFiles = false;
@@ -1121,7 +1154,12 @@ $(document ).ready(function() {
 					console.warn("Dropzone not found or not initialized yet.");
 				}
 				
-				if (textIsEmpty &&  !hasFiles && !hasEditFile) {
+				/*if (textIsEmpty &&  !hasFiles && !hasEditFile) {
+					$('#errormsg').fadeIn().delay(2000).fadeOut();
+					return false;
+				}*/
+				
+				if (textIsEmpty &&  countChkFiles == 0) {
 					$('#errormsg').fadeIn().delay(2000).fadeOut();
 					return false;
 				}
@@ -1148,6 +1186,24 @@ $(document ).ready(function() {
 			let mulSelected = 0; // 21-06-2025
 			let mulCounter = 0 ;  // 21-06-2025
 			let hasError = false;
+			let subChecklistFileData = [];
+			
+			//---- get the files--
+				
+				Object.entries(selectedSubChecklistFiles).forEach(([subId, files]) => {
+					files.forEach(file => {
+						/*subChecklistFileData.push({
+							subchecklist_id: subId,
+							subchecklist_file: file.name
+						});*/
+						formData.append(`subchecklist_file[${subId}][]`, file);
+					});
+				});
+				
+				formData.append('subChecklistFileData',  JSON.stringify(subChecklistFileData));
+				
+			
+			//------------------
 			$('.reject-form').each(function () {
 				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
 				const text = $(this).find('textarea').val().trim();
@@ -1160,17 +1216,17 @@ $(document ).ready(function() {
 				if(approveMulStatus == '0')
 				{
 					//alert(subchecklistId);
-					const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
-					const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
+					//const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
+					//const files = dropzoneInstance ? //dropzoneInstance.getAcceptedFiles() : [];
 					
 					
 					//if (text === ''  && !hasEditMultipleFile)
-					if (text === '' && files.length === 0 && !hasEditMultipleFile)
+					/*if (text === '' && files.length === 0 && !hasEditMultipleFile)
 					{
 						$('#errorMulmsg' + subchecklistId).fadeIn().delay(2000).fadeOut();
 						hasError = true;
 						return false;
-					}
+					}*/
 				}
 				
 				// validation without select cross or tick cannot go next
@@ -1240,11 +1296,28 @@ $(document ).ready(function() {
 			//alert(rejectTextsMultiple);
 		}
 		
+		// -- use form-data to send images 
+		
+		formData.append('approveStatus', approveStatus);
+		formData.append('mode', mode);
+		formData.append('task_id', task_id);
+		formData.append('order_no', order_no);
+		formData.append('current_question_id', current_id);
+		formData.append('category_id', category_id);
+		formData.append('subcategory_id', subcategory_id);
+		formData.append('directEdit', directEdit);
+		formData.append('rejectTextsSingle', rejectTextsSingle);
+		formData.append('rejectTextsMultiple', JSON.stringify(rejectTextsMultiple));
+		formData.append('_token', csrfToken);
+		
+		//------------------------------
+		
 		var URL = "{{ route('checklist-next-question') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {
+			data: formData,
+			/*data: {
 				approveStatus: approveStatus,
 				mode: mode,
 				task_id: task_id,
@@ -1256,9 +1329,11 @@ $(document ).ready(function() {
 				rejectTextsSingle: rejectTextsSingle,
 				rejectTextsMultiple: JSON.stringify(rejectTextsMultiple), // <--- Fix here
 				_token: csrfToken
-			},
+			},*/
 			traditional: true,
 			dataType: 'json',
+			contentType: false,
+			processData: false,
 			success: function(response) {
 				//alert(response.subcategoryname);
 				//$('.previous_question').css('visibility', 'visible');
@@ -1405,11 +1480,47 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="mode" value="multiple">';
 						html += '<input type="hidden" id="approveMultipleStatus' + item.id + '">';
 						html += '<input type="hidden" id="hasEditMultipleFile' + item.id +'" value="">'
-						html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
+						/*html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
 						html += '<input type="hidden" name="subchecklist_id" value="' + item.id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
-						html += '</form>';
+						html += '</form>';*/
+						
+						html +=	'<div class="col-md-12">';
+						html +=	'<label for="subcheklist_file"></label>';
+						html +=	'<div class="upload-wrapper">';
+						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
+						html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
+						html +=	'<span class="upload-text">Upload image</span>';
+						html +=	'<i class="fa fa-upload upload-icon"></i>';
+						html +=	'</label>';
+						html +=	'</div>';
+						html += '</div>';
+						/*html += '<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						html += '</div>';*/
+						
+						html += '<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						response.existingSubChecklistFiles.forEach(function (file) {
+							
+							if(file.subchecklist_id == item.id)
+							{
+								const ext = file.name.split('.').pop().toLowerCase();
+								
+								html += '<div class="preview-image-wrapper" data-index="" data-subid="' + file.subchecklist_id +'">';
+									if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+										html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+									} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+										html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+									}
+									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '">&times;</button>';
+									html += '</div>';
+							}
+							
+						});
+						html += '</div>';
+						
+						
+						
 						html += '</div>'; 
 						html += '</div>';
 						
@@ -1639,11 +1750,25 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="mode" value="single">';
 						html += '<input type="hidden" id="hasEditFile" value="">';
 						html += '<input type="hidden" id="approveStatus">';
-						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
+						/*html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
 						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + subcategory_id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
-						html += '</form>';
+						html += '</form>';*/
+						
+						html += '<div class="col-md-12">';
+						html += '<label for="checklist_file"></label>';
+						html += '<div class="upload-wrapper">';
+						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
+						html += '<label for="checklist_file" class="custom-upload-label">';
+						html += '<span class="upload-text">Upload image</span>';
+						html += '<i class="fa fa-upload upload-icon"></i>';
+						html += '</label>';
+						html += '</div>';
+						html += '</div>';
+						html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+						html += '</div>';
+						
 						html += '</div>'; 
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
@@ -1847,7 +1972,7 @@ $(document ).ready(function() {
 	// first save theb back
 	$(document).on('click','.previous_question', function(){
 	
-		
+		selectedSubChecklistFiles = [];
 		var mode = $('#mode').val();
 		//alert(mode);
 		var approveStatus = $('#approveStatus').val();
@@ -2051,11 +2176,43 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="mode" value="multiple">';
 						html += '<input type="hidden" id="approveMultipleStatus' + item.id + '">';
 						html += '<input type="hidden" id="hasEditMultipleFile' + item.id +'" value="">'
-						html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
+						/*html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
 						html += '<input type="hidden" name="subchecklist_id" value="' + item.id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
-						html += '</form>';
+						html += '</form>';*/
+						
+						html +=	'<div class="col-md-12">';
+						html +=	'<label for="subcheklist_file"></label>';
+						html +=	'<div class="upload-wrapper">';
+						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
+						html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
+						html +=	'<span class="upload-text">Upload image</span>';
+						html +=	'<i class="fa fa-upload upload-icon"></i>';
+						html +=	'</label>';
+						html +=	'</div>';
+						html += '</div>';
+						html += '<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						response.existingSubChecklistFiles.forEach(function (file) {
+							
+							if(file.subchecklist_id == item.id)
+							{
+								const ext = file.name.split('.').pop().toLowerCase();
+								
+								html += '<div class="preview-image-wrapper" data-index="" data-subid="' + file.subchecklist_id +'">';
+									if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+										html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+									} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+										html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+									}
+									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '">&times;</button>';
+									html += '</div>';
+							}
+							
+						});
+						html += '</div>';
+						
+						
 						html += '</div>'; 
 						html += '</div>'; 
 						
@@ -2251,11 +2408,39 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="hasEditFile" value="">';
 						html += '<input type="hidden" id="approveStatus">';
 						//html += '<form action="/your-upload-route" class="dropzone" id="dropzone-' + response.currentid + '"></form>';
-						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
+						/*html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
 						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + subcategory_id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
-						html += '</form>';
+						html += '</form>';*/
+						
+						html += '<div class="col-md-12">';
+						html += '<label for="checklist_file"></label>';
+						html += '<div class="upload-wrapper">';
+						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
+						html += '<label for="checklist_file" class="custom-upload-label">';
+						html += '<span class="upload-text">Upload image</span>';
+						html += '<i class="fa fa-upload upload-icon"></i>';
+						html += '</label>';
+						html += '</div>';
+						html += '</div>';
+						html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+						response.existingPreviousFiles.forEach(function (file) {
+							
+							const ext = file.name.split('.').pop().toLowerCase();
+							//alert(ext);
+								html += '<div class="preview-image-wrapper">';
+								if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+									html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+								} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+									html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+								}
+								html += '<button type="button" class="remove-checklist-image"></button>';
+								html += '</div>';
+							});
+						html += '</div>';
+						
+						
 						html += '</div>'; 
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
@@ -2535,11 +2720,26 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="mode" value="multiple">';
 						html += '<input type="hidden" id="approveMultipleStatus' + item.id + '">';
 						html += '<input type="hidden" id="hasEditMultipleFile' + item.id +'" value="">'
-						html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
+						/*html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
 						html += '<input type="hidden" name="subchecklist_id" value="' + item.id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
-						html += '</form>';
+						html += '</form>';*/
+						
+						html +=	'<div class="col-md-12">';
+							html +=	'<label for="subcheklist_file"></label>';
+							html +=	'<div class="upload-wrapper">';
+							html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
+							html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
+							html +=	'<span class="upload-text">Upload image</span>';
+							html +=	'<i class="fa fa-upload upload-icon"></i>';
+							html +=	'</label>';
+							html +=	'</div>';
+						html +='</div>';
+						html +='<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						html +='</div>';
+						
+						
 						html += '</div>'; 
 						html += '</div>';
 						
@@ -2771,11 +2971,23 @@ $(document ).ready(function() {
 						html += '<input type="hidden" id="mode" value="single">';
 						html += '<input type="hidden" id="hasEditFile" value="">';
 						html += '<input type="hidden" id="approveStatus">';
-						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
+						/*html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
 						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + response.subcategory_id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
-						html += '</form>';
+						html += '</form>';*/
+							html += '<div class="col-md-12">';
+							html += '<label for="checklist_file"></label>';
+							html += '<div class="upload-wrapper">';
+							html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
+							html += '<label for="checklist_file" class="custom-upload-label">';
+							html += '<span class="upload-text">Upload image</span>';
+							html += '<i class="fa fa-upload upload-icon"></i>';
+							html += '</label>';
+							html += '</div>';
+							html += '</div>';
+							html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+							html += '</div>';
 						html += '</div>'; 
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
@@ -3037,7 +3249,105 @@ $(document ).ready(function() {
 			});
 
 
-   })
+   });
+   
+   //let previewChecklistContainer = $('#preview-checklist-container');
+   //let selectedChecklistFiles = [];
+   
+   //-- file upload code 07-11-2025---no use dropzone--
+   $('#checklist_file').on('change', function (e) {
+		let files = Array.from(e.target.files);
+
+		selectedChecklistFiles = [...selectedChecklistFiles, ...files];
+
+		files.forEach((file, index) => {
+			let reader = new FileReader();
+			reader.onload = function (e) {
+				let previewHtml = '';
+
+				if (file.type.startsWith('image/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedChecklistFiles.length - files.length + index) 
+						+ '"><img src="' + e.target.result 
+						+ '" class="preview-image-checklist" /><button type="button" class="remove-checklist-image" data-index="' 
+						+ (selectedChecklistFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				} else if (file.type.startsWith('video/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedChecklistFiles.length - files.length + index) 
+						+ '"><video src="' + e.target.result 
+						+ '" class="preview-image-checklist" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="remove-checklist-image" data-index="' 
+						+ (selectedChecklistFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				}
+				//alert(previewHtml);
+				previewChecklistContainer.append(previewHtml);
+			};
+			reader.readAsDataURL(file);
+		});
+
+		$(this).val('');
+	});
+	
+	// Remove file from preview & array
+	previewChecklistContainer.on('click', '.remove-checklist-image', function () {
+		const indexToRemove = $(this).data('index');
+		$(this).parent().remove();
+		selectedChecklistFiles[indexToRemove] = null;
+		selectedChecklistFiles = selectedChecklistFiles.filter(file => file !== null);
+	});
+	
+   //for Subchecklist file upload
+		//let selectedSubChecklistFiles = [];
+		$(document).on('change', '.subchecklist-file', function (e) {
+		let subId = $(this).data('id'); // Get subchecklist ID
+		let files = Array.from(e.target.files);
+
+		// Initialize if not exists
+		if (!selectedSubChecklistFiles[subId]) {
+			selectedSubChecklistFiles[subId] = [];
+		}
+
+		selectedSubChecklistFiles[subId] = [
+			...selectedSubChecklistFiles[subId],
+			...files
+		];
+
+		let previewContainer = $('#preview-subchecklist-container-' + subId);
+		//previewContainer.empty();
+
+		files.forEach((file, index) => {
+			let reader = new FileReader();
+			reader.onload = function (e) {
+				let fileIndex = selectedSubChecklistFiles[subId].length - files.length + index;
+				let previewHtml = '';
+
+				if (file.type.startsWith('image/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' + fileIndex + '" data-subid="' + subId +'"><img src="' + e.target.result +'" class="preview-image-checklist" /><button type="button" class="remove-sub-image" data-index="' + fileIndex + '" data-subid="' + subId + '">&times;</button></div>';
+				} else if (file.type.startsWith('video/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' + fileIndex +'" data-subid="' + subId + '"><video src="' + e.target.result + '" class="preview-image-checklist" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="remove-sub-image" data-index="' + fileIndex + '" data-subid="' + subId + '">&times;</button></div>';
+				}
+
+				previewContainer.append(previewHtml);
+			};
+			reader.readAsDataURL(file);
+		});
+
+		$(this).val(''); // Reset input
+	});
+	//-----delete subchecklist image--
+	$(document).on('click', '.remove-sub-image', function () {
+		const subId = $(this).data('subid');
+		const indexToRemove = $(this).data('index');
+
+		// Remove visually
+		$(this).parent().remove();
+
+		// Remove logically from array
+		selectedSubChecklistFiles[subId][indexToRemove] = null;
+		selectedSubChecklistFiles[subId] = selectedSubChecklistFiles[subId].filter(f => f !== null);
+	});
+
 });
 
 function initializeDropzones() {

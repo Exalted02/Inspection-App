@@ -1210,6 +1210,40 @@ body, h1, h2, h3, h4, h5, h6 {
   border-radius: 10px;
 }
 
+.preview-image-checklist {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.remove-checklist-image{
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.remove-sub-image {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
 /*.remove-image {
   position: absolute;
   top: -2px;
