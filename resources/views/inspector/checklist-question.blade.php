@@ -801,7 +801,7 @@ $(document).ready(function() {
 	//$('.previous_question').css('visibility', 'hidden');
 });
 //Dropzone.autoDiscover = false;
-document.addEventListener('DOMContentLoaded', function () {
+/*document.addEventListener('DOMContentLoaded', function () {
 	initializeDropzones();
 	Dropzone.autoDiscover = false;
 	const filesForDropzone = {!! json_encode($existingSubChecklistFiles) !!};
@@ -904,7 +904,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 	
-});
+});*/
 </script>
 
 
@@ -913,10 +913,10 @@ const filesForDropzone = {!! json_encode($existingSubChecklistFiles) !!};
 
 let existingFiles = @json($existingFiles);
 //---------- show single image when page load ----------
-Dropzone.autoDiscover = false; // very important
+//Dropzone.autoDiscover = false; // very important
 
 //"{{ route('reject-files') }}"
-document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     let myDropzone = new Dropzone(dropzoneElement, {
         url: dropzoneElement.getAttribute('action'), 
         maxFiles: 5,
@@ -998,7 +998,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
             });
         }
     });
-});
+});*/
 //alert(existingFiles);
 
 function handleReject(id) {
@@ -1030,12 +1030,10 @@ function handleNotavailable(id) {
 	$('#approveMultipleStatus' + id).val(2);
 }
 
-Dropzone.autoDiscover = false; // very important
+//Dropzone.autoDiscover = false; // very important
 
-//alert(filesForDropzone);
-// when single file upload 
-//"{{ route('reject-files') }}"
-document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+
+/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
     new Dropzone(dropzoneElement, {
         url: dropzoneElement.getAttribute('action'),
         maxFiles: 5,
@@ -1079,7 +1077,7 @@ document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
             });
         }
     });
-});
+});*/
 
 </script>
 
@@ -1119,10 +1117,59 @@ $(document ).ready(function() {
 	}
 	
 	
-	// ========= NEXT BUTTON ==============
+	// images upload for checklist
 	let previewChecklistContainer = $('#preview-checklist-container');
     let selectedChecklistFiles = [];
 	let selectedSubChecklistFiles = [];
+	
+	//-- file upload code 07-11-2025---no use dropzone--
+   $(document).on('change', '#checklist_file', function (e) {
+	   
+		let previewChecklistContainer = $('#preview-checklist-container');
+		let files = Array.from(e.target.files);
+
+		selectedChecklistFiles = [...selectedChecklistFiles, ...files];
+
+		files.forEach((file, index) => {
+			let reader = new FileReader();
+			reader.onload = function (e) {
+				let previewHtml = '';
+
+				if (file.type.startsWith('image/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedChecklistFiles.length - files.length + index) 
+						+ '"><img src="' + e.target.result 
+						+ '" class="preview-image-checklist" /><button type="button" class="remove-checklist-image" data-index="' 
+						+ (selectedChecklistFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				} else if (file.type.startsWith('video/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedChecklistFiles.length - files.length + index) 
+						+ '"><video src="' + e.target.result 
+						+ '" class="preview-image-checklist" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="remove-checklist-image" data-index="' 
+						+ (selectedChecklistFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				}
+				//alert(previewHtml);
+				previewChecklistContainer.append(previewHtml);
+			};
+			reader.readAsDataURL(file);
+		});
+
+		$(this).val('');
+	});
+	
+	// Remove file from preview & array
+	previewChecklistContainer.on('click', '.remove-checklist-image', function () {
+		const indexToRemove = $(this).data('index');
+		$(this).parent().remove();
+		selectedChecklistFiles[indexToRemove] = null;
+		selectedChecklistFiles = selectedChecklistFiles.filter(file => file !== null);
+	});
+	
+	// ========= NEXT BUTTON ==============
+	
+	
 	
     $(document).on('click','.next_question', function(){
 		
@@ -1180,6 +1227,7 @@ $(document ).ready(function() {
 					
 				return false;
 			}*/
+			
 		}
 		else
 		{
@@ -1440,6 +1488,8 @@ $(document ).ready(function() {
 				//alert(response.categoryName);
 				$('#current_checklist_id').val(response.currentid);
 				$('#order_no').val(response.order_no);
+				
+				selectedChecklistFiles = []; // empty checklist images
 				 //$('#single-question').html(response.name);
 				const rejectFilesRoute = "{{ route('reject-files') }}";
 				const rejectSubcheckFilesRoute = "{{ route('reject-subchecklist-files') }}";
@@ -1732,6 +1782,7 @@ $(document ).ready(function() {
 						
 						
 				} else {
+					
 						$('.checklist-question-sticky-footer').removeClass('d-none');
 						$('.sticky-footer-completed').addClass('d-none');
 						//alert(response.next_approve);
@@ -1767,6 +1818,19 @@ $(document ).ready(function() {
 						html += '</div>';
 						html += '</div>';
 						html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+						response.existingNextFiles.forEach(function (file) {
+							
+							const ext = file.name.split('.').pop().toLowerCase();
+							//alert(ext);
+								html += '<div class="preview-image-wrapper">';
+								if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+									html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+								} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+									html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+								}
+								html += '<button type="button" class="remove-checklist-image"></button>';
+								html += '</div>';
+							});
 						html += '</div>';
 						
 						html += '</div>'; 
@@ -1964,6 +2028,8 @@ $(document ).ready(function() {
 					}
 			},
 		});
+		
+		
 	});
 	
 	
@@ -1973,6 +2039,7 @@ $(document ).ready(function() {
 	$(document).on('click','.previous_question', function(){
 	
 		selectedSubChecklistFiles = [];
+		selectedChecklistFiles = [];
 		var mode = $('#mode').val();
 		//alert(mode);
 		var approveStatus = $('#approveStatus').val();
@@ -2006,7 +2073,7 @@ $(document ).ready(function() {
 			let hasError = false;
 			$('.reject-form').each(function () {
 				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
-				const text = $(this).find('textarea').val().trim();
+				//const text = $(this).find('textarea').val().trim();
 				const approveMulStatus = $('#approveMultipleStatus' + subchecklistId).val();
 				//alert(approveMulStatus);
 				//var hasEditMultipleFile = parseInt($('#hasEditMultipleFile' + subchecklistId).val(), 10);
@@ -2016,17 +2083,17 @@ $(document ).ready(function() {
 				if(approveMulStatus == '0')
 				{
 	
-					const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
-					const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
-					
+					//const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
+					//const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
+					const text = $(this).find('textarea').val().trim();
 					
 					//if (text === ''  && !hasEditMultipleFile)
-					if (text === '' && files.length === 0 && !hasEditMultipleFile)
+					/*if (text === '' && files.length === 0 && !hasEditMultipleFile)
 					{
 						$('#errorMulmsg' + subchecklistId).fadeIn().delay(2000).fadeOut();
 						hasError = true;
 						return false;
-					}
+					}*/
 				}
 				
 				// validation without select cross or tick cannot go next
@@ -2254,10 +2321,10 @@ $(document ).ready(function() {
 						}, 0);
 						
 						// dropzone work
-						Dropzone.autoDiscover = false;
-						//alert(response.existingSubChecklistFiles);
+						//Dropzone.autoDiscover = false;
+						
 						//---------- show image when page load ----------
-						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+						/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
@@ -2341,9 +2408,9 @@ $(document ).ready(function() {
 									});
 								}
 							});
-						});
+						});*/
 						//--- upload new files ------- 
-						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+						/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
@@ -2388,7 +2455,7 @@ $(document ).ready(function() {
 									});
 								}
 							});
-						});
+						});*/
 						
 				} else {
 						
@@ -2469,10 +2536,10 @@ $(document ).ready(function() {
 						}
 						
 						// dropzone work
-						Dropzone.autoDiscover = false;
+						//Dropzone.autoDiscover = false;
 						
 						//---------- show image when page load ----------
-						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+						/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-files') }}",
 								maxFiles: 5,
@@ -2585,11 +2652,11 @@ $(document ).ready(function() {
 									});
 								}
 							});
-						});
+						});*/
 						
 						//--- upload files -------
 						
-						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+						/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-files') }}",
 								maxFiles: 5,
@@ -2633,7 +2700,7 @@ $(document ).ready(function() {
 									});
 								}
 							});
-						});
+						});*/
 						
 					}
 			},
@@ -2642,6 +2709,7 @@ $(document ).ready(function() {
 	
 	$(document).on('click','.get_checklist', function(){
 	   //alert('get_checklist');
+	   let selectedChecklistFiles = [];
 	//$('.previous_question').hide();
 	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var directEdit = $(this).data('dedit'); // 21-06-2025
@@ -2737,6 +2805,23 @@ $(document ).ready(function() {
 							html +=	'</div>';
 						html +='</div>';
 						html +='<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						response.existingSubChecklistFiles.forEach(function (file) {
+							
+							if(file.subchecklist_id == item.id)
+							{
+								const ext = file.name.split('.').pop().toLowerCase();
+								
+								html += '<div class="preview-image-wrapper" data-index="" data-subid="' + file.subchecklist_id +'">';
+									if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+										html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+									} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+										html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+									}
+									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '">&times;</button>';
+									html += '</div>';
+							}
+							
+						});
 						html +='</div>';
 						
 						
@@ -2987,6 +3072,19 @@ $(document ).ready(function() {
 							html += '</div>';
 							html += '</div>';
 							html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+							response.existingNextFiles.forEach(function (file) {
+							
+							const ext = file.name.split('.').pop().toLowerCase();
+							//alert(ext);
+								html += '<div class="preview-image-wrapper">';
+								if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+									html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+								} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+									html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+								}
+								html += '<button type="button" class="remove-checklist-image"></button>';
+								html += '</div>';
+							});
 							html += '</div>';
 						html += '</div>'; 
 						html += '<div class="action-buttons-without-text">';
@@ -3255,7 +3353,8 @@ $(document ).ready(function() {
    //let selectedChecklistFiles = [];
    
    //-- file upload code 07-11-2025---no use dropzone--
-   $('#checklist_file').on('change', function (e) {
+   /*$(document).on('change', '#checklist_file', function (e) {
+	    alert('ok');
 		let files = Array.from(e.target.files);
 
 		selectedChecklistFiles = [...selectedChecklistFiles, ...files];
@@ -3280,7 +3379,7 @@ $(document ).ready(function() {
 						+ (selectedChecklistFiles.length - files.length + index) 
 						+ '">&times;</button></div>';
 				}
-				//alert(previewHtml);
+				alert(previewHtml);
 				previewChecklistContainer.append(previewHtml);
 			};
 			reader.readAsDataURL(file);
@@ -3295,7 +3394,7 @@ $(document ).ready(function() {
 		$(this).parent().remove();
 		selectedChecklistFiles[indexToRemove] = null;
 		selectedChecklistFiles = selectedChecklistFiles.filter(file => file !== null);
-	});
+	});*/
 	
    //for Subchecklist file upload
 		//let selectedSubChecklistFiles = [];
