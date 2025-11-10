@@ -2709,7 +2709,7 @@ $(document ).ready(function() {
 	
 	$(document).on('click','.get_checklist', function(){
 	   //alert('get_checklist');
-	   let selectedChecklistFiles = [];
+	   selectedChecklistFiles = [];
 	//$('.previous_question').hide();
 	   $('.checklist-question-sticky-footer').show(); // 21-05-2025
 	   var directEdit = $(this).data('dedit'); // 21-06-2025
