@@ -1190,6 +1190,7 @@ $(document ).ready(function() {
 				var textIsEmpty = $('#single_rejecttext').val().trim() === '';
 				let checklistfiles = $('#checklist_file')[0].files;
 				let countChkFiles = selectedChecklistFiles.length;
+				//alert(countChkFiles);
 				selectedChecklistFiles.forEach(file => {
 					formData.append('checklist_file[]', file);
 				});
@@ -1197,12 +1198,12 @@ $(document ).ready(function() {
 				var hasEditFile = $('#hasEditFile').val();
 				//alert(hasEditFile);
 				var hasFiles = false;
-				try {
+				/*try {
 					var dzInstance = Dropzone.forElement('#dropzone-1');
 					hasFiles = dzInstance.files.length > 0;
 				} catch (e) {
 					console.warn("Dropzone not found or not initialized yet.");
-				}
+				}*/
 				
 				/*if (textIsEmpty &&  !hasFiles && !hasEditFile) {
 					$('#errormsg').fadeIn().delay(2000).fadeOut();
@@ -1297,7 +1298,7 @@ $(document ).ready(function() {
 						});
 					});
 					
-					//if (text === '' &&  hasSubFiles === 0)
+					//alert(hasSubFiles);
 					if (text === '' && hasSubFiles === 0 && !hasEditMultipleFile)
 					{
 						//alert('ok' + subchecklistId);
@@ -1595,7 +1596,7 @@ $(document ).ready(function() {
 									} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 										html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 									}
-									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '">&times;</button>';
+									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '"  data-filename="' + file.name + '">&times;</button>';
 									html += '</div>';
 									
 							}
@@ -2333,7 +2334,7 @@ $(document ).ready(function() {
 									} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 										html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 									}
-									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '">&times;</button>';
+									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '" data-filename="' + file.name+ '">&times;</button>';
 									html += '</div>';
 							}
 						});
@@ -2899,7 +2900,7 @@ $(document ).ready(function() {
 									} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 										html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 									}
-									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '">&times;</button>';
+									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '"  data-filename="' + file.name + '">&times;</button>';
 									html += '</div>';
 							}
 							
@@ -3500,7 +3501,7 @@ $(document ).ready(function() {
 		$(document).on('change', '.subchecklist-file', function (e) {
 		let subId = $(this).data('id'); // Get subchecklist ID
 		let files = Array.from(e.target.files);
-
+		//alert(e.target.files);
 		// Initialize if not exists
 		if (!selectedSubChecklistFiles[subId]) {
 			selectedSubChecklistFiles[subId] = [];
@@ -3521,7 +3522,7 @@ $(document ).ready(function() {
 				let previewHtml = '';
 
 				if (file.type.startsWith('image/')) {
-					previewHtml = '<div class="preview-image-wrapper" data-index="' + fileIndex + '" data-subid="' + subId +'"><img src="' + e.target.result +'" class="preview-image-checklist" /><button type="button" class="remove-sub-image" data-index="' + fileIndex + '" data-subid="' + subId + '">&times;</button></div>';
+					previewHtml = '<div class="preview-image-wrapper" data-index="' + fileIndex + '" data-subid="' + subId +'"><img src="' + e.target.result +'" class="preview-image-checklist" /><button type="button" class="remove-sub-image" data-index="' + fileIndex + '" data-subid="' + subId + '" data-filename="' + file.name +'">&times;</button></div>';
 				} else if (file.type.startsWith('video/')) {
 					previewHtml = '<div class="preview-image-wrapper" data-index="' + fileIndex +'" data-subid="' + subId + '"><video src="' + e.target.result + '" class="preview-image-checklist" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="remove-sub-image" data-index="' + fileIndex + '" data-subid="' + subId + '">&times;</button></div>';
 				}
@@ -3536,14 +3537,55 @@ $(document ).ready(function() {
 	//-----delete subchecklist image--
 	$(document).on('click', '.remove-sub-image', function () {
 		const subId = $(this).data('subid');
+		const filename = $(this).data('filename');
 		const indexToRemove = $(this).data('index');
-
+		//alert(subId);alert(indexToRemove);
 		// Remove visually
 		$(this).parent().remove();
+		
+		// delete from table 
+		$.ajax({
+			url: "{{ route('subchecklist-file-delete') }}",
+			type: "POST",
+			data: {filename:filename, subchecklist_id:subId, _token: csrfToken},
+			dataType: 'json',
+			success: function(response) {
+			
+			let html = '';
+			//html +='<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + subId + '">';
+				
+				response.existingSubChecklistFiles.forEach((file, index) => {
+							
+						if(file.subchecklist_id == item.id)
+						{
+							//hasSubChklistFile = 1;
+							hasSubChklistFile.push(file.subchecklist_id);
+							
+							
+							const ext = file.name.split('.').pop().toLowerCase();
+							
+							html += '<div class="preview-image-wrapper" data-index="" data-subid="' + file.subchecklist_id +'">';
+								if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+									html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+								} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+									html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+								}
+								html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '" data-filename="' + file.name+ '">&times;</button>';
+								html += '</div>';
+						}
+				});
+				
+			  //html += '</div>';
+			  $('#preview-subchecklist-container-' + subId).html(html);
+			},
+		});
+		
 
 		// Remove logically from array
 		selectedSubChecklistFiles[subId][indexToRemove] = null;
 		selectedSubChecklistFiles[subId] = selectedSubChecklistFiles[subId].filter(f => f !== null);
+		
+		
 	});
 
 });

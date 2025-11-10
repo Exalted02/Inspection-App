@@ -1549,6 +1549,7 @@ class DashboardInspectorController extends Controller
 	public function subchecklist_file_delete(Request $request)
 	{
 		$filename = $request->post('filename');
+		$subchecklist_id = $request->post('subchecklist_id');
 
 		if (!$filename) {
 			return response()->json(['success' => false, 'message' => 'Filename missing.'], 400);
@@ -1568,8 +1569,33 @@ class DashboardInspectorController extends Controller
 		// for check form validation 
 		$count = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $task_list_subchecklist_id)->count();
 		
-		$subchecklist_id = Task_list_subchecklists::where('id', $task_list_subchecklist_id)->first()->subchecklist_id;
-		return response()->json(['success' => true, 'message' => 'File deleted.', 'count'=>$count, 'subchecklist_id'=>$subchecklist_id]);
+		//$subchecklist_id = Task_list_subchecklists::where('id', $task_list_subchecklist_id)->first()->subchecklist_id;
+		
+		// fetch remailning file 
+		$existingSubChecklistFiles = [];
+		$imageSubChecklistData = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklist_id)->get();
+						
+		foreach ($imageSubChecklistData as $file) {
+			$filename = $file->file;
+			$existingSubChecklistFiles[] = [
+				'name' => $filename,
+				'subchecklist_id' => $subchecklistval->subchecklist_id,
+				'size' => file_exists(public_path('uploads/reject-files/subchecklist/' . $filename)) ? filesize(public_path('uploads/reject-files/subchecklist/' . $filename)) : 123456, // default if unknown
+				'url' => asset('uploads/reject-files/subchecklist/' . $filename),
+			];
+		}
+		
+		
+		
+		return response()->json(
+			[
+				'success' => true, 
+				'message' => 'File deleted.', 
+				'count'=>$count, 
+				'subchecklist_id'=>$subchecklist_id,
+				'existingSubChecklistFiles'=>$existingSubChecklistFiles
+			]
+		);
 	}
 	public function completed_task($task_id ='', $cat_id='', $subcat_id='')
 	{
