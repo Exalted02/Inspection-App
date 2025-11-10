@@ -1407,7 +1407,8 @@ class DashboardInspectorController extends Controller
 				'next_approve'=>$next_approve,
 				'existingPreviousFiles'=>$existingFiles,
 				'fetchsubChklistArr'=>$fetchsubChklistArr,
-				'existingSubChecklistFiles'=>$existingSubChecklistFiles
+				'existingSubChecklistFiles'=>$existingSubChecklistFiles,
+				'page_status'=> 'page_back' // forvalidation when add
 			]
 		);
 	}
