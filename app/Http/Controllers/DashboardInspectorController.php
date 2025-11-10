@@ -1756,7 +1756,9 @@ class DashboardInspectorController extends Controller
 					// fetch files for subchecklist
 					if(isset($subchecklistval->id))
 					{
-						$imageSubChecklistData = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistval->id)->get();
+						//$imageSubChecklistData = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistval->id)->get(); 10-11-2025
+						
+						$imageSubChecklistData = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $subchecklistval->id)->get();
 						foreach ($imageSubChecklistData as $file) {
 							$filename = $file->file;
 							$existingSubChecklistFiles[] = [
