@@ -1209,7 +1209,7 @@ $(document ).ready(function() {
 					return false;
 				}*/
 				
-				if (textIsEmpty &&  countChkFiles == 0) {
+				if (textIsEmpty &&  countChkFiles == 0 && !hasEditFile) {
 					$('#errormsg').fadeIn().delay(2000).fadeOut();
 					return false;
 				}
@@ -2828,6 +2828,8 @@ $(document ).ready(function() {
 				
 				$('#current_checklist_id').val(response.currentid);
 				$('#order_no').val(response.order_no);
+				let hasSubChklistFile = [];
+				
 				const rejectFilesRoute = "{{ route('reject-files') }}";
 				const rejectSubcheckFilesRoute = "{{ route('reject-subchecklist-files') }}";
 				if (response.subchecklist.length > 0) {
@@ -2886,6 +2888,9 @@ $(document ).ready(function() {
 							//alert(file.name);
 							if(file.subchecklist_id == item.id)
 							{
+								
+								hasSubChklistFile.push(file.subchecklist_id);
+								
 								const ext = file.name.split('.').pop().toLowerCase();
 								
 								html += '<div class="preview-image-wrapper" data-index="" data-subid="' + file.subchecklist_id +'">';
@@ -2941,11 +2946,20 @@ $(document ).ready(function() {
 							});
 						}, 0);
 						
+						
+						response.subchecklist.forEach((item, index) => {
+							
+							if(hasSubChklistFile.includes(item.id))
+							{
+								$('#hasEditMultipleFile' + item.id).val(1);
+							}
+							
+						});	
 						// dropzone work
-						Dropzone.autoDiscover = false;
+						//Dropzone.autoDiscover = false;
 						
 						//---------- show image when page load ----------
-						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+						/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							let myDropzone = new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
@@ -3060,11 +3074,11 @@ $(document ).ready(function() {
 									});
 								}
 							});
-						});
+						});*/
 						
 						//--- upload new files ------- 
 						// 04-07-2025 block today
-						document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
+						/*document.querySelectorAll('.dropzone').forEach(function(dropzoneElement) {
 							new Dropzone(dropzoneElement, {
 								url: "{{ route('reject-subchecklist-files') }}",
 								maxFiles: 5,
@@ -3111,10 +3125,13 @@ $(document ).ready(function() {
 									});
 								}
 							});
-						});
+						});*/
 						
 						
 				} else {
+					
+						let hasChklistFile = '';
+					
 						$('.checklist-question-sticky-footer').removeClass('d-none');
 						$('.sticky-footer').addClass('d-none');
 						//alert(response.next_approve);
@@ -3150,17 +3167,20 @@ $(document ).ready(function() {
 							html += '</div>';
 							html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
 							response.existingNextFiles.forEach(function (file) {
-							
-							const ext = file.name.split('.').pop().toLowerCase();
-							//alert(ext);
-								html += '<div class="preview-image-wrapper">';
-								if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
-									html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
-								} else if (['mp4', 'mov', 'avi'].includes(ext)) {
-									html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+								if(file.name != '')
+								{
+									hasChklistFile = 1;
+									const ext = file.name.split('.').pop().toLowerCase();
+									//alert(ext);
+										html += '<div class="preview-image-wrapper">';
+										if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+											html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+										} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+											html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+										}
+										html += '<button type="button" class="remove-checklist-image"></button>';
+										html += '</div>';
 								}
-								html += '<button type="button" class="remove-checklist-image"></button>';
-								html += '</div>';
 							});
 							html += '</div>';
 						html += '</div>'; 
@@ -3190,6 +3210,8 @@ $(document ).ready(function() {
 							const naButton = document.getElementById('question-na-' + response.currentid);
 							naButton.click();
 						}
+						
+						$('#hasEditFile').val(hasChklistFile);
 						
 						// dropzone work
 						//Dropzone.autoDiscover = false;
