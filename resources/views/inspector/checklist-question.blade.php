@@ -426,11 +426,48 @@ $(document).ready(function() {
 						html += '<input type="hidden" id="mode" value="multiple">';
 						html += '<input type="hidden" id="approveMultipleStatus' + item.id + '">';
 						html += '<input type="hidden" id="hasEditMultipleFile' + item.id +'" value="">'
-						html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
+						/*html += '<form action="' + rejectSubcheckFilesRoute + '" class="dropzone" id="dropzone-' + item.id + '">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
 						html += '<input type="hidden" name="subchecklist_id" value="' + item.id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
-						html += '</form>';
+						html += '</form>';*/
+						
+						
+						html +=	'<div class="col-md-12">';
+						html +=	'<label for="subcheklist_file"></label>';
+						html +=	'<div class="upload-wrapper">';
+						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
+						html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
+						html +=	'<span class="upload-text">Upload image</span>';
+						html +=	'<i class="fa fa-upload upload-icon"></i>';
+						html +=	'</label>';
+						html +=	'</div>';
+						html += '</div>';
+						
+						html += '<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						response.existingSubChecklistFiles.forEach(function (file) {
+							
+							if(file.subchecklist_id == item.id)
+							{
+								hasSubChklistFile.push(file.subchecklist_id);
+								
+								const ext = file.name.split('.').pop().toLowerCase();
+								
+								html += '<div class="preview-image-wrapper" data-index="" data-subid="' + file.subchecklist_id +'">';
+									if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+										html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+									} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+										html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+									}
+									html += '<button type="button" class="remove-edit-sub-image" data-index="" data-subid="' + file.subchecklist_id + '"  data-filename="' + file.name + '">&times;</button>';
+									html += '</div>';
+									
+							}
+							
+						});
+						html += '</div>';
+						
+						
 						html += '</div>'; 
 						html += '</div>';
 						
@@ -623,11 +660,45 @@ $(document).ready(function() {
 						html += '<input type="hidden" id="mode" value="single">';
 						html += '<input type="hidden" id="hasEditFile" value="">';
 						html += '<input type="hidden" id="approveStatus">';
-						html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
+						
+						/*html += '<form action="' + rejectFilesRoute + '" class="dropzone" id="dropzone-1">';
 						html += '<input type="hidden" name="current_checklist_id" id="single_checklist_id" value="' + response.currentid +'">';
 						html += '<input type="hidden" name="subcategory_id" id="single-subcategory_id" value="' + response.subcategory_id + '">';
 						html += '<input type="hidden" name="task_id" id="single-task_id" value="' + task_id +'">';
-						html += '</form>';
+						html += '</form>';*/
+						
+						html += '<div class="col-md-12">';
+						html += '<label for="checklist_file"></label>';
+						html += '<div class="upload-wrapper">';
+						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
+						html += '<label for="checklist_file" class="custom-upload-label">';
+						html += '<span class="upload-text">Upload image</span>';
+						html += '<i class="fa fa-upload upload-icon"></i>';
+						html += '</label>';
+						html += '</div>';
+						html += '</div>';
+						
+						html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+						response.existingNextFiles.forEach(function (file) {
+								if(file.name != '')
+								{
+									hasChklistFile = 1;
+									const ext = file.name.split('.').pop().toLowerCase();
+									//alert(ext);
+										html += '<div class="preview-image-wrapper">';
+										if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+											html += '<img src="' + file.url + '" class="preview-image-checklist" alt="' + file.name + '">';
+										} else if (['mp4', 'mov', 'avi'].includes(ext)) {
+											html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
+										}
+										html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name + '" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'"></button>';
+										html += '</div>';
+								}
+								
+							});
+						html += '</div>';
+						
+						
 						html += '</div>'; 
 						html += '<div class="action-buttons-without-text">';
 						html += '<button class="rejected" id="question-reject-' + response.currentid + '" onclick="handleReject(' + response.currentid + ')"><i class="fa-solid fa-xmark"></i></button>';
@@ -1174,7 +1245,7 @@ $(document ).ready(function() {
 	
 	$(document).on('click', '.remove-checklist-image', function () {
 		const indexToRemove = $(this).data('index');
-		alert(indexToRemove);
+		//alert(indexToRemove);
 		$(this).parent().remove();
 		selectedChecklistFiles[indexToRemove] = null;
 		selectedChecklistFiles = selectedChecklistFiles.filter(file => file !== null);
@@ -1317,40 +1388,21 @@ $(document ).ready(function() {
 				const text = $(this).find('textarea').val().trim();
 				const approveMulStatus = $('#approveMultipleStatus' + subchecklistId).val();
 				let hasSubFiles = 0;
-				//alert(approveMulStatus);
-				//var hasEditMultipleFile = parseInt($('#hasEditMultipleFile' + subchecklistId).val(), 10);
+				
 				var hasEditMultipleFile = $('#hasEditMultipleFile' + subchecklistId).val();
 				//alert(hasEditMultipleFile); //if 1 get then has files if 0 no files
 				//alert(approveMulStatus);
 				if(approveMulStatus == '0')
 				{
-					//alert(subchecklistId);
-					//const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
-					//const files = dropzoneInstance ? //dropzoneInstance.getAcceptedFiles() : [];
-					
-					
-					//if (text === ''  && !hasEditMultipleFile)
-					/*if (text === '' && files.length === 0 && !hasEditMultipleFile)
-					{
-						$('#errorMulmsg' + subchecklistId).fadeIn().delay(2000).fadeOut();
-						hasError = true;
-						return false;
-					}*/
-					
 					Object.entries(selectedSubChecklistFiles).forEach(([subId, files]) => {
 						
 						files.forEach(file => {
-							
 							if(subId === subchecklistId)
 							{
-								//alert(subId); //alert(subchecklistId);alert(file.name);
-								
 								if(file.name != '')
 								{
-									//alert(subId); alert(subchecklistId);
 									hasSubFiles = 1;
 								}
-								
 							}
 						});
 					});
@@ -1937,7 +1989,7 @@ $(document ).ready(function() {
 										} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 											html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 										}
-										html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name + '" data-taskid="' + task_id +'" data-checklistid="' + current_id +'"></button>';
+										html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name + '" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'"></button>';
 										html += '</div>';
 								}
 								
@@ -2151,9 +2203,10 @@ $(document ).ready(function() {
 	$(document).on('click','.previous_question', function(){
 	
 		selectedSubChecklistFiles = [];
-		selectedChecklistFiles = [];
+		//selectedChecklistFiles = [];
 		var mode = $('#mode').val();
 		//alert(mode);
+		let formData = new FormData();
 		var approveStatus = $('#approveStatus').val();
 		//alert(approveStatus);
 		//alert("approveStatus" + approveStatus);
@@ -2163,16 +2216,26 @@ $(document ).ready(function() {
 			{
 				var textIsEmpty = $('#single_rejecttext').val().trim() === '';
 				var hasEditFile = $('#hasEditFile').val();
-				//alert(hasEditFile);
+				
+				let checklistfiles = $('#checklist_file')[0].files;
+				let countChkFiles = selectedChecklistFiles.length;
+				selectedChecklistFiles.forEach(file => {
+					formData.append('checklist_file[]', file);
+				});
 				var hasFiles = false;
-				try {
+				/*try {
 					var dzInstance = Dropzone.forElement('#dropzone-1');
 					hasFiles = dzInstance.files.length > 0;
 				} catch (e) {
 					console.warn("Dropzone not found or not initialized yet.");
-				}
+				}*/
 				
-				if (textIsEmpty &&  !hasFiles && !hasEditFile) {
+				/*if (textIsEmpty &&  !hasFiles && !hasEditFile) {
+					$('#errormsg').fadeIn().delay(2000).fadeOut();
+					return false;
+				}*/
+				
+				if (textIsEmpty &&  countChkFiles == 0 && !hasEditFile) {
 					$('#errormsg').fadeIn().delay(2000).fadeOut();
 					return false;
 				}
@@ -2183,20 +2246,29 @@ $(document ).ready(function() {
 			let mulSelected = 0; // 21-06-2025
 			let mulCounter = 0 ;  // 21-06-2025
 			let hasError = false;
+			
+			let subChecklistFileData = [];
+			
+			Object.entries(selectedSubChecklistFiles).forEach(([subId, files]) => {
+					files.forEach(file => {
+						formData.append(`subchecklist_file[${subId}][]`, file);
+					});
+				});
+			
+			formData.append('subChecklistFileData',  JSON.stringify(subChecklistFileData));
+			
 			$('.reject-form').each(function () {
 				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
 				//const text = $(this).find('textarea').val().trim();
 				const approveMulStatus = $('#approveMultipleStatus' + subchecklistId).val();
-				//alert(approveMulStatus);
-				//var hasEditMultipleFile = parseInt($('#hasEditMultipleFile' + subchecklistId).val(), 10);
+				
 				var hasEditMultipleFile = $('#hasEditMultipleFile' + subchecklistId).val();
 				//alert(hasEditMultipleFile); //if 1 get then has files if 0 no files
 				//alert(approveMulStatus);
 				if(approveMulStatus == '0')
 				{
 	
-					//const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
-					//const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
+					
 					const text = $(this).find('textarea').val().trim();
 					
 					//if (text === ''  && !hasEditMultipleFile)
@@ -2206,6 +2278,28 @@ $(document ).ready(function() {
 						hasError = true;
 						return false;
 					}*/
+					
+					Object.entries(selectedSubChecklistFiles).forEach(([subId, files]) => {
+						
+						files.forEach(file => {
+							if(subId === subchecklistId)
+							{
+								if(file.name != '')
+								{
+									hasSubFiles = 1;
+								}
+							}
+						});
+					});
+					
+					//alert(hasSubFiles);
+					if (text === '' && hasSubFiles === 0 && !hasEditMultipleFile)
+					{
+						//alert('ok' + subchecklistId);
+						$('#errorMulmsg' + subchecklistId).fadeIn().delay(2000).fadeOut();
+						hasError = true;
+						return false;
+					}
 				}
 				
 				// validation without select cross or tick cannot go next
@@ -2255,11 +2349,26 @@ $(document ).ready(function() {
 			});
 		}
 		
+		
+		// -- use form-data to send images 
+		
+		formData.append('approveStatus', approveStatus);
+		formData.append('mode', mode);
+		formData.append('task_id', task_id);
+		formData.append('order_no', order_no);
+		formData.append('current_question_id', current_id);
+		formData.append('category_id', category_id);
+		formData.append('subcategory_id', subcategory_id);
+		formData.append('directEdit', directEdit);
+		formData.append('rejectTextsSingle', rejectTextsSingle);
+		formData.append('rejectTextsMultiple', JSON.stringify(rejectTextsMultiple));
+		formData.append('_token', csrfToken);
+		
 		var URL = "{{ route('save-exist-question') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {
+			/*data: {
 				approveStatus: approveStatus,
 				mode: mode,
 				task_id: task_id,
@@ -2271,9 +2380,12 @@ $(document ).ready(function() {
 				rejectTextsSingle: rejectTextsSingle,
 				rejectTextsMultiple: JSON.stringify(rejectTextsMultiple), // <--- Fix here
 				_token: csrfToken
-			},
+			},*/
+			data : formData,
 			traditional: true,
 			dataType: 'json',
+			contentType: false,
+			processData: false,
 			success: function(response) {
 				const location_id = $('#location_id').val();
 				const task_id = $('#task_id').val();

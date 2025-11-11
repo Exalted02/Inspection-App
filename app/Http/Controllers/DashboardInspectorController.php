@@ -652,6 +652,24 @@ class DashboardInspectorController extends Controller
 						}
 					}
 					
+					if($approveStatus=='2')
+					{
+						$chklistFiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->get();
+						if($chklistFiles->isNotEmpty()){
+							
+							foreach($chklistFiles as $filemn)
+							{
+								$f_name = $filemn->file;
+								$filePath = public_path('uploads/reject-files/' . $f_name);
+								if (file_exists($filePath)) {
+									unlink($filePath);
+								}
+							}
+							
+							Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+						}
+					}
+					
 				}
 				else
 				{
@@ -754,6 +772,44 @@ class DashboardInspectorController extends Controller
 							$model->approve = $text['approve_status'];
 							$model->save();
 							$task_list_subchecklist_id = $hasid;
+							
+							
+							if($text['approve_status']=='1')
+							{
+								$subchklistFiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $hasid)->get();
+								if($subchklistFiles->isNotEmpty()){
+									
+									foreach($subchklistFiles as $filemn)
+									{
+										$f_name = $filemn->file;
+										$filePath = public_path('uploads/reject-files/' . $f_name);
+										if (file_exists($filePath)) {
+											unlink($filePath);
+										}
+									}
+									
+									Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+								}
+							}
+							
+							if($text['approve_status']=='2')
+							{
+								$subchklistFiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $hasid)->get();
+								if($subchklistFiles->isNotEmpty()){
+									
+									foreach($subchklistFiles as $filemn)
+									{
+										$f_name = $filemn->file;
+										$filePath = public_path('uploads/reject-files/' . $f_name);
+										if (file_exists($filePath)) {
+											unlink($filePath);
+										}
+									}
+									
+									Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+								}
+							}
+							
 						}
 						else
 						{
@@ -7589,6 +7645,24 @@ class DashboardInspectorController extends Controller
 						}
 					}
 					
+					if($approveStatus=='2')
+					{
+						$chklistFiles = Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->get();
+						if($chklistFiles->isNotEmpty()){
+							
+							foreach($chklistFiles as $filemn)
+							{
+								$f_name = $filemn->file;
+								$filePath = public_path('uploads/reject-files/' . $f_name);
+								if (file_exists($filePath)) {
+									unlink($filePath);
+								}
+							}
+							
+							Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+						}
+					}
+					
 				}
 				else
 				{
@@ -7604,7 +7678,7 @@ class DashboardInspectorController extends Controller
 					$task_list_checklist_id = $model->id;
 				}
 				
-				$checkTemps = Task_list_checklist_temp_rejected_files::where(
+				/*$checkTemps = Task_list_checklist_temp_rejected_files::where(
 				[
 					'inspector_id'=> auth()->user()->id,
 					'task_id'=> $task_id,
@@ -7643,6 +7717,29 @@ class DashboardInspectorController extends Controller
 						//$tempFile->delete();
 						Task_list_checklist_temp_rejected_files::where('file', $filename)->delete();
 					}
+				}*/
+				
+				if($approveStatus == 0)
+				{
+					if ($request->has('checklist_file')) {
+						$checklist_files = $request->file('checklist_file');
+						foreach($checklist_files as $file)
+						{
+							$destinationPath = public_path('uploads/reject-files');
+							if (!file_exists($destinationPath)) {
+								mkdir($destinationPath, 0777, true);
+							}
+							
+							$filename = uniqid() . '.'. $file->getClientOriginalExtension();
+							$file->move($destinationPath, $filename);
+							
+							//  insert into table 
+							$model = new Task_list_checklist_rejected_files();
+							$model->task_list_checklist_id = $task_list_checklist_id ?? null;
+							$model->file  = $filename ?? null;
+							$model->save();
+						}
+					}
 				}
 			}
 
@@ -7668,6 +7765,46 @@ class DashboardInspectorController extends Controller
 							$model->approve = $text['approve_status'];
 							$model->save();
 							$task_list_subchecklist_id = $hasid;
+							
+							
+							// delete file if i select tick
+							if($text['approve_status']=='1')
+							{
+								$subchklistFiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $hasid)->get();
+								if($subchklistFiles->isNotEmpty()){
+									
+									foreach($subchklistFiles as $filemn)
+									{
+										$f_name = $filemn->file;
+										$filePath = public_path('uploads/reject-files/' . $f_name);
+										if (file_exists($filePath)) {
+											unlink($filePath);
+										}
+									}
+									
+									Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+								}
+							}
+							
+							
+							// delete file if selected NA
+							if($text['approve_status']=='2')
+							{
+								$subchklistFiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $hasid)->get();
+								if($subchklistFiles->isNotEmpty()){
+									
+									foreach($subchklistFiles as $filemn)
+									{
+										$f_name = $filemn->file;
+										$filePath = public_path('uploads/reject-files/' . $f_name);
+										if (file_exists($filePath)) {
+											unlink($filePath);
+										}
+									}
+									
+									Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+								}
+							}
 						}
 						else
 						{
@@ -7683,8 +7820,35 @@ class DashboardInspectorController extends Controller
 							$task_list_subchecklist_id = $model->id;
 						}
 						
+						
+						// direct upload the subchecklist image to folder and table
+							if ($request->has('subchecklist_file')) {
+								foreach ($request->file('subchecklist_file') as $subchecklist_id => $files) {
+									if($subchecklist_id == $subChecklistId)
+									{
+										foreach ($files as $file) {
+											// Store file
+											$destinationPath = public_path('uploads/reject-files/subchecklist');
+											if (!file_exists($destinationPath)) {
+												mkdir($destinationPath, 0777, true);
+											}
+											
+											$filename = uniqid() . '.'. $file->getClientOriginalExtension();
+											$file->move($destinationPath, $filename);
+											
+											//  insert into table 
+											$model = new Task_list_subchecklist_rejected_files();
+											$model->task_list_checklist_id = $task_list_subchecklist_id ?? null;
+											$model->task_list_subchecklist_id = $subchecklist_id ?? null;
+											$model->file  = $filename ?? null;
+											$model->save();
+										}
+									}
+								}
+							}
+						
 						// file transffer from temp folder to main folder
-						$checkSubChecklistTemps = Task_list_subchecklist_temp_rejected_files::where(
+						/*$checkSubChecklistTemps = Task_list_subchecklist_temp_rejected_files::where(
 						[
 							'inspector_id'=> auth()->user()->id,
 							'task_list_id'=> $task_id,
@@ -7716,7 +7880,7 @@ class DashboardInspectorController extends Controller
 									//$tempFile->delete();
 									Task_list_subchecklist_temp_rejected_files::where('file', $filename)->delete();
 								}
-							}
+							}*/
 					}
 				}
 			}
