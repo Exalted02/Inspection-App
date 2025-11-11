@@ -238,6 +238,42 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 @endsection 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  // Detect if device is mobile
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+ 
+  window.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.getElementById('checklist_file');
+ 
+    if (isMobileDevice()) {
+      // Add capture attribute (forces camera)
+      fileInput.setAttribute('capture', 'camera');
+    } else {
+      // Remove capture attribute (normal browse)
+      fileInput.removeAttribute('capture');
+    }
+  });
+  
+  
+  window.addEventListener('DOMContentLoaded', function () {
+	  // Get all file inputs by class name
+	  const fileInputs = document.querySelectorAll('.subchecklist-file');
+
+	  fileInputs.forEach(fileInput => {
+		if (isMobileDevice()) {
+		  // Force camera on mobile
+		  fileInput.setAttribute('capture', 'camera');
+		} else {
+		  // Allow normal file selection on desktop
+		  fileInput.removeAttribute('capture');
+		}
+	  });
+	});
+
+</script>
 <script>
 $(document).ready(function() {
 	var footerHeight = $('.checklist-question-sticky-footer').outerHeight();
@@ -3792,7 +3828,7 @@ function initializeDropzones() {
 }
 function saveAndExit()
 {
-	
+	let selectedSubChecklistFiles = [];
 	var mode = $('#mode').val();
 		//alert(mode);
 		var approveStatus = $('#approveStatus').val();
@@ -3804,16 +3840,18 @@ function saveAndExit()
 			{
 				var textIsEmpty = $('#single_rejecttext').val().trim() === '';
 				var hasEditFile = $('#hasEditFile').val();
+				
+				let checklistfiles = $('#checklist_file')[0].files;
+				let countChkFiles = selectedChecklistFiles.length;
+				selectedChecklistFiles.forEach(file => {
+					formData.append('checklist_file[]', file);
+				});
 				//alert(hasEditFile);
 				var hasFiles = false;
-				try {
-					var dzInstance = Dropzone.forElement('#dropzone-1');
-					hasFiles = dzInstance.files.length > 0;
-				} catch (e) {
-					console.warn("Dropzone not found or not initialized yet.");
-				}
 				
-				if (textIsEmpty &&  !hasFiles && !hasEditFile) {
+				alert(textIsEmpty);alert(countChkFiles);alert(hasEditFile);
+				
+				if (textIsEmpty &&  countChkFiles == 0 && !hasEditFile) {
 					$('#errormsg').fadeIn().delay(2000).fadeOut();
 					return false;
 				}
@@ -3840,29 +3878,55 @@ function saveAndExit()
 			let mulSelected = 0; // 21-06-2025
 			let mulCounter = 0 ;  // 21-06-2025
 			let hasError = false;
+			
+			let subChecklistFileData = [];
+			
+			Object.entries(selectedSubChecklistFiles).forEach(([subId, files]) => {
+					files.forEach(file => {
+						formData.append(`subchecklist_file[${subId}][]`, file);
+					});
+				});
+				
+			formData.append('subChecklistFileData',  JSON.stringify(subChecklistFileData));
+				
+				
 			$('.reject-form').each(function () {
 				const subchecklistId = $(this).attr('id').replace('rejectForm-', '');
 				const text = $(this).find('textarea').val().trim();
 				const approveMulStatus = $('#approveMultipleStatus' + subchecklistId).val();
 				//alert(approveMulStatus);
-				//var hasEditMultipleFile = parseInt($('#hasEditMultipleFile' + subchecklistId).val(), 10);
+				
 				var hasEditMultipleFile = $('#hasEditMultipleFile' + subchecklistId).val();
 				//alert(hasEditMultipleFile); //if 1 get then has files if 0 no files
 				//alert(approveMulStatus);
 				if(approveMulStatus == '0')
 				{
-	
-					const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
-					const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];
+					const text = $(this).find('textarea').val().trim();
 					
+					/*const dropzoneInstance = Dropzone.forElement('#dropzone-' + subchecklistId);
+					const files = dropzoneInstance ? dropzoneInstance.getAcceptedFiles() : [];*/
 					
-					//if (text === ''  && !hasEditMultipleFile)
-					if (text === '' && files.length === 0 && !hasEditMultipleFile)
+					Object.entries(selectedSubChecklistFiles).forEach(([subId, files]) => {
+						
+						files.forEach(file => {
+							if(subId === subchecklistId)
+							{
+								if(file.name != '')
+								{
+									hasSubFiles = 1;
+								}
+							}
+						});
+					});
+					
+					if (text === '' && hasSubFiles === 0 && !hasEditMultipleFile)
 					{
+						//alert('ok' + subchecklistId);
 						$('#errorMulmsg' + subchecklistId).fadeIn().delay(2000).fadeOut();
 						hasError = true;
 						return false;
 					}
+					
 				}
 				
 				// validation without select cross or tick cannot go next
@@ -3933,11 +3997,25 @@ function saveAndExit()
 			//alert(rejectTextsMultiple);
 		}
 		
+		// -- use form-data to send images 
+		
+		formData.append('approveStatus', approveStatus);
+		formData.append('mode', mode);
+		formData.append('task_id', task_id);
+		formData.append('order_no', order_no);
+		formData.append('current_question_id', current_id);
+		formData.append('category_id', category_id);
+		formData.append('subcategory_id', subcategory_id);
+		formData.append('directEdit', directEdit);
+		formData.append('rejectTextsSingle', rejectTextsSingle);
+		formData.append('rejectTextsMultiple', JSON.stringify(rejectTextsMultiple));
+		formData.append('_token', csrfToken);
+		
 		var URL = "{{ route('save-exist-question') }}";
 		$.ajax({
 			url: URL,
 			type: "POST",
-			data: {
+			/*data: {
 				approveStatus: approveStatus,
 				mode: mode,
 				task_id: task_id,
@@ -3949,9 +4027,12 @@ function saveAndExit()
 				rejectTextsSingle: rejectTextsSingle,
 				rejectTextsMultiple: JSON.stringify(rejectTextsMultiple), // <--- Fix here
 				_token: csrfToken
-			},
+			},*/
+			data : formData,
 			traditional: true,
 			dataType: 'json',
+			contentType: false,
+			processData: false,
 			success: function(response) {
 				const location_id = $('#location_id').val();
 				const task_id = $('#task_id').val();
