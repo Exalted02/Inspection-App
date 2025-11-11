@@ -3108,7 +3108,7 @@ $(document ).ready(function() {
 									} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 										html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 									}
-									html += '<button type="button" class="remove-sub-image" data-index="" data-subid="' + file.subchecklist_id + '"  data-filename="' + file.name + '">&times;</button>';
+									html += '<button type="button" class="remove-edit-sub-image" data-index="" data-subid="' + file.subchecklist_id + '"  data-filename="' + file.name + '">&times;</button>';
 									html += '</div>';
 							}
 							
@@ -3650,12 +3650,10 @@ $(document ).ready(function() {
 			  }
 			}).then((result) => {
 			  if (result.isConfirmed) {
-				saveAndExit(); // your function
+				saveAndExit(selectedChecklistFiles,selectedSubChecklistFiles); // your function
 			  }
 			});
-
-
-   });
+		});
    
    //let previewChecklistContainer = $('#preview-checklist-container');
    //let selectedChecklistFiles = [];
@@ -3826,12 +3824,13 @@ function initializeDropzones() {
 		});
 	});
 }
-function saveAndExit()
+function saveAndExit(selectedChecklistFiles, selectedSubChecklistFiles)
 {
-	let selectedSubChecklistFiles = [];
+	//let selectedSubChecklistFiles = [];
 	var mode = $('#mode').val();
 		//alert(mode);
 		var approveStatus = $('#approveStatus').val();
+		let formData = new FormData();
 		//alert(approveStatus);
 		//alert("approveStatus" + approveStatus);
 		if(mode=='single')
@@ -3842,14 +3841,17 @@ function saveAndExit()
 				var hasEditFile = $('#hasEditFile').val();
 				
 				let checklistfiles = $('#checklist_file')[0].files;
+				
 				let countChkFiles = selectedChecklistFiles.length;
+				
+				//let countChkFiles = 0;
+				
 				selectedChecklistFiles.forEach(file => {
 					formData.append('checklist_file[]', file);
+					
 				});
 				//alert(hasEditFile);
 				var hasFiles = false;
-				
-				alert(textIsEmpty);alert(countChkFiles);alert(hasEditFile);
 				
 				if (textIsEmpty &&  countChkFiles == 0 && !hasEditFile) {
 					$('#errormsg').fadeIn().delay(2000).fadeOut();
@@ -3895,6 +3897,7 @@ function saveAndExit()
 				const text = $(this).find('textarea').val().trim();
 				const approveMulStatus = $('#approveMultipleStatus' + subchecklistId).val();
 				//alert(approveMulStatus);
+				let hasSubFiles = 0;
 				
 				var hasEditMultipleFile = $('#hasEditMultipleFile' + subchecklistId).val();
 				//alert(hasEditMultipleFile); //if 1 get then has files if 0 no files
@@ -3918,6 +3921,8 @@ function saveAndExit()
 							}
 						});
 					});
+					
+					//alert(text);alert(hasSubFiles);alert(hasEditMultipleFile);
 					
 					if (text === '' && hasSubFiles === 0 && !hasEditMultipleFile)
 					{
