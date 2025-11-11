@@ -1469,13 +1469,14 @@ class DashboardInspectorController extends Controller
 	public function checklist_file_delete(Request $request)
 	{
 		$filename = $request->post('filename');
+		$task_id = $request->post('task_id');
+		$checklist_id = $request->post('checklist_id');
 
 		if (!$filename) {
 			return response()->json(['success' => false, 'message' => 'Filename missing.'], 400);
 		}
 		
-		// --get the task_list_checklist_id for count files
-		$task_list_checklist_id = Task_list_checklist_rejected_files::where('file', $filename)->first()->task_list_checklist_id;
+		
 		// ----------------------------------------------
 
 		Task_list_checklist_rejected_files::where('file', $filename)->delete();
@@ -1485,10 +1486,42 @@ class DashboardInspectorController extends Controller
 			unlink($filePath);
 		}
 		
-		// for check form validation 
-		$count = Task_list_checklist_rejected_files::where('task_list_checklist_id', $task_list_checklist_id)->count();
 		
-		return response()->json(['success' => true, 'message' => 'File deleted.', 'count'=>$count]);
+		
+		//--------------------------------
+		$checklist_data = Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
+		$id  = $checklist_data ? $checklist_data->id : '';
+		
+		
+		$existingFiles = [];
+		$count = 0;
+		if($id)
+		{
+			$count = Task_list_checklist_rejected_files::where('task_list_checklist_id', $id)->count();
+			
+			
+			$imageData = Task_list_checklist_rejected_files::where('task_list_checklist_id', $id)->get();
+			//echo "<pre>";print_r($imageData); die;
+			if(isset($imageData))
+			{
+				foreach ($imageData as $file) {
+					$filename = $file->file;
+					$existingFiles[] = [
+						'name' => $filename,
+						'size' => file_exists(public_path('uploads/reject-files/' . $filename)) ? filesize(public_path('uploads/reject-files/' . $filename)) : 123456, // default if unknown
+						'url' => asset('uploads/reject-files/' . $filename),
+					];
+				}
+			
+			}
+		}
+		
+		// for check form validation 
+		
+		//echo "<pre>";print_r($existingFiles); die;
+		//-------------------------------
+		
+		return response()->json(['success' => true, 'message' => 'File deleted.', 'count'=>$count, 'existingFiles'=> $existingFiles]);
 	}
 	
 	public function reject_subchecklist_files(Request $request)
@@ -1579,7 +1612,7 @@ class DashboardInspectorController extends Controller
 			$filename = $file->file;
 			$existingSubChecklistFiles[] = [
 				'name' => $filename,
-				'subchecklist_id' => $subchecklistval->subchecklist_id,
+				'subchecklist_id' => $subchecklist_id,
 				'size' => file_exists(public_path('uploads/reject-files/subchecklist/' . $filename)) ? filesize(public_path('uploads/reject-files/subchecklist/' . $filename)) : 123456, // default if unknown
 				'url' => asset('uploads/reject-files/subchecklist/' . $filename),
 			];

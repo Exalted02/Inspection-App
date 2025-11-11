@@ -1244,6 +1244,32 @@ body, h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
 }
 
+.remove-edit-sub-image {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.remove-edit-checklist-image{
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
 /*.remove-image {
   position: absolute;
   top: -2px;
