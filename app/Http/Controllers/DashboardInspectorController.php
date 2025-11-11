@@ -782,13 +782,13 @@ class DashboardInspectorController extends Controller
 									foreach($subchklistFiles as $filemn)
 									{
 										$f_name = $filemn->file;
-										$filePath = public_path('uploads/reject-files/' . $f_name);
+										$filePath = public_path('uploads/reject-files/subchecklist/' . $f_name);
 										if (file_exists($filePath)) {
 											unlink($filePath);
 										}
 									}
 									
-									Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+									Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
 								}
 							}
 							
@@ -800,13 +800,13 @@ class DashboardInspectorController extends Controller
 									foreach($subchklistFiles as $filemn)
 									{
 										$f_name = $filemn->file;
-										$filePath = public_path('uploads/reject-files/' . $f_name);
+										$filePath = public_path('uploads/reject-files/subchecklist/' . $f_name);
 										if (file_exists($filePath)) {
 											unlink($filePath);
 										}
 									}
 									
-									Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+									Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
 								}
 							}
 							
@@ -7776,13 +7776,12 @@ class DashboardInspectorController extends Controller
 									foreach($subchklistFiles as $filemn)
 									{
 										$f_name = $filemn->file;
-										$filePath = public_path('uploads/reject-files/' . $f_name);
+										$filePath = public_path('uploads/reject-files/subchecklist/' . $f_name);
 										if (file_exists($filePath)) {
 											unlink($filePath);
 										}
 									}
-									
-									Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+									Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
 								}
 							}
 							
@@ -7796,13 +7795,12 @@ class DashboardInspectorController extends Controller
 									foreach($subchklistFiles as $filemn)
 									{
 										$f_name = $filemn->file;
-										$filePath = public_path('uploads/reject-files/' . $f_name);
+										$filePath = public_path('uploads/reject-files/subchecklist/' . $f_name);
 										if (file_exists($filePath)) {
 											unlink($filePath);
 										}
 									}
-									
-									Task_list_checklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
+									Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $hasid)->delete();
 								}
 							}
 						}
