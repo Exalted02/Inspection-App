@@ -12,6 +12,7 @@ class Dashboard_notification extends Model
 	protected $fillable = [
         'user_id', 
         'user_type', 
+        'location_id', 
         'task_id', 
         'total_action_plan', 
         'read_action_plan', 

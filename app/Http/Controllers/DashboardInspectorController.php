@@ -1772,8 +1772,12 @@ class DashboardInspectorController extends Controller
 			
 			$total_inspection_closure = $count_completed_checklist + $count_completed_subchecklist;
 			
+			$taskData  = Task_lists::where('id', $request->task_id)->first();
+			$location_id = $taskData ? $taskData->location_id : null;
+			
 			$array = [
 				'mode'        => 'submit_checklist',
+				'location_id' => $location_id,
 				'task_id'     => $request->task_id,
 				'total_action_plan'	=>	null,
 				'read_action_plan'	=>	null,
@@ -2489,6 +2493,7 @@ class DashboardInspectorController extends Controller
 		
 		$array = [
 				'mode'        => 'plan_action',
+				'location_id' => $location_id,
 				'task_id'     => $task_list_id,
 				'total_action_plan'	=>	$total_action_plan,
 				'read_action_plan'	=>	$read_action_plan,
@@ -3037,10 +3042,15 @@ class DashboardInspectorController extends Controller
 		
 		// add to dashboard_notification
 		$if_approved = Task_list_corrective_action::where('id', $id)->first();
+		
+		$taskData  = Task_lists::where('id', $request->task_id)->first();
+		$location_id = $taskData ? $taskData->location_id : null;
+
 		if($if_approved->inspector_action == 1 && $if_approved->los_action == 1)
 		{
 			$array = [
 					'mode'        => 'approved_checklist',
+					'location_id' => $location_id,
 					'task_id'     => $request->task_id,
 					'total_action_plan'	=>	null,
 					'read_action_plan'	=>	null,
@@ -3057,6 +3067,7 @@ class DashboardInspectorController extends Controller
 			{
 				$array = [
 					'mode'        => 'reject_checklist',
+					'location_id' => $location_id,
 					'task_id'     => $request->task_id,
 					'total_action_plan'	=>	null,
 					'read_action_plan'	=>	null,
@@ -3230,8 +3241,12 @@ class DashboardInspectorController extends Controller
 		$get_read_action_plan = Dashboard_notification::where('user_type', 2)->where('task_id', $task_id)->first()->read_action_plan;
 		$read_action_plan =  $get_read_action_plan != null ? $get_read_action_plan+1 : 1;
 		
+		$taskData  = Task_lists::where('id', $task_id)->first();
+		$location_id = $taskData ? $taskData->location_id : null;
+		
 		$array = [
 				'mode'        => 'plan_action',
+				'location_id' => $location_id,
 				'task_id'     => $task_id,
 				'total_action_plan'	=>	$total_action_plan,
 				'read_action_plan'	=>	$read_action_plan,
@@ -3485,10 +3500,15 @@ class DashboardInspectorController extends Controller
 		
 		// add to dashboard_notification
 		$if_approved = Task_list_corrective_action::where('id', $id)->first();
+		
+		$taskData  = Task_lists::where('id', $request->task_id)->first();
+		$location_id = $taskData ? $taskData->location_id : null;
+
 		if($if_approved->inspector_action == 1 && $if_approved->los_action == 1)
 		{
 			$array = [
 					'mode'        => 'approved_checklist',
+					'location_id' => $location_id,
 					'task_id'     => $request->task_id,
 					'total_action_plan'	=>	null,
 					'read_action_plan'	=>	null,

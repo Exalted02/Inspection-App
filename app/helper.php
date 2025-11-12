@@ -638,7 +638,7 @@ use App\Models\Dashboard_notification;
 			$los_id = $los ? $los->id : null;
 		
 		
-			$ifHas = Dashboard_notification::where('user_id', $ia_id)->first();
+			$ifHas = Dashboard_notification::where('user_id', $ia_id)->where('location_id', $arr['location_id'])->where('user_type', 1)->where('task_id', $arr['task_id'])->first();
 			if($ifHas)
 			{
 				
@@ -655,7 +655,7 @@ use App\Models\Dashboard_notification;
 				$iaModel->save();
 				
 				
-				$id = Dashboard_notification::where('user_id', $lo_id)->first()->id;
+				$id = Dashboard_notification::where('user_id', $lo_id)->where('location_id', $arr['location_id'])->where('user_type', 2)->first()->id;
 				
 				//updatefor location owner
 				$loModel = Dashboard_notification::find($id);
@@ -667,7 +667,7 @@ use App\Models\Dashboard_notification;
 				$loModel->save();
 				
 				
-				$id = Dashboard_notification::where('user_id', $los_id)->first()->id;
+				$id = Dashboard_notification::where('user_id', $los_id)->where('location_id', $arr['location_id'])->where('user_type', 3)->first()->id;
 				
 				//updatefor location owner supervisor
 				$losModel = Dashboard_notification::find($id);
@@ -683,6 +683,7 @@ use App\Models\Dashboard_notification;
 				$iaModel = new Dashboard_notification();
 				$iaModel->user_id = $ia_id;
 				$iaModel->user_type = 1;
+				$iaModel->location_id = $arr['location_id'];
 				$iaModel->task_id = $arr['task_id'];
 				//$iaModel->total_action_plan 	= null;
 				//$iaModel->read_action_plan 	= null;
@@ -695,6 +696,7 @@ use App\Models\Dashboard_notification;
 				$loModel = new Dashboard_notification();
 				$loModel->user_id = $lo_id;
 				$loModel->user_type = 2;
+				$loModel->location_id = $arr['location_id'];
 				$loModel->task_id = $arr['task_id'];
 				//$loModel->total_action_plan 	= null;
 				//$loModel->read_action_plan 	= null;
@@ -707,6 +709,7 @@ use App\Models\Dashboard_notification;
 				$losModel = new Dashboard_notification();
 				$losModel->user_id = $los_id;
 				$losModel->user_type = 3;
+				$losModel->location_id = $arr['location_id'];
 				$losModel->task_id = $arr['task_id'];
 				//$losModel->total_action_plan 	= null;
 				//$losModel->read_action_plan 	= null;
@@ -719,7 +722,7 @@ use App\Models\Dashboard_notification;
 		
 		if($arr['mode'] == 'plan_action')
 		{
-			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->first();
+			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
 			$id = $iaData ? $iaData->id : null;
 			
 			$ia_pending_closure = $iaData ? $iaData->pending_closure : 0;
@@ -734,7 +737,7 @@ use App\Models\Dashboard_notification;
 			$iaModel->save();
 			
 			
-			$loData = Dashboard_notification::where('user_type', 2)->where('task_id', $arr['task_id'])->first();
+			$loData = Dashboard_notification::where('user_type', 2)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
 			$id = $loData ? $loData->id : null;
 			
 			$lo_pending_closure = $loData ? $loData->pending_closure : 0;
@@ -751,7 +754,7 @@ use App\Models\Dashboard_notification;
 			$loModel->save();
 			
 			
-			$losData = Dashboard_notification::where('user_type', 3)->where('task_id', $arr['task_id'])->first();
+			$losData = Dashboard_notification::where('user_type', 3)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
 			$id = $losData ? $losData->id : null;
 			
 			$los_pending_closure = $losData ? $losData->pending_closure : 0;
@@ -769,7 +772,7 @@ use App\Models\Dashboard_notification;
 		
 		if($arr['mode'] == 'reject_checklist')
 		{
-			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->first();
+			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
 			$id = $iaData ? $iaData->id : null;
 			
 			$ia_pending_closure = $iaData ? $iaData->pending_closure : 0;
@@ -787,7 +790,7 @@ use App\Models\Dashboard_notification;
 			$iaModel->save();
 			
 			
-			$loData = Dashboard_notification::where('user_type', 2)->where('task_id', $arr['task_id'])->first();
+			$loData = Dashboard_notification::where('user_type', 2)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
 			$id = $loData ? $loData->id : null;
 			
 			$lo_pending_closure = $loData ? $loData->pending_closure : 0;
@@ -807,7 +810,7 @@ use App\Models\Dashboard_notification;
 			$loModel->save();
 			
 			
-			$losData = Dashboard_notification::where('user_type', 3)->where('task_id', $arr['task_id'])->first();
+			$losData = Dashboard_notification::where('user_type', 3)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
 			$id = $losData ? $losData->id : null;
 			
 			$los_pending_closure = $losData ? $losData->pending_closure : 0;
@@ -828,7 +831,7 @@ use App\Models\Dashboard_notification;
 		
 		if($arr['mode'] == 'approved_checklist')
 		{
-			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->first();
+			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
 			$id = $iaData ? $iaData->id : null;
 			
 			$ia_pending_closure = $iaData ? $iaData->pending_closure : 0;
@@ -849,7 +852,7 @@ use App\Models\Dashboard_notification;
 			$iaModel->save();
 			
 			
-			$loData = Dashboard_notification::where('user_type', 2)->where('task_id', $arr['task_id'])->first();
+			$loData = Dashboard_notification::where('user_type', 2)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
 			$id = $loData ? $loData->id : null;
 			
 			$lo_pending_closure = $loData ? $loData->pending_closure : 0;
@@ -871,7 +874,7 @@ use App\Models\Dashboard_notification;
 			$loModel->save();
 			
 			
-			$losData = Dashboard_notification::where('user_type', 3)->where('task_id', $arr['task_id'])->first();
+			$losData = Dashboard_notification::where('user_type', 3)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
 			$id = $losData ? $losData->id : null;
 			
 			$los_pending_closure = $losData ? $losData->pending_closure : 0;
