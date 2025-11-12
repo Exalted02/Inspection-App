@@ -39,6 +39,8 @@ use App\Models\Followup_remarks;
 use App\Models\Task_lists;
 use App\Models\Task_list_checklists;
 use App\Models\Task_list_subchecklists;
+use App\Models\User;
+use App\Models\Dashboard_notification;
 
 
 // use File;
@@ -623,24 +625,272 @@ use App\Models\Task_list_subchecklists;
 
 		return $number . $suffix;
 	}
-
-	/*function checklist_next_question($category_id='', $order_no='')
+	function dashboard_notification($arr = '')
 	{
-		$checklistQuestion = Checklist::where('category_id', $category_id)
-		->where('status', '!=', 2)->get();
-		foreach($checklistQuestion as $list)
+		//echo "<pre>";print_r($arr);die;
+		if($arr['mode'] == 'submit_checklist')
 		{
-			$hasChecklists = Task_list_checklists::where('category_id', $category_id)->where('checklist_id', $list->id)->exists();
+			$ia_id = auth()->user()->id; // inspector id
+			$lo = User::where('company_name', auth()->user()->company_name)->where('user_type', 2)->first();
+			$lo_id = $lo ? $lo->id : null;
 			
-			$hasSubChecklists = Task_list_subchecklists::where('category_id', $category_id)->where('task_list_checklist_id', $list->id)->exists();
-			
-			if(!$hasChecklists || !$hasSubChecklists)
+			$los = User::where('company_name', auth()->user()->company_name)->where('user_type', 3)->first();
+			$los_id = $los ? $los->id : null;
+		
+		
+			$ifHas = Dashboard_notification::where('user_id', $ia_id)->first();
+			if($ifHas)
 			{
-				$checklist_id = $list->id;
 				
-				break;
+				$total_inspection_closure = $ifHas->total_inspection_closure;
+				$pending_closure = $ifHas->pending_closure;
+				
+				
+				$iaModel = Dashboard_notification::find($ifHas->id);
+				//$iaModel->total_action_plan 	= null;
+				//$iaModel->read_action_plan 	= null;
+				$iaModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
+				$iaModel->inspection_closure_date = date('Y-m-d h:i:s');
+				$iaModel->pending_closure  = $arr['pending_closure'] + $pending_closure;
+				$iaModel->save();
+				
+				
+				$id = Dashboard_notification::where('user_id', $lo_id)->first()->id;
+				
+				//updatefor location owner
+				$loModel = Dashboard_notification::find($id);
+				//$loModel->total_action_plan 	= null;
+				//$loModel->read_action_plan 	= null;
+				$loModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
+				$loModel->inspection_closure_date = date('Y-m-d h:i:s');
+				$loModel->pending_closure  = $arr['pending_closure'] + $pending_closure;
+				$loModel->save();
+				
+				
+				$id = Dashboard_notification::where('user_id', $los_id)->first()->id;
+				
+				//updatefor location owner supervisor
+				$losModel = Dashboard_notification::find($id);
+				//$losModel->total_action_plan 	= null;
+				//$losModel->read_action_plan 	= null;
+				$losModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
+				$losModel->inspection_closure_date = date('Y-m-d h:i:s');
+				$losModel->pending_closure  = $arr['pending_closure'] + $pending_closure;
+				$losModel->save();
+			}
+			else{
+				// add for inspector
+				$iaModel = new Dashboard_notification();
+				$iaModel->user_id = $ia_id;
+				$iaModel->user_type = 1;
+				$iaModel->task_id = $arr['task_id'];
+				//$iaModel->total_action_plan 	= null;
+				//$iaModel->read_action_plan 	= null;
+				$iaModel->total_inspection_closure = $arr['total_inspection_closure'];
+				$iaModel->inspection_closure_date = date('Y-m-d h:i:s');
+				$iaModel->pending_closure  = $arr['pending_closure'];
+				$iaModel->save();
+				
+				// add for location owner
+				$loModel = new Dashboard_notification();
+				$loModel->user_id = $lo_id;
+				$loModel->user_type = 2;
+				$loModel->task_id = $arr['task_id'];
+				//$loModel->total_action_plan 	= null;
+				//$loModel->read_action_plan 	= null;
+				$loModel->total_inspection_closure = $arr['total_inspection_closure'];
+				$loModel->inspection_closure_date = date('Y-m-d h:i:s');
+				$loModel->pending_closure  = $arr['pending_closure'];
+				$loModel->save();
+				
+				// add for location owner supervisor
+				$losModel = new Dashboard_notification();
+				$losModel->user_id = $los_id;
+				$losModel->user_type = 3;
+				$losModel->task_id = $arr['task_id'];
+				//$losModel->total_action_plan 	= null;
+				//$losModel->read_action_plan 	= null;
+				$losModel->total_inspection_closure = $arr['total_inspection_closure'];
+				$losModel->inspection_closure_date = date('Y-m-d h:i:s');
+				$losModel->pending_closure  = $arr['pending_closure'];
+				$losModel->save();
 			}
 		}
 		
-	}*/
+		if($arr['mode'] == 'plan_action')
+		{
+			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->first();
+			$id = $iaData ? $iaData->id : null;
+			
+			$ia_pending_closure = $iaData ? $iaData->pending_closure : 0;
+			$ia_pending_closure = $ia_pending_closure -1;
+			
+			$iaModel = Dashboard_notification::find($id);
+			$iaModel->total_action_plan 	= $arr['total_action_plan'];
+			$iaModel->read_action_plan 	= $arr['read_action_plan'];
+			//$iaModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
+			//$iaModel->inspection_closure_date = date('Y-m-d h:i:s');
+			$iaModel->pending_closure  = $ia_pending_closure;
+			$iaModel->save();
+			
+			
+			$loData = Dashboard_notification::where('user_type', 2)->where('task_id', $arr['task_id'])->first();
+			$id = $loData ? $loData->id : null;
+			
+			$lo_pending_closure = $loData ? $loData->pending_closure : 0;
+			$lo_pending_closure = $lo_pending_closure -1;
+			
+			
+			//updatefor location owner
+			$loModel = Dashboard_notification::find($id);
+			$loModel->total_action_plan 	= $arr['total_action_plan'];
+			$loModel->read_action_plan 	= $arr['read_action_plan'];
+			//$loModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
+			//$loModel->inspection_closure_date = date('Y-m-d h:i:s');
+			$loModel->pending_closure  = $lo_pending_closure;
+			$loModel->save();
+			
+			
+			$losData = Dashboard_notification::where('user_type', 3)->where('task_id', $arr['task_id'])->first();
+			$id = $losData ? $losData->id : null;
+			
+			$los_pending_closure = $losData ? $losData->pending_closure : 0;
+			$los_pending_closure = $los_pending_closure -1;
+			
+			//updatefor location owner supervisor
+			$losModel = Dashboard_notification::find($id);
+			$losModel->total_action_plan 	= $arr['total_action_plan'];
+			$losModel->read_action_plan 	= $arr['read_action_plan'];
+			//$losModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
+			//$losModel->inspection_closure_date = date('Y-m-d h:i:s');
+			$losModel->pending_closure  = $los_pending_closure;
+			$losModel->save();
+		}
+		
+		if($arr['mode'] == 'reject_checklist')
+		{
+			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->first();
+			$id = $iaData ? $iaData->id : null;
+			
+			$ia_pending_closure = $iaData ? $iaData->pending_closure : 0;
+			$ia_pending_closure = $ia_pending_closure +1;
+			
+			$ia_action_plan = $iaData ? $iaData->total_action_plan : 0;
+			$ia_action_plan = $ia_action_plan -1;
+			
+			$iaModel = Dashboard_notification::find($id);
+			$iaModel->total_action_plan = $ia_action_plan;
+			$iaModel->read_action_plan 	= $ia_action_plan;
+			//$iaModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
+			//$iaModel->inspection_closure_date = date('Y-m-d h:i:s');
+			$iaModel->pending_closure  = $ia_pending_closure;
+			$iaModel->save();
+			
+			
+			$loData = Dashboard_notification::where('user_type', 2)->where('task_id', $arr['task_id'])->first();
+			$id = $loData ? $loData->id : null;
+			
+			$lo_pending_closure = $loData ? $loData->pending_closure : 0;
+			$lo_pending_closure = $lo_pending_closure +1;
+			
+			$lo_action_plan = $loData ? $loData->total_action_plan : 0;
+			$lo_action_plan = $lo_action_plan -1;
+			
+			
+			//updatefor location owner
+			$loModel = Dashboard_notification::find($id);
+			$loModel->total_action_plan 	= $lo_action_plan;
+			$loModel->read_action_plan 	= $lo_action_plan;
+			//$loModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
+			//$loModel->inspection_closure_date = date('Y-m-d h:i:s');
+			$loModel->pending_closure  = $lo_pending_closure;
+			$loModel->save();
+			
+			
+			$losData = Dashboard_notification::where('user_type', 3)->where('task_id', $arr['task_id'])->first();
+			$id = $losData ? $losData->id : null;
+			
+			$los_pending_closure = $losData ? $losData->pending_closure : 0;
+			$los_pending_closure = $los_pending_closure +1;
+			
+			$los_action_plan = $losData ? $losData->total_action_plan : 0;
+			$los_action_plan = $los_action_plan -1;
+			
+			//updatefor location owner supervisor
+			$losModel = Dashboard_notification::find($id);
+			$losModel->total_action_plan 	= $los_action_plan;
+			$losModel->read_action_plan 	= $los_action_plan;
+			//$losModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
+			//$losModel->inspection_closure_date = date('Y-m-d h:i:s');
+			$losModel->pending_closure  = $los_pending_closure;
+			$losModel->save();
+		}
+		
+		if($arr['mode'] == 'approved_checklist')
+		{
+			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->first();
+			$id = $iaData ? $iaData->id : null;
+			
+			$ia_pending_closure = $iaData ? $iaData->pending_closure : 0;
+			$ia_pending_closure = $ia_pending_closure -1;
+			
+			$ia_action_plan = $iaData ? $iaData->total_action_plan : 0;
+			$ia_action_plan = $ia_action_plan -1;
+			
+			$ia_inspection_closure = $iaData ? $iaData->total_inspection_closure : 0;
+			$ia_inspection_closure = $ia_inspection_closure +1;
+			
+			$iaModel = Dashboard_notification::find($id);
+			$iaModel->total_action_plan = $ia_action_plan;
+			$iaModel->read_action_plan 	= $ia_action_plan;
+			$iaModel->total_inspection_closure = $ia_inspection_closure;
+			$iaModel->inspection_closure_date = date('Y-m-d h:i:s');
+			//$iaModel->pending_closure  = $ia_pending_closure;
+			$iaModel->save();
+			
+			
+			$loData = Dashboard_notification::where('user_type', 2)->where('task_id', $arr['task_id'])->first();
+			$id = $loData ? $loData->id : null;
+			
+			$lo_pending_closure = $loData ? $loData->pending_closure : 0;
+			$lo_pending_closure = $lo_pending_closure -1;
+			
+			$lo_action_plan = $loData ? $loData->total_action_plan : 0;
+			$lo_action_plan = $lo_action_plan -1;
+			
+			$lo_inspection_closure = $loData ? $loData->total_inspection_closure : 0;
+			$lo_inspection_closure = $lo_inspection_closure +1;
+			
+			//updatefor location owner
+			$loModel = Dashboard_notification::find($id);
+			$loModel->total_action_plan 	= $lo_action_plan;
+			$loModel->read_action_plan 	= $lo_action_plan;
+			$loModel->total_inspection_closure = $lo_inspection_closure;
+			$loModel->inspection_closure_date = date('Y-m-d h:i:s');
+			//$loModel->pending_closure  = $lo_pending_closure;
+			$loModel->save();
+			
+			
+			$losData = Dashboard_notification::where('user_type', 3)->where('task_id', $arr['task_id'])->first();
+			$id = $losData ? $losData->id : null;
+			
+			$los_pending_closure = $losData ? $losData->pending_closure : 0;
+			$los_pending_closure = $los_pending_closure -1;
+			
+			$los_action_plan = $losData ? $losData->total_action_plan : 0;
+			$los_action_plan = $los_action_plan -1;
+			
+			$los_inspection_closure = $losData ? $losData->total_inspection_closure : 0;
+			$los_inspection_closure = $los_inspection_closure +1;
+			
+			//updatefor location owner supervisor
+			$losModel = Dashboard_notification::find($id);
+			$losModel->total_action_plan 	= $los_action_plan;
+			$losModel->read_action_plan 	= $los_action_plan;
+			$losModel->total_inspection_closure = $los_inspection_closure;
+			$losModel->inspection_closure_date = date('Y-m-d h:i:s');
+			//$losModel->pending_closure  = $los_pending_closure;
+			$losModel->save();
+		}
+	}
 ?>

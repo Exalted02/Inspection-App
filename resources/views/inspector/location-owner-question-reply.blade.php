@@ -231,6 +231,24 @@ use Carbon\Carbon;
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+  // Detect if device is mobile
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+ 
+  window.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.getElementById('lo_file');
+ 
+    if (isMobileDevice()) {
+      // Add capture attribute (forces camera)
+      fileInput.setAttribute('capture', 'camera');
+    } else {
+      // Remove capture attribute (normal browse)
+      fileInput.removeAttribute('capture');
+    }
+  });
+</script>
+<script>
 $(document).on('click','.forward-task', function(){
 	$('#forward-task').modal('show');
 });

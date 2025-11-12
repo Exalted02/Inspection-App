@@ -339,6 +339,37 @@ if(!empty($task_id))
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ 
+<script>
+  // Detect if device is mobile
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+ 
+  window.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.getElementById('task_image');
+ 
+    if (isMobileDevice()) {
+      // Add capture attribute (forces camera)
+      fileInput.setAttribute('capture', 'camera');
+    } else {
+      // Remove capture attribute (normal browse)
+      fileInput.removeAttribute('capture');
+    }
+  });
+  
+  window.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.getElementById('adhoc_task_image');
+ 
+    if (isMobileDevice()) {
+      // Add capture attribute (forces camera)
+      fileInput.setAttribute('capture', 'camera');
+    } else {
+      // Remove capture attribute (normal browse)
+      fileInput.removeAttribute('capture');
+    }
+  });
+</script>
 <script>
 $(document).ready(function() {
 

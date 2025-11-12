@@ -26,12 +26,15 @@ use App\Models\Task_list_corrective_action_details;
 use Illuminate\Support\Facades\DB;
 use App\Models\Users_location;
 use App\Models\Task_categories_checklist_subchecklist;
+//use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
+
+use App\Models\Dashboard_notification;
 
 class DashboardInspectorController extends Controller
 {
     public function inspector_dashboard()
     {
-		
 		$data = [];
 		if(auth()->user()->user_type == 4)
 		{
@@ -739,6 +742,19 @@ class DashboardInspectorController extends Controller
 							
 							$filename = uniqid() . '.'. $file->getClientOriginalExtension();
 							$file->move($destinationPath, $filename);
+							
+							//----resize code --
+							
+							/*$filename = uniqid() . '.' . $file->getClientOriginalExtension();
+							$img = Image::make($file->getRealPath());
+							
+							// Resize if needed (optional)
+							$img->resize(1280, 720, function ($constraint) {
+								$constraint->aspectRatio();
+								$constraint->upsize();
+							});
+							
+							$img->save($destinationPath . '/' . $filename, 60);*/ // 60 = compression quality
 							
 							//  insert into table 
 							$model = new Task_list_checklist_rejected_files();
@@ -1701,6 +1717,7 @@ class DashboardInspectorController extends Controller
 	}
 	public function submit_completed_task(Request $request)
 	{
+		
 		$task_id = $request->task_id;
 		$category_id = $request->category_id;
 		//$subcategory_id = $request->subcategory_id; // 21-05-2025
@@ -1740,7 +1757,32 @@ class DashboardInspectorController extends Controller
 				$taskModel->status = 2;
 			}
 			$taskModel->save();
-			//---
+			
+			
+			//=======add to dashboard_notification table ======
+			$count_reject_checklist = Task_list_checklists::where('task_list_id', $request->task_id)->where('category_id', $request->category_id)->where('approve', 0)->count();
+			
+			$count_reject_subchecklist = Task_list_subchecklists::where('task_list_id', $request->task_id)->where('category_id', $request->category_id)->where('approve', 0)->count();
+			
+			$count_completed_checklist = Task_list_checklists::where('task_list_id', $request->task_id)->where('category_id', $request->category_id)->where('approve', 1)->count();
+			
+			$count_completed_subchecklist = Task_list_subchecklists::where('task_list_id', $request->task_id)->where('category_id', $request->category_id)->where('approve', 1)->count();
+			
+			$pending_closure = $count_reject_checklist + $count_reject_subchecklist;
+			
+			$total_inspection_closure = $count_completed_checklist + $count_completed_subchecklist;
+			
+			$array = [
+				'mode'        => 'submit_checklist',
+				'task_id'     => $request->task_id,
+				'total_action_plan'	=>	null,
+				'read_action_plan'	=>	null,
+				'total_inspection_closure'	=>	$total_inspection_closure,
+				'inspection_closure_date'	=>	date('Y-m-d h:i:s'),
+				'pending_closure'	=> $pending_closure
+			];
+			dashboard_notification($array); // send to helper
+			
 		}
 		return response()->json(['msg'=>'success']);
 	}
@@ -2438,6 +2480,26 @@ class DashboardInspectorController extends Controller
 		$correctiveActionDtldModel->lo_direct_approve = $request->lo_direct_approve == 'true' ? 1 : 0;
 		$correctiveActionDtldModel->save();
 		
+		// add to dashboard notification table 
+		$get_total_action_plan = Dashboard_notification::where('user_type', 2)->where('task_id', $task_list_id)->first()->total_action_plan;
+		$total_action_plan =  $get_total_action_plan != null ? $get_total_action_plan+1 : 1;
+		
+		$get_read_action_plan = Dashboard_notification::where('user_type', 2)->where('task_id', $task_list_id)->first()->read_action_plan;
+		$read_action_plan =  $get_read_action_plan != null ? $get_read_action_plan+1 : 1;
+		
+		$array = [
+				'mode'        => 'plan_action',
+				'task_id'     => $task_list_id,
+				'total_action_plan'	=>	$total_action_plan,
+				'read_action_plan'	=>	$read_action_plan,
+				'total_inspection_closure'	=>	null,
+				'inspection_closure_date'	=>	null,
+				'pending_closure'	=> null
+			];
+		dashboard_notification($array); // send to helper
+		
+		
+		
 		return response()->json(['location_id'=>$location_id, 'task_id'=>$task_list_id]);
 	}
 	
@@ -2973,6 +3035,42 @@ class DashboardInspectorController extends Controller
 			$correctiveActionDtldModel->save();
 		}
 		
+		// add to dashboard_notification
+		$if_approved = Task_list_corrective_action::where('id', $id)->first();
+		if($if_approved->inspector_action == 1 && $if_approved->los_action == 1)
+		{
+			$array = [
+					'mode'        => 'approved_checklist',
+					'task_id'     => $request->task_id,
+					'total_action_plan'	=>	null,
+					'read_action_plan'	=>	null,
+					'total_inspection_closure'	=>	null,
+					'inspection_closure_date'	=>	null,
+					'pending_closure'	=> null
+				];
+				
+			dashboard_notification($array); // send to helper
+		}
+		else
+		{
+			if($inspector_action == 2)
+			{
+				$array = [
+					'mode'        => 'reject_checklist',
+					'task_id'     => $request->task_id,
+					'total_action_plan'	=>	null,
+					'read_action_plan'	=>	null,
+					'total_inspection_closure'	=>	null,
+					'inspection_closure_date'	=>	null,
+					'pending_closure'	=> null
+				];
+				
+			  dashboard_notification($array); // send to helper
+			}
+		}
+		
+		
+		
 		return response()->json(['message'=>'success', 'ins_action'=>$ins_action, 'los_action'=>$los_action]);
 	}
 	
@@ -3124,6 +3222,24 @@ class DashboardInspectorController extends Controller
 		// update the status of Task lists after approve by lo 
 		
 		//Task_lists ::where('id',$task_id)->update(['status'=>4]);
+		
+		// add to dashboard notification table 
+		$get_total_action_plan = Dashboard_notification::where('user_type', 2)->where('task_id', $task_id)->first()->total_action_plan;
+		$total_action_plan =  $get_total_action_plan != null ? $get_total_action_plan+1 : 1;
+		
+		$get_read_action_plan = Dashboard_notification::where('user_type', 2)->where('task_id', $task_id)->first()->read_action_plan;
+		$read_action_plan =  $get_read_action_plan != null ? $get_read_action_plan+1 : 1;
+		
+		$array = [
+				'mode'        => 'plan_action',
+				'task_id'     => $task_id,
+				'total_action_plan'	=>	$total_action_plan,
+				'read_action_plan'	=>	$read_action_plan,
+				'total_inspection_closure'	=>	null,
+				'inspection_closure_date'	=>	null,
+				'pending_closure'	=> null
+			];
+		dashboard_notification($array); // send to helper
 		
 
 		return response()->json(['message'=>'success']);
@@ -3366,6 +3482,40 @@ class DashboardInspectorController extends Controller
 		
 		// update the status of Task lists after final approve by inspector or los 
 		//Task_lists ::where('id',$task_list_id)->update(['status'=>5]);
+		
+		// add to dashboard_notification
+		$if_approved = Task_list_corrective_action::where('id', $id)->first();
+		if($if_approved->inspector_action == 1 && $if_approved->los_action == 1)
+		{
+			$array = [
+					'mode'        => 'approved_checklist',
+					'task_id'     => $request->task_id,
+					'total_action_plan'	=>	null,
+					'read_action_plan'	=>	null,
+					'total_inspection_closure'	=>	null,
+					'inspection_closure_date'	=>	null,
+					'pending_closure'	=> null
+				];
+			dashboard_notification($array); // send to helper
+		}
+		else
+		{
+			if($inspector_action == 2 || $los_action == 2)
+			{
+				$array = [
+					'mode'        => 'reject_checklist',
+					'task_id'     => $request->task_id,
+					'total_action_plan'	=>	null,
+					'read_action_plan'	=>	null,
+					'total_inspection_closure'	=>	null,
+					'inspection_closure_date'	=>	null,
+					'pending_closure'	=> null
+				];
+			dashboard_notification($array); // send to helper
+			}
+		}
+		
+		
 		
 		return response()->json(['message'=>'success']);
 	}
