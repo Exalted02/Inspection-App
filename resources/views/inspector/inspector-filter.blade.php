@@ -57,6 +57,14 @@ $totalAction = $countAction;
 $totalPlan = $countPlan;
 $totalapprcompleted = $countCompleted;
 //echo "<pre>";print_r($approvedCompletedArray);die;
+
+// for my dashboard work
+
+$tabname = Session::get('tabname');
+if($tabname == 'ia-action-plan')
+{
+	$dashboard_notification  = App\Models\Dashboard_notification::where('user_type', 1)->where('location_id', $location_id)->where('user_id', auth()->user()->id)->update(['total_action_plan'=> 0, 'read_action_plan'=> 0]);
+}
 @endphp
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	

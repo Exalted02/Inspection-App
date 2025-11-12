@@ -179,6 +179,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('lo-transfer-location', [DashboardInspectorController::class, 'lo_transfer_location'])->name('lo-transfer-location');
 	Route::post('lo-update-nofication-status', [DashboardInspectorController::class, 'lo_update_nofication_status'])->name('lo-update-nofication-status');
 	
+	Route::post('select-dashboard-tab', [DashboardInspectorController::class, 'select_dashboard_tab'])->name('select-dashboard-tab');
+	
 	
 	//Management  
 	Route::get('/management-dashboard/{slug}', [ManagementController::class, 'index'])->name('management-dashboard');

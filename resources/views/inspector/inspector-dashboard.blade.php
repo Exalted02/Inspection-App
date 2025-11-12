@@ -617,6 +617,13 @@ $pending_closure_plan_red_dot = $pending_closure != 0 ? 1 : '';
 $inspection_closure =$correctiveApprovedCount;
 $inspection_closure_red_dot = $inspection_closure != 0 ? 1 : '';
 
+// work for count my-dashboard 
+if(auth()->user()->user_type == 1)
+{
+	$ia_action_plan_count_data = App\Models\Dashboard_notification::where('user_type', 1)->where('user_id', auth()->user()->id)->first();
+	$ia_action_plan_count = $ia_action_plan_count_data ? $ia_action_plan_count_data->total_action_plan : 0;
+}
+
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
@@ -665,6 +672,7 @@ $inspection_closure_red_dot = $inspection_closure != 0 ? 1 : '';
 				</div>
 				@if(auth()->user()->user_type == 1)
 				<div class="row padding-bottom">
+					<a href="javascript:void(0)" class="ia-corrective-action-plan" data-tab="ia-action-plan">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($open_corrective_action_plan_red_dot))
@@ -672,11 +680,12 @@ $inspection_closure_red_dot = $inspection_closure != 0 ? 1 : '';
 						@endif
 							<div class="small-card-title">Open corrective action/plan</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>
+								<div class="small-card-upper-counter me-2">{{ $ia_action_plan_count }}</div>
+								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
 						</div>
-					</div>
+					</div></a>
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
 							@if(!empty($inspection_closure_red_dot))
@@ -837,7 +846,7 @@ $inspection_closure_red_dot = $inspection_closure != 0 ? 1 : '';
 					<!-- Heading Area End -->        
 					<div class="col-sm-12 col-xs-12 col-md-12">                     
                     <!-- Latest Featured Ads  -->
-                    <div class="row ">
+                    <div class="row" id="location-scroll">
                      	<div class="grid-style-2">
 						@foreach($userdata->get_user_location as $locations)
 						@php
@@ -1229,6 +1238,29 @@ $(document).ready(function() {
 				}
 			});
 	}
+	
+	$(document).on('click', '.ia-corrective-action-plan', function(){
+		
+		var tab = $(this).data('tab');
+		var URL = "{{ route('select-dashboard-tab') }}";
+			$.ajax({
+				url: URL,
+				type: "POST",
+				data: {tab:tab, _token: csrfToken},
+				dataType: 'json',
+				success: function(response) {
+					$('html, body').animate({
+					  scrollTop: $('#location-scroll').offset().top
+					}, 800);
+				},
+				complete: function() {
+					//$('.load-more-appr').html('Load more');
+				}
+			});
+		
+		 
+		
+	})
 });
 </script>
 @endsection

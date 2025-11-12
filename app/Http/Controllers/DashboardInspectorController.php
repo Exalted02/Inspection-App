@@ -30,6 +30,7 @@ use App\Models\Task_categories_checklist_subchecklist;
 use Intervention\Image\Laravel\Facades\Image;
 
 use App\Models\Dashboard_notification;
+use Illuminate\Support\Facades\Session;
 
 class DashboardInspectorController extends Controller
 {
@@ -12690,6 +12691,13 @@ class DashboardInspectorController extends Controller
 		$html .= '</ul>';
 
 		return response()->json(['html'=> $html]);
+	}
+	
+	public function select_dashboard_tab(Request $request)
+	{
+		$tab = $request->tab ?? '';
+		Session::put('tabname', $tab);
+		return response()->json(['tab'=> $tab]);
 	}
 	
 }
