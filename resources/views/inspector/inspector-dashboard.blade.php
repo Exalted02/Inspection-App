@@ -698,7 +698,7 @@ if(auth()->user()->user_type == 3)
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($ia_action_plan_count))
-						<span class="notification-badge"></span>
+						<span class="notification-badge" id="ia_action_plan_badge"></span>
 						@endif
 							<div class="small-card-title">Open corrective action/plan</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
@@ -713,7 +713,7 @@ if(auth()->user()->user_type == 3)
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
 							@if(!empty($ia_total_ins_closure))
-							<span class="notification-badge"></span>
+							<span class="notification-badge" id="ia_completed_badge"></span>
 							@endif
 							<div class="small-card-title">Inspection closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
@@ -755,7 +755,7 @@ if(auth()->user()->user_type == 3)
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($open_corrective_action_plan_red_dot))
-						<span class="notification-badge"></span>
+						<span class="notification-badge" id="lo_action_plan_badge"></span>
 						@endif
 							<div class="small-card-title">Open corrective action/plan</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
@@ -813,7 +813,7 @@ if(auth()->user()->user_type == 3)
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($los_pending_closure_count))
-						<span class="notification-badge"></span>
+						<span class="notification-badge" id="los_pending_closure_badge"></span>
 						@endif
 							<div class="small-card-title">Pending closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
@@ -1311,6 +1311,30 @@ function get_mydashboard_data()
 			$('#ia_total_ins_closure').html(response.ia_total_ins_closure);
 			$('#lo_action_plan_count').html(response.lo_action_plan_count);
 			$('#los_pending_closure_count').html(response.los_pending_closure_count);
+			
+			$('#ia_action_plan_badge').show();
+			$('#ia_completed_badge').show();
+			$('#lo_action_plan_badge').show();
+			$('#los_pending_closure_badge').show();
+			if(response.ia_action_plan_count == 0)
+			{
+				$('#ia_action_plan_badge').hide();
+			}
+			
+			if(response.ia_total_ins_closure == 0)
+			{
+				$('#ia_completed_badge').hide();
+			}
+			
+			if(response.lo_action_plan_count == 0)
+			{
+				$('#lo_action_plan_badge').hide();
+			}
+			
+			if(response.los_pending_closure_count == 0)
+			{
+				$('#los_pending_closure_badge').hide();
+			}
 		},
 		complete: function() {
 			//$('.load-more-appr').html('Load more');
