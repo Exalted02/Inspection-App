@@ -180,6 +180,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('lo-update-nofication-status', [DashboardInspectorController::class, 'lo_update_nofication_status'])->name('lo-update-nofication-status');
 	
 	Route::post('select-dashboard-tab', [DashboardInspectorController::class, 'select_dashboard_tab'])->name('select-dashboard-tab');
+	Route::post('show-dashboard-record-interval', [DashboardInspectorController::class, 'show_dashboard_record_interval'])->name('show-dashboard-record-interval');
 	
 	
 	//Management  

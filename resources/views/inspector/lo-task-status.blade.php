@@ -249,6 +249,12 @@ $totalapprcompleted = $countCompleted;
 //echo "<pre>";print_r($correctiveActionArray);die;
 //echo "<pre>";print_r($correctiveNeededArray);die;
 
+$tabname = Session::get('tabname');
+if($tabname == 'lo-action-plan')
+{
+	$dashboard_notification  = App\Models\Dashboard_notification::where('user_type', 2)->where('location_id', $location_id)->where('user_id', auth()->user()->id)->update(['total_action_plan'=> 0, 'read_action_plan'=> 0]);
+	Session::forget('tabname');
+}
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	

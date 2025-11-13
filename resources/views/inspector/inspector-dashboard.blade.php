@@ -618,10 +618,32 @@ $inspection_closure =$correctiveApprovedCount;
 $inspection_closure_red_dot = $inspection_closure != 0 ? 1 : '';
 
 // work for count my-dashboard 
+$ia_action_plan_count =0;
+$ia_total_ins_closure = 0;
+$lo_action_plan_count = 0;
+
+$los_action_plan_count = 0;
+$los_corrective_needed = 0;
+
 if(auth()->user()->user_type == 1)
 {
-	$ia_action_plan_count_data = App\Models\Dashboard_notification::where('user_type', 1)->where('user_id', auth()->user()->id)->first();
-	$ia_action_plan_count = $ia_action_plan_count_data ? $ia_action_plan_count_data->total_action_plan : 0;
+	$ia_action_plan_count = App\Models\Dashboard_notification::where('user_type', 1)->where('user_id', auth()->user()->id)->sum('total_action_plan');
+	
+	$ia_total_ins_closure = App\Models\Dashboard_notification::where('user_type', 1)->where('user_id', auth()->user()->id)->sum('total_inspection_closure');
+	
+}
+
+if(auth()->user()->user_type == 2)
+{
+	$lo_action_plan_count = App\Models\Dashboard_notification::where('user_type', 2)->where('user_id', auth()->user()->id)->sum('total_action_plan');
+}
+
+if(auth()->user()->user_type == 3)
+{
+	$los_action_plan_count = App\Models\Dashboard_notification::where('user_type', 3)->where('user_id', auth()->user()->id)->sum('total_action_plan');
+	
+	$los_corrective_needed = App\Models\Dashboard_notification::where('user_type', 3)->where('user_id', auth()->user()->id)->sum('pending_closure');
+	$los_pending_closure_count = $los_action_plan_count + $los_corrective_needed;
 }
 
 @endphp
@@ -672,32 +694,35 @@ if(auth()->user()->user_type == 1)
 				</div>
 				@if(auth()->user()->user_type == 1)
 				<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="ia-corrective-action-plan" data-tab="ia-action-plan">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-action-plan">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
-						@if(!empty($open_corrective_action_plan_red_dot))
+						@if(!empty($ia_action_plan_count))
 						<span class="notification-badge"></span>
 						@endif
 							<div class="small-card-title">Open corrective action/plan</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2">{{ $ia_action_plan_count }}</div>
+								<div class="small-card-upper-counter me-2"><span id="ia_action_plan_count">{{ $ia_action_plan_count }}</span></div>
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
 						</div>
 					</div></a>
+					
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-completed-plan">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
-							@if(!empty($inspection_closure_red_dot))
+							@if(!empty($ia_total_ins_closure))
 							<span class="notification-badge"></span>
 							@endif
 							<div class="small-card-title">Inspection closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>
+							<div class="small-card-upper-counter me-2"><span id="ia_total_ins_closure">{{ $ia_total_ins_closure }}</span></div>
+							{{--<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
 						</div>
-					</div>
+					</div></a>
 				</div>
 				<div class="row flex-wrap d-flex">
 					<div class="col-md-4 col-sm-4 col-xs-4 small-card-first">
@@ -726,6 +751,7 @@ if(auth()->user()->user_type == 1)
 				
 				@if(auth()->user()->user_type == 2)
 					<div class="row padding-bottom">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-action-plan">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($open_corrective_action_plan_red_dot))
@@ -733,11 +759,12 @@ if(auth()->user()->user_type == 1)
 						@endif
 							<div class="small-card-title">Open corrective action/plan</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>
+							<div class="small-card-upper-counter me-2"><span id="lo_action_plan_count">{{ $lo_action_plan_count }}</span></div>
+								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
 						</div>
-					</div>
+					</div></a>
 					{{--<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
 							<span class="notification-badge"></span>
@@ -782,18 +809,20 @@ if(auth()->user()->user_type == 1)
 				
 				@if(auth()->user()->user_type == 3)
 					<div class="row padding-bottom">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="los-action-plan-needed">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
-						@if(!empty($pending_closure_plan_red_dot))
+						@if(!empty($los_pending_closure_count))
 						<span class="notification-badge"></span>
 						@endif
 							<div class="small-card-title">Pending closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
+								<div class="small-card-upper-counter me-2"><span id="los_pending_closure_count">{{ $los_pending_closure_count }}</span></div>
+								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
 						</div>
-					</div>
+					</div></a>
 					{{--<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
 							<span class="notification-badge"></span>
@@ -1214,6 +1243,10 @@ if(auth()->user()->user_type == 1)
 @section('scripts')
 <script>
 $(document).ready(function() {
+	setInterval(function() { 
+		get_mydashboard_data();
+	}, 10000); 
+	
 	var notifi_status = $('#notifi_status').val();
 	
 	//alert(notifi_status);
@@ -1239,7 +1272,7 @@ $(document).ready(function() {
 			});
 	}
 	
-	$(document).on('click', '.ia-corrective-action-plan', function(){
+	$(document).on('click', '.my-dashboard-click', function(){
 		
 		var tab = $(this).data('tab');
 		var URL = "{{ route('select-dashboard-tab') }}";
@@ -1249,6 +1282,7 @@ $(document).ready(function() {
 				data: {tab:tab, _token: csrfToken},
 				dataType: 'json',
 				success: function(response) {
+					//alert(response.tab);
 					$('html, body').animate({
 					  scrollTop: $('#location-scroll').offset().top
 					}, 800);
@@ -1262,6 +1296,27 @@ $(document).ready(function() {
 		
 	})
 });
+
+function get_mydashboard_data()
+{
+	//alert('ok');
+	$.ajax({
+		url: "{{ route('show-dashboard-record-interval') }}",
+		type: "POST",
+		data: {_token: csrfToken},
+		dataType: 'json',
+		success: function(response) {
+			//alert(response.tab);
+			$('#ia_action_plan_count').html(response.ia_action_plan_count);
+			$('#ia_total_ins_closure').html(response.ia_total_ins_closure);
+			$('#lo_action_plan_count').html(response.lo_action_plan_count);
+			$('#los_pending_closure_count').html(response.los_pending_closure_count);
+		},
+		complete: function() {
+			//$('.load-more-appr').html('Load more');
+		}
+	});
+}
 </script>
 @endsection
 

@@ -169,6 +169,16 @@ $totalapprcompleted = $countCompleted;
 
 //echo "<pre>";print_r($approvedCompletedArray);
 
+$tabname = Session::get('tabname');
+if($tabname == 'los-action-plan-needed')
+{
+	$dashboard_notification  = App\Models\Dashboard_notification::where('user_type', 3)->where('location_id', $location_id)->where('user_id', auth()->user()->id)->update(['total_action_plan'=> 0, 'read_action_plan'=> 0]);
+	
+	App\Models\Dashboard_notification::where('user_type', 3)->where('location_id', $location_id)->where('user_id', auth()->user()->id)->update(['pending_closure'=> 0]);
+	
+	Session::forget('tabname');
+}
+
 @endphp
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	

@@ -12699,5 +12699,44 @@ class DashboardInspectorController extends Controller
 		Session::put('tabname', $tab);
 		return response()->json(['tab'=> $tab]);
 	}
+	public function show_dashboard_record_interval(Request $request)
+	{
+		$user_type = auth()->user()->user_type;
+		$ia_action_plan_count = 0;
+		$ia_total_ins_closure = 0;
+		$lo_action_plan_count = 0;
+		$los_action_plan_count = 0;
+		$los_corrective_needed = 0;
+		$los_pending_closure_count = 0;
+		
+		if($user_type == 1)
+		{
+			$ia_action_plan_count = Dashboard_notification::where('user_type', 1)->where('user_id', auth()->user()->id)->sum('total_action_plan');
+	
+			$ia_total_ins_closure = Dashboard_notification::where('user_type', 1)->where('user_id', auth()->user()->id)->sum('total_inspection_closure');
+		}
+		
+		if($user_type == 2)
+		{
+			$lo_action_plan_count = Dashboard_notification::where('user_type', 2)->where('user_id', auth()->user()->id)->sum('total_action_plan');
+		}
+		
+		if($user_type == 3)
+		{
+			$los_action_plan_count = Dashboard_notification::where('user_type', 3)->where('user_id', auth()->user()->id)->sum('total_action_plan');
+	
+			$los_corrective_needed = Dashboard_notification::where('user_type', 3)->where('user_id', auth()->user()->id)->sum('pending_closure');
+			$los_pending_closure_count = $los_action_plan_count + $los_corrective_needed;
+		}
+		
+		return response()->json(
+			[
+				'ia_action_plan_count' => $ia_action_plan_count,
+				'ia_total_ins_closure' => $ia_total_ins_closure,
+				'lo_action_plan_count' => $lo_action_plan_count,
+				'los_pending_closure_count' => $los_pending_closure_count
+			]
+		);
+	}
 	
 }
