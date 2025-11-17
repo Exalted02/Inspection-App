@@ -649,12 +649,12 @@ if(auth()->user()->user_type == 3)
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card">
-		<div class="profile-banner" style="background-image: url( '{{ $backgroung_img ?? '' }} ')">
+		{{--<div class="profile-banner profile-banner-fixed" style="background-image: url( '{{ $backgroung_img ?? '' }} ')">--}}
+		<div class="profile-banner profile-banner-fixed">
 		<div class="message-forward-bg">
 		  <div class="center-fixed corrective-message-forward" style="display:none;">
 		  </div>
 		</div>
-			{{--<div class="notification-message" style="display:none;"></div>--}}
 			<div class="mega-menu">
 				<ul class="menu-logo">
 					<li>
@@ -671,12 +671,14 @@ if(auth()->user()->user_type == 3)
 				</ul>
 			</div>
 		</div>
-		<div class="profile-info">
+		<div class="profile-info container">
 			<img class="profile-avatar" src="{{ $profile_img ?? '' }}" alt="Profile Picture">
-			<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
-			<p class="profile-description">
-			{{$user_type_name ?? ''}} at {{ $userdata->get_company->company_name ?? '' }}<br>
-			</p>
+			<div class="width-100 ml-10px">
+				<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
+				<p class="profile-description">
+				{{$user_type_name ?? ''}} at {{ $userdata->get_company->company_name ?? '' }}<br>
+				</p>
+			</div>
 		</div>
 	</div>
     <!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 

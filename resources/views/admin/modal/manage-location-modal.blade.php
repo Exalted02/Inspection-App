@@ -145,7 +145,7 @@
 												<input class="form-control" type="file" name="location_image" id="location_image" accept="image/*" style="display:none;">
 												<label for="location_image" class="profile-upload-label">
 													<i class="fa fa-upload task-upload-icon"></i>
-													<span class="task-upload-text">Upload image</span>
+													{{--<span class="task-upload-text">Upload image</span>--}}
 												</label>
 												</div>
 												<span id="taskimage_id_error" style="display:none;color: red;">please </span>

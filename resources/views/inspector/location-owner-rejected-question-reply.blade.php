@@ -760,17 +760,17 @@
 								</div>
 							</div>
 							<div class="row align-items-center">
-								<div class="col-md-4">
+								<div class="col-md-12">
 									<label for="lo_file"></label>
 									<div class="upload-wrapper">
 									  <input type="file" name="lo_file[]" id="lo_file" multiple style="display: none;">
 									  <label for="lo_file" class="custom-upload-label">
-										<span class="upload-text">Upload image</span>
+										{{--<span class="upload-text">Upload image</span>--}}
 										<i class="fa fa-upload upload-icon"></i>
 									  </label>
 									</div>
 								</div>
-								<div class="col-md-8 d-flex flex-wrap gap-2" id="preview-container">
+								<div class="col-md-12 d-flex flex-wrap gap-4" id="preview-container">
 								</div>
 							</div>
 							<div class="row">

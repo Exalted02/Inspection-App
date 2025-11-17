@@ -115,12 +115,12 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 					<div class="upload-wrapper">
 					  <input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">
 					  <label for="checklist_file" class="custom-upload-label">
-						<span class="upload-text">Upload image</span>
+					    {{--<span class="upload-text">Upload image</span>--}}
 						<i class="fa fa-upload upload-icon"></i>
 					  </label>
 					</div>
 				</div>
-				<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">
+				<div class="col-md-12 d-flex flex-wrap gap-4" id="preview-checklist-container">
 				@if(!empty($existingFiles))
 					@foreach($existingFiles as $files)
 						<div class="preview-image-wrapper">
@@ -474,13 +474,13 @@ $(document).ready(function() {
 						html +=	'<div class="upload-wrapper">';
 						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
 						html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
-						html +=	'<span class="upload-text">Upload image</span>';
+						/*html +=	'<span class="upload-text">Upload image</span>';*/
 						html +=	'<i class="fa fa-upload upload-icon"></i>';
 						html +=	'</label>';
 						html +=	'</div>';
 						html += '</div>';
 						
-						html += '<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						html += '<div class="col-md-12 d-flex flex-wrap gap-4 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
 						response.existingSubChecklistFiles.forEach(function (file) {
 							
 							if(file.subchecklist_id == item.id)
@@ -708,13 +708,13 @@ $(document).ready(function() {
 						html += '<div class="upload-wrapper">';
 						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
 						html += '<label for="checklist_file" class="custom-upload-label">';
-						html += '<span class="upload-text">Upload image</span>';
+						/*html += '<span class="upload-text">Upload image</span>';*/
 						html += '<i class="fa fa-upload upload-icon"></i>';
 						html += '</label>';
 						html += '</div>';
 						html += '</div>';
 						
-						html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+						html += '<div class="col-md-12 d-flex flex-wrap gap-4" id="preview-checklist-container">';
 						response.existingNextFiles.forEach(function (file) {
 								if(file.name != '')
 								{
@@ -1721,7 +1721,7 @@ $(document ).ready(function() {
 						html +=	'<div class="upload-wrapper">';
 						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
 						html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
-						html +=	'<span class="upload-text">Upload image</span>';
+						/*html +=	'<span class="upload-text">Upload image</span>';*/
 						html +=	'<i class="fa fa-upload upload-icon"></i>';
 						html +=	'</label>';
 						html +=	'</div>';
@@ -1729,7 +1729,7 @@ $(document ).ready(function() {
 						/*html += '<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
 						html += '</div>';*/
 						
-						html += '<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						html += '<div class="col-md-12 d-flex flex-wrap gap-4 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
 						response.existingSubChecklistFiles.forEach(function (file) {
 							
 							if(file.subchecklist_id == item.id)
@@ -2007,12 +2007,12 @@ $(document ).ready(function() {
 						html += '<div class="upload-wrapper">';
 						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
 						html += '<label for="checklist_file" class="custom-upload-label">';
-						html += '<span class="upload-text">Upload image</span>';
+						/*html += '<span class="upload-text">Upload image</span>';*/
 						html += '<i class="fa fa-upload upload-icon"></i>';
 						html += '</label>';
 						html += '</div>';
 						html += '</div>';
-						html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+						html += '<div class="col-md-12 d-flex flex-wrap gap-4" id="preview-checklist-container">';
 						response.existingNextFiles.forEach(function (file) {
 								if(file.name != '')
 								{
@@ -2518,12 +2518,12 @@ $(document ).ready(function() {
 						html +=	'<div class="upload-wrapper">';
 						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
 						html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
-						html +=	'<span class="upload-text">Upload image</span>';
+						/*html +=	'<span class="upload-text">Upload image</span>';*/
 						html +=	'<i class="fa fa-upload upload-icon"></i>';
 						html +=	'</label>';
 						html +=	'</div>';
 						html += '</div>';
-						html += '<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						html += '<div class="col-md-12 d-flex flex-wrap gap-4 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
 						//response.existingSubChecklistFiles.forEach(function (file) {
 						
 						response.existingSubChecklistFiles.forEach((file, index) => {
@@ -2764,12 +2764,12 @@ $(document ).ready(function() {
 						html += '<div class="upload-wrapper">';
 						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
 						html += '<label for="checklist_file" class="custom-upload-label">';
-						html += '<span class="upload-text">Upload image</span>';
+						/*html += '<span class="upload-text">Upload image</span>';*/
 						html += '<i class="fa fa-upload upload-icon"></i>';
 						html += '</label>';
 						html += '</div>';
 						html += '</div>';
-						html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+						html += '<div class="col-md-12 d-flex flex-wrap gap-4" id="preview-checklist-container">';
 						response.existingPreviousFiles.forEach(function (file) {
 							
 							if(file.name != '')
@@ -3087,12 +3087,12 @@ $(document ).ready(function() {
 							html +=	'<div class="upload-wrapper">';
 							html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
 							html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
-							html +=	'<span class="upload-text">Upload image</span>';
+							/*html +=	'<span class="upload-text">Upload image</span>';*/
 							html +=	'<i class="fa fa-upload upload-icon"></i>';
 							html +=	'</label>';
 							html +=	'</div>';
 						html +='</div>';
-						html +='<div class="col-md-12 d-flex flex-wrap gap-2 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
+						html +='<div class="col-md-12 d-flex flex-wrap gap-4 preview-subchecklist-container" id="preview-subchecklist-container-' + item.id + '">';
 						response.existingSubChecklistFiles.forEach(function (file) {
 							//alert(file.name);
 							if(file.subchecklist_id == item.id)
@@ -3369,12 +3369,12 @@ $(document ).ready(function() {
 							html += '<div class="upload-wrapper">';
 							html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
 							html += '<label for="checklist_file" class="custom-upload-label">';
-							html += '<span class="upload-text">Upload image</span>';
+							/*html += '<span class="upload-text">Upload image</span>';*/
 							html += '<i class="fa fa-upload upload-icon"></i>';
 							html += '</label>';
 							html += '</div>';
 							html += '</div>';
-							html += '<div class="col-md-12 d-flex flex-wrap gap-2" id="preview-checklist-container">';
+							html += '<div class="col-md-12 d-flex flex-wrap gap-4" id="preview-checklist-container">';
 							response.existingNextFiles.forEach(function (file) {
 								if(file.name != '')
 								{

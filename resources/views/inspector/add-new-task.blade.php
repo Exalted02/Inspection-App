@@ -115,7 +115,7 @@ if(!empty($task_id))
 													<div class="upload-wrapper">
 														<input type="file" name="adhoc_task_image" id="adhoc_task_image" style="display: none;" accept="image/*">
 														<label for="adhoc_task_image" class="task-upload-label">
-														<span class="task-upload-text">Update image</span>
+														{{--<span class="task-upload-text">Upload image</span>--}}
 														<i class="fa fa-upload task-upload-icon"></i>
 														</label>
 														<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
@@ -230,7 +230,7 @@ if(!empty($task_id))
 												<div class="upload-wrapper">
 													<input type="file" name="task_image" id="task_image" style="display: none;" accept="image/*">
 													<label for="task_image" class="task-upload-label">
-													<span class="task-upload-text">Update image</span>
+													{{--<span class="task-upload-text">Upload image</span>--}}
 													<i class="fa fa-upload task-upload-icon"></i>
 													</label>
 													<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>

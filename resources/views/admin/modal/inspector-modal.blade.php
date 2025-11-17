@@ -100,7 +100,7 @@
 												<input class="form-control" type="file" name="avatar" id="avatar" accept="image/*" style="display:none;">
 												<label for="avatar" class="profile-upload-label">
 													<i class="fa fa-upload task-upload-icon"></i>
-													<span class="task-upload-text">Upload image</span>
+													{{--<span class="task-upload-text">Upload image</span>--}}
 												</label>
 												</div>
 												{{--<div class="invalid-feedback">{{ __('please_enter') }} {{ __('image')}}.</div>--}}
@@ -121,7 +121,7 @@
 												<input class="form-control" type="file" name="backgroung_image" id="backgroung_image" accept="image/*" style="display:none;">
 												<label for="backgroung_image" class="profile-upload-label">
 													<i class="fa fa-upload task-upload-icon"></i>
-													<span class="task-upload-text">Upload image</span>
+													{{--<span class="task-upload-text">Upload image</span>--}}
 												</label>
 												</div>
 												{{--<div class="invalid-feedback">{{ __('please_enter') }} {{ __('backgroung_image')}}.</div>--}}

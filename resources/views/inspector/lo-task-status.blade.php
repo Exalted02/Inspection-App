@@ -260,14 +260,16 @@ if($tabname == 'lo-action-plan')
 	
 		<div class="profile-card">
 		<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/locationowner/'. $userdata->background_image )}} ')"></div>
-			<div class="profile-info">
+			<div class="profile-info container">
 				<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/locationowner/'. $userdata->profile_image)}}" alt="Profile Picture">
+				<div class="width-100 ml-10px">
 				<h2 class="profile-name">{{ $userdata->name ?? ''}}</h2>
 				<p class="profile-description">
-					Location Owner at {{ $userdata->get_company->company_name ?? '' }},<br>
+					Location Owner at {{ $userdata->get_company->company_name ?? '' }},
 						{{ $location_name ?? '' }}
 						
 				</p>
+				</div>
 			</div>
 		</div>
     <!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 

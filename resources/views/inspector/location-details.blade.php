@@ -209,7 +209,7 @@ $getCategotyArr = [];
 								<input type="file" name="task_image" id="task_image" style="display: none;">
 								<label for="task_image" class="task-upload-label">
 								<i class="fa fa-upload task-upload-icon"></i>
-								<span class="task-upload-text">Upload image</span>
+								{{--<span class="task-upload-text">Upload image</span>--}}
 								</label>
 								<span id="taskimage_id_error" style="display:none;  color: red; margin-left:17px;">please </span>
 							</div>
