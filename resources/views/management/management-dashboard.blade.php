@@ -412,13 +412,12 @@ $tot_close_obs = 0;
     <!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
     <div class="container">
 		<h2 class="page-title">Welcome to your overview</h2>
-		<div class="page-subtitle">Check out how your factory is performing</div>
-		<div class="row flex-wrap d-flex">
-		<div class="col-md-1 col-sm-2 col-4 mb-2"><button type="button" class="btn">View by</button>
+		<div class="page-subtitle mb-3">Check out how your factory is performing</div>
+		<div class="d-flex gap-4">
+			<div class=" d-flex align-items-center">View by</div>
+			<div class=""><button type="button" class="btn btn-outline-secondary weekly-list-show">Weekly</button>
 			</div>
-			<div class="col-md-1 col-sm-2 col-4 mb-2"><button type="button" class="btn btn-outline-secondary weekly-list-show">Weekly</button>
-			</div>
-			<div class="col-md-1 col-sm-2 col-4 mb-2"><button type="button" class="btn btn-outline-secondary monthly-list-show">Monthly</button>
+			<div class=""><button type="button" class="btn btn-outline-secondary monthly-list-show">Monthly</button>
 			</div>
 		</div>
 		<div class="pt-2 pb-2">

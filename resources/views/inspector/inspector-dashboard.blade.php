@@ -648,7 +648,7 @@ if(auth()->user()->user_type == 3)
 
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
-	<div class="profile-card">
+	<div class="profile-card mb-0">
 		{{--<div class="profile-banner profile-banner-fixed" style="background-image: url( '{{ $backgroung_img ?? '' }} ')">--}}
 		<div class="profile-banner profile-banner-fixed">
 		<div class="message-forward-bg">
