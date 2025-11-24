@@ -133,9 +133,9 @@ if(!empty($task_id))
 										</div>
 										<div class="">
 										@if(empty($task_id))
-											<button class="sticky-footer save-adhoc-task adhoc-task-load-add" type="button">Add Task</button>
+											<button class="sticky-footer save-adhoc-task adhoc-task-load-add" type="button">Add Observation</button>
 										@else
-											<button class="sticky-footer save-adhoc-task adhoc-task-load-edit" type="button">Edit Task</button>
+											<button class="sticky-footer save-adhoc-task adhoc-task-load-edit" type="button">Edit Observation</button>
 										@endif
 										</div>
 									</div>
@@ -945,9 +945,14 @@ $(document).ready(function() {
 						localStorage.setItem('taskupdated', 1);
 					}
 					
-					var baseUrl = "{{ url('/location-details') }}";
+					/*var baseUrl = "{{ url('/location-details') }}";
 					var location_id = $('#location_id').val();
-					var redirectUrl = baseUrl + '/'+ location_id;
+					var redirectUrl = baseUrl + '/'+ location_id;*/
+					
+					var baseUrl = "{{ url('/thank-you') }}";
+					var task_id = response.task_id;
+					var redirectUrl = baseUrl + '/'+ task_id;
+					
 					window.location.href = redirectUrl;
 					/*setTimeout(() => {
 						window.location.reload();

@@ -2936,7 +2936,7 @@ class DashboardInspectorController extends Controller
 		}
 		//echo "<pre>";print_r($structuredArray);die;
 		// insert remaining checklist in Tasklist checklist table
-		$categoryIds = Manage_location_category::where('location_id', $request->location_id)->pluck('category_id')->toArray();
+		$categoryIds = Manage_location_category::where('location_id', $request->location_id)->distinct('category_id')->pluck('category_id')->toArray();
 		
 		$checklists = Checklist::whereIn('category_id', $categoryIds)->get();
 		
@@ -2986,9 +2986,21 @@ class DashboardInspectorController extends Controller
 			}
 		}
 
+		foreach($categoryIds as $cat)
+		{
+			$model = new Task_list_subcategories();
+			$model->task_list_id = $id;
+			$model->task_list_category_id = $cat;
+			$model->total_task = 0;
+			$model->completed_task = 0;
+			$model->is_submit = 1;
+			$model->created_at = date('Y-m-d h:i:s');
+			$model->save();
+		}
 		
 		return response()->json([
-			'success' => true
+			'success' => true,
+			'task_id' => $id
 		]);
 	}
 	
