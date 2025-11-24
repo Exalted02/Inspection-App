@@ -2745,52 +2745,7 @@ class DashboardInspectorController extends Controller
 			$model->save();
 		}
 		
-		// add task_location_category
-		
-		$structuredArray = [];
-		if (!empty($finalData)) {
-			// Delete previous data for this task list
-			Task_location_categories::where('task_list_id', $id)->delete();
-			Task_categories_checklist_subchecklist::where('task_list_id', $id)->delete();
-
-			foreach ($finalData as $cat) {
-				$categoryId = is_array($cat['category_id']) ? $cat['category_id'][0] : $cat['category_id'];
-
-				// Save category for this task list
-				$locModel = new Task_location_categories();
-				$locModel->task_list_id = $id;
-				$locModel->category_id = $categoryId;
-				$locModel->save();
-
-				foreach ($cat['checklists'] as $chk) {
-					$checklistId = $chk['id'];
-					$subchecklists = $chk['subchecklists'] ?? [];
-
-					if (!empty($subchecklists)) {
-						// Insert each subchecklist
-						foreach ($subchecklists as $subId) {
-							$catChkSubchkModel = new Task_categories_checklist_subchecklist();
-							$catChkSubchkModel->task_list_id = $id;
-							$catChkSubchkModel->category_id = $categoryId;
-							$catChkSubchkModel->checklist_id = $checklistId;
-							$catChkSubchkModel->subchecklist_id = $subId;
-							$catChkSubchkModel->save();
-						}
-					} else {
-						// If no subchecklist, insert only checklist
-						$catChkSubchkModel = new Task_categories_checklist_subchecklist();
-						$catChkSubchkModel->task_list_id = $id;
-						$catChkSubchkModel->category_id = $categoryId;
-						$catChkSubchkModel->checklist_id = $checklistId;
-						$catChkSubchkModel->subchecklist_id = null; // Or 0 if you prefer
-						$catChkSubchkModel->save();
-					}
-				}
-			}
-		}
-		//echo "<pre>";print_r($structuredArray);die;
-		
-		// add file
+		// add file to task
 		$fileName = '';
 		if($request->hasFile('adhoc_task_image')) {
 			$destinationPath = public_path('uploads/task/');
@@ -2819,6 +2774,218 @@ class DashboardInspectorController extends Controller
 			$updtmodel->image = $fileName;
 			$updtmodel->save();
 		}
+		
+		// add task_location_category
+		//echo "<pre>"; print_r($finalData);die;
+		
+		$structuredArray = [];
+		if (!empty($finalData)) {
+			// Delete previous data for this task list
+			Task_location_categories::where('task_list_id', $id)->delete();
+			Task_categories_checklist_subchecklist::where('task_list_id', $id)->delete();
+			
+			$existChecklistArr = Task_list_checklists::where('task_list_id', $id)->pluck('id')->toArray();
+			Task_list_checklists::where('task_list_id', $id)->delete();
+			$getChecklistFiles = Task_list_checklist_rejected_files::whereIn('task_list_checklist_id', $existChecklistArr)->pluck('file')->toArray();
+			Task_list_checklist_rejected_files::whereIn('task_list_checklist_id', $existChecklistArr)->delete();
+			
+			$existSubChecklistArr = Task_list_subchecklists::where('task_list_id', $id)->pluck('id')->toArray();
+			Task_list_subchecklists::where('task_list_id', $id)->delete();
+			
+			$getSubChecklistFiles = Task_list_subchecklist_rejected_files::whereIn('task_list_checklist_id', $existSubChecklistArr)->pluck('file')->toArray();
+			
+			Task_list_subchecklist_rejected_files::whereIn('task_list_checklist_id', $existSubChecklistArr)->delete();
+			
+			
+			
+			//Task_location_categories::where('task_list_id', $id)->delete();
+			//Task_categories_checklist_subchecklist::where('task_list_id', $id)->delete();
+			$chkimg =0;
+			$subchkimg = 0;
+			foreach ($finalData as $cat) {
+				$categoryId = is_array($cat['category_id']) ? $cat['category_id'][0] : $cat['category_id'];
+
+				// Save category for this task list
+				$locModel = new Task_location_categories();
+				$locModel->task_list_id = $id;
+				$locModel->category_id = $categoryId;
+				$locModel->save();
+
+				foreach ($cat['checklists'] as $chk) {
+					$checklistId = $chk['id'];
+					$subchecklists = $chk['subchecklists'] ?? [];
+
+					if (!empty($subchecklists)) {
+						// Insert each subchecklist
+						foreach ($subchecklists as $subId) {
+							$catChkSubchkModel = new Task_categories_checklist_subchecklist();
+							$catChkSubchkModel->task_list_id = $id;
+							$catChkSubchkModel->category_id = $categoryId;
+							$catChkSubchkModel->checklist_id = $checklistId;
+							$catChkSubchkModel->subchecklist_id = $subId;
+							$catChkSubchkModel->save();
+							
+							//-- 24-11-2025 direct save to subchecklist table
+							$subchecklistModel = new Task_list_subchecklists();
+							$subchecklistModel->task_list_id = $id;
+							$subchecklistModel->category_id = $categoryId;
+							$subchecklistModel->task_list_checklist_id = $checklistId;
+							$subchecklistModel->subchecklist_id = $subId;
+							$subchecklistModel->rejected_region = $request->post('adhoc_task_title');
+							$subchecklistModel->approve = 0;
+							$subchecklistModel->save();
+							$subCheklistId = $subchecklistModel->id;
+							
+							// save to subchecklist rejectrd files table images
+							 if($fileName) {
+								
+								$sourcePath = public_path('uploads/task/' . $fileName);
+								
+								$targetDir = public_path('uploads/reject-files/subchecklist/');
+								
+								if (!file_exists($targetDir)) {
+									mkdir($targetDir, 0777, true);
+								}
+								
+								if (file_exists($sourcePath)) {
+									// generate new filename for each subchecklist
+									$newFileName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+
+									$destinationPath = $targetDir . $newFileName;
+
+									// copy the file (don't move)
+									copy($sourcePath, $destinationPath);
+
+									// save to DB
+									$model = new Task_list_subchecklist_rejected_files();
+									$model->task_list_checklist_id = $subCheklistId;
+									$model->task_list_subchecklist_id = $subId;
+									$model->file = $newFileName;
+									$model->save();
+								}
+							}
+							else
+							{
+								$newFileName = $request->hid_task_image;
+								$model = new Task_list_subchecklist_rejected_files();
+								$model->task_list_checklist_id = $subCheklistId;
+								$model->task_list_subchecklist_id = $subId;
+								$model->file = $getSubChecklistFiles[$subchkimg] ?? null;
+								$model->save();
+								$subchkimg++;
+							}
+						}
+					} else {
+						// If no subchecklist, insert only checklist
+						$catChkSubchkModel = new Task_categories_checklist_subchecklist();
+						$catChkSubchkModel->task_list_id = $id;
+						$catChkSubchkModel->category_id = $categoryId;
+						$catChkSubchkModel->checklist_id = $checklistId;
+						$catChkSubchkModel->subchecklist_id = null; // Or 0 if you prefer
+						$catChkSubchkModel->save();
+						
+						//-- 24-11-2025 direct save to checklist table
+						$chklistModel = new Task_list_checklists();
+						$chklistModel->task_list_id = $id;
+						$chklistModel->category_id = $categoryId;
+						$chklistModel->checklist_id = $checklistId;
+						$chklistModel->rejected_region = $request->post('adhoc_task_title');
+						$chklistModel->approve = 0;
+						$chklistModel->save();
+						$cheklistId = $chklistModel->id;
+						
+						// save image to checklist rejected files table images
+						
+						if($fileName) 
+						{
+							$sourcePath = public_path('uploads/task/' . $fileName);
+							
+							$targetDir = public_path('uploads/reject-files/');
+							
+							if (!file_exists($targetDir)) {
+								mkdir($targetDir, 0777, true);
+							}
+							
+							if (file_exists($sourcePath)) {
+								// generate new filename for each subchecklist
+								$newFileName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+
+								$destinationPath = $targetDir . $newFileName;
+
+								// copy the file (don't move)
+								copy($sourcePath, $destinationPath);
+
+								// save to DB
+								$model = new Task_list_checklist_rejected_files();
+								$model->task_list_checklist_id = $cheklistId ?? null;
+								$model->file = $newFileName;
+								$model->save();
+							}
+						}
+						else{
+								$newFileName = $request->hid_task_image;
+								$model = new Task_list_checklist_rejected_files();
+								$model->task_list_checklist_id = $cheklistId ?? null;
+								$model->file = $getChecklistFiles[$chkimg] ?? null;
+								$model->save();
+								$chkimg++;
+							}
+					}
+				}
+			}
+		}
+		//echo "<pre>";print_r($structuredArray);die;
+		// insert remaining checklist in Tasklist checklist table
+		$categoryIds = Manage_location_category::where('location_id', $request->location_id)->pluck('category_id')->toArray();
+		
+		$checklists = Checklist::whereIn('category_id', $categoryIds)->get();
+		
+		$existingChecklistIds = Task_list_checklists::where('task_list_id', $id)
+                            ->pluck('checklist_id')
+                            ->toArray();
+							
+		foreach ($checklists as $chk) {
+			if (!in_array($chk->id, $existingChecklistIds)) {
+
+				Task_list_checklists::create([
+					'task_list_id'    => $id,
+					'category_id'     => $chk->category_id,
+					'checklist_id'    => $chk->id,
+					'rejected_region' => null,
+					'approve'         => 1,
+				]);
+			}
+		}
+		
+		// insert remaining checklist and subchecklist in Tasklist checklist table
+		
+		foreach ($checklists as $chk) {
+
+			$subchecklists = Subchecklist::where('checklist_id', $chk->id)->get();
+
+			// Get existing subchecklist IDs for this task_list + checklist
+			$existingSubIds = Task_list_subchecklists::where('task_list_id', $id)
+								->where('task_list_checklist_id', $chk->id)
+								->pluck('subchecklist_id')
+								->toArray();
+
+			foreach ($subchecklists as $sub) {
+
+				// insert only if missing
+				if (!in_array($sub->id, $existingSubIds)) {
+
+					Task_list_subchecklists::create([
+						'task_list_id'             => $id,
+						'category_id'              => $chk->category_id,
+						'task_list_checklist_id'   => $chk->id,   // checklist ID
+						'subchecklist_id'          => $sub->id,
+						'rejected_region'          => null,
+						'approve'                  => 1,
+					]);
+				}
+			}
+		}
+
 		
 		return response()->json([
 			'success' => true
@@ -3976,12 +4143,16 @@ class DashboardInspectorController extends Controller
 							
 				$subchecklistData = Task_list_subchecklists::where('task_list_id', $needed->task_list_id)->where('task_list_checklist_id', $needed->task_list_checklist_id)->where('subchecklist_id',$needed->subchecklist_id)->first();
 				$id = $subchecklistData ? $subchecklistData->id : '';
+				//echo $id; die;
 							
 				if(!$task_list_subchecklist_corrective_needed)
 				{
 					$isSubChecklistfiles = '';
 					$subChecklistimages = '';
-					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					//$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					
+					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $id)->first();
+					
 					$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
 									
 					$correctiveNeddedArray[] = [
@@ -4002,7 +4173,9 @@ class DashboardInspectorController extends Controller
 				{
 					$isSubChecklistfiles = '';
 					$subChecklistimages = '';
-					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					//$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $id)->first();
+					
 					$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
 					
 					$correctiveNeddedArray[] = [
@@ -5306,7 +5479,8 @@ class DashboardInspectorController extends Controller
 				{
 					$isSubChecklistfiles = '';
 					$subChecklistimages = '';
-					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					//$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $id)->first();
 					$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
 									
 					$correctiveNeddedArray[] = [
@@ -5327,7 +5501,8 @@ class DashboardInspectorController extends Controller
 				{
 					$isSubChecklistfiles = '';
 					$subChecklistimages = '';
-					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					//$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $id)->first();
 					$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
 					
 					$correctiveNeddedArray[] = [
@@ -6686,7 +6861,8 @@ class DashboardInspectorController extends Controller
 				{
 					$isSubChecklistfiles = '';
 					$subChecklistimages = '';
-					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					//$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $id)->first();
 					$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
 									
 					$correctiveNeddedArray[] = [
@@ -6707,7 +6883,8 @@ class DashboardInspectorController extends Controller
 				{
 					$isSubChecklistfiles = '';
 					$subChecklistimages = '';
-					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					//$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $id)->first();
 					$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
 					
 					$correctiveNeddedArray[] = [
@@ -8306,7 +8483,7 @@ class DashboardInspectorController extends Controller
 				{
 					$isSubChecklistfiles = '';
 					$subChecklistimages = '';
-					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $id)->first();
 					$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
 									
 					$correctiveNeddedArray[] = [
@@ -8325,7 +8502,7 @@ class DashboardInspectorController extends Controller
 				{
 					$isSubChecklistfiles = '';
 					$subChecklistimages = '';
-					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $id)->first();
+					$isSubChecklistfiles = Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $id)->first();
 					$subChecklistimages = $isSubChecklistfiles ? $isSubChecklistfiles->file  : '';
 					
 					$correctiveNeddedArray[] = [
@@ -10826,7 +11003,7 @@ class DashboardInspectorController extends Controller
 		//--------- 26-09-2025-------
 		$company_id = User::where('user_type', 2)->where('id', auth()->user()->id)->first()->company_name;
 		
-		$users_location = Users_location::where('company_id', $company_id)->where('user_type', 2)->where('user_id', auth()->user()->id)->where('location_id', $lid)->first();
+		$users_location = Users_location::where('company_id', $company_id)->where('user_type', 2)->where('user_id', auth()->user()->id)->where('location_id', $location_id)->first();
 		$primary_owner = $users_location ? $users_location->primary_owner : '';
 		
 		$excludedChecklistPairs = [];

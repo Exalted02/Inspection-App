@@ -177,7 +177,7 @@ if($tabname == 'ia-completed-plan')
 													//$arrSubchecklist = [];
 													$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
 													
-													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $subchecklistData->id)->first();
 													
 													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-needed.png');
 													
@@ -324,7 +324,7 @@ if($tabname == 'ia-completed-plan')
 													//$arrSubchecklist = [];
 													$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
 													
-													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $subchecklistData->id)->first();
 													
 													$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-action.png');
 													
@@ -493,7 +493,7 @@ if($tabname == 'ia-completed-plan')
 												//$arrSubchecklist = [];
 												$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
 												
-												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+												$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $subchecklistData->id)->first();
 												
 												$images = $filedata && $filedata->file != '' ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-plan.png');
 												
@@ -667,7 +667,7 @@ if($tabname == 'ia-completed-plan')
 													//$arrSubchecklist = [];
 													$subchecklistName = App\Models\Subchecklist::where('id', $subchecklistData->subchecklist_id)->first();
 													
-													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_subchecklist_id', $subchecklistData->id)->first();
+													$filedata = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id', $subchecklistData->id)->first();
 													
 													$images = $filedata && $filedata->file !=''  ? url('uploads/reject-files/subchecklist/' . $filedata->file) : url('images/noimages/corrective-completed.png');
 													//$images =url('images/noimages/corrective-completed.png');
