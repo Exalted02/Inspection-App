@@ -92,8 +92,7 @@ $getCategotyArr = [];
 								   
 								    $taskStatus = $tasks->status == 0 ? '' : ($tasks->status == 1 ? 'Incomplete' : '');
 										 
-								   
-								@endphp
+								 @endphp
 								
 								@if(!$ifAllCategoryExists)
 								<div class="d-flex mb-3 task">

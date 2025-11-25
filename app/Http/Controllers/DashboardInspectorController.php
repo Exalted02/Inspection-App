@@ -2486,10 +2486,16 @@ class DashboardInspectorController extends Controller
 		$correctiveActionDtldModel->save();
 		
 		// add to dashboard notification table 
-		$get_total_action_plan = Dashboard_notification::where('user_type', 2)->where('task_id', $task_list_id)->first()->total_action_plan;
+		$get_total_action_plan_data = Dashboard_notification::where('user_type', 2)->where('task_id', $task_list_id)->first();
+		
+		$get_total_action_plan = $get_total_action_plan_data ? $get_total_action_plan_data->total_action_plan : null;
+		
 		$total_action_plan =  $get_total_action_plan != null ? $get_total_action_plan+1 : 1;
 		
-		$get_read_action_plan = Dashboard_notification::where('user_type', 2)->where('task_id', $task_list_id)->first()->read_action_plan;
+		$get_read_action_plan_data = Dashboard_notification::where('user_type', 2)->where('task_id', $task_list_id)->first();
+		
+		$get_read_action_plan = $get_read_action_plan_data ? $get_read_action_plan_data->read_action_plan : null;
+		
 		$read_action_plan =  $get_read_action_plan != null ? $get_read_action_plan+1 : 1;
 		
 		$array = [
@@ -2502,6 +2508,7 @@ class DashboardInspectorController extends Controller
 				'inspection_closure_date'	=>	null,
 				'pending_closure'	=> null
 			];
+		//echo "<pre>";print_r($array);die;
 		dashboard_notification($array); // send to helper
 		
 		
@@ -2880,7 +2887,6 @@ class DashboardInspectorController extends Controller
 
 										$destinationPath = $targetDir . $newFileName;
 
-										// copy the file (don't move)
 										copy($sourcePath, $destinationPath);
 
 										// save to DB
@@ -3030,7 +3036,37 @@ class DashboardInspectorController extends Controller
 			$model->is_submit = 1;
 			$model->created_at = date('Y-m-d h:i:s');
 			$model->save();
+			
+			//=======add to dashboard_notification table ======
+			$count_reject_checklist = Task_list_checklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 0)->count();
+			
+			$count_reject_subchecklist = Task_list_subchecklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 0)->count();
+			
+			$count_completed_checklist = Task_list_checklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 1)->count();
+			
+			$count_completed_subchecklist = Task_list_subchecklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 1)->count();
+			
+			$pending_closure = $count_reject_checklist + $count_reject_subchecklist;
+			
+			$total_inspection_closure = $count_completed_checklist + $count_completed_subchecklist;
+			
+			$taskData  = Task_lists::where('id', $id)->first();
+			$location_id = $taskData ? $taskData->location_id : null;
+			
+			$array = [
+				'mode'        => 'submit_checklist',
+				'location_id' => $location_id,
+				'task_id'     => $id,
+				'total_action_plan'	=>	null,
+				'read_action_plan'	=>	null,
+				'total_inspection_closure'	=>	$total_inspection_closure,
+				'inspection_closure_date'	=>	date('Y-m-d h:i:s'),
+				'pending_closure'	=> $pending_closure
+			];
+			dashboard_notification($array); // send to helper
 		}
+		
+		
 		
 		return response()->json([
 			'success' => true,

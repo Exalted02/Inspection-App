@@ -720,6 +720,8 @@ use App\Models\Dashboard_notification;
 			}
 		}
 		
+		//echo $arr['total_action_plan']; die;
+		
 		if($arr['mode'] == 'plan_action')
 		{
 			$iaData = Dashboard_notification::where('user_type', 1)->where('task_id', $arr['task_id'])->where('location_id', $arr['location_id'])->first();
@@ -728,9 +730,11 @@ use App\Models\Dashboard_notification;
 			$ia_pending_closure = $iaData ? $iaData->pending_closure : 0;
 			$ia_pending_closure = $ia_pending_closure -1;
 			
-			$iaModel = Dashboard_notification::find($id);
-			$iaModel->total_action_plan 	= $arr['total_action_plan'];
-			$iaModel->read_action_plan 	= $arr['read_action_plan'];
+			
+			$iaModel = !empty($id) ? Dashboard_notification::find($id) : new Dashboard_notification();
+			
+			$iaModel->total_action_plan 	= $arr['total_action_plan'] ?? null;
+			$iaModel->read_action_plan 	= $arr['read_action_plan'] ?? null;
 			//$iaModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
 			//$iaModel->inspection_closure_date = date('Y-m-d h:i:s');
 			$iaModel->pending_closure  = $ia_pending_closure;
@@ -745,7 +749,8 @@ use App\Models\Dashboard_notification;
 			
 			
 			//updatefor location owner
-			$loModel = Dashboard_notification::find($id);
+			//$loModel = Dashboard_notification::find($id);
+			$loModel = !empty($id) ? Dashboard_notification::find($id) : new Dashboard_notification();
 			$loModel->total_action_plan 	= $arr['total_action_plan'];
 			$loModel->read_action_plan 	= $arr['read_action_plan'];
 			//$loModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
@@ -761,7 +766,8 @@ use App\Models\Dashboard_notification;
 			$los_pending_closure = $los_pending_closure -1;
 			
 			//updatefor location owner supervisor
-			$losModel = Dashboard_notification::find($id);
+			//$losModel = Dashboard_notification::find($id);
+			$losModel = !empty($id) ? Dashboard_notification::find($id) : new Dashboard_notification();
 			$losModel->total_action_plan 	= $arr['total_action_plan'];
 			$losModel->read_action_plan 	= $arr['read_action_plan'];
 			//$losModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
@@ -781,7 +787,8 @@ use App\Models\Dashboard_notification;
 			$ia_action_plan = $iaData ? $iaData->total_action_plan : 0;
 			$ia_action_plan = $ia_action_plan -1;
 			
-			$iaModel = Dashboard_notification::find($id);
+			//$iaModel = Dashboard_notification::find($id);
+			$iaModel = !empty($id) ? Dashboard_notification::find($id) : new Dashboard_notification();
 			$iaModel->total_action_plan = $ia_action_plan;
 			$iaModel->read_action_plan 	= $ia_action_plan;
 			//$iaModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
@@ -801,7 +808,8 @@ use App\Models\Dashboard_notification;
 			
 			
 			//updatefor location owner
-			$loModel = Dashboard_notification::find($id);
+			//$loModel = Dashboard_notification::find($id);
+			$loModel = !empty($id) ? Dashboard_notification::find($id) : new Dashboard_notification();
 			$loModel->total_action_plan 	= $lo_action_plan;
 			$loModel->read_action_plan 	= $lo_action_plan;
 			//$loModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
@@ -820,7 +828,8 @@ use App\Models\Dashboard_notification;
 			$los_action_plan = $los_action_plan -1;
 			
 			//updatefor location owner supervisor
-			$losModel = Dashboard_notification::find($id);
+			//$losModel = Dashboard_notification::find($id);
+			$losModel = !empty($id) ? Dashboard_notification::find($id) : new Dashboard_notification();
 			$losModel->total_action_plan 	= $los_action_plan;
 			$losModel->read_action_plan 	= $los_action_plan;
 			//$losModel->total_inspection_closure = $arr['total_inspection_closure'] + $total_inspection_closure;
@@ -843,7 +852,8 @@ use App\Models\Dashboard_notification;
 			$ia_inspection_closure = $iaData ? $iaData->total_inspection_closure : 0;
 			$ia_inspection_closure = $ia_inspection_closure +1;
 			
-			$iaModel = Dashboard_notification::find($id);
+			//$iaModel = Dashboard_notification::find($id);
+			$iaModel = !empty($id) ? Dashboard_notification::find($id) : new Dashboard_notification();
 			$iaModel->total_action_plan = $ia_action_plan;
 			$iaModel->read_action_plan 	= $ia_action_plan;
 			$iaModel->total_inspection_closure = $ia_inspection_closure;
@@ -865,7 +875,8 @@ use App\Models\Dashboard_notification;
 			$lo_inspection_closure = $lo_inspection_closure +1;
 			
 			//updatefor location owner
-			$loModel = Dashboard_notification::find($id);
+			//$loModel = Dashboard_notification::find($id);
+			$loModel = !empty($id) ? Dashboard_notification::find($id) : new Dashboard_notification();
 			$loModel->total_action_plan 	= $lo_action_plan;
 			$loModel->read_action_plan 	= $lo_action_plan;
 			$loModel->total_inspection_closure = $lo_inspection_closure;
@@ -887,7 +898,8 @@ use App\Models\Dashboard_notification;
 			$los_inspection_closure = $los_inspection_closure +1;
 			
 			//updatefor location owner supervisor
-			$losModel = Dashboard_notification::find($id);
+			//$losModel = Dashboard_notification::find($id);
+			$losModel = !empty($id) ? Dashboard_notification::find($id) : new Dashboard_notification();
 			$losModel->total_action_plan 	= $los_action_plan;
 			$losModel->read_action_plan 	= $los_action_plan;
 			$losModel->total_inspection_closure = $los_inspection_closure;

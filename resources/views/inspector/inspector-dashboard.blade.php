@@ -645,6 +645,70 @@ if(auth()->user()->user_type == 3)
 	$los_corrective_needed = App\Models\Dashboard_notification::where('user_type', 3)->where('user_id', auth()->user()->id)->sum('pending_closure');
 	$los_pending_closure_count = $los_action_plan_count + $los_corrective_needed;
 }
+// my dashboard work 25-11-2025------
+$countTaskLoc = [];
+if(auth()->user()->user_type == 1)
+{
+	$taskIdArr = [];
+	$taskData = App\Models\Task_lists::where('task_type', 0)->get();
+	foreach($taskData as $tasks)
+	{
+		$getCategotyArr = [];
+		$taskLocationCat = App\Models\Task_location_categories::where('task_list_id', $tasks->id)->get();
+	    foreach($taskLocationCat as $categories)
+	    {
+		   $getCategotyArr[] = $categories->category_id;
+	    }
+		
+		
+		$subcategories = App\Models\Task_list_subcategories::where('task_list_id',$tasks->id)->whereIn('task_list_category_id',$getCategotyArr)->distinct('task_list_category_id')->count('task_list_category_id');
+		
+		if(count($getCategotyArr) == $subcategories)
+		{
+			$taskIdArr[$tasks->location_id] =  $tasks->id;
+		}
+		
+	}
+	//echo "<pre>";print_r($taskIdArr);die;
+	
+	
+	$routTasksLoc = App\Models\Task_lists::where('task_type', 0)->distinct('location_id')->pluck('location_id')->toArray();
+	$tot = 0;
+	foreach($routTasksLoc as $loc)
+	{
+		$countTaskLoc[$loc] = App\Models\Task_lists::where('location_id', $loc)->where('task_type', 0)->whereNotIn('id',$taskIdArr)->count();
+		$tot = $tot + $countTaskLoc[$loc];
+	}
+	$countTaskLoc['total_outs_insp'] = $tot;
+	//echo "<pre>";print_r($countTaskLoc);die;
+	
+	$inspection_action_plan = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0, 1])
+    ->where(function ($q) {
+        $q->where(function ($q) {
+            $q->where('inspector_action', 0)->where('los_action', 0);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 1)->where('los_action', 0);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 0)->where('los_action', 1);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 1)->where('los_action', 1);
+        });
+    })
+    ->get();
+	$inspection_closure = $inspection_action_plan->count();
+	
+	$inspection_completed = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0, 1])
+    ->where(function ($q) {
+        $q->where(function ($q) {
+            $q->where('inspector_action', 1)->where('los_action', 1);
+        });
+    })
+    ->get();
+	$inspection_closure = $inspection_completed->count();
+}
 
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
@@ -702,9 +766,9 @@ if(auth()->user()->user_type == 3)
 						@if(!empty($ia_action_plan_count))
 						<span class="notification-badge" id="ia_action_plan_badge"></span>
 						@endif
-							<div class="small-card-title">Open corrective action/plan</div>
+							<div class="small-card-title">Outstanding Inspection</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2"><span id="ia_action_plan_count">{{ $ia_action_plan_count }}</span></div>
+								<div class="small-card-upper-counter me-2"><span id="ia_action_plan_count">{{ $countTaskLoc['total_outs_insp'] ?? 0 }}</span></div>
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
@@ -714,12 +778,12 @@ if(auth()->user()->user_type == 3)
 					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-completed-plan">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
-							@if(!empty($ia_total_ins_closure))
+							@if(!empty($inspection_closure))
 							<span class="notification-badge" id="ia_completed_badge"></span>
 							@endif
 							<div class="small-card-title">Inspection closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-							<div class="small-card-upper-counter me-2"><span id="ia_total_ins_closure">{{ $ia_total_ins_closure }}</span></div>
+							<div class="small-card-upper-counter me-2"><span id="ia_total_ins_closure">{{ $inspection_closure ?? 0 }}</span></div>
 							{{--<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
@@ -744,7 +808,7 @@ if(auth()->user()->user_type == 3)
 					<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Pending closure</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</span></div>
+							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $inspection_closure ?? 0}}</span></div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 					</div>
@@ -1240,13 +1304,17 @@ if(auth()->user()->user_type == 3)
         </section>
 		<input type="hidden" id="notifi_status" value="{{ $notifi_status ?? '';}}">
 		<input type="hidden" id="loc_name" value="{{ $loc_name ?? '';}}">
-    </div>
+	</div>
+	<div id="taskLocData" data-values="{{ json_encode($countTaskLoc) }}"></div>
 @endsection 
 @section('scripts')
 <script>
+//let countTaskLoc = @json($countTaskLoc);
+</script>
+<script>
 $(document).ready(function() {
 	setInterval(function() { 
-		get_mydashboard_data();
+		//get_mydashboard_data();
 	}, 10000); 
 	
 	var notifi_status = $('#notifi_status').val();
@@ -1277,7 +1345,18 @@ $(document).ready(function() {
 	$(document).on('click', '.my-dashboard-click', function(){
 		
 		var tab = $(this).data('tab');
-		var URL = "{{ route('select-dashboard-tab') }}";
+		let countTaskLoc = JSON.parse($('#taskLocData').attr('data-values'));
+		delete countTaskLoc.total_outs_insp;
+		let loc_id = Object.keys(countTaskLoc).reduce((a, b) =>
+			countTaskLoc[a] > countTaskLoc[b] ? a : b
+		);
+		
+		var baseUrl = "{{ url('/location-details') }}";
+		var redirectUrl = baseUrl + '/'+ loc_id;
+		window.location.href = redirectUrl;
+		
+		// use ajax to store the tab in session
+		/*var URL = "{{ route('select-dashboard-tab') }}";
 			$.ajax({
 				url: URL,
 				type: "POST",
@@ -1292,10 +1371,7 @@ $(document).ready(function() {
 				complete: function() {
 					//$('.load-more-appr').html('Load more');
 				}
-			});
-		
-		 
-		
+			});*/
 	})
 });
 
