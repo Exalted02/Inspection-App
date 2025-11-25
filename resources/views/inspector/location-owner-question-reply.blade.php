@@ -40,7 +40,7 @@ use Carbon\Carbon;
 	
 	
 	if ($taskSubChecklist) {
-		$subImages = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id',$taskSubChecklist->task_list_checklist_id)->where('task_list_subchecklist_id', $taskSubChecklist->id)->get();
+		$subImages = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id',$taskSubChecklist->id)->where('task_list_subchecklist_id', $taskSubChecklist->subchecklist_id)->get();
 		
 		$subChecklistName = App\Models\Subchecklist::where('id', $taskSubChecklist->subchecklist_id)->first()->name;
 		
@@ -56,6 +56,7 @@ use Carbon\Carbon;
 	}
  }
  
+ //echo "<pre>";print_r($image_arr);die;
  $loopCnt = 0;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->

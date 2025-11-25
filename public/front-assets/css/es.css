@@ -2473,4 +2473,40 @@ body, h1, h2, h3, h4, h5, h6 {
 padding-bottom: 5px;
 }
 
+#extra-previews {
+    display: none;
+	/*margin-top: 5px !important;*/
+}
+.adhoc-preview-image-wrapper {
+    display: inline-block;
+    position: relative;
+    margin: 5px;
+}
+.adhoc-preview-image {
+    max-width: 160px;
+    height: auto;
+    border-radius: 5px;
+    display: block;
+}
+.adhoc-preview-image-wrapper .remove-image {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: red;
+    color: #fff;
+    border: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+}
+@media (max-width: 767px) {
+    .adhoc-preview-image {
+        max-width: 30%;
+    }
+}
+
 

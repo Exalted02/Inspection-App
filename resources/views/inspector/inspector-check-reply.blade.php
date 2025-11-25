@@ -101,10 +101,10 @@
 	 
 	$subImages = collect();
 	$subChecklistName = '';
-	
+	//echo "<pre>";print_r($taskSubChecklist);die;
 	
 	if ($taskSubChecklist) {
-		$subImages = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id',$taskSubChecklist->task_list_checklist_id)->where('task_list_subchecklist_id', $taskSubChecklist->id)->get();
+		$subImages = App\Models\Task_list_subchecklist_rejected_files::where('task_list_checklist_id',$taskSubChecklist->id)->where('task_list_subchecklist_id', $taskSubChecklist->subchecklist_id)->get();
 		
 		$subChecklistName = App\Models\Subchecklist::where('id', $taskSubChecklist->subchecklist_id)->first()->name;
 		
@@ -175,6 +175,7 @@
  //echo "<pre>";print_r($final_check_data);die;
  //echo "<pre>";print_r($corrective_action_files);die;
  //echo "<pre>";print_r($corrective_dtls_data);die;
+ //echo "<pre>";print_r($image_arr);die;
  
  $loopCnt = 0;
 @endphp

@@ -113,7 +113,7 @@ if(!empty($task_id))
 												<div class="col-md-4 mb-3">
 													<label for="adhoc_task_image" class="task-cover-image">Upload Cover</label>
 													<div class="upload-wrapper">
-														<input type="file" name="adhoc_task_image" id="adhoc_task_image" style="display: none;" accept="image/*">
+														<input type="file" name="adhoc_task_image[]" id="adhoc_task_image" style="display: none;" accept="image/*" multiple>
 														<label for="adhoc_task_image" class="task-upload-label">
 														{{--<span class="task-upload-text">Upload image</span>--}}
 														<i class="fa fa-upload task-upload-icon"></i>
@@ -122,6 +122,7 @@ if(!empty($task_id))
 													</div>
 												</div>
 											</div>
+											<div id="extra-previews" class=""></div>
 											<div class="row">
 												<div class="form-group  col-md-12  col-sm-12 adhoctaskImg" style="display:block;">
 													<div class="task-preview-wrapper position-relative d-inline-block">
@@ -696,11 +697,66 @@ $(document).ready(function() {
         readURL(this);
     });
 	
-	$("#adhoc_task_image").change(function() {
+	//--------- multiple adhoc filr upload ---
+	//let previewContainer = $('.adhoctaskImg');
+	//let previewContainer = $('.task-img-upload');
+	//let previewContainer = $('.task-preview-wrapper');
+	let previewContainer = $('#extra-previews');
+	let selectedFiles = [];
+	$('#adhoc_task_image').on('change', function (e) {
+		$('#adhoc-delete-image').hide();
+		$('.adhoctaskImg').hide();
+		$('#extra-previews').show();
+		let files = Array.from(e.target.files);
+
+		selectedFiles = [...selectedFiles, ...files];
+
+		files.forEach((file, index) => {
+			let reader = new FileReader();
+			reader.onload = function (e) {
+				let previewHtml = '';
+
+				if (file.type.startsWith('image/')) {
+					previewHtml = '<div class="adhoc-preview-image-wrapper" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '"><img src="' + e.target.result 
+						+ '" class="adhoc-preview-image" /><button type="button" class="remove-image" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				} else if (file.type.startsWith('video/')) {
+					previewHtml = '<div class="preview-image-wrapper" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '"><video src="' + e.target.result 
+						+ '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="remove-image" data-index="' 
+						+ (selectedFiles.length - files.length + index) 
+						+ '">&times;</button></div>';
+				}
+				previewContainer.append(previewHtml);
+			};
+			reader.readAsDataURL(file);
+		});
+
+		$(this).val('');
+	});
+	// Remove file from preview & array
+	previewContainer.on('click', '.remove-image', function () {
+		const indexToRemove = $(this).data('index');
+		//alert(indexToRemove);
+		$(this).parent().remove();
+		selectedFiles[indexToRemove] = null;
+		selectedFiles = selectedFiles.filter(file => file !== null);
+		if(indexToRemove == 0)
+		{
+			$('.adhoctaskImg').show();
+		}
+	});
+	
+	//-- single adhoc file no need now 
+	/*$("#adhoc_task_image").change(function() {
 		$('#adhoc-delete-image').show();
 		$('.adhoctaskImg').show();
         readURL(this);
-    });
+    });*/
    
    $(document).on('click','.save-task', function(){
 		//let category_id = $('#category_id').val().trim();
@@ -911,6 +967,11 @@ $(document).ready(function() {
 		
 		let formData = new FormData($('#frmtaskadhoc')[0]);
 		formData.append('category_ids', JSON.stringify(result));
+		
+		selectedFiles.forEach(file => {
+			formData.append('adhoc_task_image[]', file);
+		});
+		
 		formData.append('_token', csrfToken);
 		//alert(URL);
 		$.ajax({

@@ -2746,7 +2746,7 @@ class DashboardInspectorController extends Controller
 		}
 		
 		// add file to task
-		$fileName = '';
+		/*$fileName = '';
 		if($request->hasFile('adhoc_task_image')) {
 			$destinationPath = public_path('uploads/task/');
 			if (!file_exists($destinationPath)) {
@@ -2773,6 +2773,28 @@ class DashboardInspectorController extends Controller
 			$updtmodel= Task_lists::find($id);
 			$updtmodel->image = $fileName;
 			$updtmodel->save();
+		}*/
+		// add multiple file 
+		$adhoc_task_image = $request->file('adhoc_task_image');
+		//echo "<pre>";print_r($adhoc_task_image);die;
+		$adhocFileNames = [];
+		if ($adhoc_task_image && is_array($adhoc_task_image)) {
+			foreach ($adhoc_task_image as $file) {
+				
+				$destinationPath = public_path('uploads/task/');
+				if (!file_exists($destinationPath)) {
+					mkdir($destinationPath, 0777, true);
+				}
+				
+				$filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+				$file->move($destinationPath, $filename);
+				
+				$adhocFileNames[] = $filename;
+
+				$updtmodel= Task_lists::find($id);
+				$updtmodel->image = $filename;
+				$updtmodel->save();
+			}
 		}
 		
 		// add task_location_category
@@ -2837,34 +2859,40 @@ class DashboardInspectorController extends Controller
 							$subCheklistId = $subchecklistModel->id;
 							
 							// save to subchecklist rejectrd files table images
-							 if($fileName) {
-								
-								$sourcePath = public_path('uploads/task/' . $fileName);
-								
-								$targetDir = public_path('uploads/reject-files/subchecklist/');
-								
-								if (!file_exists($targetDir)) {
-									mkdir($targetDir, 0777, true);
-								}
-								
-								if (file_exists($sourcePath)) {
-									// generate new filename for each subchecklist
-									$newFileName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+							 //if($fileName) 
+							 if(!empty($adhocFileNames)) 
+							 {
+								foreach($adhocFileNames as $val)
+								{
+									$fileName = $val;
+									$sourcePath = public_path('uploads/task/' . $fileName);
+									
+									
+									$targetDir = public_path('uploads/reject-files/subchecklist/');
+									
+									if (!file_exists($targetDir)) {
+										mkdir($targetDir, 0777, true);
+									}
+									
+									if (file_exists($sourcePath)) {
+										// generate new filename for each subchecklist
+										$newFileName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
 
-									$destinationPath = $targetDir . $newFileName;
+										$destinationPath = $targetDir . $newFileName;
 
-									// copy the file (don't move)
-									copy($sourcePath, $destinationPath);
+										// copy the file (don't move)
+										copy($sourcePath, $destinationPath);
 
-									// save to DB
-									$model = new Task_list_subchecklist_rejected_files();
-									$model->task_list_checklist_id = $subCheklistId;
-									$model->task_list_subchecklist_id = $subId;
-									$model->file = $newFileName;
-									$model->save();
+										// save to DB
+										$model = new Task_list_subchecklist_rejected_files();
+										$model->task_list_checklist_id = $subCheklistId;
+										$model->task_list_subchecklist_id = $subId;
+										$model->file = $newFileName;
+										$model->save();
+									}
 								}
 							}
-							else
+							elseif(!empty($request->hid_task_image))
 							{
 								$newFileName = $request->hid_task_image;
 								$model = new Task_list_subchecklist_rejected_files();
@@ -2896,33 +2924,39 @@ class DashboardInspectorController extends Controller
 						
 						// save image to checklist rejected files table images
 						
-						if($fileName) 
+						//if($fileName) 
+						if(!empty($adhocFileNames))
 						{
-							$sourcePath = public_path('uploads/task/' . $fileName);
-							
-							$targetDir = public_path('uploads/reject-files/');
-							
-							if (!file_exists($targetDir)) {
-								mkdir($targetDir, 0777, true);
-							}
-							
-							if (file_exists($sourcePath)) {
-								// generate new filename for each subchecklist
-								$newFileName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+							foreach($adhocFileNames as $val)
+							{
+								$fileName = $val;
+								$sourcePath = public_path('uploads/task/' . $fileName);
+								
+								$targetDir = public_path('uploads/reject-files/');
+								
+								if (!file_exists($targetDir)) {
+									mkdir($targetDir, 0777, true);
+								}
+								
+								if (file_exists($sourcePath)) {
+									// generate new filename for each subchecklist
+									$newFileName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
 
-								$destinationPath = $targetDir . $newFileName;
+									$destinationPath = $targetDir . $newFileName;
 
-								// copy the file (don't move)
-								copy($sourcePath, $destinationPath);
+									// copy the file (don't move)
+									copy($sourcePath, $destinationPath);
 
-								// save to DB
-								$model = new Task_list_checklist_rejected_files();
-								$model->task_list_checklist_id = $cheklistId ?? null;
-								$model->file = $newFileName;
-								$model->save();
+									// save to DB
+									$model = new Task_list_checklist_rejected_files();
+									$model->task_list_checklist_id = $cheklistId ?? null;
+									$model->file = $newFileName;
+									$model->save();
+								}
 							}
 						}
-						else{
+						elseif(!empty($request->hid_task_image))
+						{
 								$newFileName = $request->hid_task_image;
 								$model = new Task_list_checklist_rejected_files();
 								$model->task_list_checklist_id = $cheklistId ?? null;
@@ -3688,7 +3722,7 @@ class DashboardInspectorController extends Controller
 		{
 			$array = [
 					'mode'        => 'approved_checklist',
-					'location_id' => $location_id,
+					'location_id' => $location_id ?? '',
 					'task_id'     => $request->task_id,
 					'total_action_plan'	=>	null,
 					'read_action_plan'	=>	null,
@@ -3704,6 +3738,7 @@ class DashboardInspectorController extends Controller
 			{
 				$array = [
 					'mode'        => 'reject_checklist',
+					'location_id' => $location_id ?? '',
 					'task_id'     => $request->task_id,
 					'total_action_plan'	=>	null,
 					'read_action_plan'	=>	null,
