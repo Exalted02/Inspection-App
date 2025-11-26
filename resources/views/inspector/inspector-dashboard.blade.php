@@ -917,7 +917,7 @@ if(auth()->user()->user_type == 3)
 				</div>
 				@if(auth()->user()->user_type == 1)
 				<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection" data-count="{{ $countTaskLoc['total_outs_insp'] ?? 0 }}">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($ia_action_plan_count))
@@ -932,7 +932,7 @@ if(auth()->user()->user_type == 3)
 						</div>
 					</div></a>
 					
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-action-plan">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-action-plan" data-count="{{ $inspection_closure_action_plan ?? 0 }}">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
 							@if(!empty($inspection_closure_action_plan))
@@ -985,7 +985,7 @@ if(auth()->user()->user_type == 3)
 				
 				@if(auth()->user()->user_type == 2)
 					<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-corrective-needed">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-corrective-needed" data-count="{{ $correctiveNeededCount ?? 0 }}">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($correctiveNeededCount))
@@ -1043,7 +1043,7 @@ if(auth()->user()->user_type == 3)
 				
 				@if(auth()->user()->user_type == 3)
 					<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="los-action-plan">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="los-action-plan" data-count="{{ $los_closure_action_plan ?? 0 }}">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($los_closure_action_plan))
@@ -1519,39 +1519,55 @@ $(document).ready(function() {
 		//alert(tab);
 		if(tab == 'ia-outstanding-inspection')
 		{
-			let countTaskLoc = JSON.parse($('#taskLocData').attr('data-values'));
-			delete countTaskLoc.total_outs_insp;
-			let loc_id = Object.keys(countTaskLoc).reduce((a, b) =>
-				countTaskLoc[a] > countTaskLoc[b] ? a : b
-			);
-			
-			var baseUrl = "{{ url('/location-details') }}";
-			var redirectUrl = baseUrl + '/'+ loc_id;
-			window.location.href = redirectUrl;
+			let dataCount = $(this).data('count');
+			if(dataCount != 0)
+			{
+				let countTaskLoc = JSON.parse($('#taskLocData').attr('data-values'));
+				delete countTaskLoc.total_outs_insp;
+				let loc_id = Object.keys(countTaskLoc).reduce((a, b) =>
+					countTaskLoc[a] > countTaskLoc[b] ? a : b
+				);
+				
+				var baseUrl = "{{ url('/location-details') }}";
+				var redirectUrl = baseUrl + '/'+ loc_id;
+				window.location.href = redirectUrl;
+			}
 		}
 		
 		if(tab == 'ia-action-plan')
 		{
-			//localStorage.setItem('selectedTab', 'corrective_checked_tab');
-			let loc_id = $('#IaPlanActionLocId').val();
-			var baseUrl = "{{ url('/inspector-filter') }}";
-			var redirectUrl = baseUrl + '/'+ loc_id + '/0#corrective_checked_tab';
-			window.location.href = redirectUrl;
+			let dataCount = $(this).data('count');
+			if(dataCount != 0)
+			 {
+				//localStorage.setItem('selectedTab', 'corrective_checked_tab');
+				let loc_id = $('#IaPlanActionLocId').val();
+				var baseUrl = "{{ url('/inspector-filter') }}";
+				var redirectUrl = baseUrl + '/'+ loc_id + '/0#corrective_checked_tab';
+				window.location.href = redirectUrl;
+			 }
 		}
 		
 		if(tab == 'lo-corrective-needed')
 		{
-			let loc_id = $('#LoCorrectiveNeededLocId').val();
-			var baseUrl = "{{ url('/lo-task-status') }}";
-			var redirectUrl = baseUrl + '/'+ loc_id + '/1';
-			window.location.href = redirectUrl;
+			let dataCount = $(this).data('count');
+			if(dataCount != 0)
+			{
+				let loc_id = $('#LoCorrectiveNeededLocId').val();
+				var baseUrl = "{{ url('/lo-task-status') }}";
+				var redirectUrl = baseUrl + '/'+ loc_id + '/1';
+				window.location.href = redirectUrl;
+			 }
 		}
 		if(tab == 'los-action-plan')
 		{
-			let loc_id = $('#LosPlanActionLocId').val();
-			var baseUrl = "{{ url('/los-task-status') }}";
-			var redirectUrl = baseUrl + '/'+ loc_id + '/0#corrective_checked_tab';
-			window.location.href = redirectUrl;
+			let dataCount = $(this).data('count');
+			if(dataCount != 0)
+			{
+				let loc_id = $('#LosPlanActionLocId').val();
+				var baseUrl = "{{ url('/los-task-status') }}";
+				var redirectUrl = baseUrl + '/'+ loc_id +'/0';
+				window.location.href = redirectUrl;
+			}
 		}
 		
 		

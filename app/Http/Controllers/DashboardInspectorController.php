@@ -2986,14 +2986,17 @@ class DashboardInspectorController extends Controller
 							
 		foreach ($checklists as $chk) {
 			if (!in_array($chk->id, $existingChecklistIds)) {
-
-				Task_list_checklists::create([
-					'task_list_id'    => $id,
-					'category_id'     => $chk->category_id,
-					'checklist_id'    => $chk->id,
-					'rejected_region' => null,
-					'approve'         => 1,
-				]);
+				$ifSuchelistExists = Subchecklist::where('checklist_id', $chk->id)->exists();
+				if(!$ifSuchelistExists)
+				{
+					Task_list_checklists::create([
+						'task_list_id'    => $id,
+						'category_id'     => $chk->category_id,
+						'checklist_id'    => $chk->id,
+						'rejected_region' => null,
+						'approve'         => 1,
+					]);
+				}
 			}
 		}
 		
