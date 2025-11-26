@@ -722,7 +722,27 @@ if(auth()->user()->user_type == 1)
 	
 	//echo "<pre>";print_r($inActionPlanTaskLocIds);die;
 	//----------ia-action-plan end --------
-	
+}
+if(auth()->user()->user_type == 2)
+{
+	//----------lo-action-plan--------
+	$lo_action_plan = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0, 1])
+    ->where(function ($q) {
+        $q->where(function ($q) {
+            $q->where('inspector_action', 0)->where('los_action', 0);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 1)->where('los_action', 0);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 0)->where('los_action', 1);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 1)->where('los_action', 1);
+        });
+    })
+    ->get();
+	$lo_closure_action_plan = $lo_action_plan->count();
 }
 
 @endphp
@@ -849,9 +869,9 @@ if(auth()->user()->user_type == 1)
 						@if(!empty($open_corrective_action_plan_red_dot))
 						<span class="notification-badge" id="lo_action_plan_badge"></span>
 						@endif
-							<div class="small-card-title">Open corrective action/plan</div>
+							<div class="small-card-title">Open Observation - Corrective Needed</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-							<div class="small-card-upper-counter me-2"><span id="lo_action_plan_count">{{ $lo_action_plan_count }}</span></div>
+							<div class="small-card-upper-counter me-2"><span id="lo_action_plan_count">{{ $correctiveNeededCount }}</span></div>
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
@@ -886,7 +906,7 @@ if(auth()->user()->user_type == 1)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Pending closure</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</span></div>
+							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $lo_closure_action_plan ?? 0 }}</span></div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 					</div>
