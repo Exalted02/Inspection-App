@@ -109,7 +109,7 @@ $correctiveChecklistIds = DB::table('task_list_checklists')
 			
 $excludedSubChecklistPairs = App\Models\Task_list_corrective_action::whereNotIn('rejected_repeated', [0])
 			->whereIn('task_list_id', $taskListIds)
-			->where('los_id', auth()->user()->id) // add new 24-09-2025
+			->where('lo_id', auth()->user()->id) // add new los_id 24-09-2025; lo_id 26-11-2025
 			->orWhereIn('lo_direct_approve', [0, 1])
 			//->orWhere('lo_direct_approve', 0)
 			//->orWhere('lo_direct_approve', 1)
@@ -1086,7 +1086,7 @@ if(auth()->user()->user_type == 3)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Open Observation</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount}}</span></div>
+							<div class="small-card-counter"><span id="tot_no_of_obs-s">{{ $correctiveNeededCount}}</span></div>
 						</div>
 					</div>
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
