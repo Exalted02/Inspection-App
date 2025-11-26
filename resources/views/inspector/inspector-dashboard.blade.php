@@ -67,8 +67,7 @@ else{
 
 
 //echo "<pre>";print_r($taskListIds);die;
-$categoryIds = App\Models\Task_list_subcategories::whereIn('task_list_id', $taskListIds)
-			->pluck('task_list_category_id');
+$categoryIds = App\Models\Task_list_subcategories::whereIn('task_list_id', $taskListIds)->pluck('task_list_category_id');
 
 $submit_task_id = App\Models\Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)->pluck('task_list_id')->toArray();
 
@@ -899,7 +898,7 @@ if(auth()->user()->user_type == 3)
 				
 				@if(auth()->user()->user_type == 2)
 					<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-action-plan">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-corrective-needed">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($open_corrective_action_plan_red_dot))
@@ -1451,7 +1450,7 @@ $(document).ready(function() {
 			window.location.href = redirectUrl;
 		}
 		
-		if(tab == 'lo-action-plan')
+		if(tab == 'lo-corrective-needed')
 		{
 			let loc_id = $('#IaPlanActionLocId').val();
 			var baseUrl = "{{ url('/lo-task-status') }}";
