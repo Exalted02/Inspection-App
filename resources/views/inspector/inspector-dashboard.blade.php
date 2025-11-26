@@ -736,6 +736,102 @@ if(auth()->user()->user_type == 2)
     })
     ->get();
 	$lo_closure_action_plan = $lo_action_plan->count();
+	
+	// corrective needed 
+	
+	$correctiveNeededLo = DB::table(function ($query) use (
+			$taskListIds,
+			$categoryIds,
+			$submit_task_id,
+			$correctiveChecklistIds,
+			$correctiveSubChecklistIds
+		) {
+			// Subquery 1: From task_list_checklists
+			$baseQuery = DB::table('task_list_checklists')
+				->select(
+					'id',
+					'checklist_id as checklist_id',
+					DB::raw("'checklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'created_at',
+					'updated_at',
+					DB::raw('NULL as subchecklist_id'),
+					DB::raw('NULL as task_list_checklist_id')
+				)
+				->whereIn('category_id', $categoryIds)
+				->whereIn('task_list_id', $submit_task_id)
+				->where('approve', 0)
+				->where(function ($query) use ($correctiveChecklistIds) {
+					if (!empty($correctiveChecklistIds)) {
+						$query->where(function ($q) use ($correctiveChecklistIds) {
+							foreach ($correctiveChecklistIds as $item) {
+								$taskListId = is_array($item) ? $item['task_list_id'] : $item->task_list_id;
+								$checklistId = is_array($item) ? $item['checklist_id'] : $item->checklist_id;
+
+								$q->orWhere(function ($subQ) use ($taskListId, $checklistId) {
+									$subQ->where('task_list_id', $taskListId)
+										 ->where('checklist_id', $checklistId);
+								});
+							}
+						});
+					} else {
+						$query->whereRaw('1 = 0'); // Prevent matching any row
+					}
+				});
+
+			$unionQuery = DB::table('task_list_subchecklists')
+				->select(
+					'id',
+					'subchecklist_id as item_id',
+					DB::raw("'subchecklist' as type"),
+					'task_list_id',
+					'category_id',
+					'approve',
+					'created_at',
+					'updated_at',
+					'subchecklist_id',
+					'task_list_checklist_id'
+				)
+				//->whereIn('task_list_id', $taskListIds)
+				->whereIn('task_list_id', $submit_task_id)
+				->whereIn('category_id', $categoryIds)
+				->where('approve', 0)
+				->where(function ($query) use ($correctiveSubChecklistIds) {
+					if (!empty($correctiveSubChecklistIds)) {
+						foreach ($correctiveSubChecklistIds as $item) {
+							$taskListId = is_array($item) ? $item['task_list_id'] : $item->task_list_id;
+							$subchecklistId = is_array($item) ? $item['subchecklist_id'] : $item->subchecklist_id;
+
+							$query->orWhere(function ($subQ) use ($taskListId, $subchecklistId) {
+								$subQ->where('task_list_id', $taskListId)
+									 ->where('subchecklist_id', $subchecklistId);
+							});
+						}
+					} else {
+						$query->whereRaw('1 = 0');
+					}
+				});
+
+			// Merge both queries using unionAll
+			$query->fromSub($baseQuery->unionAll($unionQuery), 'combined');
+		}, 'combined')->get();
+		
+		//echo "<pre>";print_r($correctiveNeededLo); die;
+		$loActionPlanTaskLocIds = [];
+		$maxLoPlanActionLocId = '';
+		if($correctiveNeededLo->count() > 0)
+		{
+			foreach($correctiveNeededLo as $val)
+			{
+				$tsk = App\Models\Task_lists::where('id', $val->task_list_id)->first();
+				$loActionPlanTaskLocIds[] = $tsk->location_id;
+			}
+			
+			$counts = array_count_values($loActionPlanTaskLocIds);
+			$maxLoPlanActionLocId = array_keys($counts, max($counts))[0];
+		}
 }
 
 if(auth()->user()->user_type == 3)
@@ -892,7 +988,7 @@ if(auth()->user()->user_type == 3)
 					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-corrective-needed">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
-						@if(!empty($open_corrective_action_plan_red_dot))
+						@if(!empty($correctiveNeededCount))
 						<span class="notification-badge" id="lo_action_plan_badge"></span>
 						@endif
 							<div class="small-card-title">Open Observation - Corrective Needed</div>
@@ -1378,6 +1474,7 @@ if(auth()->user()->user_type == 3)
 		<input type="hidden" id="loc_name" value="{{ $loc_name ?? '';}}">
 		<input type="hidden" id="IaPlanActionLocId" value="{{ $maxIaPlanActionLocId ?? '';}}">
 		<input type="hidden" id="LosPlanActionLocId" value="{{ $maxLosPlanActionLocId ?? '';}}">
+		<input type="hidden" id="LoCorrectiveNeededLocId" value="{{ $maxLoPlanActionLocId ?? '';}}">
 	</div>
 	<div id="taskLocData" data-values="{{ json_encode($countTaskLoc) }}"></div>
 @endsection 
@@ -1444,7 +1541,7 @@ $(document).ready(function() {
 		
 		if(tab == 'lo-corrective-needed')
 		{
-			let loc_id = $('#IaPlanActionLocId').val();
+			let loc_id = $('#LoCorrectiveNeededLocId').val();
 			var baseUrl = "{{ url('/lo-task-status') }}";
 			var redirectUrl = baseUrl + '/'+ loc_id + '/1';
 			window.location.href = redirectUrl;
