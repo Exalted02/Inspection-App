@@ -695,9 +695,6 @@ if(auth()->user()->user_type == 1)
         })
         ->orWhere(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 1);
-        })
-        ->orWhere(function ($q) {
-            $q->where('inspector_action', 1)->where('los_action', 1);
         });
     })
     ->get();
@@ -735,9 +732,6 @@ if(auth()->user()->user_type == 2)
         })
         ->orWhere(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 1);
-        })
-        ->orWhere(function ($q) {
-            $q->where('inspector_action', 1)->where('los_action', 1);
         });
     })
     ->get();
@@ -757,9 +751,6 @@ if(auth()->user()->user_type == 3)
         })
         ->orWhere(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 1);
-        })
-        ->orWhere(function ($q) {
-            $q->where('inspector_action', 1)->where('los_action', 1);
         });
     })
     ->get();
@@ -998,8 +989,8 @@ if(auth()->user()->user_type == 3)
 					</div>
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Open corrective action/plan</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveActionCount + $correctivePlanCount}}</span></div>
+							<div class="small-card-title">Open Observation</div>
+							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount}}</span></div>
 						</div>
 					</div>
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
@@ -1444,9 +1435,10 @@ $(document).ready(function() {
 		
 		if(tab == 'ia-action-plan')
 		{
+			//localStorage.setItem('selectedTab', 'corrective_checked_tab');
 			let loc_id = $('#IaPlanActionLocId').val();
 			var baseUrl = "{{ url('/inspector-filter') }}";
-			var redirectUrl = baseUrl + '/'+ loc_id + '/1';
+			var redirectUrl = baseUrl + '/'+ loc_id + '/0#corrective_checked_tab';
 			window.location.href = redirectUrl;
 		}
 		
@@ -1461,7 +1453,7 @@ $(document).ready(function() {
 		{
 			let loc_id = $('#LosPlanActionLocId').val();
 			var baseUrl = "{{ url('/los-task-status') }}";
-			var redirectUrl = baseUrl + '/'+ loc_id + '/1';
+			var redirectUrl = baseUrl + '/'+ loc_id + '/0#corrective_checked_tab';
 			window.location.href = redirectUrl;
 		}
 		
