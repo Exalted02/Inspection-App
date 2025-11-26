@@ -645,7 +645,10 @@ if(auth()->user()->user_type == 3)
 	$los_corrective_needed = App\Models\Dashboard_notification::where('user_type', 3)->where('user_id', auth()->user()->id)->sum('pending_closure');
 	$los_pending_closure_count = $los_action_plan_count + $los_corrective_needed;
 }
+
+
 // my dashboard work 25-11-2025------
+
 $countTaskLoc = [];
 if(auth()->user()->user_type == 1)
 {
@@ -682,6 +685,7 @@ if(auth()->user()->user_type == 1)
 	$countTaskLoc['total_outs_insp'] = $tot;
 	//echo "<pre>";print_r($countTaskLoc);die;
 	
+	//----------ia-action-plan--------
 	$inspection_action_plan = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0, 1])
     ->where(function ($q) {
         $q->where(function ($q) {
@@ -698,16 +702,27 @@ if(auth()->user()->user_type == 1)
         });
     })
     ->get();
-	$inspection_closure = $inspection_action_plan->count();
+	$inspection_closure_action_plan = $inspection_action_plan->count();
 	
-	$inspection_completed = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0, 1])
-    ->where(function ($q) {
-        $q->where(function ($q) {
-            $q->where('inspector_action', 1)->where('los_action', 1);
-        });
-    })
-    ->get();
-	$inspection_closure = $inspection_completed->count();
+	//echo "<pre>";print_r($inspection_action_plan);die;
+	
+	$inActionPlanTaskLocIds = [];
+	$maxIaPlanActionLocId = '';
+	if($inspection_closure_action_plan > 0)
+	{
+		foreach($inspection_action_plan as $val)
+		{
+			$tsk = App\Models\Task_lists::where('id', $val->task_list_id)->first();
+			$inActionPlanTaskLocIds[] = $tsk->location_id;
+		}
+		
+		$counts = array_count_values($inActionPlanTaskLocIds);
+		$maxIaPlanActionLocId = array_keys($counts, max($counts))[0];
+	}
+	
+	//echo "<pre>";print_r($inActionPlanTaskLocIds);die;
+	//----------ia-action-plan end --------
+	
 }
 
 @endphp
@@ -760,7 +775,7 @@ if(auth()->user()->user_type == 1)
 				</div>
 				@if(auth()->user()->user_type == 1)
 				<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-action-plan">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if(!empty($ia_action_plan_count))
@@ -775,15 +790,15 @@ if(auth()->user()->user_type == 1)
 						</div>
 					</div></a>
 					
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-completed-plan">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-action-plan">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
-							@if(!empty($inspection_closure))
+							@if(!empty($inspection_closure_action_plan))
 							<span class="notification-badge" id="ia_completed_badge"></span>
 							@endif
 							<div class="small-card-title">Inspection closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-							<div class="small-card-upper-counter me-2"><span id="ia_total_ins_closure">{{ $inspection_closure ?? 0 }}</span></div>
+							<div class="small-card-upper-counter me-2"><span id="ia_total_ins_closure">{{ $inspection_closure_action_plan ?? 0 }}</span></div>
 							{{--<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
@@ -791,21 +806,32 @@ if(auth()->user()->user_type == 1)
 					</div></a>
 				</div>
 				<div class="row flex-wrap d-flex">
-					<div class="col-md-4 col-sm-4 col-xs-4 small-card-first">
+				
+					<div class="col-md-3 col-sm-3 col-xs-3 small-card-first">
+						<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $correctiveApprovedCount + $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
+							<div class="small-card-counter">{{ $countTaskLoc['total_outs_insp'] ?? 0 }}</div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
+						</a>
 					</div>
-					<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
+					
+					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Observations</div>
 							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount }}</span></div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 					</div>
-					<div class="col-md-4 col-sm-4 col-xs-4 small-card-second">
+					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
+						<div class="bg small-card my-dashboard-lower">
+							<div class="small-card-title">Open Observation</div>
+							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount ?? 0}}</span></div>
+							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Pending closure</div>
 							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $inspection_closure ?? 0}}</span></div>
@@ -1304,6 +1330,7 @@ if(auth()->user()->user_type == 1)
         </section>
 		<input type="hidden" id="notifi_status" value="{{ $notifi_status ?? '';}}">
 		<input type="hidden" id="loc_name" value="{{ $loc_name ?? '';}}">
+		<input type="hidden" id="IaPlanActionLocId" value="{{ $maxIaPlanActionLocId ?? '';}}">
 	</div>
 	<div id="taskLocData" data-values="{{ json_encode($countTaskLoc) }}"></div>
 @endsection 
@@ -1345,15 +1372,27 @@ $(document).ready(function() {
 	$(document).on('click', '.my-dashboard-click', function(){
 		
 		var tab = $(this).data('tab');
-		let countTaskLoc = JSON.parse($('#taskLocData').attr('data-values'));
-		delete countTaskLoc.total_outs_insp;
-		let loc_id = Object.keys(countTaskLoc).reduce((a, b) =>
-			countTaskLoc[a] > countTaskLoc[b] ? a : b
-		);
+		//alert(tab);
+		if(tab == 'ia-outstanding-inspection')
+		{
+			let countTaskLoc = JSON.parse($('#taskLocData').attr('data-values'));
+			delete countTaskLoc.total_outs_insp;
+			let loc_id = Object.keys(countTaskLoc).reduce((a, b) =>
+				countTaskLoc[a] > countTaskLoc[b] ? a : b
+			);
+			
+			var baseUrl = "{{ url('/location-details') }}";
+			var redirectUrl = baseUrl + '/'+ loc_id;
+			window.location.href = redirectUrl;
+		}
 		
-		var baseUrl = "{{ url('/location-details') }}";
-		var redirectUrl = baseUrl + '/'+ loc_id;
-		window.location.href = redirectUrl;
+		if(tab == 'ia-action-plan')
+		{
+			let loc_id = $('#IaPlanActionLocId').val();
+			var baseUrl = "{{ url('/inspector-filter') }}";
+			var redirectUrl = baseUrl + '/'+ loc_id + '/1';
+			window.location.href = redirectUrl;
+		}
 		
 		// use ajax to store the tab in session
 		/*var URL = "{{ route('select-dashboard-tab') }}";
