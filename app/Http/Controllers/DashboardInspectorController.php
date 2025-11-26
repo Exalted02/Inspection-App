@@ -3025,20 +3025,25 @@ class DashboardInspectorController extends Controller
 				}
 			}
 		}
-
-		foreach($categoryIds as $cat)
+		
+		$categories = Category::where('location_id', $request->location_id)->get();
+		foreach($categories as $category)
 		{
-			$model = new Task_list_subcategories();
-			$model->task_list_id = $id;
-			$model->task_list_category_id = $cat;
-			$model->total_task = 0;
-			$model->completed_task = 0;
-			$model->is_submit = 1;
-			$model->created_at = date('Y-m-d h:i:s');
-			$model->save();
+			$exists = Checklist::where('category_id', $category->id)->exists();
+			if($exists)
+			{
+				$model = new Task_list_subcategories();
+				$model->task_list_id = $id;
+				$model->task_list_category_id = $category->id;
+				$model->total_task = 0;
+				$model->completed_task = 0;
+				$model->is_submit = 1;
+				$model->created_at = date('Y-m-d h:i:s');
+				$model->save();
+			}
 			
 			//=======add to dashboard_notification table ======
-			$count_reject_checklist = Task_list_checklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 0)->count();
+			/*$count_reject_checklist = Task_list_checklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 0)->count();
 			
 			$count_reject_subchecklist = Task_list_subchecklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 0)->count();
 			
@@ -3063,7 +3068,7 @@ class DashboardInspectorController extends Controller
 				'inspection_closure_date'	=>	date('Y-m-d h:i:s'),
 				'pending_closure'	=> $pending_closure
 			];
-			dashboard_notification($array); // send to helper
+			dashboard_notification($array);*/ // send to helper
 		}
 		
 		
