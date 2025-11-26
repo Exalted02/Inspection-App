@@ -745,6 +745,27 @@ if(auth()->user()->user_type == 2)
 	$lo_closure_action_plan = $lo_action_plan->count();
 }
 
+if(auth()->user()->user_type == 3)
+{
+	//----------los-action-plan--------
+	$los_action_plan = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0, 1])
+    ->where(function ($q) {
+        $q->where(function ($q) {
+            $q->where('inspector_action', 0)->where('los_action', 0);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 1)->where('los_action', 0);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 0)->where('los_action', 1);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 1)->where('los_action', 1);
+        });
+    })
+    ->get();
+	$los_closure_action_plan = $los_action_plan->count();
+}
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card mb-0">
