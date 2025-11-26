@@ -765,6 +765,21 @@ if(auth()->user()->user_type == 3)
     })
     ->get();
 	$los_closure_action_plan = $los_action_plan->count();
+	
+	$losActionPlanTaskLocIds = [];
+	$maxLosPlanActionLocId = '';
+	if($los_closure_action_plan > 0)
+	{
+		foreach($los_action_plan as $val)
+		{
+			$tsk = App\Models\Task_lists::where('id', $val->task_list_id)->first();
+			$losActionPlanTaskLocIds[] = $tsk->location_id;
+		}
+		
+		$counts = array_count_values($losActionPlanTaskLocIds);
+		$maxLosPlanActionLocId = array_keys($counts, max($counts))[0];
+	}
+	//echo $maxLosPlanActionLocId; die;
 }
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
@@ -942,17 +957,17 @@ if(auth()->user()->user_type == 3)
 				
 				@if(auth()->user()->user_type == 3)
 					<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="los-action-plan-needed">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="los-action-plan">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
-						@if(!empty($los_pending_closure_count))
+						@if(!empty($los_closure_action_plan))
 						<span class="notification-badge" id="los_pending_closure_badge"></span>
 						@endif
-							<div class="small-card-title">Pending closure</div>
+							<div class="small-card-title">Inspection closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-								<div class="small-card-upper-counter me-2"><span id="los_pending_closure_count">{{ $los_pending_closure_count }}</span></div>
+								<div class="small-card-upper-counter me-2"><span id="los_pending_closure_count">{{ $los_closure_action_plan }}</span></div>
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>--}}
-								<div class="small-card-upper-counter-title">Pending task</div>
+								<div class="small-card-upper-counter-title">Pending tasks</div>
 							</div>
 						</div>
 					</div></a>
@@ -1372,6 +1387,7 @@ if(auth()->user()->user_type == 3)
 		<input type="hidden" id="notifi_status" value="{{ $notifi_status ?? '';}}">
 		<input type="hidden" id="loc_name" value="{{ $loc_name ?? '';}}">
 		<input type="hidden" id="IaPlanActionLocId" value="{{ $maxIaPlanActionLocId ?? '';}}">
+		<input type="hidden" id="LosPlanActionLocId" value="{{ $maxLosPlanActionLocId ?? '';}}">
 	</div>
 	<div id="taskLocData" data-values="{{ json_encode($countTaskLoc) }}"></div>
 @endsection 
@@ -1434,6 +1450,22 @@ $(document).ready(function() {
 			var redirectUrl = baseUrl + '/'+ loc_id + '/1';
 			window.location.href = redirectUrl;
 		}
+		
+		if(tab == 'lo-action-plan')
+		{
+			let loc_id = $('#IaPlanActionLocId').val();
+			var baseUrl = "{{ url('/lo-task-status') }}";
+			var redirectUrl = baseUrl + '/'+ loc_id + '/1';
+			window.location.href = redirectUrl;
+		}
+		if(tab == 'los-action-plan')
+		{
+			let loc_id = $('#LosPlanActionLocId').val();
+			var baseUrl = "{{ url('/los-task-status') }}";
+			var redirectUrl = baseUrl + '/'+ loc_id + '/1';
+			window.location.href = redirectUrl;
+		}
+		
 		
 		// use ajax to store the tab in session
 		/*var URL = "{{ route('select-dashboard-tab') }}";
