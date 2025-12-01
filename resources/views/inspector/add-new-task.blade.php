@@ -842,7 +842,10 @@ $(document).ready(function() {
 			success: function(response) {
 				if (!response.success) {
 					
-					$('#tasktitle_id_error').text('Task title already exists.').fadeIn().delay(2000).fadeOut(); 
+					$('#tasktitle_id_error').text('Task title already exists.').fadeIn().delay(20000).fadeOut(); 
+					$('html, body').animate({
+					  scrollTop: $('#task_title').offset().top
+					}, 800);
 					
 					if(hid_task_id == '')
 					{
@@ -983,7 +986,11 @@ $(document).ready(function() {
 			//dataType: 'json',
 			success: function(response) {
 				if (!response.success) {
-					$('#tasktitle_id_error').text('Task title already exists.').fadeIn().delay(2000).fadeOut(); 
+					$('#adhoc_tasktitle_id_error').text('Task title already exists.').fadeIn().delay(20000).fadeOut(); 
+					
+					$('html, body').animate({
+					  scrollTop: $('#adhoc_task_title').offset().top
+					}, 800);
 					
 					if(hid_task_id == '')
 					{

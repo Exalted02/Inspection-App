@@ -969,7 +969,7 @@ if(auth()->user()->user_type == 3)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Open Observation</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount ?? 0}}</span></div>
+							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount + $inspection_closure_action_plan ?? 0}}</span></div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 					</div>

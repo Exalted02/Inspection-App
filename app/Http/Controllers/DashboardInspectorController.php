@@ -2558,7 +2558,7 @@ class DashboardInspectorController extends Controller
         })
         ->first();*/
 		
-		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('category_id', $request->post('category_id'))->where('task_title', $request->post('task_title'))
+		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('category_id', $request->post('category_id'))->where('task_title', $request->post('task_title'))->where('task_title', 0)
 		->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
@@ -2704,8 +2704,7 @@ class DashboardInspectorController extends Controller
 		
 		
 		
-		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('task_title', $request->post('adhoc_task_title'))
-		->when($request->post('id'), function ($query) use ($request) {
+		$existingTask = Task_lists::where('location_id', $request->post('location_id'))->where('task_title', $request->post('adhoc_task_title'))->where('task_type', 1)->when($request->post('id'), function ($query) use ($request) {
             $query->where('id', '!=', $request->post('id'));
         })
 		->first();
