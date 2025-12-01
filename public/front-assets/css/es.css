@@ -2503,10 +2503,17 @@ padding-bottom: 5px;
     line-height: 20px;
     text-align: center;
 }
-@media (max-width: 767px) {
+
+@media (max-width: 575px) {
+    .adhoc-preview-image-wrapper .remove-image {
+        right: 221px !important;
+        top: -7px; 
+    }
+
     .adhoc-preview-image {
         max-width: 30%;
     }
 }
+
 
 

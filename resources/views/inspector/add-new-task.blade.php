@@ -106,7 +106,7 @@ if(!empty($task_id))
 												<div class="col-md-12">
 													<label>{{ __('What’s your observation?') }}</label>
 													<textarea class="form-control" placeholder="State your observations" name="observation" id="observation" >{{ old('observation', $observation ?? '') }}</textarea>
-													<span id="adhoc_observation_id_error" style="display:none;  color: red;"></span>
+														{{--<span id="adhoc_observation_id_error" style="display:none;  color: red;"></span>--}}
 												</div>
 											</div>
 											<div class="row align-items-center update-image">
@@ -125,11 +125,12 @@ if(!empty($task_id))
 											<div id="extra-previews" class=""></div>
 											<div class="row">
 												<div class="form-group  col-md-12  col-sm-12 adhoctaskImg" style="display:block;">
-													<div class="task-preview-wrapper position-relative d-inline-block">
-														<img id="" class="img-responsive task-img-upload" src="{{ $task_image ? url('uploads/task/' . $task_image) : url('images/noimages/default-task-pic.png') }}" alt=""/>
+												{{--<div class="task-preview-wrapper position-relative d-inline-block">
+													<img id="" class="img-responsive task-img-upload" src="{{ $task_image ? url('uploads/task/' . $task_image) : url('images/noimages/default-task-pic.png') }}" alt=""/>
 														<button type="button" class="task-img-delete" id="adhoc-delete-image">×</button>
-													</div>
+													</div>--}}
 												</div>
+												<span id="adhoc_observation_id_error" style="display:none;  color: red;"></span>
 											</div>
 										</div>
 										<div class="">
@@ -947,12 +948,20 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		if (observation === '')
+		/*if (observation === '')
 		{
 			$('#adhoc_observation_id_error').text('Please enter observation').fadeIn().delay(2000).fadeOut();
 			return false;
-		}
+		}*/
 		
+		//let files = $('#adhoc_task_image')[0].files;
+		
+		if (selectedFiles.length === 0 && observation === '') {
+			$('#adhoc_observation_id_error')
+				.text('Please enter observation or select file')
+				.fadeIn().delay(2000).fadeOut();
+			return false;
+		}
 		
 		var URL = $('#frmtaskadhoc').attr('action');
 		var id = $('#id').val();
