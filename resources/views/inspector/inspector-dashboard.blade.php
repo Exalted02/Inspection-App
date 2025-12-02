@@ -1484,6 +1484,9 @@ if(auth()->user()->user_type == 3)
 </script>
 <script>
 $(document).ready(function() {
+	localStorage.removeItem('taskcreated');
+	localStorage.removeItem('taskupdated');
+	
 	setInterval(function() { 
 		//get_mydashboard_data();
 	}, 10000); 

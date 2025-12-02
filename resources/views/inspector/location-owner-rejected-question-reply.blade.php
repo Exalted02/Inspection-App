@@ -788,7 +788,7 @@
 									<div class="split-placeholder-wrapper">
 									<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time">
 									<span class="custom-left-placeholder" id="selected_time">Set Time</span>
-									<span class="custom-right-placeholder" id="selected_date">Set Date</span>
+									{{--<span class="custom-right-placeholder" id="selected_date">Set Date</span>--}}
 								</div>
 								<span id="settimeline_id_error" style="display:none;  color: red;"></span>
 								<input type="hidden" id="hidden_set_date" name="hidden_set_date">
@@ -914,7 +914,7 @@ $(document).ready(function() {
 flatpickr("#set_time", {
     enableTime: false,
     dateFormat: "d M Y H:i",
-    onChange: function(selectedDates, dateStr, instance) {
+    /*onChange: function(selectedDates, dateStr, instance) {
 		
 			if (selectedDates.length == 1) {
 				const date = selectedDates[0];
@@ -958,6 +958,45 @@ flatpickr("#set_time", {
 			} else {
 				document.getElementById('selected_date').innerText = "Setdate";
 			}
+		}*/
+		onChange: function(selectedDates, dateStr, instance) {
+			if (selectedDates.length == 1) {
+
+				const date = selectedDates[0];
+				const dateOnly = flatpickr.formatDate(date, "d M Y");
+				const timeOnly = flatpickr.formatDate(date, "H:i");
+
+				// Show only left placeholder
+				document.getElementById('selected_time').innerText = dateOnly;
+
+				// Set hidden fields
+				$('#hidden_set_date').val(dateOnly);
+				$('#hidden_set_time').val(timeOnly);
+
+				// Clear input value (prevent overlapping)
+				instance._input.value = "";
+				instance.input.value = "";
+
+				if (window.innerWidth <= 576) {
+					$('.set-timeline-input').val('');
+					setTimeout(() => {
+						instance._input.value = "";
+						instance.input.value = "";
+						instance.input.blur();
+					}, 10);
+				} else {
+					setTimeout(() => {
+						instance._input.value = "";
+						instance.input.value = "";
+						instance.input.blur();
+					}, 10);
+				}
+			}
+		},
+		onValueUpdate: function(selectedDates, dateStr, instance) {
+			// Always clear the input
+			instance._input.value = "";
+			instance.input.value = "";
 		}
 	});
   
