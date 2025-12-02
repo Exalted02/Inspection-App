@@ -2982,8 +2982,8 @@ class DashboardInspectorController extends Controller
 		$existingChecklistIds = Task_list_checklists::where('task_list_id', $id)
                             ->pluck('checklist_id')
                             ->toArray();
-							
-		foreach ($checklists as $chk) {
+		// The uncheck checklist and subchecklist not inserted into tables				
+		/*foreach ($checklists as $chk) {
 			if (!in_array($chk->id, $existingChecklistIds)) {
 				$ifSuchelistExists = Subchecklist::where('checklist_id', $chk->id)->exists();
 				if(!$ifSuchelistExists)
@@ -3026,7 +3026,8 @@ class DashboardInspectorController extends Controller
 					]);
 				}
 			}
-		}
+		}*/
+		//----------------------
 		
 		$categories = Category::where('location_id', $request->location_id)->get();
 		foreach($categories as $category)

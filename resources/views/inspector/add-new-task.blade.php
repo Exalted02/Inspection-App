@@ -218,8 +218,8 @@ if(!empty($task_id))
 												<label>{{ __('Timeline') }}</label>
 												<div class="split-placeholder-wrapper">
 													<input class="form-control set-timeline-input" placeholder="" type="text" name="set_time" id="set_time" readonly>
-													<span class="custom-left-placeholder" id="selected_time">Set Time</span>
-													<span class="custom-right-placeholder" id="selected_date">{{ $selected_date ? $selected_date : 'Set Date'}}</span>
+													<span class="custom-left-placeholder" id="selected_time">Set Date</span>
+													{{--<span class="custom-right-placeholder" id="selected_date">{{ $selected_date ? $selected_date : 'Set Date'}}</span>--}}
 												</div>
 												<span id="settimeline_id_error" style="display:none;  color: red;"></span>
 												<input type="hidden" id="hidden_set_date" name="hidden_set_date" value="{{ $selected_date ?? ''}}">
@@ -622,15 +622,21 @@ $(document).ready(function() {
     dateFormat: "d M Y H:i",
 	minDate: "today",
 	//allowInput: true,
-    onChange: function(selectedDates, dateStr, instance) {
+    /*onChange: function(selectedDates, dateStr, instance) {
 			if (selectedDates.length == 1) {
 				const date = selectedDates[0];
 				//alert(date);
 				const dateOnly = flatpickr.formatDate(date, "d M Y");
 				const timeOnly = flatpickr.formatDate(date, "H:i");
                 //alert(date);alert(dateOnly);alert(timeOnly);
-				document.getElementById('selected_time').innerText = 'Set Time';
-				document.getElementById('selected_date').innerText = dateOnly;
+				// 02-12-2025--
+				//document.getElementById('selected_time').innerText = 'Set Time';
+				//document.getElementById('selected_date').innerText = dateOnly;
+				
+				document.getElementById('selected_time').innerText = dateOnly;
+				//document.getElementById('selected_date').innerText = '';
+				//-----------------
+				
 				$('#hidden_set_date').val(dateOnly);
 				$('#hidden_set_time').val(timeOnly);
 				
@@ -665,7 +671,8 @@ $(document).ready(function() {
 				}
 				
 			} else {
-				document.getElementById('selected_date').innerText = "Setdate";
+				//document.getElementById('selected_date').innerText = "Setdate";
+				document.getElementById('selected_date').innerText = "";
 			}
 		},
 		onValueUpdate: function(selectedDates, dateStr, instance) {
@@ -673,6 +680,46 @@ $(document).ready(function() {
 			//if(window.innerWidth <= 576) {
 					instance.input.value = '';
 				//}
+		}*/
+		
+		onChange: function(selectedDates, dateStr, instance) {
+			if (selectedDates.length == 1) {
+
+				const date = selectedDates[0];
+				const dateOnly = flatpickr.formatDate(date, "d M Y");
+				const timeOnly = flatpickr.formatDate(date, "H:i");
+
+				// Show only left placeholder
+				document.getElementById('selected_time').innerText = dateOnly;
+
+				// Set hidden fields
+				$('#hidden_set_date').val(dateOnly);
+				$('#hidden_set_time').val(timeOnly);
+
+				// Clear input value (prevent overlapping)
+				instance._input.value = "";
+				instance.input.value = "";
+
+				if (window.innerWidth <= 576) {
+					$('.set-timeline-input').val('');
+					setTimeout(() => {
+						instance._input.value = "";
+						instance.input.value = "";
+						instance.input.blur();
+					}, 10);
+				} else {
+					setTimeout(() => {
+						instance._input.value = "";
+						instance.input.value = "";
+						instance.input.blur();
+					}, 10);
+				}
+			}
+		},
+		onValueUpdate: function(selectedDates, dateStr, instance) {
+			// Always clear the input
+			instance._input.value = "";
+			instance.input.value = "";
 		}
 	});
 	
