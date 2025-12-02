@@ -867,6 +867,100 @@ if(auth()->user()->user_type == 3)
 	}
 	//echo $maxLosPlanActionLocId; die;
 }
+
+// work for my dashboard observation
+$inspection_completed = App\Models\Task_lists::where('task_type', 1)->count();
+
+$corrective_action_tasks = App\Models\Task_list_corrective_action::all();
+$corrective_action_checklist = [];
+$corrective_action_checklst_subchecklst = [];
+if($corrective_action_tasks->count() > 0)
+{
+	foreach($corrective_action_tasks as $val)
+	{
+		if($val->subchecklist_id != null)
+		{
+			$corrective_action_checklst_subchecklst[] = 
+			[
+				'task_list_id' => $val->task_list_id,
+				'checklist_id' => $val->checklist_id,
+				'subchecklist_id' => $val->subchecklist_id
+			];
+		}
+		else{
+			$corrective_action_checklist[] = [
+				'task_list_id' => $val->task_list_id,
+				'checklist_id' => $val->checklist_id,
+			];
+		}
+	}
+}
+
+$get_tasklist_checklist = App\Models\Task_list_checklists::where('approve', 0)->get();
+
+$observations = 0;
+if($get_tasklist_checklist->count() > 0)
+{
+	$excludeChecklist = [];
+	foreach ($corrective_action_checklist as $item) {
+		$excludeChecklist[$item['task_list_id']][] = $item['checklist_id'];
+	}
+	//echo "<pre>";print_r($excludeChecklist);die;
+	foreach($get_tasklist_checklist as $checklist)
+	{
+		$taskListId = $checklist->task_list_id;
+		$checklistId = $checklist->checklist_id;
+
+		// If this pair should be excluded → SKIP
+		if (
+			isset($excludeChecklist[$taskListId]) &&
+			in_array($checklistId, $excludeChecklist[$taskListId])
+		) {
+			continue;   // Skip this record
+		}
+		else{
+			$observations++;
+		}
+
+	}
+}
+
+$get_tasklist_subchecklist = App\Models\Task_list_subchecklists::where('approve', 0)->get();
+if($get_tasklist_subchecklist->count() > 0)
+{
+	$excludeSubchecklist = [];
+
+	foreach ($corrective_action_checklst_subchecklst as $item) {
+		$taskId  = $item['task_list_id'];
+		$checkId = $item['checklist_id'];
+		$subId   = $item['subchecklist_id'];
+		$excludeSubchecklist[$taskId][$checkId][] = $subId;
+	}
+	//echo "<pre>";print_r($excludeSubchecklist);die;
+	
+	foreach($get_tasklist_subchecklist as $row)
+	{
+		 
+
+        $taskId  = $row->task_list_id;
+        $checkId = $row->task_list_checklist_id;
+        $subId   = $row->subchecklist_id;
+
+        // Skip if this exact combination is in the exclude list
+        if (
+            isset($excludeSubchecklist[$taskId]) && isset($excludeSubchecklist[$taskId][$checkId]) && in_array($subId, $excludeSubchecklist[$taskId][$checkId])
+        ) {
+            continue; // ← skip this record
+        }
+		else{
+			$observations++;
+		}
+	}
+
+}
+
+//echo "<pre>";print_r($corrective_action_checklist);
+//echo "<pre>";print_r($corrective_action_checklst_subchecklst);die;
 @endphp
     <!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	<div class="profile-card mb-0">
@@ -953,7 +1047,7 @@ if(auth()->user()->user_type == 3)
 						<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $countTaskLoc['total_outs_insp'] ?? 0 }}</div>
+							<div class="small-card-counter">{{ $inspection_completed ?? 0 }}</div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 						</a>
@@ -962,7 +1056,7 @@ if(auth()->user()->user_type == 3)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Observations</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $correctiveNeededCount }}</span></div>
+							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $observations }}</span></div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 					</div>
