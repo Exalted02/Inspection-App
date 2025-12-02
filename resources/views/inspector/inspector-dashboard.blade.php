@@ -910,16 +910,21 @@ if($get_tasklist_checklist->count() > 0)
 	{
 		$taskListId = $checklist->task_list_id;
 		$checklistId = $checklist->checklist_id;
-
-		// If this pair should be excluded → SKIP
-		if (
-			isset($excludeChecklist[$taskListId]) &&
-			in_array($checklistId, $excludeChecklist[$taskListId])
-		) {
-			continue;   // Skip this record
-		}
-		else{
-			$observations++;
+		$categoryId = $checklist->category_id;
+		
+		$exists = App\Models\Task_list_subcategories::where('task_list_id', $taskListId)->where('task_list_category_id', $categoryId)->exists();
+		if($exists)
+		{
+			// If this pair should be excluded → SKIP
+			if (
+				isset($excludeChecklist[$taskListId]) &&
+				in_array($checklistId, $excludeChecklist[$taskListId])
+			) {
+				continue;   // Skip this record
+			}
+			else{
+				$observations++;
+			}
 		}
 
 	}
@@ -940,20 +945,23 @@ if($get_tasklist_subchecklist->count() > 0)
 	
 	foreach($get_tasklist_subchecklist as $row)
 	{
-		 
-
-        $taskId  = $row->task_list_id;
+		$taskId  = $row->task_list_id;
         $checkId = $row->task_list_checklist_id;
         $subId   = $row->subchecklist_id;
-
-        // Skip if this exact combination is in the exclude list
-        if (
-            isset($excludeSubchecklist[$taskId]) && isset($excludeSubchecklist[$taskId][$checkId]) && in_array($subId, $excludeSubchecklist[$taskId][$checkId])
-        ) {
-            continue; // ← skip this record
-        }
-		else{
-			$observations++;
+		$categoryId = $row->category_id;
+		
+		$exists = App\Models\Task_list_subcategories::where('task_list_id', $taskId)->where('task_list_category_id', $categoryId)->exists();
+		if($exists)
+		{
+			// Skip if this exact combination is in the exclude list
+			if (
+				isset($excludeSubchecklist[$taskId]) && isset($excludeSubchecklist[$taskId][$checkId]) && in_array($subId, $excludeSubchecklist[$taskId][$checkId])
+			) {
+				continue; // skip this record
+			}
+			else{
+				$observations++;
+			}
 		}
 	}
 
@@ -1014,7 +1022,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection" data-count="{{ $countTaskLoc['total_outs_insp'] ?? 0 }}">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
-						@if(!empty($ia_action_plan_count))
+						@if($countTaskLoc['total_outs_insp'] != 0)
 						<span class="notification-badge" id="ia_action_plan_badge"></span>
 						@endif
 							<div class="small-card-title">Outstanding Inspection</div>
@@ -1023,13 +1031,14 @@ if($get_tasklist_subchecklist->count() > 0)
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
+							<div class="arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
 						</div>
 					</div></a>
 					
 					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-action-plan" data-count="{{ $inspection_closure_action_plan ?? 0 }}">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
-							@if(!empty($inspection_closure_action_plan))
+							@if($inspection_closure_action_plan != 0)
 							<span class="notification-badge" id="ia_completed_badge"></span>
 							@endif
 							<div class="small-card-title">Inspection closure</div>
@@ -1038,6 +1047,7 @@ if($get_tasklist_subchecklist->count() > 0)
 							{{--<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
+							<div class="arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
 						</div>
 					</div></a>
 				</div>
@@ -1082,7 +1092,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-corrective-needed" data-count="{{ $correctiveNeededCount ?? 0 }}">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
-						@if(!empty($correctiveNeededCount))
+						@if($correctiveNeededCount != 0)
 						<span class="notification-badge" id="lo_action_plan_badge"></span>
 						@endif
 							<div class="small-card-title">Open Observation - Corrective Needed</div>
@@ -1091,6 +1101,7 @@ if($get_tasklist_subchecklist->count() > 0)
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
+							<div class="arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
 						</div>
 					</div></a>
 					{{--<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
@@ -1140,7 +1151,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="los-action-plan" data-count="{{ $los_closure_action_plan ?? 0 }}">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
-						@if(!empty($los_closure_action_plan))
+						@if($los_closure_action_plan != 0)
 						<span class="notification-badge" id="los_pending_closure_badge"></span>
 						@endif
 							<div class="small-card-title">Inspection closure</div>
@@ -1149,6 +1160,7 @@ if($get_tasklist_subchecklist->count() > 0)
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending tasks</div>
 							</div>
+							<div class="arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
 						</div>
 					</div></a>
 					{{--<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
