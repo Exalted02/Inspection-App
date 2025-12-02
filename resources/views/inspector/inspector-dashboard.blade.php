@@ -1108,7 +1108,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-first">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $correctiveApprovedCount + $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
+							<div class="small-card-counter">{{ $inspection_completed }}</div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 					</div>
@@ -1166,7 +1166,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-first">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $correctiveApprovedCount + $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>
+							<div class="small-card-counter">{{ $inspection_completed }}</div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 					</div>
