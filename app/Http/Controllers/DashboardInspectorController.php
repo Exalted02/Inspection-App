@@ -2859,7 +2859,7 @@ class DashboardInspectorController extends Controller
 							$subchecklistModel->category_id = $categoryId;
 							$subchecklistModel->task_list_checklist_id = $checklistId;
 							$subchecklistModel->subchecklist_id = $subId;
-							$subchecklistModel->rejected_region = $request->post('adhoc_task_title');
+							$subchecklistModel->rejected_region = $request->post('observation') ?? null;
 							$subchecklistModel->approve = 0;
 							$subchecklistModel->save();
 							$subCheklistId = $subchecklistModel->id;
@@ -2922,7 +2922,7 @@ class DashboardInspectorController extends Controller
 						$chklistModel->task_list_id = $id;
 						$chklistModel->category_id = $categoryId;
 						$chklistModel->checklist_id = $checklistId;
-						$chklistModel->rejected_region = $request->post('adhoc_task_title');
+						$chklistModel->rejected_region = $request->post('observation') ?? null;
 						$chklistModel->approve = 0;
 						$chklistModel->save();
 						$cheklistId = $chklistModel->id;
