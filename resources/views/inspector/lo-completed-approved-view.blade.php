@@ -95,8 +95,9 @@
  if($type == 'subchecklist')
  {
 	 
-	 $taskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('approve', 0)->first();
+	 /*$taskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('approve', 0)->first();*/
 	 
+	 $taskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
 	 
 	$subImages = collect();
 	$subChecklistName = '';
@@ -203,7 +204,7 @@
 						</div>
 						@endif
 					
-						
+						@if(!empty($corrective_action_data))
 						<div class="row">
 							<div class="col-md-12">
 								<label>Reason</label>
@@ -212,6 +213,7 @@
 								</div>
 							</div>
 						</div>
+						@endif
 						
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
@@ -237,13 +239,18 @@
 							</div>
 							
 							<div class="col-md-12 text-ia-lo-los d-flex justify-content-between flex-wrap">
-							<img src="{{ url('uploads/profile/'. $corrective_action_data?->get_inspector?->id . '/inspector/'. $corrective_action_data?->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+							@if(!empty($corrective_action_data))
+							   <img src="{{ url('uploads/profile/'. $corrective_action_data?->get_inspector?->id . '/inspector/'. $corrective_action_data?->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+						    @else
+								<img src="{{ url('uploads/profile/'. $userData->get_user->id . '/inspector/'. $userData->get_user->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+							@endif
 							<span>By (IA) {{ $userData->get_user->name ?? ''}}</span><span>·</span><span>{{ change_date_format($created_at, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 						</div>
-						<hr class="horizontal-line">
+						
 						
 						
 						@if(!empty($lo_corrective_action_plan))
+							<hr class="horizontal-line">
 							<div class="row IA-IOS-get-reply">
 								<div class="col-md-12">
 									<div class="d-flex justify-between align-items-center">

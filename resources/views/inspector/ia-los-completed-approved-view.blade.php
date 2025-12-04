@@ -13,8 +13,11 @@
  $lo_corrective_completed_by = '';
  
  $userData = App\Models\Task_lists::with('get_user')->where('id', $task_id)->first();
+ //echo "<pre>";print_r($userData);die;
  
  $checklist = App\Models\Checklist::where('id', $checklist_id)->first();
+ //echo "<pre>";print_r($checklist);
+ //echo $type;die;
  if($type == 'checklist')
  {
 	 $taskChecklist = App\Models\Task_list_checklists::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
@@ -34,7 +37,7 @@
 	 /*$corrective_action_data = App\Models\Task_list_corrective_action::where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->where('inspector_id', auth()->user()->id)->first();*/
 	 
 	 $corrective_action_data = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')->where('task_list_id', $task_id)->where('checklist_id', $checklist_id)->first();
-	 
+	 //echo "<pre>";print_r($corrective_action_data);die;
 	 $lo_corrective_action_plan = $corrective_action_data ? $corrective_action_data->lo_corrective_action_plan : '';
 	 
 	 $lo_direct_approve = $corrective_action_data ? $corrective_action_data->lo_direct_approve : '';
@@ -93,8 +96,10 @@
  if($type == 'subchecklist')
  {
 	 
-	 $taskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('approve', 0)->first();
+	 /*$taskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->where('approve', 0)->first();*/
 	 
+	 $taskSubChecklist = App\Models\Task_list_subchecklists::where('task_list_id', $task_id)->where('task_list_checklist_id', $checklist_id)->where('subchecklist_id', $subchecklist_id)->first();
+	 //echo "<pre>";print_r($taskSubChecklist);die;
 	 
 	$subImages = collect();
 	$subChecklistName = '';
@@ -203,10 +208,12 @@
 						</div>
 						@endif
 					
-						
+						@if(!empty($corrective_action_data))
 						<div class="row">
 							<div class="col-md-12"><label>Reason</label></div>
 						</div>
+						@endif
+						
 						<div class="row">
 						<div class="col-md-12"><p class="text-muted mb-0">{{ $rejected_region ?? '' }}</p></div>
 						</div>
@@ -233,12 +240,17 @@
 								@endif
 							</div>
 							<div class="col-md-6 text-ia-lo-los d-flex justify-content-between flex-wrap">
+							@if(!empty($corrective_action_data))
 							<img src="{{ url('uploads/profile/'. $corrective_action_data?->get_inspector?->id . '/inspector/'. $corrective_action_data?->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+							@else
+								<img src="{{ url('uploads/profile/'. $userData->get_user->id . '/inspector/'. $userData->get_user->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
+							@endif
 							<span>By (IA) {{ $userData->get_user->name ?? ''}} </span><span>{{ change_date_format($created_at, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 						</div>
-						<hr class="horizontal-line">
+						{{--<hr class="horizontal-line">--}}
 						
 						@if(!empty($lo_corrective_action_plan))
+							<hr class="horizontal-line">
 						{{--<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 								<label>Corrective</label>

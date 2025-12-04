@@ -698,10 +698,7 @@ if($mode == 'corrective_appr')
 				$extension = strtolower($extension);
 				
 				//if (!empty($result['image']))
-					
-				if(array_key_exists('image', $result))
-				{
-					$route = route('lo-subchecklist-completed-approved-view', [
+				$route = route('lo-subchecklist-completed-approved-view', [
 						'location_id' => $location_id,
 						'task_id' => $result['task_id'],
 						'checklist_id' => $result['checklist_id'],
@@ -709,9 +706,20 @@ if($mode == 'corrective_appr')
 						'type' => $result['type'],
 						'tab' => 'corrective-action'
 					]);
+					
+				if(array_key_exists('image', $result))
+				{
+					/*$route = route('lo-subchecklist-completed-approved-view', [
+						'location_id' => $location_id,
+						'task_id' => $result['task_id'],
+						'checklist_id' => $result['checklist_id'],
+						'subchecklist_id' => $val['subchecklist_id'],
+						'type' => $result['type'],
+						'tab' => 'corrective-action'
+					]);*/
 					$class = '';
 				} else {
-					$route = "javascript:void(0)";
+					//$route = "javascript:void(0)";
 					$class = 'list-approved-filter';
 				}
 			@endphp
@@ -753,13 +761,14 @@ if($mode == 'corrective_appr')
 			$extension = strtolower($extension);
 			
 			//if (!empty($result['image']))
-				
+			$route = route('lo-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+		
 			if(array_key_exists('image', $result))
 			{
-				$route = route('lo-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);
+				/*$route = route('lo-checklist-completed-approved-view',['location_id'=>$location_id,'task_id'=>$result['task_id'], 'checklist_id'=> $result['checklist_id'],'type' => $result['type'],'tab'=>'corrective-action']);*/
 				$class = '';
 			} else {
-				$route = "javascript:void(0)";
+				//$route = "javascript:void(0)";
 				$class = 'list-approved-filter';
 			}
 		@endphp		
