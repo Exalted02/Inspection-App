@@ -3028,8 +3028,31 @@ class DashboardInspectorController extends Controller
 			}
 		}*/
 		//----------------------
+		$categoriesFromChecklists = Task_list_checklists::where('task_list_id', $id)
+			->pluck('category_id')
+			->toArray();
+
+		$categoriesFromSubChecklists = Task_list_subchecklists::where('task_list_id', $id)
+			->pluck('category_id')
+			->toArray();
+			
+		$distinctCategories = array_values(array_unique(
+			array_merge($categoriesFromChecklists, $categoriesFromSubChecklists)
+		));
 		
-		$categories = Category::where('location_id', $request->location_id)->get();
+		foreach($distinctCategories as $category)
+		{
+			$model = new Task_list_subcategories();
+			$model->task_list_id = $id;
+			$model->task_list_category_id = $category;
+			$model->total_task = 0;
+			$model->completed_task = 0;
+			$model->is_submit = 1;
+			$model->created_at = date('Y-m-d h:i:s');
+			$model->save();
+		}
+		
+		/*$categories = Category::where('location_id', $request->location_id)->get();
 		foreach($categories as $category)
 		{
 			$exists = Checklist::where('category_id', $category->id)->exists();
@@ -3046,7 +3069,7 @@ class DashboardInspectorController extends Controller
 			}
 			
 			//=======add to dashboard_notification table ======
-			/*$count_reject_checklist = Task_list_checklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 0)->count();
+			$count_reject_checklist = Task_list_checklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 0)->count();
 			
 			$count_reject_subchecklist = Task_list_subchecklists::where('task_list_id', $id)->where('category_id', $cat)->where('approve', 0)->count();
 			
@@ -3071,8 +3094,8 @@ class DashboardInspectorController extends Controller
 				'inspection_closure_date'	=>	date('Y-m-d h:i:s'),
 				'pending_closure'	=> $pending_closure
 			];
-			dashboard_notification($array);*/ // send to helper
-		}
+			dashboard_notification($array);// send to helper
+		}*/ 
 		
 		
 		
@@ -3904,14 +3927,19 @@ class DashboardInspectorController extends Controller
 
 		$offset = 0;
 		$limit = config('custom.LOAD_MORE_LIST_SHOW');
-
+		
+		
 		// Common filters
 		$taskListIds = Task_lists::where('location_id', $lid)
 			->where('inspector_id', auth()->user()->id)
 			->pluck('id');
 		
-		$categoryIds = Task_list_subcategories::whereIn('task_list_id', $taskListIds)
-			->pluck('task_list_category_id');
+		$categoryIds = Task_list_subcategories::whereIn('task_list_id', $taskListIds)->pluck('task_list_category_id');
+		
+		/*$categoryIds = Task_list_subcategories::get(['task_list_id', 'task_list_category_id'])->map(function ($item) {
+				return $item->task_list_id . '-' . $item->task_list_category_id;
+			})->toArray();*/
+		
 		//echo "<pre>";print_r($categoryIds);die;
 		//-----05-08-2025 if submit checklist then submit task data show-----
 		$submit_task_id = Task_list_subcategories::whereIn('task_list_category_id', $categoryIds)->pluck('task_list_id')->toArray();
