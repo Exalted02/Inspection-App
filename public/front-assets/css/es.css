@@ -2552,4 +2552,12 @@ padding-bottom: 5px;
 	}
 }
 
+.custom-left-placeholder {
+    color: #999;   
+    font-size: 14px;
+}
+.custom-left-placeholder.filled {
+    color: #555;   
+}
+
 

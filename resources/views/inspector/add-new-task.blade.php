@@ -113,7 +113,7 @@ if(!empty($task_id))
 												<div class="col-md-4 mb-3">
 													<label for="adhoc_task_image" class="task-cover-image">Upload Cover</label>
 													<div class="upload-wrapper">
-														<input type="file" name="adhoc_task_image[]" id="adhoc_task_image" style="display: none;" accept="image/*" multiple>
+														<input type="file" name="adhoc_task_image[]" id="adhoc_task_image" style="display: none;" accept="image/*;capture=camera" multiple>
 														<label for="adhoc_task_image" class="task-upload-label">
 														{{--<span class="task-upload-text">Upload image</span>--}}
 														<i class="fa fa-upload task-upload-icon"></i>
@@ -230,7 +230,7 @@ if(!empty($task_id))
 											<div class="col-md-4 mb-3">
 												<label for="task_image" class="task-cover-image">Upload Cover</label>
 												<div class="upload-wrapper">
-													<input type="file" name="task_image" id="task_image" style="display: none;" accept="image/*">
+													<input type="file" name="task_image" id="task_image" style="display: none;" accept="image/*;capture=camera">
 													<label for="task_image" class="task-upload-label">
 													{{--<span class="task-upload-text">Upload image</span>--}}
 													<i class="fa fa-upload task-upload-icon"></i>
@@ -344,7 +344,7 @@ if(!empty($task_id))
  
 <script>
   // Detect if device is mobile
-  function isMobileDevice() {
+  /*function isMobileDevice() {
     return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   }
  
@@ -358,6 +358,8 @@ if(!empty($task_id))
       // Remove capture attribute (normal browse)
       fileInput.removeAttribute('capture');
     }
+	
+	
   });
   
   window.addEventListener('DOMContentLoaded', function () {
@@ -370,7 +372,9 @@ if(!empty($task_id))
       // Remove capture attribute (normal browse)
       fileInput.removeAttribute('capture');
     }
-  });
+	
+	
+  });*/
 </script>
 <script>
 $(document).ready(function() {
@@ -684,7 +688,6 @@ $(document).ready(function() {
 		
 		onChange: function(selectedDates, dateStr, instance) {
 			if (selectedDates.length == 1) {
-
 				const date = selectedDates[0];
 				const dateOnly = flatpickr.formatDate(date, "d M Y");
 				const timeOnly = flatpickr.formatDate(date, "H:i");

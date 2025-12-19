@@ -113,7 +113,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 				<div class="col-md-12">
 					<label for="checklist_file"></label>
 					<div class="upload-wrapper">
-					  <input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">
+					  <input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;" accept="image/*;capture=camera">
 					  <label for="checklist_file" class="custom-upload-label">
 					    {{--<span class="upload-text">Upload image</span>--}}
 						<i class="fa fa-upload upload-icon"></i>
@@ -241,7 +241,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 
 <script>
   // Detect if device is mobile
-  function isMobileDevice() {
+  /*function isMobileDevice() {
     return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   }
  
@@ -271,7 +271,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 		  fileInput.removeAttribute('capture');
 		}
 	  });
-	});
+	});*/
 
 </script>
 <script>
@@ -472,7 +472,7 @@ $(document).ready(function() {
 						html +=	'<div class="col-md-12">';
 						html +=	'<label for="subcheklist_file"></label>';
 						html +=	'<div class="upload-wrapper">';
-						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
+						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '" accept="image/*;capture=camera">';
 						html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
 						/*html +=	'<span class="upload-text">Upload image</span>';*/
 						html +=	'<i class="fa fa-upload upload-icon"></i>';
@@ -706,7 +706,7 @@ $(document).ready(function() {
 						html += '<div class="col-md-12">';
 						html += '<label for="checklist_file"></label>';
 						html += '<div class="upload-wrapper">';
-						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
+						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;" accept="image/*;capture=camera">';
 						html += '<label for="checklist_file" class="custom-upload-label">';
 						/*html += '<span class="upload-text">Upload image</span>';*/
 						html += '<i class="fa fa-upload upload-icon"></i>';
@@ -1719,7 +1719,7 @@ $(document ).ready(function() {
 						html +=	'<div class="col-md-12">';
 						html +=	'<label for="subcheklist_file"></label>';
 						html +=	'<div class="upload-wrapper">';
-						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
+						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '" accept="image/*;capture=camera">';
 						html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
 						/*html +=	'<span class="upload-text">Upload image</span>';*/
 						html +=	'<i class="fa fa-upload upload-icon"></i>';
@@ -2005,7 +2005,7 @@ $(document ).ready(function() {
 						html += '<div class="col-md-12">';
 						html += '<label for="checklist_file"></label>';
 						html += '<div class="upload-wrapper">';
-						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
+						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;" accept="image/*;capture=camera">';
 						html += '<label for="checklist_file" class="custom-upload-label">';
 						/*html += '<span class="upload-text">Upload image</span>';*/
 						html += '<i class="fa fa-upload upload-icon"></i>';
@@ -2516,7 +2516,7 @@ $(document ).ready(function() {
 						html +=	'<div class="col-md-12">';
 						html +=	'<label for="subcheklist_file"></label>';
 						html +=	'<div class="upload-wrapper">';
-						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
+						html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '" accept="image/*;capture=camera">';
 						html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
 						/*html +=	'<span class="upload-text">Upload image</span>';*/
 						html +=	'<i class="fa fa-upload upload-icon"></i>';
@@ -2762,7 +2762,7 @@ $(document ).ready(function() {
 						html += '<div class="col-md-12">';
 						html += '<label for="checklist_file"></label>';
 						html += '<div class="upload-wrapper">';
-						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
+						html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;" accept="image/*;capture=camera">';
 						html += '<label for="checklist_file" class="custom-upload-label">';
 						/*html += '<span class="upload-text">Upload image</span>';*/
 						html += '<i class="fa fa-upload upload-icon"></i>';
@@ -3085,7 +3085,7 @@ $(document ).ready(function() {
 						html +=	'<div class="col-md-12">';
 							html +=	'<label for="subcheklist_file"></label>';
 							html +=	'<div class="upload-wrapper">';
-							html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '">';
+							html +=	'<input type="file" class="subchecklist-file" name="subcheklist_file[]" id="subcheklist_file_' + item.id + '" multiple style="display: none;" data-id="' + item.id + '" accept="image/*;capture=camera">';
 							html +=	'<label for="subcheklist_file_' + item.id + '" class="custom-upload-label">';
 							/*html +=	'<span class="upload-text">Upload image</span>';*/
 							html +=	'<i class="fa fa-upload upload-icon"></i>';
@@ -3367,7 +3367,7 @@ $(document ).ready(function() {
 							html += '<div class="col-md-12">';
 							html += '<label for="checklist_file"></label>';
 							html += '<div class="upload-wrapper">';
-							html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;">';
+							html += '<input type="file" name="checklist_file[]" id="checklist_file" multiple style="display: none;" accept="image/*;capture=camera">';
 							html += '<label for="checklist_file" class="custom-upload-label">';
 							/*html += '<span class="upload-text">Upload image</span>';*/
 							html += '<i class="fa fa-upload upload-icon"></i>';

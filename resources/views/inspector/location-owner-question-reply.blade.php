@@ -131,7 +131,7 @@ use Carbon\Carbon;
 							<div class="col-md-12">
 								<label for="lo_file"></label>
 								<div class="upload-wrapper">
-								  <input type="file" name="lo_file[]" id="lo_file" multiple style="display: none;">
+								  <input type="file" name="lo_file[]" id="lo_file" multiple style="display: none;" accept="image/*;capture=camera">
 								  <label for="lo_file" class="custom-upload-label">
 									{{--<span class="upload-text">Upload image</span>--}}
 									<i class="fa fa-upload upload-icon"></i>
@@ -233,7 +233,7 @@ use Carbon\Carbon;
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
   // Detect if device is mobile
-  function isMobileDevice() {
+  /*function isMobileDevice() {
     return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   }
  
@@ -247,7 +247,7 @@ use Carbon\Carbon;
       // Remove capture attribute (normal browse)
       fileInput.removeAttribute('capture');
     }
-  });
+  });*/
 </script>
 <script>
 $(document).on('click','.forward-task', function(){
