@@ -195,6 +195,7 @@
 					var page_url4 = app_url+'/inspector-filter';
 					var page_url5 = app_url+'/add-new-task';
 					var page_url6 = app_url+'/task-list-edit';
+					var page_url7 = app_url+'/inspection-closure';
 					var current_url = window.location.href;
 					//alert(page_url1);alert(current_url);
 					if(current_url.includes(page_url1))
@@ -248,6 +249,14 @@
 						{
 							history.back();
 						}
+					}
+					else if(current_url.includes(page_url7))
+					{
+						setTimeout(function() {
+							var baseUrl = "{{ url('/inspector-dashboard') }}";
+							var redirectUrl = baseUrl;
+							window.location.href = redirectUrl;
+						}, 100);
 					}
 					else{
 						history.back();

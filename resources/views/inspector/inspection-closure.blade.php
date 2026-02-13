@@ -29,12 +29,14 @@ $locationIds = App\Models\Task_lists::where('inspector_id', $userdata->id)
     ->distinct()
     ->pluck('location_id');
 
-//echo "<pre>";print_r($locationIds);die;
+//echo "<pre>";print_r($userdata);die;
 $correctiveActionArray =[];
+
+$total_count = 0;
 @endphp
 	<!-- =-=-=-=-=-=-= Breadcrumb =-=-=-=-=-=-= -->
 	
-		<div class="profile-card">
+	{{--<div class="profile-card">
 		<div class="profile-banner" style="background-image: url( '{{url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->background_image )}} ')"></div>
 			<div class="profile-info container">
 				<img class="profile-avatar" src="{{ url('uploads/profile/' .$userdata->id .'/inspector/'. $userdata->profile_image)}}" alt="Profile Picture">
@@ -47,7 +49,7 @@ $correctiveActionArray =[];
 					</p>
 				</div>
 			</div>
-		</div>
+		</div>--}}
     <!-- =-=-=-=-=-=-= Breadcrumb End =-=-=-=-=-=-= --> 
     <!-- =-=-=-=-=-=-= Main Content Area =-=-=-=-=-=-= -->
 	<div class="container checklist">
@@ -55,7 +57,7 @@ $correctiveActionArray =[];
 	    <div class="col-md-8 col-sm-8 col-xs-10 profile-name">
 		   Inspection Closure
 	    </div>
-		<div class="col-md-4 col-sm-4 col-xs-2">
+		<div class="col-md-4 col-sm-4 col-xs-2 location-count" id="show_count">
 	    </div>
 	 </div>
 		
@@ -113,12 +115,35 @@ $correctiveActionArray =[];
 						->get();
 						//echo "<pre>";print_r($correctiveActionData);die;
 						$count = 0;
+						
+						// corrective plan data 
+						
+						$correctivePlanData = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
+						->where(function ($q) {
+							$q->where(function ($q) {
+								$q->where('inspector_action', 0)->where('los_action', 1);
+							})->orWhere(function ($q) {
+								$q->where('inspector_action', 1)->where('los_action', 0);
+							})->orWhere(function ($q) {
+								$q->where('inspector_action', 0)->where('los_action', 0);
+							});
+						})
+						->orderBy('updated_at', 'asc')
+						->get();
+						//echo "<pre>";print_r($correctivePlanData);die;
+						
+						$correctiveActionPlanData = $correctiveActionData->merge($correctivePlanData);
+
+						//echo "<pre>";print_r($correctiveActionPlanData);die;
+						$total_count = $total_count + $correctiveActionPlanData->count();
 						@endphp
+						
+						@if($correctiveActionPlanData->count() > 0)
 						<!-- Tabs -->
 						<div class="row mt-2">
 							<div class="col-md-8 col-sm-8 col-xs-10 location-name">{{ $locationData->location_name ?? '' }}
 							</div>
-							<div class="col-md-4 col-sm-4 col-xs-2 location-count">{{ $correctiveActionData->count() }}
+							<div class="col-md-4 col-sm-4 col-xs-2 location-count">{{ $correctiveActionPlanData->count() }}
 							</div>
 						</div>
 
@@ -126,7 +151,7 @@ $correctiveActionArray =[];
 						<!-- Tab panes -->
 						<div class="row tab-content mt-2">
 							<div class="col-md-8 col-sm-8 col-xs-10">
-							@foreach($correctiveActionData as $result)
+							@foreach($correctiveActionPlanData as $result)
 									@php 
 										
 										$arrSubchecklist = [];
@@ -204,16 +229,16 @@ $correctiveActionArray =[];
 									<div class="d-flex mb-3 task">
 										<div class="date-box">
 											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-											<img src="{{ $val['image'] }}">
+											<img src="{{ $val['image'] }}"  width="50" height="50">
 											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
-											<video controls src="{{ $val['image'] }}"></video>
+											<video controls src="{{ $val['image'] }}"   width="50" height="50"></video>
 											@endif
 										</div>
 										<div class="flex-grow-1">
-											@if($result['second_checked'] == '')
-											<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$locations,'task_id'=>$result->task_list_id, 'checklist_id'=> $result->checklist_id,'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											@if($result->second_checked == '')
+											<a href="{{ route('inspector-subchecklist-question-reply',['location_id'=>$locations,'task_id'=>$result->task_list_id, 'checklist_id'=> $result->checklist_id,'subchecklist_id'=>$val['subchecklist_id'],'type' => $type,'tab'=>'corrective-action']) }}">
 											@else
-											<a href="{{ route('inspector-subchecklist-second-approve-by-lo',['location_id'=>$locations,'task_id'=>$result->task_list_id, 'checklist_id'=> $result['checklist_id'],'subchecklist_id'=>$val['subchecklist_id'],'type' => $result['type'],'tab'=>'corrective-action']) }}">
+											<a href="{{ route('inspector-subchecklist-second-approve-by-lo',['location_id'=>$locations,'task_id'=>$result->task_list_id, 'checklist_id'=> $result->checklist_id,'subchecklist_id'=>$val['subchecklist_id'],'type' => $type,'tab'=>'corrective-action']) }}">
 											@endif
 											<h6>{{ $checklistName ?? '' }} 
 											@if($val!='')
@@ -231,17 +256,17 @@ $correctiveActionArray =[];
 												<p class="text-muted mb-0" >
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 												@if(auth()->user()->user_type == 1)
-													@if($result['inspector_action'] == 1)
+													@if($result->inspector_action == 1)
 														<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-													@elseif($result['inspector_action'] == 0)
+													@elseif($result->inspector_action== 0)
 														<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 													@endif
 												@endif
 												
 												@if(auth()->user()->user_type == 3)
-													@if($result['los_action'] == 1)
+													@if($result->los_action == 1)
 														<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-													@elseif($result['los_action'] == 0)
+													@elseif($result->los_action == 0)
 														<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 													@endif
 												@endif
@@ -260,13 +285,13 @@ $correctiveActionArray =[];
 										<div class="d-flex mb-3 task">
 										<div class="date-box">
 										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-											<img src="{{ $images }}">
+											<img src="{{ $images }}"  width="50" height="50">
 										@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
-											<video controls src="{{ $images }}"></video>
+											<video controls src="{{ $images }}"   width="50" height="50"></video>
 										@endif
 										</div>
 										<div class="flex-grow-1">
-											@if($result['second_checked'] == '')
+											@if($result->second_checked == '')
 											<a href="{{ route('inspector-checklist-question-reply',['location_id'=>$locations,'task_id'=>$result->task_list_id, 'checklist_id'=> $result->checklist_id,'type' => $type,'tab'=>'corrective-action']) }}">
 											@else
 											<a href="{{ route('inspector-checklist-second-approve-by-lo',['location_id'=>$locations,'task_id'=>$result->task_list_id, 'checklist_id'=> $result->checklist_id,'type' => $type,'tab'=>'corrective-action']) }}">
@@ -284,17 +309,17 @@ $correctiveActionArray =[];
 												<p class="text-muted mb-0">
 												<i class="fa fa-map-marker"></i> {{ $location_name ?? ''}}
 												@if(auth()->user()->user_type == 1)
-													@if($result['inspector_action'] == 1)
+													@if($result->inspector_action == 1)
 														<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-													@elseif($result['inspector_action'] == 0)
+													@elseif($result->inspector_action == 0)
 														<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 													@endif
 												@endif
 												
 												@if(auth()->user()->user_type == 3)
-													@if($result['los_action'] == 1)
+													@if($result->los_action == 1)
 														<button type="button" class="btn btn-outline-success status-outline-common-btn ml-10px"  style="border-color: #198754; color: #198754;">Agree</button>
-													@elseif($result['los_action'] == 0)
+													@elseif($result->los_action == 0)
 														<button type="button" class="btn btn-warning status-outline-common-btn ml-10px" style="border-color: #ffc107; color: #ffc107;">Pending</button>
 													@endif
 												@endif
@@ -307,7 +332,9 @@ $correctiveActionArray =[];
 								@endforeach
 							</div>
 						</div>
+						@endif
 						@endforeach
+						<input type="hidden" value="{{ $total_count ?? 0}}" id="total_count">
 				</div>
 			</div>
 			</section>
@@ -397,6 +424,8 @@ $totalapprcompleted ?? ''}}" id="totalapprcompleted">
 
 <script>
 $(document ).ready(function() {
+	let total_count = $('#total_count').val();
+	$('#show_count').html(total_count);
 	var isactive = $('#isactive').val();
 	var user_id = $('#user_id').val();
 	//alert(isactive);

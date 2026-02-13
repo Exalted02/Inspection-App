@@ -2560,7 +2560,6 @@ padding-bottom: 5px;
     color: #555;   
 }
 .location-name {
-  /* margin: 10px 0 5px; */
   font-size: 18px;
   font-weight: 14px;
   color: #000000;
@@ -2568,14 +2567,14 @@ padding-bottom: 5px;
 .location-count {
   font-size: 18px;
   font-weight: 600;
-  color: #dc3545;              /* red text */
-  background-color: #f8d7da;  /* light red bg */
+  color: #dc3545;             
+  background-color: #f8d7da; 
   width: 5px !important;
   height: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;         /* square with soft corners */
+  border-radius: 6px;   
 }
 
 
