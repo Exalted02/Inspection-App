@@ -3917,8 +3917,15 @@ class DashboardInspectorController extends Controller
 			]
 		);
 	}
+	public function inspection_closure()
+	{
+		$data = [];
+		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
+		return view('inspector.inspection-closure', $data);
+	}
 	public function inspector_filter($lid='', $active='')
 	{
+		//echo $lid; die;correctiveActionArray
 		if (auth()->user()->user_type == 2) {
 			return redirect('inspector-dashboard');
 		}
@@ -4334,7 +4341,7 @@ class DashboardInspectorController extends Controller
 				});
 			})->count();
 			
-		
+		//echo "<pre>";print_r($taskListIds);die;
 		$correctiveActionData = Task_list_corrective_action::whereIn('lo_direct_approve', [1])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
 			->where(function ($q) {
 				$q->where(function ($q) {

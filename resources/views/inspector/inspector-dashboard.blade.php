@@ -653,6 +653,7 @@ if(auth()->user()->user_type == 1)
 {
 	$taskIdArr = [];
 	$taskData = App\Models\Task_lists::where('task_type', 0)->get();
+	//echo "<pre>";print_r($taskData);die;
 	foreach($taskData as $tasks)
 	{
 		$getCategotyArr = [];
@@ -661,13 +662,15 @@ if(auth()->user()->user_type == 1)
 	    {
 		   $getCategotyArr[] = $categories->category_id;
 	    }
-		
+		//echo "<pre>";print_r($getCategotyArr);
 		
 		$subcategories = App\Models\Task_list_subcategories::where('task_list_id',$tasks->id)->whereIn('task_list_category_id',$getCategotyArr)->distinct('task_list_category_id')->count('task_list_category_id');
 		
+		
 		if(count($getCategotyArr) == $subcategories)
 		{
-			$taskIdArr[$tasks->location_id] =  $tasks->id;
+			//$taskIdArr[$tasks->location_id] =  $tasks->id;
+			$taskIdArr[] =  $tasks->id;
 		}
 		
 	}
@@ -685,7 +688,7 @@ if(auth()->user()->user_type == 1)
 	//echo "<pre>";print_r($countTaskLoc);die;
 	
 	//----------ia-action-plan--------
-	$inspection_action_plan = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0, 1])
+	$inspection_action_plan = App\Models\Task_list_corrective_action::where('inspector_id', auth()->user()->id)->whereIn('lo_direct_approve', [0, 1])
     ->where(function ($q) {
         $q->where(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 0);
@@ -1632,18 +1635,19 @@ $(document).ready(function() {
 			if(dataCount != 0)
 			{
 				let countTaskLoc = JSON.parse($('#taskLocData').attr('data-values'));
+				//alert(countTaskLoc.total_outs_insp);
 				delete countTaskLoc.total_outs_insp;
 				let loc_id = Object.keys(countTaskLoc).reduce((a, b) =>
 					countTaskLoc[a] > countTaskLoc[b] ? a : b
 				);
-				
+				//alert(loc_id);
 				var baseUrl = "{{ url('/location-details') }}";
 				var redirectUrl = baseUrl + '/'+ loc_id;
 				window.location.href = redirectUrl;
 			}
 		}
 		
-		if(tab == 'ia-action-plan')
+		/*if(tab == 'ia-action-plan')
 		{
 			let dataCount = $(this).data('count');
 			if(dataCount != 0)
@@ -1652,6 +1656,19 @@ $(document).ready(function() {
 				let loc_id = $('#IaPlanActionLocId').val();
 				var baseUrl = "{{ url('/inspector-filter') }}";
 				var redirectUrl = baseUrl + '/'+ loc_id + '/0#corrective_checked_tab';
+				window.location.href = redirectUrl;
+			 }
+		}*/
+		// show the location wise  13-02-2026
+		if(tab == 'ia-action-plan')
+		{
+			let dataCount = $(this).data('count');
+			if(dataCount != 0)
+			 {
+				//localStorage.setItem('selectedTab', 'corrective_checked_tab');
+				//let loc_id = $('#IaPlanActionLocId').val();
+				var baseUrl = "{{ url('/inspection-closure') }}";
+				var redirectUrl = baseUrl;
 				window.location.href = redirectUrl;
 			 }
 		}

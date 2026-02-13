@@ -882,11 +882,43 @@ $(document ).ready(function() {
 	var isactive = $('#isactive').val();
 	//alert(isactive);
 	var user_id = $('#user_id').val();
-
+    
+	if (window.location.hash) {
+		let gettab = window.location.hash.slice(1);
+		if(gettab == 'corrective_checked_tab')
+		{
+			//alert(gettab);
+			var totalAction = $('#totalAction').val();
+			var totalPlan = $('#totalPlan').val();
+			
+			
+			if(totalAction > 0 && totalPlan > 0)
+			{
+				if(totalAction > totalPlan) 
+				{
+					localStorage.setItem('selectedTab', '#'+ gettab);
+				}
+				else{
+					gettab  = 'process_final_checked_tab';
+					localStorage.setItem('selectedTab', '#'+ gettab);
+				}
+			}
+			else if(totalAction == 0 && totalPlan == 0) 
+			{
+				localStorage.setItem('selectedTab', '#'+ gettab);
+			}
+			else if(totalAction == 0 && totalPlan > 0) 
+			{
+				gettab = 'process_final_checked_tab';
+				localStorage.setItem('selectedTab', '#'+ gettab);
+			}
+		}
+	}
+	
 	if(isactive == 0)
 	{
+		//alert(isactive);
 		const selectedTab = localStorage.getItem('selectedTab');
-		//alert(selectedTab);
 		if (selectedTab) {
 			$('a[href="' + selectedTab + '"]').tab('show');
 			

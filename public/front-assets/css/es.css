@@ -2559,5 +2559,24 @@ padding-bottom: 5px;
 .custom-left-placeholder.filled {
     color: #555;   
 }
+.location-name {
+  /* margin: 10px 0 5px; */
+  font-size: 18px;
+  font-weight: 14px;
+  color: #000000;
+}
+.location-count {
+  font-size: 18px;
+  font-weight: 600;
+  color: #dc3545;              /* red text */
+  background-color: #f8d7da;  /* light red bg */
+  width: 5px !important;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;         /* square with soft corners */
+}
+
 
 

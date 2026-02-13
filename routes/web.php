@@ -206,6 +206,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::post('mgnt-load-more-plan-data', [ManagementController::class, 'mgnt_load_more_plan_data'])->name('mgnt-load-more-plan-data');
 	Route::post('mgnt-load-more-appr-data', [ManagementController::class, 'mgnt_load_more_appr_data'])->name('mgnt-load-more-appr-data');
 	
+	//--- 13-02-2026----
+	Route::get('/inspection-closure', [DashboardInspectorController::class, 'inspection_closure'])->name('inspection-closure');
 	
 	//User-Accounts  
 	Route::get('/users', [UserController::class, 'index'])->name('users');

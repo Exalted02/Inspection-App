@@ -380,7 +380,17 @@ if(!empty($task_id))
 $(document).ready(function() {
 
 	let openCategoryId = {{ $firstCategoryId ?? ''}};
-	let firstCatId = {{ $locationWisecategory[0]['id'] }}
+		{{-- let firstCatId = {{ $locationWisecategory[0]['id'] }} --}}
+	
+	
+	@if(!empty($locationWisecategory) && isset($locationWisecategory[0]['id']))
+        let firstCatId = {{ $locationWisecategory[0]['id'] }};
+        //console.log(firstCatId);
+    @else
+        let firstCatId = '';
+    @endif
+	
+	//alert(firstCatId);
 	
 	if (openCategoryId) {
         
