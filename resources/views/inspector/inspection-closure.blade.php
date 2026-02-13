@@ -150,7 +150,7 @@ $total_count = 0;
 							
 						<!-- Tab panes -->
 						<div class="row tab-content mt-2">
-							<div class="col-md-8 col-sm-8 col-xs-10">
+							<div class="col-md-8 col-sm-8 col-xs-12">
 							@foreach($correctiveActionPlanData as $result)
 									@php 
 										
@@ -229,9 +229,9 @@ $total_count = 0;
 									<div class="d-flex mb-3 task">
 										<div class="date-box">
 											@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-											<img src="{{ $val['image'] }}"  width="50" height="50">
+											<img src="{{ $val['image'] }}" class="media-thumb">
 											@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
-											<video controls src="{{ $val['image'] }}"   width="50" height="50"></video>
+											<video controls src="{{ $val['image'] }}"    class="media-thumb"></video>
 											@endif
 										</div>
 										<div class="flex-grow-1">
@@ -285,9 +285,9 @@ $total_count = 0;
 										<div class="d-flex mb-3 task">
 										<div class="date-box">
 										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-											<img src="{{ $images }}"  width="50" height="50">
+											<img src="{{ $images }}" class="media-thumb">
 										@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
-											<video controls src="{{ $images }}"   width="50" height="50"></video>
+											<video controls src="{{ $images }}" class="media-thumb"></video>
 										@endif
 										</div>
 										<div class="flex-grow-1">
