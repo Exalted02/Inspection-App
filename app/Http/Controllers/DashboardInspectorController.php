@@ -3516,11 +3516,18 @@ class DashboardInspectorController extends Controller
 		//Task_lists ::where('id',$task_id)->update(['status'=>4]);
 		
 		// add to dashboard notification table 
-		$get_total_action_plan = Dashboard_notification::where('user_type', 2)->where('task_id', $task_id)->first()->total_action_plan;
+		$get_total_action_plan_data = Dashboard_notification::where('user_type', 2)->where('task_id', $task_id)->first();
+		
+		$get_total_action_plan = $get_total_action_plan_data ? $get_total_action_plan_data->total_action_plan : null;
+		
 		$total_action_plan =  $get_total_action_plan != null ? $get_total_action_plan+1 : 1;
 		
-		$get_read_action_plan = Dashboard_notification::where('user_type', 2)->where('task_id', $task_id)->first()->read_action_plan;
+		$get_read_action_plan_data = Dashboard_notification::where('user_type', 2)->where('task_id', $task_id)->first();
+		
+		$get_read_action_plan = $get_read_action_plan_data ? $get_read_action_plan_data->read_action_plan : null;
+		
 		$read_action_plan =  $get_read_action_plan != null ? $get_read_action_plan+1 : 1;
+		
 		
 		$taskData  = Task_lists::where('id', $task_id)->first();
 		$location_id = $taskData ? $taskData->location_id : null;
@@ -3922,6 +3929,12 @@ class DashboardInspectorController extends Controller
 		$data = [];
 		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 		return view('inspector.inspection-closure', $data);
+	}
+	public function los_inspection_closure()
+	{
+		$data = [];
+		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
+		return view('inspector.los-inspection-closure', $data);
 	}
 	public function inspector_filter($lid='', $active='')
 	{
@@ -6522,6 +6535,7 @@ class DashboardInspectorController extends Controller
 		/*$taskListIds = Task_lists::where('location_id', $lid)
 			->where('inspector_id', auth()->user()->id)
 			->pluck('id');*/
+		//correctiveNeededArray
 		
 		$taskListIds = Task_lists::where('location_id', $lid)->pluck('id');
 

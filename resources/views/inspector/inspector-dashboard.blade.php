@@ -840,7 +840,7 @@ if(auth()->user()->user_type == 2)
 if(auth()->user()->user_type == 3)
 {
 	//----------los-action-plan--------
-	$los_action_plan = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0, 1])
+	$los_action_plan = App\Models\Task_list_corrective_action::where('los_id', auth()->user()->id)->whereIn('lo_direct_approve', [0, 1])
     ->where(function ($q) {
         $q->where(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 0);
@@ -872,7 +872,9 @@ if(auth()->user()->user_type == 3)
 }
 
 // work for my dashboard observation
-$inspection_completed = App\Models\Task_lists::where('task_type', 1)->count();
+$ins_inspection_completed = App\Models\Task_lists::where('inspector_id', auth()->user()->id)->where('task_type', 1)->count();
+$lo_inspection_completed = App\Models\Task_lists::where('lo_id', auth()->user()->id)->where('task_type', 1)->count();
+$los_inspection_completed = App\Models\Task_lists::where('los_id', auth()->user()->id)->where('task_type', 1)->count();
 
 $corrective_action_tasks = App\Models\Task_list_corrective_action::all();
 $corrective_action_checklist = [];
@@ -1060,7 +1062,7 @@ if($get_tasklist_subchecklist->count() > 0)
 						<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $inspection_completed ?? 0 }}</div>
+							<div class="small-card-counter">{{ $ins_inspection_completed ?? 0 }}</div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 						</a>
@@ -1091,7 +1093,7 @@ if($get_tasklist_subchecklist->count() > 0)
 				@endif
 				
 				@if(auth()->user()->user_type == 2)
-					<div class="row padding-bottom">
+				<div class="row padding-bottom">
 					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-corrective-needed" data-count="{{ $correctiveNeededCount ?? 0 }}">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
@@ -1122,7 +1124,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-first">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $inspection_completed }}</div>
+							<div class="small-card-counter">{{ $lo_inspection_completed }}</div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 					</div>
@@ -1150,7 +1152,7 @@ if($get_tasklist_subchecklist->count() > 0)
 				@endif
 				
 				@if(auth()->user()->user_type == 3)
-					<div class="row padding-bottom">
+				<div class="row padding-bottom">
 					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="los-action-plan" data-count="{{ $los_closure_action_plan ?? 0 }}">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
 						<div class="bg small-card my-dashboard-upper position-relative">
@@ -1181,7 +1183,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-first">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Inspection completed</div>
-							<div class="small-card-counter">{{ $inspection_completed }}</div>
+							<div class="small-card-counter">{{ $los_inspection_completed }}</div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
 					</div>
@@ -1684,7 +1686,7 @@ $(document).ready(function() {
 				window.location.href = redirectUrl;
 			 }
 		}
-		if(tab == 'los-action-plan')
+		/*if(tab == 'los-action-plan')
 		{
 			let dataCount = $(this).data('count');
 			if(dataCount != 0)
@@ -1692,6 +1694,16 @@ $(document).ready(function() {
 				let loc_id = $('#LosPlanActionLocId').val();
 				var baseUrl = "{{ url('/los-task-status') }}";
 				var redirectUrl = baseUrl + '/'+ loc_id +'/0';
+				window.location.href = redirectUrl;
+			}
+		}*/
+		if(tab == 'los-action-plan')
+		{
+			let dataCount = $(this).data('count');
+			if(dataCount != 0)
+			{
+				var baseUrl = "{{ url('/los-inspection-closure') }}";
+				var redirectUrl = baseUrl;
 				window.location.href = redirectUrl;
 			}
 		}

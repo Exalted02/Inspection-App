@@ -1527,7 +1527,7 @@ body, h1, h2, h3, h4, h5, h6 {
     padding-left: 75px;
     padding-right: 90px;
 	color: transparent;
-	text-shadow: 0 0 0 #000;
+	/*text-shadow: 0 0 0 #000;*/
 	background:white !important;
 }
 
@@ -2119,26 +2119,18 @@ body, h1, h2, h3, h4, h5, h6 {
     list-style: none;
     position: relative;
 }
-/*.experience-box .experience-list::before {
-    border: 1px dashed #D5D8DA;
+.experience-box .experience-list::before {
+    /*border: 1px dashed #D5D8DA;*/
     bottom: 0;
     content: "";
     width: 2px;
     position: absolute;
     top: 8px;
     left: 8px;
-}*/
+}
+
 .experience-box .experience-list li {
     position: relative;
-}
-.experience-box .experience-list li.approved::before {
-    border: 1px dashed #D5D8DA;
-    bottom: 0;
-    content: "";
-    width: 2px;
-    position: absolute;
-    top: 8px;
-    left: 8px;
 }
 .experience-box .experience-list li .experience-user {
     background: #FFF;
@@ -2147,7 +2139,7 @@ body, h1, h2, h3, h4, h5, h6 {
     margin: 0;
     padding: 0;
     position: absolute;
-    top: 4px;
+    top: 0;
     left: -3px;
     border: 1px solid;
     border-radius: 50%;
@@ -2176,13 +2168,9 @@ body, h1, h2, h3, h4, h5, h6 {
     width: 10px;
 }
 .experience-box .experience-list li .experience-content {
-    /* margin: 0 0 25px 40px; */
     margin: 0 0 0 40px;
     padding: 0;
     position: relative;
-}
-.experience-box .experience-list .approved .experience-content {
-    padding-bottom: 25px;
 }
 .experience-box .experience-list .approved .experience-content .title {
     color: #008000;
@@ -2197,6 +2185,35 @@ body, h1, h2, h3, h4, h5, h6 {
 .experience-box .experience-list .rejected .experience-content .title-reason {
     color: #000000;
     font-size: 14px;
+}
+
+
+
+.experience-list {
+  position: relative;
+  list-style: none;
+  padding-left: 30px; /* space for line */
+}
+
+/* draw vertical line per item */
+.experience-list li {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.experience-list li::before {
+  content: "";
+  position: absolute;
+  left: 8px;   /* adjust to match your circle */
+  top: 8px;
+  bottom: -8px;
+  width: 2px;
+  border-left: 1px dashed #D5D8DA;
+}
+
+/* ❌ remove line for last item */
+.experience-list li:last-child::before {
+  display: none;
 }
 
 
