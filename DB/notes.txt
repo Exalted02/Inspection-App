@@ -1,0 +1,27 @@
+Inspector
+-------------------------
+[RED] - Outstanding Inspection => Which counter comes here? Please explain in details.
+[RED] - Inspection closure => Total number of Corrective Action + Corrective Plan
+****1) Inspection completed => Which counter comes here? Please explain.
+2) Observations => 
+3) Open Observation => Total number of Corrective Needed + Corrective Action + Corrective Plan
+4) Inspection closure => Total number of completed checklist from all locations 
+
+
+LO
+-------------------------
+[RED] - Open Observation => Total number of Corrective Needed
+****1) Inspection completed => Which counter comes here? Please explain.
+2) Observations => 
+3) Pending closure => Total number of Corrective Action + Corrective Plan
+4) Inspection closure => Total number of completed checklist from all locations
+
+
+LOS
+-------------------------
+[RED] - Inspection closure => Total number of Corrective Action + Corrective Plan
+****1) Inspection completed => Which counter comes here? Please explain.
+2) Observations => 
+3) Open Observation => Total number of Corrective Needed
+4) Inspection closure => Total number of completed checklist from all locations
+

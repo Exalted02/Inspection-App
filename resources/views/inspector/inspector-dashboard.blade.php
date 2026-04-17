@@ -566,6 +566,7 @@ if (!empty($correctiveApprChecklistIds)) {
 		}
 		
 // if subchecklist ids are not empty, union it
+	// dd($correctiveApprSubChecklistIds);
 	if (!empty($correctiveApprSubChecklistIds)) {
 		$subChecklistQuery = DB::table('task_list_subchecklists')
 			->select(
@@ -596,12 +597,6 @@ if (!empty($correctiveApprChecklistIds)) {
 		$baseChecklistQuery->unionAll($subChecklistQuery);
 	}
 	
-/*$correctiveApproved = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
-			->mergeBindings($baseChecklistQuery)
-			->orderBy('updated_at', 'desc')
-			->offset($offset)
-			->limit($limit)
-			->get();*/
 
 $correctiveApprovedCount = DB::table(DB::raw("({$baseChecklistQuery->toSql()}) as combined"))
 			->mergeBindings($baseChecklistQuery)->count();
@@ -725,7 +720,7 @@ if(auth()->user()->user_type == 1)
 if(auth()->user()->user_type == 2)
 {
 	//----------lo-action-plan--------
-	$lo_action_plan = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0, 1])
+	$lo_action_plan = App\Models\Task_list_corrective_action::where('lo_id', auth()->user()->id)->whereIn('lo_direct_approve', [0, 1])
     ->where(function ($q) {
         $q->where(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 0);
@@ -872,9 +867,10 @@ if(auth()->user()->user_type == 3)
 }
 
 // work for my dashboard observation
-$ins_inspection_completed = App\Models\Task_lists::where('inspector_id', auth()->user()->id)->where('task_type', 1)->count();
-$lo_inspection_completed = App\Models\Task_lists::where('lo_id', auth()->user()->id)->where('task_type', 1)->count();
-$los_inspection_completed = App\Models\Task_lists::where('los_id', auth()->user()->id)->where('task_type', 1)->count();
+// $ins_inspection_completed = App\Models\Task_lists::where('task_type', 1)->count();
+$ins_inspection_completed = $correctiveApprovedCount;
+$lo_inspection_completed = $correctiveApprovedCount;
+$los_inspection_completed = $correctiveApprovedCount;
 
 $corrective_action_tasks = App\Models\Task_list_corrective_action::all();
 $corrective_action_checklist = [];
@@ -1084,7 +1080,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					</div>
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Pending closure</div>
+							<div class="small-card-title">Inspection closure</div>
 							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $inspection_closure ?? 0}}</span></div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
@@ -1100,7 +1096,7 @@ if($get_tasklist_subchecklist->count() > 0)
 						@if($correctiveNeededCount != 0)
 						<span class="notification-badge" id="lo_action_plan_badge"></span>
 						@endif
-							<div class="small-card-title">Open Observation - Corrective Needed</div>
+							<div class="small-card-title">Open Observation</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
 							<div class="small-card-upper-counter me-2"><span id="lo_action_plan_count">{{ $correctiveNeededCount }}</span></div>
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>--}}
