@@ -914,6 +914,7 @@ $(document).ready(function() {
 flatpickr("#set_time", {
     enableTime: false,
     dateFormat: "d M Y H:i",
+	disableMobile: true,
     /*onChange: function(selectedDates, dateStr, instance) {
 		
 			if (selectedDates.length == 1) {

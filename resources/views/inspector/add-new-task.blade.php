@@ -635,6 +635,7 @@ $(document).ready(function() {
     enableTime: false,
     dateFormat: "d M Y H:i",
 	minDate: "today",
+	disableMobile: true,
 	//allowInput: true,
     /*onChange: function(selectedDates, dateStr, instance) {
 			if (selectedDates.length == 1) {
