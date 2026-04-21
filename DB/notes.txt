@@ -1,9 +1,9 @@
 Inspector
 -------------------------
-[RED] - Outstanding Inspection => Which counter comes here? Please explain in details.
+[RED] - Outstanding Inspection => From totay to previous date routine task data.
 [RED] - Inspection closure => Total number of Corrective Action + Corrective Plan
 ****1) Inspection completed => Which counter comes here? Please explain.
-2) Observations => 
+2) Observations => Total number of rejection from routine task + 
 3) Open Observation => Total number of Corrective Needed + Corrective Action + Corrective Plan
 4) Inspection closure => Total number of completed checklist from all locations 
 
@@ -24,4 +24,29 @@ LOS
 2) Observations => 
 3) Open Observation => Total number of Corrective Needed
 4) Inspection closure => Total number of completed checklist from all locations
+
+
+
+step 1) routine task create -> 
+	Correct 1
+	Reject 2
+	NA 2
+
+
+
+Truncate query
+
+TRUNCATE `exalteds_bizbuk`.`dashboard_notifications`
+TRUNCATE `exalteds_bizbuk`.`task_categories_checklist_subchecklists`
+TRUNCATE `exalteds_bizbuk`.`task_lists`
+TRUNCATE `exalteds_bizbuk`.`task_list_checklists`
+TRUNCATE `exalteds_bizbuk`.`task_list_checklist_rejected_files`
+TRUNCATE `exalteds_bizbuk`.`task_list_corrective_actions`
+TRUNCATE `exalteds_bizbuk`.`task_list_corrective_action_details`
+TRUNCATE `exalteds_bizbuk`.`task_list_corrective_action_files`
+TRUNCATE `exalteds_bizbuk`.`task_list_subcategories`
+TRUNCATE `exalteds_bizbuk`.`task_list_subchecklists`
+TRUNCATE `exalteds_bizbuk`.`task_list_subchecklist_rejected_files`
+TRUNCATE `exalteds_bizbuk`.`task_location_categories`
+
 

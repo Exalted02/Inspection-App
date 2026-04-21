@@ -676,7 +676,7 @@ if(auth()->user()->user_type == 1)
 	$tot = 0;
 	foreach($routTasksLoc as $loc)
 	{
-		$countTaskLoc[$loc] = App\Models\Task_lists::where('location_id', $loc)->where('task_type', 0)->whereNotIn('id',$taskIdArr)->count();
+		$countTaskLoc[$loc] = App\Models\Task_lists::where('location_id', $loc)->where('task_type', 0)->whereDate('created_at', '<=', now())->whereNotIn('id',$taskIdArr)->count();
 		$tot = $tot + $countTaskLoc[$loc];
 	}
 	$countTaskLoc['total_outs_insp'] = $tot;
@@ -1020,8 +1020,8 @@ if($get_tasklist_subchecklist->count() > 0)
 				</div>
 				@if(auth()->user()->user_type == 1)
 				<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection" data-count="{{ $countTaskLoc['total_outs_insp'] ?? 0 }}">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-first">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection" data-count="{{ $countTaskLoc['total_outs_insp'] ?? 0 }}">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if($countTaskLoc['total_outs_insp'] != 0)
 						<span class="notification-badge" id="ia_action_plan_badge"></span>
@@ -1034,10 +1034,11 @@ if($get_tasklist_subchecklist->count() > 0)
 							</div>
 							<div class="arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
 						</div>
-					</div></a>
+					</a>
+					</div>
 					
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-action-plan" data-count="{{ $inspection_closure_action_plan ?? 0 }}">
 					<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-action-plan" data-count="{{ $inspection_closure_action_plan ?? 0 }}">
 						<div class="bg small-card my-dashboard-upper position-relative">
 							@if($inspection_closure_action_plan != 0)
 							<span class="notification-badge" id="ia_completed_badge"></span>
@@ -1050,7 +1051,8 @@ if($get_tasklist_subchecklist->count() > 0)
 							</div>
 							<div class="arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
 						</div>
-					</div></a>
+					</a>
+					</div>
 				</div>
 				<div class="row flex-wrap d-flex">
 				
@@ -1066,7 +1068,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Observations</div>
+							<div class="small-card-title">Observation</div>
 							<div class="small-card-counter"><span id="tot_no_of_obs">{{ $observations }}</span></div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
@@ -1090,8 +1092,8 @@ if($get_tasklist_subchecklist->count() > 0)
 				
 				@if(auth()->user()->user_type == 2)
 				<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-corrective-needed" data-count="{{ $correctiveNeededCount ?? 0 }}">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="lo-corrective-needed" data-count="{{ $correctiveNeededCount ?? 0 }}">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if($correctiveNeededCount != 0)
 						<span class="notification-badge" id="lo_action_plan_badge"></span>
@@ -1104,7 +1106,8 @@ if($get_tasklist_subchecklist->count() > 0)
 							</div>
 							<div class="arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
 						</div>
-					</div></a>
+					</a>
+					</div>
 					{{--<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
 							<span class="notification-badge"></span>
@@ -1149,8 +1152,8 @@ if($get_tasklist_subchecklist->count() > 0)
 				
 				@if(auth()->user()->user_type == 3)
 				<div class="row padding-bottom">
-					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="los-action-plan" data-count="{{ $los_closure_action_plan ?? 0 }}">
 					<div class="col-md-12 col-sm-12 col-xs-12 small-card-first">
+					<a href="javascript:void(0)" class="my-dashboard-click" data-tab="los-action-plan" data-count="{{ $los_closure_action_plan ?? 0 }}">
 						<div class="bg small-card my-dashboard-upper position-relative">
 						@if($los_closure_action_plan != 0)
 						<span class="notification-badge" id="los_pending_closure_badge"></span>
@@ -1163,7 +1166,8 @@ if($get_tasklist_subchecklist->count() > 0)
 							</div>
 							<div class="arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
 						</div>
-					</div></a>
+					</a>
+					</div>
 					{{--<div class="col-md-6 col-sm-6 col-xs-6 small-card-second">
 						<div class="bg small-card my-dashboard-upper position-relative">
 							<span class="notification-badge"></span>
@@ -1522,7 +1526,7 @@ if($get_tasklist_subchecklist->count() > 0)
                             <div class="col-md-4 col-xs-6 col-sm-6">
 								<div class="category-grid-box-1">
 								@if(auth()->user()->user_type == 1)
-								<a title="" href="{{route('location-details', ['id' => $locations->location_id ])}}">
+									<a title="" href="{{route('location-details', ['id' => $locations->location_id ])}}">
 									<div class="image" style="background-image: url('{{ $loc_image }}');">
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
@@ -1533,7 +1537,7 @@ if($get_tasklist_subchecklist->count() > 0)
 											<div class="price"><span>{{ $taskCnt + $countNedded }} pending tasks</span></div>
 										</div>--}}
 									</div>
-									<div class="short-description-1 clearfix">
+									<div class="short-description-1 clearfix"></div>
 										<h3>{{ $lacationData->location_name ?? '' }}</h3>
 									</a>
 								@elseif(auth()->user()->user_type == 3)
@@ -1545,9 +1549,8 @@ if($get_tasklist_subchecklist->count() > 0)
 										<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>
 										</div>
 										{{--<div class="price"><span>{{ $countNedded }}  pending tasks</span></div>--}}
-										</div>
 									</div>
-									<div class="short-description-1 clearfix">
+									<div class="short-description-1 clearfix"></div>
 										<h3>{{ $lacationData->location_name ?? '' }}</h3>
 									</a>
 								
@@ -1560,14 +1563,13 @@ if($get_tasklist_subchecklist->count() > 0)
 											<div class="price"><span>{{ $taskCnt + $countNedded }}  pending tasks</span></div>
 										</div>
 									</div>
-									<div class="short-description-1 clearfix">
+									<div class="short-description-1 clearfix"></div>
 										<h3>{{ $lacationData->location_name ?? '' }}</h3>
-								</a>
+									</a>
 								
 								@endif
 								
 								{{--<div class="category-title"> <span>{{ $city ?? '' }}, {{ $state ?? '' }}, {{ $country ?? '' }}, {{ $lacationData->zipcode ?? '' }}</span> </div>--}}
-									</div>
 								</div>
                             </div>
 						@endforeach
