@@ -574,7 +574,7 @@
 																<img src="{{ url('uploads/profile/'. $corrective_action_data->get_inspector->id . '/inspector/'. $corrective_action_data->get_inspector->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
 																<span>By (IA) {{ $corrective_action_data->get_inspector->name ?? ''}} </span>
 																<span>·</span>
-																<span>{{ change_date_format($corrective_dtls_data->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+																<span>{{ change_date_format($val->inspector_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
 															</div>
 														</div>
 													</div>
@@ -591,7 +591,7 @@
 																<img src="{{ url('uploads/profile/'. $corrective_action_data->get_los->id . '/locationownersupervisor/'. $corrective_action_data->get_los->profile_image) }}" class="small-rounded-profile-img mb-0" alt="Profile image">
 																<span>By (LOS) {{ $corrective_action_data->get_los->name ?? ''}} </span>
 																<span>·</span>
-																<span>{{ change_date_format($corrective_dtls_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
+																<span>{{ change_date_format($val->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span>
 															</div>
 														</div>
 													</div>
