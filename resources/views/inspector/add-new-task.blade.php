@@ -113,7 +113,7 @@ if(!empty($task_id))
 												<div class="col-md-4 mb-3">
 													<label for="adhoc_task_image" class="task-cover-image">Upload Cover</label>
 													<div class="upload-wrapper">
-														<input type="file" name="adhoc_task_image[]" id="adhoc_task_image" style="display: none;" accept="image/*;capture=camera" multiple>
+														<input type="file" name="adhoc_task_image[]" id="adhoc_task_image" style="display: none;" accept="image/*;capture=camera">
 														<label for="adhoc_task_image" class="task-upload-label">
 														{{--<span class="task-upload-text">Upload image</span>--}}
 														<i class="fa fa-upload task-upload-icon"></i>
@@ -1111,10 +1111,37 @@ $(document).ready(function() {
 		});
 	})
 	
-	$('#delete-image').on('click', function() {
+	// $('#delete-image').on('click', function() {
+	$(document).on('click', '#delete-image', function() {	
 		//$('#img-upload').attr('src', '');
 		var defaultImg = "{{ url('images/noimages/default-task-pic.png') }}";
 		$('.task-img-upload').attr('src', defaultImg);
+		$('#task_image').val('');
+		$('#delete-image').hide();
+		$('.taskImg').show();
+		var hid_task_image = $('#hid_task_image').val();
+		var task_id = $('#hid_task_id').val();
+		if(hid_task_image != '')
+		{
+			$.ajax({
+				url: "{{ route('delete-task-image') }}",
+				type: "POST",
+				data: {task_id:task_id,task_image:hid_task_image,_token:csrfToken},
+				//processData: false,
+				//contentType: false,
+				//dataType: 'json',
+				success: function(response) {
+					
+				},
+			});
+		}
+	});
+	$(document).on('click', '#delete-video', function() {	
+		//$('#img-upload').attr('src', '');
+		var defaultImg = "{{ url('images/noimages/default-task-pic.png') }}";
+		previewHtml = '<img id="" class="img-responsive task-img-upload" src="' + defaultImg + '" alt=""><button type="button" class="task-img-delete" id="delete-image">×</button>';
+		
+		$('.task-preview-wrapper').html(previewHtml);
 		$('#task_image').val('');
 		$('#delete-image').hide();
 		$('.taskImg').show();
@@ -1163,7 +1190,7 @@ $(document).ready(function() {
 	
 	
 });
-function readURL(input) {
+/*function readURL(input) {
 	if (input.files && input.files[0]) {
 		var reader = new FileReader();
 		reader.onload = function(e) {
@@ -1171,6 +1198,37 @@ function readURL(input) {
 		};
 		reader.readAsDataURL(input.files[0]);
 	}
+}*/
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var file = input.files[0];
+        var fileType = file.type; // e.g. image/png, video/mp4
+
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            // If image
+            if (fileType.startsWith('image/')) {
+                $('.task-preview-wrapper').html(
+                    '<img id="" class="img-responsive task-img-upload" src="' + e.target.result + '" alt=""/><button type="button" class="task-img-delete" id="delete-image" style="display: inline-block;">×</button>'
+                );
+            }
+
+            // If video
+            else if (fileType.startsWith('video/')) {
+				previewHtml = '<div class="preview-image-wrapper"><video src="' + e.target.result + '" class="preview-image" controls style="max-width: 120px; max-height: 120px;"></video><button type="button" class="task-img-delete" id="delete-video" style="display: inline-block;">×</button>';
+                $('.task-preview-wrapper').html(previewHtml);
+            }
+
+            // Optional: unsupported file
+            else {
+                $('.task-preview-wrapper').html('<p>Unsupported file type</p>');
+            }
+        };
+
+        reader.readAsDataURL(file);
+    }
 }
 
 function initializeAccordion() {
