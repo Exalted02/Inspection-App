@@ -91,7 +91,9 @@ $getCategotyArr = [];
 								   $ifAllCategoryExists = $matchedCount === count($getCategotyArr);
 								   
 								    $taskStatus = $tasks->status == 0 ? '' : ($tasks->status == 1 ? 'Incomplete' : '');
-										 
+									
+									$extension = pathinfo($img, PATHINFO_EXTENSION);
+									$extension = strtolower($extension);
 								 @endphp
 								
 								@if(!$ifAllCategoryExists)
@@ -120,7 +122,11 @@ $getCategotyArr = [];
 										<a href="{{ route('location-owner', ['location_id'=>$tasks->location_id,'task_id'=>$tasks->id, 'active'=>1]) }}">
 									@endif
 										
-										<img src="{{$img }}" alt="Task"/>
+										@if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+											<img src="{{ $img }}">
+										@elseif(in_array($extension, ['mp4', 'webm', 'ogg']))
+											<video controls src="{{ $img }}"></video>
+										@endif
 										
 											<h6>{{ $tasks->task_title ?? '' }}</h6>
 											@if(!empty($taskStatus))

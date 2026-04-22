@@ -35,18 +35,18 @@ step 1) routine task create ->
 
 
 Truncate query
-
-TRUNCATE `exalteds_bizbuk`.`dashboard_notifications`
-TRUNCATE `exalteds_bizbuk`.`task_categories_checklist_subchecklists`
-TRUNCATE `exalteds_bizbuk`.`task_lists`
-TRUNCATE `exalteds_bizbuk`.`task_list_checklists`
-TRUNCATE `exalteds_bizbuk`.`task_list_checklist_rejected_files`
-TRUNCATE `exalteds_bizbuk`.`task_list_corrective_actions`
-TRUNCATE `exalteds_bizbuk`.`task_list_corrective_action_details`
-TRUNCATE `exalteds_bizbuk`.`task_list_corrective_action_files`
-TRUNCATE `exalteds_bizbuk`.`task_list_subcategories`
-TRUNCATE `exalteds_bizbuk`.`task_list_subchecklists`
-TRUNCATE `exalteds_bizbuk`.`task_list_subchecklist_rejected_files`
-TRUNCATE `exalteds_bizbuk`.`task_location_categories`
+=========================
+TRUNCATE `exalteds_bizbuk`.`dashboard_notifications`;
+TRUNCATE `exalteds_bizbuk`.`task_categories_checklist_subchecklists`;
+TRUNCATE `exalteds_bizbuk`.`task_lists`;
+TRUNCATE `exalteds_bizbuk`.`task_list_checklists`;
+TRUNCATE `exalteds_bizbuk`.`task_list_checklist_rejected_files`;
+TRUNCATE `exalteds_bizbuk`.`task_list_corrective_actions`;
+TRUNCATE `exalteds_bizbuk`.`task_list_corrective_action_details`;
+TRUNCATE `exalteds_bizbuk`.`task_list_corrective_action_files`;
+TRUNCATE `exalteds_bizbuk`.`task_list_subcategories`;
+TRUNCATE `exalteds_bizbuk`.`task_list_subchecklists`;
+TRUNCATE `exalteds_bizbuk`.`task_list_subchecklist_rejected_files`;
+TRUNCATE `exalteds_bizbuk`.`task_location_categories`;
 
 

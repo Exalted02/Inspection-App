@@ -339,9 +339,10 @@ body, h1, h2, h3, h4, h5, h6 {
 	/* color: #E52D27; */
 	color: #000000;
 }
-.location-details .task img {
+.location-details .task img, .location-details .task video {
 	width: 100%;
 	height: 100px;
+	min-height: 100px;
 	object-fit: cover;
 	border-radius: 8px;
 	margin-bottom: 8px;
