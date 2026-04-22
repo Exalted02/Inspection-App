@@ -275,6 +275,7 @@
 					var page_url5 = app_url + '/inspector-subchecklist-second-approve-plan-by-lo/';
 					
 					var page_url6 = app_url + '/ia-los-checklist-completed-approved-view/';
+					var page_url7 = app_url+'/los-inspection-closure';
 					
 					var current_url = window.location.href;
 					var active = 1;
@@ -331,6 +332,14 @@
 							var location_id = $('#location_id').val();
 							var baseUrl = "{{ url('/los-task-status') }}";
 							var redirectUrl = baseUrl + '/' + location_id + '/' + active;
+							window.location.href = redirectUrl;
+						}, 100);
+					}
+					if(current_url.includes(page_url7))
+					{
+						setTimeout(function() {
+							var baseUrl = "{{ url('/inspector-dashboard') }}";
+							var redirectUrl = baseUrl;
 							window.location.href = redirectUrl;
 						}, 100);
 					}

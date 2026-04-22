@@ -868,9 +868,48 @@ if(auth()->user()->user_type == 3)
 
 // work for my dashboard observation
 // $ins_inspection_completed = App\Models\Task_lists::where('task_type', 1)->count();
-$ins_inspection_completed = $correctiveApprovedCount;
-$lo_inspection_completed = $correctiveApprovedCount;
-$los_inspection_completed = $correctiveApprovedCount;
+// $ins_inspection_completed = $correctiveApprovedCount;
+$ins_inspection_completed = $lo_inspection_completed = $los_inspection_completed = 0;
+$ins_task_list_data = App\Models\Task_lists::where('inspector_id', auth()->user()->id)->get();
+foreach($ins_task_list_data as $ins_tasks){
+	$getCategotyArr = [];
+	$taskLocationCat = App\Models\Task_location_categories::where('task_list_id', $ins_tasks->id)->get();
+	foreach($taskLocationCat as $categories)
+	{
+	   $getCategotyArr[] = $categories->category_id;
+	}
+	$matchedCount = App\Models\Task_list_subcategories::where('task_list_id',$ins_tasks->id)->whereIn('task_list_category_id',$getCategotyArr)->distinct('task_list_category_id')->count('task_list_category_id');
+	$ifAllCategoryExists = $matchedCount === count($getCategotyArr);
+	if($ifAllCategoryExists){
+		$ins_inspection_completed ++;
+	}
+}
+if(auth()->user()->user_type == 2 || auth()->user()->user_type == 3){
+	// $lo_inspection_completed = $correctiveApprovedCount;
+	// $los_inspection_completed = $correctiveApprovedCount;
+	$u_locations = App\Models\Users_location::where('user_id', auth()->user()->id)->pluck('location_id')->toArray();
+	$lo_los_task_list_data = App\Models\Task_lists::whereIn('location_id', $u_locations)->get();
+	foreach($lo_los_task_list_data as $lo_los_tasks){
+		$getCategotyArr = [];
+		$taskLocationCat = App\Models\Task_location_categories::where('task_list_id', $lo_los_tasks->id)->get();
+		foreach($taskLocationCat as $categories)
+		{
+		   $getCategotyArr[] = $categories->category_id;
+		}
+		$matchedCount = App\Models\Task_list_subcategories::where('task_list_id',$lo_los_tasks->id)->whereIn('task_list_category_id',$getCategotyArr)->distinct('task_list_category_id')->count('task_list_category_id');
+		$ifAllCategoryExists = $matchedCount === count($getCategotyArr);
+		if($ifAllCategoryExists){
+			if(auth()->user()->user_type == 2){
+				$lo_inspection_completed ++;
+			}
+			if(auth()->user()->user_type == 3){
+				$los_inspection_completed ++;
+			}
+		}
+	}
+}
+
+
 
 $corrective_action_tasks = App\Models\Task_list_corrective_action::all();
 $corrective_action_checklist = [];
