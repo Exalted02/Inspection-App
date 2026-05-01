@@ -698,6 +698,21 @@ if(auth()->user()->user_type == 1)
     ->get();
 	$inspection_closure_action_plan = $inspection_action_plan->count();
 	
+	$los_action_plan = App\Models\Task_list_corrective_action::where('los_id', auth()->user()->id)->whereIn('lo_direct_approve', [0, 1])
+    ->where(function ($q) {
+        $q->where(function ($q) {
+            $q->where('inspector_action', 0)->where('los_action', 0);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 1)->where('los_action', 0);
+        })
+        ->orWhere(function ($q) {
+            $q->where('inspector_action', 0)->where('los_action', 1);
+        });
+    })
+    ->get();
+	$los_closure_action_plan = $los_action_plan->count();
+	
 	//echo "<pre>";print_r($inspection_action_plan);die;
 	
 	$inActionPlanTaskLocIds = [];
@@ -941,7 +956,8 @@ $get_tasklist_checklist = App\Models\Task_list_checklists::where('approve', 0)->
 $observations = 0;
 if($get_tasklist_checklist->count() > 0)
 {
-	$excludeChecklist = [];
+	$observations += $get_tasklist_checklist->count();
+	/*$excludeChecklist = [];
 	foreach ($corrective_action_checklist as $item) {
 		$excludeChecklist[$item['task_list_id']][] = $item['checklist_id'];
 	}
@@ -967,13 +983,15 @@ if($get_tasklist_checklist->count() > 0)
 			}
 		}
 
-	}
+	}*/
 }
 
 $get_tasklist_subchecklist = App\Models\Task_list_subchecklists::where('approve', 0)->get();
 if($get_tasklist_subchecklist->count() > 0)
 {
-	$excludeSubchecklist = [];
+	$observations += $get_tasklist_subchecklist->count();
+	
+	/*$excludeSubchecklist = [];
 
 	foreach ($corrective_action_checklst_subchecklst as $item) {
 		$taskId  = $item['task_list_id'];
@@ -1003,7 +1021,7 @@ if($get_tasklist_subchecklist->count() > 0)
 				$observations++;
 			}
 		}
-	}
+	}*/
 
 }
 
@@ -1098,7 +1116,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-first">
 						<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection">
 						<div class="bg small-card my-dashboard-lower">
-							<div class="small-card-title">Inspection completed</div>
+							<div class="small-card-title color-777">Inspection completed</div>
 							<div class="small-card-counter">{{ $ins_inspection_completed ?? 0 }}</div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
@@ -1236,7 +1254,7 @@ if($get_tasklist_subchecklist->count() > 0)
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title">Open Observation</div>
-							<div class="small-card-counter"><span id="tot_no_of_obs-s">{{ $correctiveNeededCount}}</span></div>
+							<div class="small-card-counter"><span id="tot_no_of_obs-s">{{ $correctiveNeededCount + $los_closure_action_plan ?? 0}}</span></div>
 						</div>
 					</div>
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">

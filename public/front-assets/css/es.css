@@ -73,6 +73,9 @@ body, h1, h2, h3, h4, h5, h6 {
 .width-100 {
 	width: 100%;
 }
+.color-777 {
+	color: #777;
+}
 /**********************************FOR HEADER SECTION***********************************/
 .header-icon {
 	float: right;
@@ -2520,7 +2523,7 @@ padding-bottom: 5px;
     display: block;
 }
 .adhoc-preview-image-wrapper .remove-image {
-    position: absolute;
+    /*position: absolute;
     top: -6px;
     right: -6px;
     background: red;
@@ -2532,7 +2535,20 @@ padding-bottom: 5px;
     cursor: pointer;
     font-size: 16px;
     line-height: 20px;
+    text-align: center;*/
+	position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #E7E7E7;
+    color: black;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
     text-align: center;
+    line-height: 20px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 @media (max-width: 575px) {
