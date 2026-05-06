@@ -124,7 +124,7 @@ if ($checklistdata && $checklistdata->get_subchecklist && $checklistdata->get_su
 				@if(!empty($existingFiles))
 					@foreach($existingFiles as $files)
 						<div class="preview-image-wrapper">
-							<img src="{{ url('uploads/reject-files/'. $files['name']) }}" class="preview-image-checklist"><button type="button" class="remove-edit-checklist-image" data-filename="{{ $files['name'] ?? '' }}" data-taskid="{{ $task_id ?? '' }}" data-checklistid="{{ $checklistdata->id ?? '' }}" >
+							<img src="{{ url('uploads/reject-files/'. $files['name']) }}" class="preview-image-checklist"><button type="button" class="remove-edit-checklist-image" data-filename="{{ $files['name'] ?? '' }}" data-taskid="{{ $task_id ?? '' }}" data-checklistid="{{ $checklistdata->id ?? '' }}" >×
 							</button>
 						</div>
 					@endforeach
@@ -727,7 +727,7 @@ $(document).ready(function() {
 										} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 											html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 										}
-										html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name + '" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'"></button>';
+										html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name + '" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'">×</button>';
 										html += '</div>';
 								}
 								
@@ -1314,7 +1314,7 @@ $(document ).ready(function() {
 						} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 							html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 						}
-						html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name + '" data-taskid="' + task_id +'" data-checklistid="' + checklist_id +'"></button>';
+						html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name + '" data-taskid="' + task_id +'" data-checklistid="' + checklist_id +'"></button>×';
 						html += '</div>';
 				}
 				
@@ -2025,7 +2025,7 @@ $(document ).ready(function() {
 										} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 											html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 										}
-										html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name + '" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'"></button>';
+										html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name + '" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'">×</button>';
 										html += '</div>';
 								}
 								
@@ -2783,7 +2783,7 @@ $(document ).ready(function() {
 									} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 										html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 									}
-									html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name +'" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'"></button>';
+									html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name +'" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'">×</button>';
 									html += '</div>';
 									
 									
@@ -3387,7 +3387,7 @@ $(document ).ready(function() {
 										} else if (['mp4', 'mov', 'avi'].includes(ext)) {
 											html += '<video src="' + file.url + '" class="preview-image-checklist" controls></video>';
 										}
-										html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name +'" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'"></button>';
+										html += '<button type="button" class="remove-edit-checklist-image" data-filename="' + file.name +'" data-taskid="' + task_id +'" data-checklistid="' + response.currentid +'">×</button>';
 										html += '</div>';
 								}
 							});

@@ -771,7 +771,8 @@ $(document).ready(function() {
 		$('#extra-previews').show();
 		let files = Array.from(e.target.files);
 
-		selectedFiles = [...selectedFiles, ...files];
+		// selectedFiles = [...selectedFiles, ...files];
+		selectedFiles = [...files];
 
 		files.forEach((file, index) => {
 			let reader = new FileReader();
@@ -793,7 +794,8 @@ $(document).ready(function() {
 						+ (selectedFiles.length - files.length + index) 
 						+ '">&times;</button></div>';
 				}
-				previewContainer.append(previewHtml);
+				// previewContainer.append(previewHtml);
+				previewContainer.html(previewHtml);
 			};
 			reader.readAsDataURL(file);
 		});

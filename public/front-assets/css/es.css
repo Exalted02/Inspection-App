@@ -1280,40 +1280,49 @@ body, h1, h2, h3, h4, h5, h6 {
 
 .remove-sub-image {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #ff4d4d;
-  color: #fff;
+  top: -10px;
+  right: -10px;
+  background: #E7E7E7;
+  color: #000;
   border: none;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 16px;
   cursor: pointer;
 }
 
 .remove-edit-sub-image {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #ff4d4d;
-  color: #fff;
+  top: -10px;
+  right: -10px;
+  background: #E7E7E7;
+  color: #000;
   border: none;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 16px;
   cursor: pointer;
 }
 
 .remove-edit-checklist-image{
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #ff4d4d;
-  color: #fff;
+  top: -10px;
+  right: -10px;
+  background: #E7E7E7;
+  color: #000;
   border: none;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -2552,14 +2561,14 @@ padding-bottom: 5px;
 }
 
 @media (max-width: 575px) {
-    .adhoc-preview-image-wrapper .remove-image {
+    /*.adhoc-preview-image-wrapper .remove-image {
         right: 221px !important;
         top: -7px; 
     }
 
     .adhoc-preview-image {
         max-width: 30%;
-    }
+    }*/
 }
 .arrow-right{
 	/*margin-left: 528px;*/
