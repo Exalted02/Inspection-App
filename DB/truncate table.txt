@@ -16,3 +16,5 @@ TRUNCATE TABLE `inspection_app`.`task_list_checklist_temp_rejected_files`;
 TRUNCATE TABLE `inspection_app`.`task_list_subchecklists`;
 TRUNCATE TABLE `inspection_app`.`task_list_subchecklist_rejected_files`;
 TRUNCATE TABLE `inspection_app`.`task_list_subchecklist_temp_rejected_files`;
+TRUNCATE TABLE `inspection_app`.`task_categories_checklist_subchecklists`;
+TRUNCATE TABLE `inspection_app`.`dashboard_notifications`;
