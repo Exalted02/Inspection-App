@@ -2639,6 +2639,10 @@ padding-bottom: 5px;
 		object-fit: cover !important;
 	}
 }*/
+a:focus {
+  outline: none !important;
+  outline-offset: -2px;
+}
 
 
 
