@@ -453,20 +453,35 @@ $(document).ready(function() {
 		}
 	}
 	
-	
-    $('input[name="task_type"]').on('change', function() {
-		if ($(this).val() == 0) {
-			$('.form-adhoc').slideUp(); // smooth hide
-			$('.form-routine').slideDown(); // smooth show
+	function toggleTaskType(taskType){
+
+		if(taskType == 0){
+			$('.form-adhoc').slideUp();
+			$('.form-routine').slideDown();
 			
 			$('.task-category-form').slideUp();
 			$('.task-main-form').slideDown();
 			$('#routing_task_type').val(0);
-		} else {
-			$('.form-routine').slideUp(); // smooth hide
-			$('.form-adhoc').slideDown(); // smooth show
+		}else{
+			$('.form-routine').slideUp();
+			$('.form-adhoc').slideDown();
 			$('#adhoc_task_type').val(1);
 		}
+	}
+    // $('input[name="task_type"]').on('change', function() {
+    $(document).on('change', 'input[name="task_type"]', function(){
+		toggleTaskType($(this).val());
+	});
+	$(window).on('load', function(){
+
+		let checkedValue = $('input[name="task_type"]:checked').val();
+
+		if(typeof checkedValue !== 'undefined'){
+
+			toggleTaskType(checkedValue);
+
+		}
+
 	});
 	
     $('.add-category').on('click', function() {

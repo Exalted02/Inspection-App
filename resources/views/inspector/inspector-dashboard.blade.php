@@ -672,7 +672,8 @@ if(auth()->user()->user_type == 1)
 	//echo "<pre>";print_r($taskIdArr);die;
 	
 	
-	$routTasksLoc = App\Models\Task_lists::where('task_type', 0)->distinct('location_id')->pluck('location_id')->toArray();
+	// $routTasksLoc = App\Models\Task_lists::where('task_type', 0)->distinct('location_id')->pluck('location_id')->toArray();
+	$routTasksLoc = App\Models\Users_location::where('user_id', auth()->user()->id)->pluck('location_id')->toArray();
 	$tot = 0;
 	foreach($routTasksLoc as $loc)
 	{
@@ -1100,7 +1101,7 @@ if($get_tasklist_subchecklist->count() > 0)
 							@if($inspection_closure_action_plan != 0)
 							<span class="notification-badge" id="ia_completed_badge"></span>
 							@endif
-							<div class="small-card-title">Inspection closure</div>
+							<div class="small-card-title">Pending closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
 							<div class="small-card-upper-counter me-2"><span id="ia_total_ins_closure">{{ $inspection_closure_action_plan ?? 0 }}</span></div>
 							{{--<div class="small-card-upper-counter me-2"><span id="tot_no_of_obs">{{ $correctiveApprovedCount }}</span></div>--}}
@@ -1114,13 +1115,13 @@ if($get_tasklist_subchecklist->count() > 0)
 				<div class="row flex-wrap d-flex">
 				
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-first">
-						<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection">
+						{{--<a href="javascript:void(0)" class="my-dashboard-click" data-tab="ia-outstanding-inspection">--}}
 						<div class="bg small-card my-dashboard-lower">
 							<div class="small-card-title color-777">Inspection completed</div>
 							<div class="small-card-counter">{{ $ins_inspection_completed ?? 0 }}</div>
 							{{--<div class="small-card-counter-title">WEEKLY</div>--}}
 						</div>
-						</a>
+						{{--</a>--}}
 					</div>
 					
 					<div class="col-md-3 col-sm-3 col-xs-3 small-card-second">
@@ -1157,7 +1158,7 @@ if($get_tasklist_subchecklist->count() > 0)
 						@endif
 							<div class="small-card-title">Open Observation</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
-							<div class="small-card-upper-counter me-2"><span id="lo_action_plan_count">{{ $correctiveNeededCount }}</span></div>
+								<div class="small-card-upper-counter me-2"><span id="lo_action_plan_count">{{ $correctiveNeededCount }}</span></div>
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount}}</div>--}}
 								<div class="small-card-upper-counter-title">Pending task</div>
 							</div>
@@ -1215,7 +1216,7 @@ if($get_tasklist_subchecklist->count() > 0)
 						@if($los_closure_action_plan != 0)
 						<span class="notification-badge" id="los_pending_closure_badge"></span>
 						@endif
-							<div class="small-card-title">Inspection closure</div>
+							<div class="small-card-title">Pending closure</div>
 							<div class="d-flex align-items-center small-card-upper-counter-wrapper">
 								<div class="small-card-upper-counter me-2"><span id="los_pending_closure_count">{{ $los_closure_action_plan }}</span></div>
 								{{--<div class="small-card-upper-counter me-2">{{ $correctiveActionCount + $correctivePlanCount + $correctiveNeededCount}}</div>--}}
@@ -1588,7 +1589,12 @@ if($get_tasklist_subchecklist->count() > 0)
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-											<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }} pending tasks</span></div>
+										@php
+											$p_task = 0;
+											$p_task = App\Models\Task_lists::where('location_id', $locations->location_id)->where('task_type', 0)->whereDate('created_at', '<=', now())->whereNotIn('id',$taskIdArr)->count();
+										@endphp
+											{{--<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }} pending tasks</span></div>--}}
+											<div class="price"><span>{{ $p_task }} pending tasks</span></div>
 										</div>
 										{{--<div class="price-tag">
 											<div class="price"><span>{{ $taskCnt + $countNedded }} pending tasks</span></div>
@@ -1598,12 +1604,47 @@ if($get_tasklist_subchecklist->count() > 0)
 										<h3>{{ $lacationData->location_name ?? '' }}</h3>
 									</a>
 								@elseif(auth()->user()->user_type == 3)
+									@php 
+										$locationData = App\Models\Manage_location::where('id', $locations->location_id)->first();
+										$taskListIds_los = App\Models\Task_lists::where(['los_id'=>auth()->user()->id, 'location_id'=>$locations->location_id])->pluck('id');
+										
+										$categoryIds_los = App\Models\Task_list_subcategories::whereIn('task_list_id', $taskListIds_los)->pluck('task_list_category_id');
+										
+										$correctiveActionData_los = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [1])->whereIn('task_list_id', $taskListIds_los)->whereIn('category_id', $categoryIds_los)
+										->where(function ($q) {
+											$q->where(function ($q) {
+												$q->where('inspector_action', 0)->where('los_action', 1);
+											})->orWhere(function ($q) {
+												$q->where('inspector_action', 1)->where('los_action', 0);
+											})->orWhere(function ($q) {
+												$q->where('inspector_action', 0)->where('los_action', 0);
+											});
+										})
+										->orderBy('updated_at', 'asc')
+										->get();
+										
+										$correctivePlanData_los = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0])->whereIn('task_list_id', $taskListIds_los)->whereIn('category_id', $categoryIds_los)
+										->where(function ($q) {
+											$q->where(function ($q) {
+												$q->where('inspector_action', 0)->where('los_action', 1);
+											})->orWhere(function ($q) {
+												$q->where('inspector_action', 1)->where('los_action', 0);
+											})->orWhere(function ($q) {
+												$q->where('inspector_action', 0)->where('los_action', 0);
+											});
+										})
+										->orderBy('updated_at', 'asc')
+										->get();
+										
+										$correctiveActionPlanData_los = $correctiveActionData_los->merge($correctivePlanData_los);
+									@endphp 
 									<a title="" href="{{route('los-task-status', ['id' => $locations->location_id, 'active'=>1])}}">
 									<div class="image" style="background-image: url('{{ $loc_image }}');">
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-										<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>
+										<div class="price"><span>{{ $correctiveActionPlanData_los->count() }}  pending tasks</span></div>
+										{{--<div class="price"><span>{{ $countAction + $countPlan + $taskCnt }}  pending tasks</span></div>--}}
 										</div>
 										{{--<div class="price"><span>{{ $countNedded }}  pending tasks</span></div>--}}
 									</div>
@@ -1617,7 +1658,8 @@ if($get_tasklist_subchecklist->count() > 0)
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-											<div class="price"><span>{{ $taskCnt + $countNedded }}  pending tasks</span></div>
+											{{--<div class="price"><span>{{ $taskCnt + $countNedded }}  pending tasks</span></div>--}}
+											<div class="price"><span>{{ $correctiveNeededCount }}  pending tasks</span></div>
 										</div>
 									</div>
 									<div class="short-description-1 clearfix"></div>
@@ -1698,8 +1740,10 @@ $(document).ready(function() {
 					countTaskLoc[a] > countTaskLoc[b] ? a : b
 				);
 				//alert(loc_id);
-				var baseUrl = "{{ url('/location-details') }}";
-				var redirectUrl = baseUrl + '/'+ loc_id;
+				// var baseUrl = "{{ url('/location-details') }}";
+				var baseUrl = "{{ url('/outstanding-inspection') }}";
+				// var redirectUrl = baseUrl + '/'+ loc_id;
+				var redirectUrl = baseUrl;
 				window.location.href = redirectUrl;
 			}
 		}

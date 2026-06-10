@@ -4,17 +4,17 @@ tasklist_subcategories
 submit_inspector_status
 
 *****Truncate list table*****
-TRUNCATE TABLE `inspection_app`.`task_lists`;
-TRUNCATE TABLE `inspection_app`.`task_list_subcategories`;
-TRUNCATE TABLE `inspection_app`.`task_location_categories`;
-TRUNCATE TABLE `inspection_app`.`task_list_corrective_actions`;
-TRUNCATE TABLE `inspection_app`.`task_list_corrective_action_details`;
-TRUNCATE TABLE `inspection_app`.`task_list_corrective_action_files`;
-TRUNCATE TABLE `inspection_app`.`task_list_checklists`;
-TRUNCATE TABLE `inspection_app`.`task_list_checklist_rejected_files`;
-TRUNCATE TABLE `inspection_app`.`task_list_checklist_temp_rejected_files`;
-TRUNCATE TABLE `inspection_app`.`task_list_subchecklists`;
-TRUNCATE TABLE `inspection_app`.`task_list_subchecklist_rejected_files`;
-TRUNCATE TABLE `inspection_app`.`task_list_subchecklist_temp_rejected_files`;
-TRUNCATE TABLE `inspection_app`.`task_categories_checklist_subchecklists`;
-TRUNCATE TABLE `inspection_app`.`dashboard_notifications`;
+TRUNCATE TABLE `task_lists`;
+TRUNCATE TABLE `task_list_subcategories`;
+TRUNCATE TABLE `task_location_categories`;
+TRUNCATE TABLE `task_list_corrective_actions`;
+TRUNCATE TABLE `task_list_corrective_action_details`;
+TRUNCATE TABLE `task_list_corrective_action_files`;
+TRUNCATE TABLE `task_list_checklists`;
+TRUNCATE TABLE `task_list_checklist_rejected_files`;
+TRUNCATE TABLE `task_list_checklist_temp_rejected_files`;
+TRUNCATE TABLE `task_list_subchecklists`;
+TRUNCATE TABLE `task_list_subchecklist_rejected_files`;
+TRUNCATE TABLE `task_list_subchecklist_temp_rejected_files`;
+TRUNCATE TABLE `task_categories_checklist_subchecklists`;
+TRUNCATE TABLE `dashboard_notifications`;

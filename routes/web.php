@@ -68,6 +68,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('lo-task-status/{id}/{active}', [DashboardInspectorController::class, 'lo_task_status'])->name('lo-task-status');
 	
 	Route::get('/location-details/{id}', [DashboardInspectorController::class, 'location_details'])->name('location-details');
+	Route::get('/outstanding-inspection', [DashboardInspectorController::class, 'outstanding_inspection'])->name('outstanding-inspection');
 	Route::get('/inspector-dashboard', [DashboardInspectorController::class, 'inspector_dashboard'])->name('inspector-dashboard');
 	
 	Route::post('send-location-details', [DashboardInspectorController::class, 'send_location_details'])->name('send-location-details');

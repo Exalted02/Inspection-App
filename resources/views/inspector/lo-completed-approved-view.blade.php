@@ -84,7 +84,7 @@
 		$lo_corrective_completed_by = $corrective_dtls_data ? $corrective_dtls_data->lo_completed_by : '';
 	//---------------------
 	
-	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','desc')->skip(0)->take(PHP_INT_MAX)->get();
 	
 	$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
 	$max_order = $corrective_detls_order->max('order');
@@ -170,7 +170,7 @@
 		$lo_corrective_completed_by = $corrective_dtls_data ? $corrective_dtls_data->lo_completed_by : '';
 	//---------------------
 	
-	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','desc')->skip(0)->take(PHP_INT_MAX)->get();
 	
 	$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
 	$max_order = $corrective_detls_order->max('order');
@@ -248,7 +248,7 @@
 						</div>
 						
 						
-						
+						{{--
 						@if(!empty($lo_corrective_action_plan))
 							<hr class="horizontal-line">
 							<div class="row IA-IOS-get-reply">
@@ -459,11 +459,13 @@
 								
 							@endif
 						@endif
-						
+						--}}
 						
 						
 						<hr class="horizontal-line">
+						
 					@if($final_check_data->isNotEmpty())
+						@php $k = 0; @endphp
 						@foreach($final_check_data as $val)
 							@php 
 								$corrective_final_files = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $val->task_list_corrective_action_id)->where('status', $val->order)->get();
@@ -558,7 +560,7 @@
 										<label class="mb-0">Progress</label>
 										<i class="fa-solid fa-chevron-up"></i>
 									</div>
-									<div class="experience-box mt-2">
+									<div class="experience-box mt-2" style="{{ $k == 0 ? 'display: block' : '' }}">
 										<ul class="experience-list">
 										@if($max_order == $val->order)
 											@if($corrective_action_data->inspector_action == 1 && $corrective_action_data->los_action == 1 && $val->rejected_status == 0 )
@@ -683,6 +685,7 @@
 								</div>
 							</div>
 						</div>
+						@php $k++; @endphp
 						@endif
 							<hr class="horizontal-line">
 						@endforeach

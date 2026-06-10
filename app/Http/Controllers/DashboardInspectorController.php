@@ -4073,6 +4073,69 @@ class DashboardInspectorController extends Controller
 		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 		return view('inspector.inspection-closure', $data);
 	}
+	public function outstanding_inspection()
+    {
+		if (auth()->user()->user_type == 2 || auth()->user()->user_type == 3)
+		{
+			return redirect('inspector-dashboard');
+		}
+		
+		$user = User::with('get_user_location')
+			->where('id', auth()->user()->id)
+			->first();
+
+		$locationIds = $user->get_user_location->pluck('location_id')->toArray();
+		
+		$data = [];
+		$data['location_categories'] = Manage_location::with('category_by_location')->whereIn('id', $locationIds)->get();
+		
+		//$data['task_list'] = Task_lists::where('location_id', $id)->where('inspector_id', auth()->user()->id)->get();
+		
+		$data['task_list_data'] = collect(); // default empty collection
+
+		if (auth()->user()->user_type == 1) {
+			// Only return data if a match is found
+			$tasks = Task_lists::whereIn('location_id', $locationIds)
+				->where('inspector_id', auth()->user()->id)
+				->orderBy('location_id', 'ASC')
+				->orderBy('created_at', 'ASC')
+				->get();
+
+		} elseif (auth()->user()->user_type == 2 || auth()->user()->user_type == 3) {
+			$tasks = Task_lists::whereIn('location_id', $locationIds)
+				->orderBy('location_id', 'ASC')
+				->orderBy('id', 'ASC')
+				->get();
+		}
+		
+		// Filter completed locations/categories
+		$tasks = $tasks->filter(function ($task) {
+
+			$categoryIds = Task_location_categories::where('task_list_id', $task->id)
+				->pluck('category_id')
+				->toArray();
+
+			$matchedCount = Task_list_subcategories::where('task_list_id', $task->id)
+				->whereIn('task_list_category_id', $categoryIds)
+				->distinct('task_list_category_id')
+				->count('task_list_category_id');
+
+			return $matchedCount !== count($categoryIds);
+		});
+
+		$data['groupedTasks'] = $tasks
+			->groupBy('location_id')
+			->filter(fn($tasks) => $tasks->count() > 0);
+
+		$data['locationcategory'] = Category::whereIn('location_id', $locationIds)
+			->where('status', '!=', 2)
+			->get();
+
+		$data['locationWisecategory'] = Category::whereIn('location_id', $locationIds)
+			->get();
+		
+        return view('inspector.outstanding-inspection', $data);
+    }
 	public function los_inspection_closure()
 	{
 		$data = [];
