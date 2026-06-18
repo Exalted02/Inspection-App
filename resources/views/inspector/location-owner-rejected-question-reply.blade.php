@@ -202,8 +202,8 @@
 							<hr class="horizontal-line">
 						@endif
 					
-						@if($final_check_data->isNotEmpty())
 							@php $k = 0; @endphp
+						@if($final_check_data->isNotEmpty())
 					@foreach($final_check_data as $val)
 						@php 
 							$corrective_final_files = App\Models\Task_list_corrective_action_file::where('task_list_corrective_actions_id', $val->task_list_corrective_action_id)->where('status', $val->order)->get();
@@ -559,7 +559,7 @@
 												<label class="mb-0">Progress</label>
 												<i class="fa-solid fa-chevron-up"></i>
 											</div>
-											<div class="experience-box mt-2">
+											<div class="experience-box mt-2" style="{{ $k == 0 ? 'display: block' : '' }}">
 												<ul class="experience-list">
 												@if($corrective_dtls_data->approved_status == 1 && $corrective_dtls_data->rejected_status == 2)
 													
