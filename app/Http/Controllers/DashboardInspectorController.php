@@ -4142,6 +4142,12 @@ class DashboardInspectorController extends Controller
 		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
 		return view('inspector.los-inspection-closure', $data);
 	}
+	public function lo_inspection_closure()
+	{
+		$data = [];
+		$data['userdata'] = User::with('get_user_location')->where('id', auth()->user()->id)->first();
+		return view('inspector.lo-inspection-closure', $data);
+	}
 	public function inspector_filter($lid='', $active='')
 	{
 		//echo $lid; die;correctiveActionArray

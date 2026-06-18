@@ -210,6 +210,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	//--- 13-02-2026----
 	Route::get('/inspection-closure', [DashboardInspectorController::class, 'inspection_closure'])->name('inspection-closure');
 	Route::get('/los-inspection-closure', [DashboardInspectorController::class, 'los_inspection_closure'])->name('los-inspection-closure');
+	Route::get('/lo-inspection-closure', [DashboardInspectorController::class, 'lo_inspection_closure'])->name('lo-inspection-closure');
 	
 	//User-Accounts  
 	Route::get('/users', [UserController::class, 'index'])->name('users');

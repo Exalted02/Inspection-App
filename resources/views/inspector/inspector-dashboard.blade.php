@@ -1658,8 +1658,8 @@ if($get_tasklist_subchecklist->count() > 0)
 										<img alt="Test" src="{{ $loc_image  }}" class="img-responsive d-none">
 										<div class="ribbon popular"></div>
 										<div class="price-tag">
-											{{--<div class="price"><span>{{ $taskCnt + $countNedded }}  pending tasks</span></div>--}}
-											<div class="price"><span>{{ $correctiveNeededCount }}  pending tasks</span></div>
+											<div class="price"><span>{{ $countNedded }}  pending tasks</span></div>
+											{{--<div class="price"><span>{{ $correctiveNeededCount }}  pending tasks</span></div>--}}
 										</div>
 									</div>
 									<div class="short-description-1 clearfix"></div>
@@ -1774,7 +1774,7 @@ $(document).ready(function() {
 			 }
 		}
 		
-		if(tab == 'lo-corrective-needed')
+		/*if(tab == 'lo-corrective-needed')
 		{
 			let dataCount = $(this).data('count');
 			if(dataCount != 0)
@@ -1782,6 +1782,16 @@ $(document).ready(function() {
 				let loc_id = $('#LoCorrectiveNeededLocId').val();
 				var baseUrl = "{{ url('/lo-task-status') }}";
 				var redirectUrl = baseUrl + '/'+ loc_id + '/1';
+				window.location.href = redirectUrl;
+			 }
+		}*/
+		if(tab == 'lo-corrective-needed')
+		{
+			let dataCount = $(this).data('count');
+			if(dataCount != 0)
+			{
+				var baseUrl = "{{ url('/lo-inspection-closure') }}";
+				var redirectUrl = baseUrl;
 				window.location.href = redirectUrl;
 			 }
 		}
