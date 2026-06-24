@@ -1379,7 +1379,7 @@ $(document ).ready(function() {
 				}
 			}
 			
-			/*if(approveStatus == '')
+			if(approveStatus == '')
 			{
 				Swal.fire({
 					  icon: "warning",
@@ -1393,7 +1393,7 @@ $(document ).ready(function() {
 					});
 					
 				return false;
-			}*/
+			}
 			
 		}
 		else
@@ -1465,7 +1465,7 @@ $(document ).ready(function() {
 				return false;
 			}
 			
-			/*if(mulSelected != mulCounter)
+			if(mulSelected != mulCounter)
 			{
 				Swal.fire({
 					  icon: "warning",
@@ -1478,7 +1478,7 @@ $(document ).ready(function() {
 					});
 					
 				return false;
-			}*/
+			}
 			
 		}
 		

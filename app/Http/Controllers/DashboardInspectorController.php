@@ -9,6 +9,7 @@ use App\Models\Manage_location;
 use App\Models\Manage_location_category;
 use App\Models\Category;
 use App\Models\Task_lists;
+use App\Models\Task_list_categories;
 use App\Models\Checklist;
 use App\Models\Subchecklist;
 use App\Models\Task_list_checklist_temp_rejected_files;
@@ -4096,7 +4097,7 @@ class DashboardInspectorController extends Controller
 		if (auth()->user()->user_type == 1) {
 			// Only return data if a match is found
 			$tasks = Task_lists::whereIn('location_id', $locationIds)
-				->where('inspector_id', auth()->user()->id)
+				->where('inspector_id', auth()->user()->id)->where('task_type', 0)->whereDate('created_at', '<=', now())
 				->orderBy('location_id', 'ASC')
 				->orderBy('created_at', 'ASC')
 				->get();
@@ -12803,6 +12804,8 @@ class DashboardInspectorController extends Controller
 		Task_lists::where('id', $id)->delete();
 		Task_location_categories::where('task_list_id', $id)->delete();
 		Task_categories_checklist_subchecklist::where('task_list_id', $id)->delete();
+		Task_list_categories::where('task_list_id', $id)->delete();
+		Task_list_subcategories::where('task_list_id', $id)->delete();
 		
 		// delete from checklist and checklist files table
 		$checklistData = Task_list_checklists::where('task_list_id', $id)->where('approve', 0)->get();
@@ -12816,10 +12819,11 @@ class DashboardInspectorController extends Controller
 				{
 					foreach($fileDataArr as $files)
 						$file_name = $files->file ? $files->file : '';
-						
-						$filePath = public_path('uploads/reject-files/' . $file_name);
-						if (file_exists($filePath)) {
-							unlink($filePath);
+						if($file_name != ''){
+							$filePath = public_path('uploads/reject-files/' . $file_name);
+							if (file_exists($filePath)) {
+								unlink($filePath);
+							}
 						}
 				}
 				
@@ -12842,10 +12846,11 @@ class DashboardInspectorController extends Controller
 					foreach($fileDataArr as $files)
 					{
 						$file_name = $files->file ? $files->file : '';
-						
-						$filePath = public_path('uploads/reject-files/subchecklist/' . $file_name);
-						if (file_exists($filePath)) {
-							unlink($filePath);
+						if($file_name != ''){
+							$filePath = public_path('uploads/reject-files/subchecklist/' . $file_name);
+							if (file_exists($filePath)) {
+								unlink($filePath);
+							}
 						}
 					}
 				}
@@ -12863,9 +12868,11 @@ class DashboardInspectorController extends Controller
 			{
 				$corrsctive_files = Task_list_corrective_action_file::where('task_list_corrective_actions_id', $files->id)->first();
 				$file_name = $corrsctive_files ? $corrsctive_files->file : '';
-				$filePath = public_path('uploads/corrective_action/' . $file_name);
-				if (file_exists($filePath)) {
-					unlink($filePath);
+				if($file_name != ''){
+					$filePath = public_path('uploads/corrective_action/' . $file_name);
+					if (file_exists($filePath)) {
+						unlink($filePath);
+					}
 				}
 				
 				Task_list_corrective_action_file::where('task_list_corrective_actions_id', $files->id)->delete();
