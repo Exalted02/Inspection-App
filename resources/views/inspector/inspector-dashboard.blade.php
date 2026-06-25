@@ -952,7 +952,7 @@ if($corrective_action_tasks->count() > 0)
 	}
 }
 
-$get_tasklist_checklist = App\Models\Task_list_checklists::where('approve', 0)->get();
+$get_tasklist_checklist = App\Models\Task_list_checklists::where('approve', 0)->whereIn('task_list_id', $taskListIds)->get();
 
 $observations = 0;
 if($get_tasklist_checklist->count() > 0)
@@ -987,7 +987,7 @@ if($get_tasklist_checklist->count() > 0)
 	}*/
 }
 
-$get_tasklist_subchecklist = App\Models\Task_list_subchecklists::where('approve', 0)->get();
+$get_tasklist_subchecklist = App\Models\Task_list_subchecklists::where('approve', 0)->whereIn('task_list_id', $taskListIds)->get();
 if($get_tasklist_subchecklist->count() > 0)
 {
 	$observations += $get_tasklist_subchecklist->count();
