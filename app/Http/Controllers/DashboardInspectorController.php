@@ -252,7 +252,8 @@ class DashboardInspectorController extends Controller
 		$allCategoriesPresent = empty(array_diff($getCats, $presentCategoryIds));
 		if($allCategoriesPresent)
 		{
-			return redirect('location-details/' . $lid);
+			// return redirect('location-details/' . $lid);
+			return redirect('inspector-dashboard');
 		}
 		//--------
 		$data = [];
