@@ -2,8 +2,8 @@
 @section('content')
 @php 
  use Carbon\Carbon;
- $startDate = Carbon::now()->subWeeks(4)->startOfDay(); // 4 weeks ago
- $endDate = Carbon::now()->endOfDay(); //upto today
+ $startDate = $startDate; // 4 weeks ago
+ $endDate = $endDate; //upto today
  
  $today = Carbon::today(); //today date
  $futureDate = Carbon::today()->addWeeks(4); // next 4 weeks
@@ -31,7 +31,7 @@
 		$location_ids = App\Models\Users_location::where('user_id', auth()->user()->id)->pluck('location_id')->toArray();
 		//echo "<pre>";print_r($location_ids);die;
 		
-			$taskListIds = App\Models\Task_lists::whereIn('location_id', $location_ids)
+			$taskListIds = App\Models\Task_lists::whereIn('location_id', $location_ids)->whereBetween('created_at', [$startDate, $endDate])
 					->pluck('id');
 		
 
@@ -385,6 +385,18 @@
 					->mergeBindings($baseChecklistQuery)->count();
 					
 $tot_close_obs = 0;
+
+$observations = 0;
+$get_tasklist_checklist = App\Models\Task_list_checklists::where('approve', 0)->whereIn('task_list_id', $taskListIds)->get();
+if($get_tasklist_checklist->count() > 0)
+{
+	$observations += $get_tasklist_checklist->count();
+}
+$get_tasklist_subchecklist = App\Models\Task_list_subchecklists::where('approve', 0)->whereIn('task_list_id', $taskListIds)->get();
+if($get_tasklist_subchecklist->count() > 0)
+{
+	$observations += $get_tasklist_subchecklist->count();
+}
 @endphp
 
 <style>
@@ -433,7 +445,7 @@ $tot_close_obs = 0;
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-second d-flex">
 					<div class="bg small-card">
 						<div class="small-card-title">No. of observations</div>
-						<div class="small-card-counter"><span id="tot_no_of_obs">0</span></div>
+						<div class="small-card-counter"><span id="tot_no_of_obs1">{{$observations}}</span></div>
 						<div class="small-card-counter-title">WEEKLY</div>
 					</div>
 				</div>
@@ -449,7 +461,7 @@ $tot_close_obs = 0;
     </div>
 	@foreach($locations as $key=>$location)
 	@php 
-		$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->pluck('id')->toArray();
+		$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->whereBetween('created_at', [$startDate, $endDate])->pluck('id')->toArray();
 		
 		//echo "<pre>";print_r($taskLocation);die;
 		
@@ -585,14 +597,15 @@ $tot_close_obs = 0;
 		
 		//------- for time to close observation count ---
 		 
-		$lo_direct_approve = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('lo_direct_approve', 1)->whereBetween('lo_completed_by', [$today, $futureDate])->count();
+		$lo_direct_approve = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('lo_direct_approve', 1)->whereBetween('lo_completed_by', [$startDate, $endDate])->count();
 		
-		$lo_no_direct_approve = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('lo_direct_approve', 0)->whereBetween('lo_completed_by', [$today, $futureDate])->count();
+		$lo_no_direct_approve = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('lo_direct_approve', 0)->whereBetween('lo_completed_by', [$startDate, $endDate])->count();
 		$close_obs = $lo_direct_approve + $lo_no_direct_approve;
 		
 		//$time_to_close_obs = $time_to_close_obs + $close_obs;
 		
 		$days = 0;
+		$observations = 0;
 		foreach($taskLocation as $tsk_id)
 		{
 			$exists = App\Models\Task_list_corrective_action::where('task_list_id', $tsk_id)->where('los_action', 1)->where('inspector_action', 1)->exists();
@@ -629,10 +642,22 @@ $tot_close_obs = 0;
 			}
 			
 			
+			$get_tasklist_checklist = App\Models\Task_list_checklists::where('approve', 0)->where('task_list_id', $tsk_id)->get();
+			if($get_tasklist_checklist->count() > 0)
+			{
+				$observations += $get_tasklist_checklist->count();
+			}
+			$get_tasklist_subchecklist = App\Models\Task_list_subchecklists::where('approve', 0)->where('task_list_id', $tsk_id)->get();
+			if($get_tasklist_subchecklist->count() > 0)
+			{
+				$observations += $get_tasklist_subchecklist->count();
+			}
 		}
 		
 		$close_obs = $days;
 		$tot_close_obs = $tot_close_obs + $close_obs;
+		
+		
 	@endphp
 	<div class="management-location-card pt-2 pb-2">
 		<div class="container">
@@ -654,15 +679,15 @@ $tot_close_obs = 0;
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-first d-flex">
 					<div class="small-card">
 						<div class="small-card-title">No. of observations</div>
-						<div class="small-card-counter">{{ $no_of_obs ?? '' }}</div>
-						<div class="small-card-counter-title">WEEKLY</div>
+						<div class="small-card-counter">{{ $observations ?? '' }}</div>
+						<div class="small-card-counter-title">{{ $slug == 'weekly' ? 'WEEKLY' : "MONTHLY" }}</div>
 					</div>
 				</div>
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-second d-flex">
 					<div class="small-card">
 						<div class="small-card-title">Repeat observations</div>
 						<div class="small-card-counter">{{ $no_of_repeated_obs }}</div>
-						<div class="small-card-counter-title">WEEKLY</div>
+						<div class="small-card-counter-title">{{ $slug == 'weekly' ? 'WEEKLY' : "MONTHLY" }}</div>
 					</div>
 				</div>
 				<div class="col-md-4 col-sm-4 col-xs-4 small-card-third d-flex">
@@ -765,6 +790,7 @@ $(document).ready(function() {
 <script>
 @foreach($locations as $key=>$location)
     const chartData{{ $key }} = @json($chartData[$key]);
+	// console.log(chartData{{ $key }});
 
     const labels{{ $key }} = chartData{{ $key }}.map(item => item.label);
     const correctiveData{{ $key }} = chartData{{ $key }}.map(item => item.corrective_needed);

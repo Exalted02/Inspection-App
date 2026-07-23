@@ -320,6 +320,9 @@ class ManagementController extends Controller
 		}
 		
 		//echo "<pre>";print_r($chartData);die;
+		$data['startDate'] = $startDate->toDateTimeString();
+		$data['endDate'] = $endDate->toDateTimeString();
+		
 		$data['chartData'] = $chartData;
 		$data['slug'] = $slug;
         return view('management.management-dashboard', $data);
