@@ -1411,6 +1411,7 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 .rounded-profile-img {
     height: 36px !important;
+    min-height: 36px !important;
     width: 36px !important;
     border-radius: 50% !important;
     object-fit: cover  !important;

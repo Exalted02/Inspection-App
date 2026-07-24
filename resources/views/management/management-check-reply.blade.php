@@ -80,7 +80,7 @@
 		 }
 	 }*/
 	 
-	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','desc')->skip(0)->take(PHP_INT_MAX)->get();
 	
 	$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
 	$max_order = $corrective_detls_order->max('order');
@@ -159,7 +159,7 @@
 		 }
 	 }*/
 	 
-	 $final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+	 $final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','desc')->skip(0)->take(PHP_INT_MAX)->get();
 	 
 	 $corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
 	$max_order = $corrective_detls_order->max('order');
@@ -231,7 +231,7 @@
 						@if(!empty($lo_corrective_action_plan))
 						<hr class="horizontal-line">
 						@endif
-						
+						{{--
 						@if(!empty($lo_corrective_action_plan))
 						<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
@@ -298,7 +298,7 @@
 						@if($corrective_dtls_data)
 						</br>
 						@if($corrective_dtls_data->approved_status == 1 || $corrective_dtls_data->approved_status == 2 || $corrective_dtls_data->rejected_status == 1 || $corrective_dtls_data->rejected_status == 2)
-							{{--<hr class="horizontal-line">--}}
+							
 							@endif
 						@endif
 						
@@ -347,6 +347,7 @@
 							<hr class="horizontal-line">
 							@endif
 						@endif
+						--}}
 						
 						@if($final_check_data->isNotEmpty())
 						

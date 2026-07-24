@@ -32,6 +32,7 @@ use Intervention\Image\Laravel\Facades\Image;
 
 use App\Models\Dashboard_notification;
 use Illuminate\Support\Facades\Session;
+use App\Providers\RouteServiceProvider;
 
 class DashboardInspectorController extends Controller
 {
@@ -40,7 +41,7 @@ class DashboardInspectorController extends Controller
 		$data = [];
 		if(auth()->user()->user_type == 4)
 		{
-			return redirect('management-dashboard');
+			return redirect(RouteServiceProvider::MANAGEMENT_HOME);
 		}
 
 		$id = auth()->user()->id;

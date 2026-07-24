@@ -81,7 +81,7 @@
 		$lo_corrective_completed_by = $corrective_dtls_data ? $corrective_dtls_data->lo_completed_by : '';
 	//---------------------
 	
-	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','desc')->skip(0)->take(PHP_INT_MAX)->get();
 	
 	$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
 	$max_order = $corrective_detls_order->max('order');
@@ -168,7 +168,7 @@
 		$lo_corrective_completed_by = $corrective_dtls_data ? $corrective_dtls_data->lo_completed_by : '';
 	//---------------------
 	
-	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','asc')->skip(1)->take(PHP_INT_MAX)->get();
+	$final_check_data = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id','desc')->skip(0)->take(PHP_INT_MAX)->get();
 	
 	$corrective_detls_order = App\Models\Task_list_corrective_action_details::where('task_list_corrective_action_id',$corrective_action_primary_id)->orderBy('id')->skip(1)->take(PHP_INT_MAX)->get(['order']);
 	$max_order = $corrective_detls_order->max('order');
@@ -234,7 +234,7 @@
 						</div>
 						<hr class="horizontal-line">
 						
-						<div class="row IA-IOS-get-reply">
+						{{--<div class="row IA-IOS-get-reply">
 							<div class="col-md-12">
 								<label>Corrective</label>
 								<div>
@@ -328,6 +328,7 @@
 						
 						
 						<hr class="horizontal-line">
+						--}}
 						
 						@if($final_check_data->isNotEmpty())
 						@foreach($final_check_data as $val)
@@ -413,7 +414,7 @@
 									<span class="show-completed-status">Approved by (LOS) {{$corrective_action_data->get_los->name ?? ''}}</span><span class="show-completed-status">{{ change_date_format($corrective_action_data->los_action_date, 'Y-m-d H:i:s', 'd M Y, h:i A')}}</span></div>
 								@endif
 								@php
-									break;
+									// break;
 								@endphp
 							@endif	
 								

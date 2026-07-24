@@ -593,7 +593,8 @@ if($get_tasklist_subchecklist->count() > 0)
 		//------- for rejected repeated count ---
 		$repeated_obs_count = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('repeated_observation', 1)->whereBetween('created_at', [$startDate, $endDate])->count();
 		//echo $repeated_obs_count;die;
-		$no_of_repeated_obs = ceil($repeated_obs_count / 4);
+		// $no_of_repeated_obs = ceil($repeated_obs_count / 4);
+		$no_of_repeated_obs = $repeated_obs_count;
 		
 		//------- for time to close observation count ---
 		 

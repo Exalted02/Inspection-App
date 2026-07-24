@@ -92,8 +92,12 @@ use App\Models\Dashboard_notification;
     }
 //Change date format
     function change_date_format($date, $fromFormat, $toFormat){
+		if($date != ''){
 		$data = Carbon::createFromFormat($fromFormat, $date)->format($toFormat);
         return $data;
+		}else{
+			return '';
+		}
     }
 //get website settings
     function web_settings(){
