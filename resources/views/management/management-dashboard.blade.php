@@ -459,6 +459,9 @@ if($get_tasklist_subchecklist->count() > 0)
 			</div>
 		</div>
     </div>
+	@php
+	$all_task_wise_array = [];
+	@endphp
 	@foreach($locations as $key=>$location)
 	@php 
 		$taskLocation = App\Models\Task_lists::where('location_id', $location->id)->whereBetween('created_at', [$startDate, $endDate])->pluck('id')->toArray();
@@ -607,6 +610,7 @@ if($get_tasklist_subchecklist->count() > 0)
 		
 		$days = 0;
 		$observations = 0;
+		$task_wise_array = [];
 		foreach($taskLocation as $tsk_id)
 		{
 			$exists = App\Models\Task_list_corrective_action::where('task_list_id', $tsk_id)->where('los_action', 1)->where('inspector_action', 1)->exists();
@@ -639,6 +643,10 @@ if($get_tasklist_subchecklist->count() > 0)
 					// Calculate difference in days
 					$days = $days + $task_created_at->diffInDays($updated_at);
 					//echo "Task ID {$tsk_id}: {$days} days<br>";
+					$all_task_wise_array[] = $task_wise_array[] = [
+						'task_created_array' => $task_created_at->toDateTimeString(),
+						'task_updated_array' => $updated_at->toDateTimeString()
+					];
 				}
 			}
 			
@@ -654,8 +662,15 @@ if($get_tasklist_subchecklist->count() > 0)
 				$observations += $get_tasklist_subchecklist->count();
 			}
 		}
-		
-		$close_obs = $days;
+		// echo '<pre>'; print_r($task_wise_array);
+		$createdDates = array_column($task_wise_array, 'task_created_array');
+		$updatedDates = array_column($task_wise_array, 'task_updated_array');
+
+		$minCreated = Carbon::parse(min($createdDates));
+		$maxUpdated = Carbon::parse(max($updatedDates));
+
+		$diffDays = $minCreated->diffInDays($maxUpdated);
+		$close_obs = $diffDays;
 		$tot_close_obs = $tot_close_obs + $close_obs;
 		
 		
@@ -705,9 +720,19 @@ if($get_tasklist_subchecklist->count() > 0)
 		</div>
 	</div>
 	@endforeach
+	@php
+	// echo '<pre>'; print_r($all_task_wise_array);	
+	$createdDates = array_column($all_task_wise_array, 'task_created_array');
+	$updatedDates = array_column($all_task_wise_array, 'task_updated_array');
+
+	$minCreated = Carbon::parse(min($createdDates));
+	$maxUpdated = Carbon::parse(max($updatedDates));
+
+	$totdiffDays = $minCreated->diffInDays($maxUpdated);
+	@endphp
 	<input type="hidden" id="loc_tot_no_of_obs" value="{{ $loc_tot_no_of_obs ?? ''}}">
 	<input type="hidden" id="time_to_close_obs" value="{{ $time_to_close_obs ?? ''}}">
-	<input type="hidden" id="tot_close_observation" value="{{ $tot_close_obs ?? ''}}">
+	<input type="hidden" id="tot_close_observation" value="{{ $totdiffDays ?? ''}}">
 	{{--<div class="management-location-card pt-2 pb-2">
 		<div class="container">
 			<div class="d-flex align-items-center location-header mb-3">

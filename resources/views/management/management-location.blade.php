@@ -510,6 +510,51 @@ use Carbon\Carbon;
 		$lo_no_direct_approve = App\Models\Task_list_corrective_action::whereIn('task_list_id', $taskLocation)->where('lo_direct_approve', 0)->whereBetween('lo_completed_by', [$today, $futureDate])->count();
 		$close_obs = $lo_direct_approve + $lo_no_direct_approve;
 		
+		$task_wise_array = [];
+		foreach($taskLocation as $tsk_id)
+		{
+			$exists = App\Models\Task_list_corrective_action::where('task_list_id', $tsk_id)->where('los_action', 1)->where('inspector_action', 1)->exists();
+			
+			if ($exists) {
+				$corrective = App\Models\Task_list_corrective_action::where('task_list_id', $tsk_id)
+					->where('los_action', 1)
+					->where('inspector_action', 1)
+					->first();
+
+				$updated_at = Carbon::parse($corrective->updated_at);
+
+				// Try to get created_at from checklist first
+				$task_checklist = App\Models\Task_list_checklists::where('task_list_id', $tsk_id)
+					->where('approve', 0)
+					->first();
+
+				// If not found, try subchecklist
+				if ($task_checklist) {
+					$task_created_at = Carbon::parse($task_checklist->created_at);
+				} else {
+					$task_subchecklist = App\Models\Task_list_subchecklists::where('task_list_id', $tsk_id)
+						->where('approve', 0)
+						->first();
+
+					$task_created_at = $task_subchecklist ? Carbon::parse($task_subchecklist->created_at) : null;
+				}
+
+				if (isset($task_created_at)) {
+					$task_wise_array[] = [
+						'task_created_array' => $task_created_at->toDateTimeString(),
+						'task_updated_array' => $updated_at->toDateTimeString()
+					];
+				}
+			}
+		}
+		$createdDates = array_column($task_wise_array, 'task_created_array');
+		$updatedDates = array_column($task_wise_array, 'task_updated_array');
+
+		$minCreated = Carbon::parse(min($createdDates));
+		$maxUpdated = Carbon::parse(max($updatedDates));
+
+		$diffDays = $minCreated->diffInDays($maxUpdated);
+		
 		$time_to_close_obs = $time_to_close_obs + $close_obs;
 @endphp
     <div class="container location-details">
@@ -548,7 +593,7 @@ use Carbon\Carbon;
 							<div class="col-md-6 col-sm-6 col-xs-6 small-card-odd d-flex">
 								<div class="bg small-card">
 									<div class="small-card-title">Time to close observation</div>
-									<div class="small-card-counter">{{ $close_obs }}</div>
+									<div class="small-card-counter">{{ $diffDays }}</div>
 									<div class="small-card-counter-title">DAYS</div>
 								</div>
 							</div>
