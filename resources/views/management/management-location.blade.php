@@ -639,7 +639,11 @@ use Carbon\Carbon;
 							</div>
 							@endforeach
 						@else
-							<div class="text-center"><strong><h3>No record found</h3></strong></div>
+							<div class="text-center">
+								<div class="add-task-box">							
+									<strong><h3>No record found</h3></strong>
+								</div>
+							</div>
 						@endif
 					</div>
 				</div>

@@ -664,7 +664,11 @@ foreach($approvedCompleted as $result)
 							@endforeach
 							</div>--}}
 						</div>
-						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>
+						<div class="text-left" style="display:none" id="no_record">
+							<div class="add-task-box">							
+								<strong><h3>No record found</h3></strong>
+							</div>
+						</div>
 					</div>
 				</div>
 			</section>

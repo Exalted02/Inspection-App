@@ -284,7 +284,11 @@ if($tabname == 'los-action-plan-needed')
 									@endif
 								@endforeach
 							@else	
-								<div class="text-center"><strong><h3>No record founds</h3></strong></div>
+								<div class="text-center">
+									<div class="add-task-box">							
+										<strong><h3>No record found</h3></strong>
+									</div>
+								</div>
 							@endif
 							</div>--}}
 						@endif
@@ -933,7 +937,11 @@ if($tabname == 'los-action-plan-needed')
 							<div class="load-more-appr" id="showloadappr">Load more</div>
 								<input type="hidden" value="{{ $moreloadappr ?? '' }}" id="moreloadappr">
 						</div>
-						<div class="text-left" style="display:none" id="no_record"><strong><h3>No record found</h3></strong></div>	
+						<div class="text-left" style="display:none" id="no_record">
+							<div class="add-task-box">							
+								<strong><h3>No record found</h3></strong>
+							</div>
+						</div>	
 					</div>
 				</div>
 			</section>
