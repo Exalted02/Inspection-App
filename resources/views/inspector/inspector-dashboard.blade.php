@@ -689,9 +689,9 @@ if(auth()->user()->user_type == 1)
         $q->where(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 0);
         })
-        ->orWhere(function ($q) {
+        /*->orWhere(function ($q) {
             $q->where('inspector_action', 1)->where('los_action', 0);
-        })
+        })*/
         ->orWhere(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 1);
         });
@@ -707,9 +707,9 @@ if(auth()->user()->user_type == 1)
         ->orWhere(function ($q) {
             $q->where('inspector_action', 1)->where('los_action', 0);
         })
-        ->orWhere(function ($q) {
+        /*->orWhere(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 1);
-        });
+        })*/;
     })
     ->get();
 	$los_closure_action_plan = $los_action_plan->count();
@@ -859,9 +859,9 @@ if(auth()->user()->user_type == 3)
         ->orWhere(function ($q) {
             $q->where('inspector_action', 1)->where('los_action', 0);
         })
-        ->orWhere(function ($q) {
+        /*->orWhere(function ($q) {
             $q->where('inspector_action', 0)->where('los_action', 1);
-        });
+        })*/;
     })
     ->get();
 	$los_closure_action_plan = $los_action_plan->count();
@@ -1613,12 +1613,12 @@ if($get_tasklist_subchecklist->count() > 0)
 										$correctiveActionData_los = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [1])->whereIn('task_list_id', $taskListIds_los)->whereIn('category_id', $categoryIds_los)
 										->where(function ($q) {
 											$q->where(function ($q) {
-												$q->where('inspector_action', 0)->where('los_action', 1);
+												$q->where('inspector_action', 0)->where('los_action', 0);
 											})->orWhere(function ($q) {
 												$q->where('inspector_action', 1)->where('los_action', 0);
-											})->orWhere(function ($q) {
-												$q->where('inspector_action', 0)->where('los_action', 0);
-											});
+											})/*->orWhere(function ($q) {
+												$q->where('inspector_action', 0)->where('los_action', 1);
+											})*/;
 										})
 										->orderBy('updated_at', 'asc')
 										->get();
@@ -1626,12 +1626,12 @@ if($get_tasklist_subchecklist->count() > 0)
 										$correctivePlanData_los = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0])->whereIn('task_list_id', $taskListIds_los)->whereIn('category_id', $categoryIds_los)
 										->where(function ($q) {
 											$q->where(function ($q) {
-												$q->where('inspector_action', 0)->where('los_action', 1);
+												$q->where('inspector_action', 0)->where('los_action', 0);
 											})->orWhere(function ($q) {
 												$q->where('inspector_action', 1)->where('los_action', 0);
-											})->orWhere(function ($q) {
-												$q->where('inspector_action', 0)->where('los_action', 0);
-											});
+											})/*->orWhere(function ($q) {
+												$q->where('inspector_action', 0)->where('los_action', 1);
+											})*/;
 										})
 										->orderBy('updated_at', 'asc')
 										->get();

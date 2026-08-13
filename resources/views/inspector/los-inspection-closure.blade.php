@@ -104,12 +104,12 @@ $total_count = 0;
 						$correctiveActionData = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [1])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
 						->where(function ($q) {
 							$q->where(function ($q) {
-								$q->where('inspector_action', 0)->where('los_action', 1);
+								$q->where('inspector_action', 0)->where('los_action', 0);
 							})->orWhere(function ($q) {
 								$q->where('inspector_action', 1)->where('los_action', 0);
-							})->orWhere(function ($q) {
-								$q->where('inspector_action', 0)->where('los_action', 0);
-							});
+							})/*->orWhere(function ($q) {
+								$q->where('inspector_action', 0)->where('los_action', 1);
+							})*/;
 						})
 						->orderBy('updated_at', 'asc')
 						->get();
@@ -121,12 +121,12 @@ $total_count = 0;
 						$correctivePlanData = App\Models\Task_list_corrective_action::whereIn('lo_direct_approve', [0])->whereIn('task_list_id', $taskListIds)->whereIn('category_id', $categoryIds)
 						->where(function ($q) {
 							$q->where(function ($q) {
-								$q->where('inspector_action', 0)->where('los_action', 1);
+								$q->where('inspector_action', 0)->where('los_action', 0);
 							})->orWhere(function ($q) {
 								$q->where('inspector_action', 1)->where('los_action', 0);
-							})->orWhere(function ($q) {
-								$q->where('inspector_action', 0)->where('los_action', 0);
-							});
+							})/*->orWhere(function ($q) {
+								$q->where('inspector_action', 0)->where('los_action', 1);
+							})*/;
 						})
 						->orderBy('updated_at', 'asc')
 						->get();

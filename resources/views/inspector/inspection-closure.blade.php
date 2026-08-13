@@ -105,9 +105,9 @@ $total_count = 0;
 						->where(function ($q) {
 							$q->where(function ($q) {
 								$q->where('inspector_action', 0)->where('los_action', 1);
-							})->orWhere(function ($q) {
+							})/*->orWhere(function ($q) {
 								$q->where('inspector_action', 1)->where('los_action', 0);
-							})->orWhere(function ($q) {
+							})*/->orWhere(function ($q) {
 								$q->where('inspector_action', 0)->where('los_action', 0);
 							});
 						})
