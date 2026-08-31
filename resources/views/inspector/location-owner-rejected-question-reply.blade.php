@@ -131,6 +131,24 @@
 	}
  }
  
+ $corrective_action = App\Models\Task_list_corrective_action::with('get_inspector','get_lo','get_los')
+    ->where('task_list_id', $task_id)
+    ->where('checklist_id', $checklist_id)
+    ->first();
+
+$latestRejectedDate = App\Models\Task_list_corrective_action_details::where(
+    'task_list_corrective_action_id',
+    $corrective_action?->id
+)
+->whereIn('rejected_status', [1, 2])
+->orderByDesc('id')
+->first();
+
+$latestRejectedDate = $latestRejectedDate?->rejected_status == 1
+    ? $latestRejectedDate?->inspector_action_date
+    : $latestRejectedDate?->los_action_date;
+	
+ 
 	$taskData = App\Models\Task_lists::where('id',$task_id)->first();
 	$task_location_id = $taskData ? $taskData->location_id : '';
 	$task_category_id = $taskData ? $taskData->category_id : '';
@@ -896,10 +914,28 @@ $(document).on('click','.forward-task', function(){
 </script>
 <script>
 $(document).ready(function() {
+	const createdAt = "{{ !empty($latestRejectedDate) ? \Carbon\Carbon::parse($latestRejectedDate)->format('Y-m-d') : (!empty($created_at) ? \Carbon\Carbon::parse($created_at)->format('Y-m-d') : '') }}";
+
+	let minDate = null;
+
+	if (createdAt) {
+		const parts = createdAt.split('-');
+
+		// JS month starts from 0
+		minDate = new Date(
+			parseInt(parts[0]),
+			parseInt(parts[1]) - 1,
+			parseInt(parts[2])
+		);
+	}
+
+	// console.log('createdAt:', createdAt);
+	// console.log('minDate:', minDate);
 flatpickr("#set_time", {
     enableTime: false,
-    dateFormat: "d M Y H:i",
+    dateFormat: "d M Y",
 	disableMobile: true,
+	minDate: minDate,
     /*onChange: function(selectedDates, dateStr, instance) {
 		
 			if (selectedDates.length == 1) {

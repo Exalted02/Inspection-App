@@ -1333,25 +1333,6 @@ $(document ).ready(function() {
 		
 	});
 	
-	// ========= NAVIGATION REQUEST LOCK ==============
-	// Prevent multiple Next/Back clicks while an AJAX request is running.
-	let questionNavigationRequestRunning = false;
-
-	function lockQuestionNavigation() {
-		if (questionNavigationRequestRunning) {
-			return false;
-		}
-
-		questionNavigationRequestRunning = true;
-		$('.next_question, .previous_question').prop('disabled', true);
-		return true;
-	}
-
-	function unlockQuestionNavigation() {
-		questionNavigationRequestRunning = false;
-		$('.next_question, .previous_question').prop('disabled', false);
-	}
-
 	// ========= NEXT BUTTON ==============
 	
 	
@@ -1556,12 +1537,6 @@ $(document ).ready(function() {
 		//------------------------------
 		
 		var URL = "{{ route('checklist-next-question') }}";
-
-		// Lock both navigation buttons only after validation has passed.
-		if (!lockQuestionNavigation()) {
-			return false;
-		}
-
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -2252,10 +2227,6 @@ $(document ).ready(function() {
 						});*/
 					}
 			},
-			complete: function() {
-				unlockQuestionNavigation();
-			}
-
 		});
 		
 		
@@ -2430,12 +2401,6 @@ $(document ).ready(function() {
 		formData.append('_token', csrfToken);
 		
 		var URL = "{{ route('save-exist-question') }}";
-
-		// Keep navigation locked while saving and while loading the previous question.
-		if (!lockQuestionNavigation()) {
-			return false;
-		}
-
 		$.ajax({
 			url: URL,
 			type: "POST",
@@ -2465,13 +2430,8 @@ $(document ).ready(function() {
 				const redirectUrl = refreshUrl.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ACTIVE', 1);
 				window.location.href = redirectUrl;*/
 				
-			},
-			
-			error: function() {
-				// Save failed, so there will be no previous-question request.
-				unlockQuestionNavigation();
 			}
-
+			
 		});
 	});
 	
@@ -3029,10 +2989,6 @@ $(document ).ready(function() {
 						
 					}
 			},
-			complete: function() {
-				unlockQuestionNavigation();
-			}
-
 		});
 	}
 	
@@ -3671,10 +3627,9 @@ $(document ).ready(function() {
 				//const thankyouUrlTemplate = "{{ url('thank-you/TASK_ID') }}";
 				//const redirectUrl = thankyouUrlTemplate.replace('TASK_ID', task_id);
 				
-				// const categoryUrlTemplate = "{{ url('category/LOCATION_ID/TASK_ID/ACTIVE') }}";
-				// const redirectUrl = categoryUrlTemplate.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ACTIVE', 1);
-				// window.location.href = redirectUrl;
-				window.location.href = "{{ url('inspector-dashboard') }}";
+				const categoryUrlTemplate = "{{ url('category/LOCATION_ID/TASK_ID/ACTIVE') }}";
+				const redirectUrl = categoryUrlTemplate.replace('LOCATION_ID', location_id).replace('TASK_ID', task_id).replace('ACTIVE', 1);
+				window.location.href = redirectUrl;
 			},
 		});
    });
