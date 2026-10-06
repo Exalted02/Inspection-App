@@ -666,11 +666,15 @@ if($get_tasklist_subchecklist->count() > 0)
 		$createdDates = array_column($task_wise_array, 'task_created_array');
 		$updatedDates = array_column($task_wise_array, 'task_updated_array');
 
-		$minCreated = Carbon::parse(min($createdDates));
-		$maxUpdated = Carbon::parse(max($updatedDates));
+		if (!empty($createdDates) && !empty($updatedDates)) {
+			$minCreated = Carbon::parse(min($createdDates));
+			$maxUpdated = Carbon::parse(max($updatedDates));
 
-		$diffDays = $minCreated->diffInDays($maxUpdated);
-		$close_obs = $diffDays;
+			$diffDays = $minCreated->diffInDays($maxUpdated);
+			$close_obs = $diffDays;
+		} else {
+			$close_obs = 0;
+		}
 		$tot_close_obs = $tot_close_obs + $close_obs;
 		
 		
@@ -725,10 +729,14 @@ if($get_tasklist_subchecklist->count() > 0)
 	$createdDates = array_column($all_task_wise_array, 'task_created_array');
 	$updatedDates = array_column($all_task_wise_array, 'task_updated_array');
 
-	$minCreated = Carbon::parse(min($createdDates));
-	$maxUpdated = Carbon::parse(max($updatedDates));
+	if (!empty($createdDates) && !empty($updatedDates)) {
+		$minCreated = Carbon::parse(min($createdDates));
+		$maxUpdated = Carbon::parse(max($updatedDates));
 
-	$totdiffDays = $minCreated->diffInDays($maxUpdated);
+		$totdiffDays = $minCreated->diffInDays($maxUpdated);
+	} else {
+		$totdiffDays = 0;
+	}
 	@endphp
 	<input type="hidden" id="loc_tot_no_of_obs" value="{{ $loc_tot_no_of_obs ?? ''}}">
 	<input type="hidden" id="time_to_close_obs" value="{{ $time_to_close_obs ?? ''}}">

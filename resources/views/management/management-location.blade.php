@@ -547,7 +547,7 @@ use Carbon\Carbon;
 				}
 			}
 		}
-		$createdDates = array_column($task_wise_array, 'task_created_array');
+		/*$createdDates = array_column($task_wise_array, 'task_created_array');
 		$updatedDates = array_column($task_wise_array, 'task_updated_array');
 
 		$minCreated = Carbon::parse(min($createdDates));
@@ -555,7 +555,23 @@ use Carbon\Carbon;
 
 		$diffDays = $minCreated->diffInDays($maxUpdated);
 		
-		$time_to_close_obs = $time_to_close_obs + $close_obs;
+		$time_to_close_obs = $time_to_close_obs + $close_obs;*/
+		
+		$createdDates = array_column($task_wise_array, 'task_created_array');
+		$updatedDates = array_column($task_wise_array, 'task_updated_array');
+
+		if (!empty($createdDates) && !empty($updatedDates)) {
+
+			$minCreated = Carbon::parse(min($createdDates));
+			$maxUpdated = Carbon::parse(max($updatedDates));
+
+			$diffDays = $minCreated->diffInDays($maxUpdated);
+
+			$time_to_close_obs = $time_to_close_obs + $close_obs;
+
+		} else {
+			$diffDays = 0;
+		}
 @endphp
     <div class="container location-details">
 		<div class="d-flex align-items-center location-header mb-3">
